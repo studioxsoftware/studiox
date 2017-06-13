@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="lv">
+  <texts>
+    <text name="LdapIsEnabled" value="Aktivizēta" />
+    <text name="LdapContextType" value="Konteksts tips" />
+    <text name="LdapContainer" value="Konteiners" />
+    <text name="LdapDomain" value="Domēns" />
+    <text name="LdapUserName" value="Lietotājvārds" />
+    <text name="LdapPassword" value="Parole" />
+  </texts>
+</localizationDictionary>

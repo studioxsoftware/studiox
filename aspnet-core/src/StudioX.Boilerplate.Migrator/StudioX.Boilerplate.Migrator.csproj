@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp1.1</TargetFramework>
+    <PackageTargetFallback>$(PackageTargetFallback);dotnet5.6;portable-net45+win8</PackageTargetFallback>
+    <AssemblyName>StudioX.Boilerplate.Migrator</AssemblyName>
+    <OutputType>Exe</OutputType>
+    <PackageId>StudioX.Boilerplate.Migrator</PackageId>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Update="appsettings.json;log4net.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
+    <Reference Include="System" />
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\framework\src\StudioX.Castle.Log4Net\StudioX.Castle.Log4Net.csproj" />
+    <ProjectReference Include="..\StudioX.Boilerplate.Core\StudioX.Boilerplate.Core.csproj" />
+    <ProjectReference Include="..\StudioX.Boilerplate.EntityFrameworkCore\StudioX.Boilerplate.EntityFrameworkCore.csproj" />
+  </ItemGroup>
+
+</Project>

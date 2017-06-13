@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net46</TargetFramework>
+    <AssemblyName>StudioX.TestBase.SampleApplication</AssemblyName>
+    <PackageId>StudioX.TestBase.SampleApplication</PackageId>
+    <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
+    <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\StudioX.AutoMapper\StudioX.AutoMapper.csproj" />
+    <ProjectReference Include="..\..\src\StudioX.EntityFramework\StudioX.EntityFramework.csproj" />
+    <ProjectReference Include="..\..\src\StudioX.TestBase\StudioX.TestBase.csproj" />
+    <ProjectReference Include="..\..\src\StudioX.EntityFramework.GraphDiff\StudioX.EntityFramework.GraphDiff.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">
+    <Reference Include="System" />
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+
+</Project>

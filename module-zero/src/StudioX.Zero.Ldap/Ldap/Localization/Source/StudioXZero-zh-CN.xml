@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="zh-CN">
+  <texts>
+    <text name="LdapIsEnabled" value="启用" />
+    <text name="LdapContextType" value="上下文类型" />
+    <text name="LdapContainer" value="容器" />
+    <text name="LdapDomain" value="域名" />
+    <text name="LdapUserName" value="用户名" />
+    <text name="LdapPassword" value="密码" />
+  </texts>
+</localizationDictionary>

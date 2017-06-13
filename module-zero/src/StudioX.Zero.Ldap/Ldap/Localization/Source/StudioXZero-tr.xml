@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="tr">
+  <texts>
+    <text name="LdapIsEnabled" value="Aktif" />
+    <text name="LdapContextType" value="Context type" />
+    <text name="LdapContainer" value="Container" />
+    <text name="LdapDomain" value="Domain" />
+    <text name="LdapUserName" value="Kullanıcı adı" />
+    <text name="LdapPassword" value="Şifre" />
+  </texts>
+</localizationDictionary>

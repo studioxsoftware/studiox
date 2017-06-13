@@ -1,0 +1,47 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="..\..\common.props" />
+
+  <PropertyGroup>
+    <TargetFrameworks>net46;netstandard1.6</TargetFrameworks>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <AssemblyName>StudioX.ZeroCore</AssemblyName>
+    <PackageId>StudioX.ZeroCore</PackageId>
+    <PackageTags>asp.net;asp.net mvc;boilerplate;application framework;web framework;framework;domain driven design;multitenancy;user management;role management;identity</PackageTags>
+    <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
+    <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
+    <RootNamespace>StudioX</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Zero\Localization\SourceExt\StudioXZero-de.xml" />
+    <EmbeddedResource Include="Zero\Localization\SourceExt\StudioXZero-fa.xml" />
+    <EmbeddedResource Include="Zero\Localization\SourceExt\StudioXZero-fr.xml" />
+    <EmbeddedResource Include="Zero\Localization\SourceExt\StudioXZero-it.xml" />
+    <EmbeddedResource Include="Zero\Localization\SourceExt\StudioXZero-lt.xml" />
+    <EmbeddedResource Include="Zero\Localization\SourceExt\StudioXZero-lv.xml" />
+    <EmbeddedResource Include="Zero\Localization\SourceExt\StudioXZero-pt-BR.xml" />
+    <EmbeddedResource Include="Zero\Localization\SourceExt\StudioXZero-ru.xml" />
+    <EmbeddedResource Include="Zero\Localization\SourceExt\StudioXZero-tr.xml" />
+    <EmbeddedResource Include="Zero\Localization\SourceExt\StudioXZero-zh-CN.xml" />
+    <EmbeddedResource Include="Zero\Localization\SourceExt\StudioXZero.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="1.1.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\StudioX.Zero.Common\StudioX.Zero.Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Transactions" />
+  </ItemGroup>
+
+</Project>
