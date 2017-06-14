@@ -27,7 +27,7 @@ namespace StudioX.Boilerplate.AuditLogs
 
         public async Task<ListResultDto<AuditLogListDto>> GetAll()
         {
-            var auditLogs = await QueryBuilder().ToListAsync();
+            var auditLogs = await CreateFilteredQuery().ToListAsync();
             return new ListResultDto<AuditLogListDto>(auditLogs);
         }
 
@@ -39,7 +39,7 @@ namespace StudioX.Boilerplate.AuditLogs
             if (input.Sorting.IsNullOrEmpty())
                 input.Sorting = InputConstant.DefaultSorting;
 
-            var query = QueryBuilder(input);
+            var query = CreateFilteredQuery(input);
             var totalCount = query.Count();
 
             var auditLogs = query.OrderBy(input.Sorting)
@@ -70,7 +70,7 @@ namespace StudioX.Boilerplate.AuditLogs
 
         #region Private methods
 
-        private IQueryable<AuditLogListDto> QueryBuilder()
+        private IQueryable<AuditLogListDto> CreateFilteredQuery()
         {
             var query = auditLogRepository.GetAll()
                 .GroupJoin(UserManager.Users, auditLog => auditLog.UserId, user => user.Id,
@@ -92,9 +92,9 @@ namespace StudioX.Boilerplate.AuditLogs
             return query;
         }
 
-        private IQueryable<AuditLogListDto> QueryBuilder(GetAuditLogsInput input)
+        private IQueryable<AuditLogListDto> CreateFilteredQuery(GetAuditLogsInput input)
         {
-            var query = QueryBuilder().Where(x => x.ExecutionTime >= input.StartDate 
+            var query = CreateFilteredQuery().Where(x => x.ExecutionTime >= input.StartDate 
                             && x.ExecutionTime <= input.EndDate);
 
             if (input.ExecutionDurationFrom.HasValue && input.ExecutionDurationTo.HasValue)

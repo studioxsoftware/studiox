@@ -40,7 +40,7 @@ export class CreateUserModalComponent extends AppComponentBase {
     save(): void {
 
         this.saving = true;
-        this._userService.createUser(this.user)
+        this._userService.create(this.user)
             .finally(() => { this.saving = false; })
             .subscribe(() => {
                 this.notify.info(this.l('SavedSuccessfully'));

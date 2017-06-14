@@ -30,7 +30,7 @@ namespace StudioX.Boilerplate.Tests.Users
         public async Task CreateUserTest()
         {
             //Act
-            await userAppService.CreateUser(
+            await userAppService.Create(
                 new CreateUserInput
                 {
                     EmailAddress = "john@studiox.com",

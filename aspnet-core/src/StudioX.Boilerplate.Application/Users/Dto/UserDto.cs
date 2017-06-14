@@ -1,12 +1,14 @@
 using System;
+using System.Collections.Generic;
 using StudioX.Application.Services.Dto;
+using StudioX.Authorization.Users;
 using StudioX.AutoMapper;
 using StudioX.Boilerplate.Authorization.Users;
 
 namespace StudioX.Boilerplate.Users.Dto
 {
     [AutoMapFrom(typeof(User))]
-    public class UserListDto : EntityDto<long>
+    public class UserDto : EntityDto<long>
     {
         public string FirstName { get; set; }
 
@@ -26,8 +28,10 @@ namespace StudioX.Boilerplate.Users.Dto
 
         public bool IsLockoutEnabled { get; set; }
 
-        public bool IsAdmin => !IsLockoutEnabled;
-
         public DateTime CreationTime { get; set; }
+
+        public virtual ICollection<UserRole> Roles { get; set; }
+
+        public virtual ICollection<UserPermissionSetting> Permissions { get; set; }
     }
 }
