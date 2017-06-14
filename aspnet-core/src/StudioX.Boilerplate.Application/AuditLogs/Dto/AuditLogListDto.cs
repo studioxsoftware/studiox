@@ -7,8 +7,6 @@ namespace StudioX.Boilerplate.AuditLogs.Dto
     {
         public virtual long? UserId { get; set; }
 
-        public virtual string BranchName { get; set; }
-
         public virtual string UserName { get; set; }
 
         public virtual string ServiceName { get; set; }
