@@ -1,4 +1,4 @@
-﻿import { Injector } from '@angular/core';
+﻿import { Injector, ElementRef} from '@angular/core';
 import { AppConsts } from '@shared/AppConsts';
 import { LocalizationService } from '@studiox/localization/localization.service';
 import { PermissionCheckerService } from '@studiox/auth/permission-checker.service';
@@ -21,6 +21,7 @@ export abstract class AppComponentBase {
     message: MessageService;
     multiTenancy: StudioXMultiTenancyService;
     appSession: AppSessionService;
+    domNode: HTMLElement = null;
 
     constructor(injector: Injector) {
         this.localization = injector.get(LocalizationService);
@@ -31,7 +32,12 @@ export abstract class AppComponentBase {
         this.message = injector.get(MessageService);
         this.multiTenancy = injector.get(StudioXMultiTenancyService);
         this.appSession = injector.get(AppSessionService);
+        this.domNode = injector.get(ElementRef).nativeElement;
     }
+
+    ngAfterViewInit(): void {
+         ($ as any).AdminBSB.input.activate($(this.domNode));
+    }		      
 
     l(key: string, ...args: any[]): string {
         let localizedText = this.localization.localize(key, this.localizationSourceName);
