@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
-  selector: 'ng-table',
+  selector: 'studiox-table',
   template: `
     <table class="table dataTable" ngClass="{{config.className || ''}}"
            role="grid" style="width: 100%;">

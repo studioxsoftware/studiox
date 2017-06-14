@@ -27,7 +27,7 @@ import { SideBarFooterComponent } from '@app/layout/sidebar-footer.component';
 import { RightSideBarComponent } from '@app/layout/right-sidebar.component';
 
 import { PaginationModule } from 'ngx-bootstrap';
-import { Ng2TableModule } from '@ng-table/ng-table-module';
+import { Ng2TableModule } from '@studiox-table/studiox-table-module';
 import { TableDemoComponent } from '@app/table-demo/table-demo.component';
 
 @NgModule({

@@ -16,7 +16,7 @@
     "baseUrl": ".",
     "paths": {
       "@studiox/*": [ "../src/framework/studiox-ng2-module/src/*" ],
-      "@ng-table/*": [ "../src/framework/ng-table/*" ],
+      "@studiox-table/*": [ "../src/framework/studiox-table/*" ],
       "@app/*": [ "./app/*" ],
       "@shared/*": [ "./shared/*" ],
       "@node_modules/*": [ "../node_modules/*" ]

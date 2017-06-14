@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Ng2TableModule } from '../ng-table-module';
+import { Ng2TableModule } from '../studiox-table-module';
 
 const html = ``;
 
