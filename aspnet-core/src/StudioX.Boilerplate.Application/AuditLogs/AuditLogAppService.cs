@@ -31,7 +31,7 @@ namespace StudioX.Boilerplate.AuditLogs
             return new ListResultDto<AuditLogListDto>(auditLogs);
         }
 
-        public PagedResultDto<AuditLogListDto> GetListPagedResult(GetAuditLogsInput input)
+        public PagedResultDto<AuditLogListDto> PagedResult(GetAuditLogsInput input)
         {
             if (input.MaxResultCount <= 0)
                 input.MaxResultCount = SettingManager.GetSettingValue<int>(BoilerplateSettingProvider.AuditLogsDefaultPageSize);
