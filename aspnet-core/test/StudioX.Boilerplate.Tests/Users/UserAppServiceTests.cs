@@ -20,7 +20,7 @@ namespace StudioX.Boilerplate.Tests.Users
         public async Task GetUsersTest()
         {
             //Act
-            var output = await userAppService.GetUsers();
+            var output = await userAppService.GetAll();
 
             //Assert
             output.Items.Count.ShouldBeGreaterThan(0);

@@ -731,8 +731,8 @@ export class UserServiceProxy {
     /**
      * @return Success
      */
-    getUsers(): Observable<ListResultDtoOfUserListDto> {
-        let url_ = this.baseUrl + "/api/services/app/User/GetUsers";
+    getAll(): Observable<ListResultDtoOfUserListDto> {
+        let url_ = this.baseUrl + "/api/services/app/User/GetAll";
 
         const content_ = "";
         
@@ -744,11 +744,11 @@ export class UserServiceProxy {
 				"Accept": "application/json; charset=UTF-8"
             })
         }).map((response) => {
-            return this.processGetUsers(response);
+            return this.processGetAll(response);
         }).catch((response: any, caught: any) => {
             if (response instanceof Response) {
                 try {
-                    return Observable.of(this.processGetUsers(response));
+                    return Observable.of(this.processGetAll(response));
                 } catch (e) {
                     return <Observable<ListResultDtoOfUserListDto>><any>Observable.throw(e);
                 }
@@ -757,7 +757,7 @@ export class UserServiceProxy {
         });
     }
 
-    protected processGetUsers(response: Response): ListResultDtoOfUserListDto {
+    protected processGetAll(response: Response): ListResultDtoOfUserListDto {
         const responseText = response.text();
         const status = response.status; 
 

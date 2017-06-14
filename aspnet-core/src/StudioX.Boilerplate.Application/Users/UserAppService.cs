@@ -37,7 +37,7 @@ namespace StudioX.Boilerplate.Users
 
 
         [StudioXAuthorize(PermissionNames.System.Administration.Users.View)]
-        public async Task<ListResultDto<UserListDto>> GetUsers()
+        public async Task<ListResultDto<UserListDto>> GetAll()
         {
             var users = await userRepository.GetAllListAsync();
 

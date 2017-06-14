@@ -7,7 +7,7 @@ namespace StudioX.Boilerplate.Users
 {
     public interface IUserAppService : IApplicationService
     {
-        Task<ListResultDto<UserListDto>> GetUsers();
+        Task<ListResultDto<UserListDto>> GetAll();
 
         PagedResultDto<UserListDto> PagedResult(GetUsersInput input);
 
