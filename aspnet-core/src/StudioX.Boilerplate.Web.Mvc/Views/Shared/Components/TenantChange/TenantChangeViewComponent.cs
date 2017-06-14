@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace StudioX.Boilerplate.Web.Views.Shared.Components.TenantChange
 {
-    public class TenantChangeViewComponent : ViewComponent
+    public class TenantChangeViewComponent : BoilerplateViewComponent
     {
         private readonly ISessionAppService sessionAppService;
 

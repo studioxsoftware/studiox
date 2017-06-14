@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace StudioX.Boilerplate.Web.Views.Shared.Components.SideBarNav
 {
-    public class SideBarNavViewComponent : ViewComponent
+    public class SideBarNavViewComponent : BoilerplateViewComponent
     {
         private readonly IUserNavigationManager userNavigationManager;
         private readonly IStudioXSession session;

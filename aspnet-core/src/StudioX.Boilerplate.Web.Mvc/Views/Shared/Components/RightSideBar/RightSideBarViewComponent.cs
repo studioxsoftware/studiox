@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace StudioX.Boilerplate.Web.Views.Shared.Components.RightSideBar
 {
-    public class RightSideBarViewComponent : ViewComponent
+    public class RightSideBarViewComponent : BoilerplateViewComponent
     {
         private readonly ISettingManager settingManager;
 

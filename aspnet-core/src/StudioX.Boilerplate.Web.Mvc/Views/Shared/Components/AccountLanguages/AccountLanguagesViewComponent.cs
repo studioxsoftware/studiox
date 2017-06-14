@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace StudioX.Boilerplate.Web.Views.Shared.Components.AccountLanguages
 {
-    public class AccountLanguagesViewComponent : ViewComponent
+    public class AccountLanguagesViewComponent : BoilerplateViewComponent
     {
         private readonly ILanguageManager languageManager;
 

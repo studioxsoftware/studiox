@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace StudioX.Boilerplate.Web.Views.Shared.Components.SideBarUserArea
 {
-    public class SideBarUserAreaViewComponent : ViewComponent
+    public class SideBarUserAreaViewComponent : BoilerplateViewComponent
     {
         private readonly ISessionAppService sessionAppService;
         private readonly IMultiTenancyConfig multiTenancyConfig;
