@@ -10,7 +10,7 @@ const routes: Routes = [
     },
     {
         path: 'app',
-        loadChildren: 'app/app.module#AppModule', //Lazy load account module
+        loadChildren: 'app/app.module#AppModule', //Lazy load app module
         data: { preload: true }
     }
 ];
