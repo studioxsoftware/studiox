@@ -6,7 +6,7 @@ using StudioX.AutoMapper;
 namespace StudioX.Boilerplate.AuditLogs.Dto
 {
     [AutoMapFrom(typeof(AuditLog))]
-    public class AuditLogDto : EntityDto
+    public class AuditLogDto : EntityDto<long>
     {
         public virtual string UserName { get; set; }
 

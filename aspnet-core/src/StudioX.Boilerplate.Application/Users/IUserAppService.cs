@@ -7,12 +7,26 @@ namespace StudioX.Boilerplate.Users
 {
     public interface IUserAppService : IApplicationService
     {
+        Task<ListResultDto<UserListDto>> GetAll();
+
+        PagedResultDto<UserListDto> PagedResult(GetUsersInput input);
+
+        Task<UserDto> Get(long id);
+
         Task ProhibitPermission(ProhibitPermissionInput input);
 
-        Task RemoveFromRole(long userId, string roleName);
+        Task ResetUserSpecificPermissions(long id);
 
-        Task<ListResultDto<UserListDto>> GetUsers();
+        Task Unlock(long id);
 
-        Task CreateUser(CreateUserInput input);
+        Task Create(CreateUserInput input);
+
+        Task UpdateUserPermissions(UserPermissionsInput input);
+
+        Task Update(UpdateUserInput input);
+
+        Task ResetPassword(ChangeUserPasswordInput input);
+
+        Task Delete(long id);
     }
 }

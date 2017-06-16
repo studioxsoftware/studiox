@@ -26,6 +26,11 @@ namespace StudioX.Authorization.Users
         public const int MaxEmailAddressLength = 256;
 
         /// <summary>
+        /// Maximum length of the <see cref="PhoneNumber"/> property.
+        /// </summary>
+        public const int MaxPhoneNumberLength = 32;
+
+        /// <summary>
         /// Maximum length of the <see cref="FirstName"/> property.
         /// </summary>
         public const int MaxFirstNameLength = 32;

@@ -20,7 +20,7 @@ namespace StudioX.Boilerplate.Tests.Users
         public async Task GetUsersTest()
         {
             //Act
-            var output = await userAppService.GetUsers();
+            var output = await userAppService.GetAll();
 
             //Assert
             output.Items.Count.ShouldBeGreaterThan(0);
@@ -30,7 +30,7 @@ namespace StudioX.Boilerplate.Tests.Users
         public async Task CreateUserTest()
         {
             //Act
-            await userAppService.CreateUser(
+            await userAppService.Create(
                 new CreateUserInput
                 {
                     EmailAddress = "john@studiox.com",

@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\framework\src\StudioX\StudioX.csproj" />
     <ProjectReference Include="..\StudioX.Boilerplate.Core\StudioX.Boilerplate.Core.csproj" />
   </ItemGroup>
 

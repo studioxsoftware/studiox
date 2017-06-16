@@ -19,7 +19,7 @@ namespace StudioX.Boilerplate.Web.Controllers
 
         public async Task<ActionResult> Index()
         {
-            var output = await userAppService.GetUsers();
+            var output = await userAppService.GetAll();
             return View(output);
         }
     }

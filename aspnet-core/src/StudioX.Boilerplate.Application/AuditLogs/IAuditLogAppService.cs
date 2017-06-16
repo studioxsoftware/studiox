@@ -9,7 +9,7 @@ namespace StudioX.Boilerplate.AuditLogs
     {
         Task<ListResultDto<AuditLogListDto>> GetAll();
 
-        PagedResultDto<AuditLogListDto> GetListPagedResult(GetAuditLogsInput input);
+        PagedResultDto<AuditLogListDto> PagedResult(GetAuditLogsInput input);
 
         AuditLogDto Get(int id);
     }
