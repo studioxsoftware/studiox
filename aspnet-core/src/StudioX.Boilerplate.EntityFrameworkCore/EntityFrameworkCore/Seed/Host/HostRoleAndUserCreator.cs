@@ -45,7 +45,7 @@ namespace StudioX.Boilerplate.EntityFrameworkCore.Seed.Host
                     UserName = StudioXUserBase.AdminUserName,
                     FirstName = "admin",
                     LastName = "admin",
-                    EmailAddress = "admin@aspnetzero.com",
+                    EmailAddress = "admin@studioxsoftware.com",
                     IsEmailConfirmed = true,
                     IsActive = true,
                     Password = "AM4OLBpptxBYmM79lGOX9egzZk3vIQU3d/gFCJzaBjAPXzYIK3tQ2N7X4fcrHtElTw==" //123qwe
