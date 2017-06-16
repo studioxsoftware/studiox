@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 namespace StudioX.Application.Services.Dto
 {
     /// <summary>
-    /// Simply implements <see cref="IPagedResultRequest"/>.
+    ///     Simply implements <see cref="IPagedResultRequest" />.
     /// </summary>
     [Serializable]
     public class PagedResultRequestDto : LimitedResultRequestDto, IPagedResultRequest

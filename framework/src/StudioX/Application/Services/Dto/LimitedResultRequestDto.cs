@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 namespace StudioX.Application.Services.Dto
 {
     /// <summary>
-    /// Simply implements <see cref="ILimitedResultRequest"/>.
+    ///     Simply implements <see cref="ILimitedResultRequest" />.
     /// </summary>
     public class LimitedResultRequestDto : ILimitedResultRequest
     {
