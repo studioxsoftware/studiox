@@ -24,13 +24,11 @@
                 return;
             case 2: //InActive
                 studiox.message.warn(studiox.utils.formatString(studiox.localization
-                    .localize("TenantIsNotActive", "Boilerplate"),
-                    this.tenancyName));
+                    .localize("TenantIsNotActive", "Boilerplate"), tenancyName));
                 break;
             case 3: //NotFound
                 studiox.message.warn(studiox.utils.formatString(studiox.localization
-                    .localize("ThereIsNoTenantDefinedWithName{0}", "Boilerplate"),
-                    this.tenancyName));
+                    .localize("ThereIsNoTenantDefinedWithName{0}", "Boilerplate"), tenancyName));
                 break;
             }
         });
