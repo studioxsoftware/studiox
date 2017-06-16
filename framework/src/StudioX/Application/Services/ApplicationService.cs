@@ -7,44 +7,45 @@ using StudioX.Runtime.Session;
 namespace StudioX.Application.Services
 {
     /// <summary>
-    /// This class can be used as a base class for application services. 
+    ///     This class can be used as a base class for application services.
     /// </summary>
-    public abstract class ApplicationService : StudioXServiceBase, IApplicationService, IAvoidDuplicateCrossCuttingConcerns
+    public abstract class ApplicationService : StudioXServiceBase, IApplicationService,
+        IAvoidDuplicateCrossCuttingConcerns
     {
-        public static string[] CommonPostfixes = { "AppService", "ApplicationService" };
+        public static string[] CommonPostfixes = {"AppService", "ApplicationService"};
 
         /// <summary>
-        /// Gets current session information.
+        ///     Gets current session information.
         /// </summary>
         public IStudioXSession StudioXSession { get; set; }
-        
+
         /// <summary>
-        /// Reference to the permission manager.
+        ///     Reference to the permission manager.
         /// </summary>
         public IPermissionManager PermissionManager { protected get; set; }
 
         /// <summary>
-        /// Reference to the permission checker.
+        ///     Reference to the permission checker.
         /// </summary>
         public IPermissionChecker PermissionChecker { protected get; set; }
 
         /// <summary>
-        /// Reference to the feature manager.
+        ///     Reference to the feature manager.
         /// </summary>
         public IFeatureManager FeatureManager { protected get; set; }
 
         /// <summary>
-        /// Reference to the feature checker.
+        ///     Reference to the feature checker.
         /// </summary>
         public IFeatureChecker FeatureChecker { protected get; set; }
 
         /// <summary>
-        /// Gets the applied cross cutting concerns.
+        ///     Gets the applied cross cutting concerns.
         /// </summary>
         public List<string> AppliedCrossCuttingConcerns { get; } = new List<string>();
 
         /// <summary>
-        /// Constructor.
+        ///     Constructor.
         /// </summary>
         protected ApplicationService()
         {
@@ -53,7 +54,7 @@ namespace StudioX.Application.Services
         }
 
         /// <summary>
-        /// Checks if current user is granted for a permission.
+        ///     Checks if current user is granted for a permission.
         /// </summary>
         /// <param name="permissionName">Name of the permission</param>
         protected virtual Task<bool> IsGrantedAsync(string permissionName)
@@ -62,7 +63,7 @@ namespace StudioX.Application.Services
         }
 
         /// <summary>
-        /// Checks if current user is granted for a permission.
+        ///     Checks if current user is granted for a permission.
         /// </summary>
         /// <param name="permissionName">Name of the permission</param>
         protected virtual bool IsGranted(string permissionName)
@@ -71,7 +72,7 @@ namespace StudioX.Application.Services
         }
 
         /// <summary>
-        /// Checks if given feature is enabled for current tenant.
+        ///     Checks if given feature is enabled for current tenant.
         /// </summary>
         /// <param name="featureName">Name of the feature</param>
         /// <returns></returns>
@@ -81,7 +82,7 @@ namespace StudioX.Application.Services
         }
 
         /// <summary>
-        /// Checks if given feature is enabled for current tenant.
+        ///     Checks if given feature is enabled for current tenant.
         /// </summary>
         /// <param name="featureName">Name of the feature</param>
         /// <returns></returns>

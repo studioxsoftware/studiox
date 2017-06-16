@@ -3,7 +3,7 @@ using System;
 namespace StudioX.Application.Services.Dto
 {
     /// <summary>
-    /// Simply implements <see cref="IPagedAndSortedResultRequest"/>.
+    ///     Simply implements <see cref="IPagedAndSortedResultRequest" />.
     /// </summary>
     [Serializable]
     public class PagedAndSortedResultRequestDto : PagedResultRequestDto, IPagedAndSortedResultRequest
