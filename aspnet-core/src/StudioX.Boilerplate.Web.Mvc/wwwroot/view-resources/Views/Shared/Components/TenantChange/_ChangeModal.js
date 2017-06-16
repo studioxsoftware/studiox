@@ -1,11 +1,11 @@
 ﻿(function ($) {
-    var _accountService = studiox.services.app.account;
+    var accountService = studiox.services.app.account;
 
-    var _$form = $('form[name=TenantChangeForm]');
+    var $form = $('form[name=TenantChangeForm]');
 
     function switchToSelectedTenant () {
 
-        var tenancyName = _$form.find('input[name=TenancyName]').val();
+        var tenancyName = $form.find('input[name=TenancyName]').val();
 
         if (!tenancyName) {
             studiox.multiTenancy.setTenantIdCookie(null);
@@ -13,7 +13,7 @@
             return;
         }
 
-        _accountService.isTenantAvailable({
+        accountService.isTenantAvailable({
             tenancyName: tenancyName
         }).done(function (result) {
             switch (result.state) {
@@ -37,22 +37,22 @@
     }
 
     //Handle save button click
-    _$form.closest('div.modal-content').find(".save-button").click(function(e) {
+    $form.closest('div.modal-content').find(".save-button").click(function(e) {
         e.preventDefault();
         switchToSelectedTenant();
     });
 
     //Handle enter key
-    _$form.find('input').on('keypress', function (e) {
+    $form.find('input').on('keypress', function (e) {
         if (e.which === 13) {
             e.preventDefault();
             switchToSelectedTenant();
         }
     });
 
-    $.AdminBSB.input.activate(_$form);
+    $.AdminBSB.input.activate($form);
 
     $('#TenantChangeModal').on('shown.bs.modal', function () {
-        _$form.find('input[type=text]:first').focus();
+        $form.find('input[type=text]:first').focus();
     });
 })(jQuery);
