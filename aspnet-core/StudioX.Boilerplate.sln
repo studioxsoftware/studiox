@@ -93,6 +93,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StudioX.ZeroCore.EntityFram
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StudioX.Web.Api", "..\framework\src\StudioX.Web.Api\StudioX.Web.Api.csproj", "{0A992A83-FD8E-426D-97B1-EBEF84BA560D}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StudioX.Web", "..\framework\src\StudioX.Web\StudioX.Web.csproj", "{B92CFA97-8509-44C0-A429-4985893E498B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -263,6 +265,10 @@ Global
 		{0A992A83-FD8E-426D-97B1-EBEF84BA560D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0A992A83-FD8E-426D-97B1-EBEF84BA560D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0A992A83-FD8E-426D-97B1-EBEF84BA560D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B92CFA97-8509-44C0-A429-4985893E498B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B92CFA97-8509-44C0-A429-4985893E498B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B92CFA97-8509-44C0-A429-4985893E498B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B92CFA97-8509-44C0-A429-4985893E498B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -309,5 +315,6 @@ Global
 		{49E63441-ADFC-4CFD-BD74-30EE41526962} = {CF1FC987-5A04-473A-B948-DADBB807B66A}
 		{0DCC378C-06C1-4A70-AF7C-EB34F4836693} = {CF1FC987-5A04-473A-B948-DADBB807B66A}
 		{0A992A83-FD8E-426D-97B1-EBEF84BA560D} = {ECEC3EB9-4290-4F30-96A5-10FF69E9E8CD}
+		{B92CFA97-8509-44C0-A429-4985893E498B} = {ECEC3EB9-4290-4F30-96A5-10FF69E9E8CD}
 	EndGlobalSection
 EndGlobal

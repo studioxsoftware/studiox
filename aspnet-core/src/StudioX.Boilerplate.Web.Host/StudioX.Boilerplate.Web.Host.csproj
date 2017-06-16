@@ -20,6 +20,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="wwwroot\swagger\ui\on-complete.js" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="app.config" />
     <None Update="Dockerfile">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
