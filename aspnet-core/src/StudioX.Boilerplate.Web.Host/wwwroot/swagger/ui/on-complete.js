@@ -18,7 +18,7 @@
     return null;
 };
 
-var csrfCookie = getCookieValue("StudioX.AuthToken");;
+var csrfCookie = getCookieValue("StudioX.AuthToken");
 var header = 'Bearer ' + csrfCookie;
 var csrfCookieAuth = new SwaggerClient.ApiKeyAuthorization("Authorization", header, "header");
 swaggerUi.api.clientAuthorizations.add("Authorization", csrfCookieAuth);

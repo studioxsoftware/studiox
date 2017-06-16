@@ -8,6 +8,8 @@ namespace StudioX.Boilerplate.Authorization.Users
     {
         public const string DefaultPassword = "123qwe";
 
+        public const string DefaultEmailAddress = "default@studioxsoftware.com";
+
         public static string CreateRandomPassword()
         {
             return Guid.NewGuid().ToString("N").Truncate(16);

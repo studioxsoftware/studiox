@@ -4,6 +4,15 @@ namespace StudioX.Zero.Configuration
     {
         public static class UserManagement
         {
+            public static class SecurityPassword
+            {
+                /// <summary>
+                /// "StudioX.Zero.UserManagement.SecurityPassword.MaintainanceAdminPassword".
+                /// </summary>
+                public const string MaintainanceAdminPassword = "StudioX.Zero.UserManagement.SecurityPassword.MaintainanceAdminPassword";
+            }
+
+
             /// <summary>
             /// "StudioX.Zero.UserManagement.IsEmailConfirmationRequiredForLogin".
             /// </summary>
