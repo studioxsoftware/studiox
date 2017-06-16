@@ -1,32 +1,32 @@
 ﻿(function() {
     $(function() {
 
-        var _tenantService = studiox.services.app.tenant;
-        var _$modal = $('#TenantCreateModal');
-        var _$form = _$modal.find('form');
+        var service = studiox.services.app.tenant;
+        var $modal = $('#TenantCreateModal');
+        var $form = $modal.find('form');
 
-        _$form.validate();
+        $form.validate();
 
-        _$form.find('button[type="submit"]').click(function (e) {
+        $form.find('button[type="submit"]').click(function (e) {
             e.preventDefault();
 
-            if (!_$form.valid()) {
+            if (!$form.valid()) {
                 return;
             }
 
-            var tenant = _$form.serializeFormToObject(); //serializeFormToObject is defined in main.js
+            var tenant = $form.serializeFormToObject(); //serializeFormToObject is defined in main.js
 
-            studiox.ui.setBusy(_$modal);
-            _tenantService.createTenant(tenant).done(function () {
-                _$modal.modal('hide');
+            studiox.ui.setBusy($modal);
+            service.createTenant(tenant).done(function () {
+                $modal.modal('hide');
                 location.reload(true); //reload page to see new tenant!
             }).always(function() {
-                studiox.ui.clearBusy(_$modal);
+                studiox.ui.clearBusy($modal);
             });
         });
         
-        _$modal.on('shown.bs.modal', function () {
-            _$modal.find('input:not([type=hidden]):first').focus();
+        $modal.on('shown.bs.modal', function () {
+            $modal.find('input:not([type=hidden]):first').focus();
         });
     });
 })();
