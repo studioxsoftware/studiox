@@ -1376,7 +1376,6 @@ export class ListResultDtoOfAuditLogListDto {
 
 export class AuditLogListDto { 
     userId: number; 
-    branchName: string; 
     userName: string; 
     serviceName: string; 
     methodName: string; 
@@ -1390,7 +1389,6 @@ export class AuditLogListDto {
     constructor(data?: any) {
         if (data !== undefined) {
             this.userId = data["userId"] !== undefined ? data["userId"] : null;
-            this.branchName = data["branchName"] !== undefined ? data["branchName"] : null;
             this.userName = data["userName"] !== undefined ? data["userName"] : null;
             this.serviceName = data["serviceName"] !== undefined ? data["serviceName"] : null;
             this.methodName = data["methodName"] !== undefined ? data["methodName"] : null;
@@ -1411,7 +1409,6 @@ export class AuditLogListDto {
     toJS(data?: any) {
         data = data === undefined ? {} : data;
         data["userId"] = this.userId !== undefined ? this.userId : null;
-        data["branchName"] = this.branchName !== undefined ? this.branchName : null;
         data["userName"] = this.userName !== undefined ? this.userName : null;
         data["serviceName"] = this.serviceName !== undefined ? this.serviceName : null;
         data["methodName"] = this.methodName !== undefined ? this.methodName : null;

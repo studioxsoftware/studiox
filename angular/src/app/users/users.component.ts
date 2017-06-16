@@ -26,7 +26,7 @@ export class UsersComponent extends AppComponentBase implements OnInit {
     }
 
     getUsers(): void {
-        this._userService.getUsers()
+        this._userService.getAll()
             .subscribe((result) => {
                 this.users = result.items;
             });
