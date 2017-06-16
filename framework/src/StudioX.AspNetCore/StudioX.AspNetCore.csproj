@@ -52,4 +52,8 @@
     <Reference Include="System.Transactions" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Wrapping\Results\Mvc\AspNetCore\" />
+  </ItemGroup>
+
 </Project>

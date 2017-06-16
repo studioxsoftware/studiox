@@ -10,10 +10,13 @@ namespace StudioX.AspNetCore.Mvc.Results
     public class StudioXResultFilter : IResultFilter, ITransientDependency
     {
         private readonly IStudioXAspNetCoreConfiguration configuration;
+        private readonly IStudioXActionResultWrapperFactory actionResultWrapper;
 
-        public StudioXResultFilter(IStudioXAspNetCoreConfiguration configuration)
+        public StudioXResultFilter(IStudioXAspNetCoreConfiguration configuration, 
+            IStudioXActionResultWrapperFactory actionResultWrapper)
         {
             this.configuration = configuration;
+            this.actionResultWrapper = actionResultWrapper;
         }
 
         public virtual void OnResultExecuting(ResultExecutingContext context)
@@ -35,9 +38,7 @@ namespace StudioX.AspNetCore.Mvc.Results
                 return;
             }
 
-            StudioXActionResultWrapperFactory
-                .CreateFor(context)
-                .Wrap(context);
+            actionResultWrapper.CreateFor(context).Wrap(context);
         }
 
         public virtual void OnResultExecuted(ResultExecutedContext context)

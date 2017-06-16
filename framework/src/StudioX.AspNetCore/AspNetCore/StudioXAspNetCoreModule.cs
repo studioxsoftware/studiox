@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.Extensions.Options;
+using StudioX.AspNetCore.Mvc.Results.Wrapping;
 
 namespace StudioX.AspNetCore
 {
@@ -27,6 +28,7 @@ namespace StudioX.AspNetCore
             IocManager.AddConventionalRegistrar(new StudioXAspNetCoreConventionalRegistrar());
 
             IocManager.Register<IStudioXAspNetCoreConfiguration, StudioXAspNetCoreConfiguration>();
+            IocManager.Register<IStudioXActionResultWrapperFactory, StudioXActionResultWrapperFactory>();
 
             Configuration.ReplaceService<IPrincipalAccessor, AspNetCorePrincipalAccessor>(DependencyLifeStyle.Transient);
             Configuration.ReplaceService<IStudioXAntiForgeryManager, StudioXAspNetCoreAntiForgeryManager>(DependencyLifeStyle.Transient);
