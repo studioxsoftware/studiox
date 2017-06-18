@@ -2,7 +2,7 @@
 {
     internal class ModuleConfigurations : IModuleConfigurations
     {
-        public IStudioXStartupConfiguration StudioXConfiguration { get; private set; }
+        public IStudioXStartupConfiguration StudioXConfiguration { get; }
 
         public ModuleConfigurations(IStudioXStartupConfiguration startupConfiguration)
         {

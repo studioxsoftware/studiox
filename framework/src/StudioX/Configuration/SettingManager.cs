@@ -11,19 +11,19 @@ using StudioX.Runtime.Session;
 namespace StudioX.Configuration
 {
     /// <summary>
-    /// This class implements <see cref="ISettingManager"/> to manage setting values in the database.
+    ///     This class implements <see cref="ISettingManager" /> to manage setting values in the database.
     /// </summary>
     public class SettingManager : ISettingManager, ISingletonDependency
     {
         public const string ApplicationSettingsCacheKey = "ApplicationSettings";
 
         /// <summary>
-        /// Reference to the current Session.
+        ///     Reference to the current Session.
         /// </summary>
         public IStudioXSession StudioXSession { get; set; }
 
         /// <summary>
-        /// Reference to the setting store.
+        ///     Reference to the setting store.
         /// </summary>
         public ISettingStore SettingStore { get; set; }
 
@@ -32,7 +32,7 @@ namespace StudioX.Configuration
         private readonly ITypedCache<int, Dictionary<string, SettingInfo>> tenantSettingCache;
         private readonly ITypedCache<string, Dictionary<string, SettingInfo>> userSettingCache;
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public SettingManager(ISettingDefinitionManager settingDefinitionManager, ICacheManager cacheManager)
         {
             this.settingDefinitionManager = settingDefinitionManager;
@@ -47,7 +47,7 @@ namespace StudioX.Configuration
 
         #region Public methods
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public Task<string> GetSettingValueAsync(string name)
         {
             return GetSettingValueInternalAsync(name, StudioXSession.TenantId, StudioXSession.UserId);
@@ -85,10 +85,11 @@ namespace StudioX.Configuration
 
         public async Task<IReadOnlyList<ISettingValue>> GetAllSettingValuesAsync()
         {
-            return await GetAllSettingValuesAsync(SettingScopes.Application | SettingScopes.Tenant | SettingScopes.User);
+            return await GetAllSettingValuesAsync(SettingScopes.Application | SettingScopes.Tenant |
+                                                  SettingScopes.User);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public async Task<IReadOnlyList<ISettingValue>> GetAllSettingValuesAsync(SettingScopes scopes)
         {
             var settingDefinitions = new Dictionary<string, SettingDefinition>();
@@ -115,7 +116,8 @@ namespace StudioX.Configuration
                     }
 
                     if (!setting.IsInherited &&
-                        ((setting.Scopes.HasFlag(SettingScopes.Tenant) && StudioXSession.TenantId.HasValue) || (setting.Scopes.HasFlag(SettingScopes.User) && StudioXSession.UserId.HasValue)))
+                        (setting.Scopes.HasFlag(SettingScopes.Tenant) && StudioXSession.TenantId.HasValue ||
+                         setting.Scopes.HasFlag(SettingScopes.User) && StudioXSession.UserId.HasValue))
                     {
                         continue;
                     }
@@ -137,8 +139,8 @@ namespace StudioX.Configuration
                         continue;
                     }
 
-                    if (!setting.IsInherited &&
-                        (setting.Scopes.HasFlag(SettingScopes.User) && StudioXSession.UserId.HasValue))
+                    if (!setting.IsInherited && setting.Scopes.HasFlag(SettingScopes.User) &&
+                        StudioXSession.UserId.HasValue)
                     {
                         continue;
                     }
@@ -155,7 +157,8 @@ namespace StudioX.Configuration
                     var setting = settingDefinitions.GetOrDefault(settingValue.Name);
                     if (setting != null && setting.Scopes.HasFlag(SettingScopes.User))
                     {
-                        settingValues[settingValue.Name] = new SettingValueObject(settingValue.Name, settingValue.Value);
+                        settingValues[settingValue.Name] =
+                            new SettingValueObject(settingValue.Name, settingValue.Value);
                     }
                 }
             }
@@ -163,7 +166,7 @@ namespace StudioX.Configuration
             return settingValues.Values.ToImmutableList();
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public async Task<IReadOnlyList<ISettingValue>> GetAllSettingValuesForApplicationAsync()
         {
             return (await GetApplicationSettingsAsync()).Values
@@ -171,7 +174,7 @@ namespace StudioX.Configuration
                 .ToImmutableList();
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public async Task<IReadOnlyList<ISettingValue>> GetAllSettingValuesForTenantAsync(int tenantId)
         {
             return (await GetReadOnlyTenantSettings(tenantId)).Values
@@ -179,7 +182,7 @@ namespace StudioX.Configuration
                 .ToImmutableList();
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public Task<IReadOnlyList<ISettingValue>> GetAllSettingValuesForUserAsync(long userId)
         {
             return GetAllSettingValuesForUserAsync(new UserIdentifier(StudioXSession.TenantId, userId));
@@ -192,7 +195,7 @@ namespace StudioX.Configuration
                 .ToImmutableList();
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         [UnitOfWork]
         public virtual async Task ChangeSettingForApplicationAsync(string name, string value)
         {
@@ -200,7 +203,7 @@ namespace StudioX.Configuration
             await applicationSettingCache.RemoveAsync(ApplicationSettingsCacheKey);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         [UnitOfWork]
         public virtual async Task ChangeSettingForTenantAsync(int tenantId, string name, string value)
         {
@@ -208,7 +211,7 @@ namespace StudioX.Configuration
             await tenantSettingCache.RemoveAsync(tenantId);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         [UnitOfWork]
         public virtual Task ChangeSettingForUserAsync(long userId, string name, string value)
         {
@@ -225,14 +228,16 @@ namespace StudioX.Configuration
 
         #region Private methods
 
-        private async Task<string> GetSettingValueInternalAsync(string name, int? tenantId = null, long? userId = null, bool fallbackToDefault = true)
+        private async Task<string> GetSettingValueInternalAsync(string name, int? tenantId = null, long? userId = null,
+            bool fallbackToDefault = true)
         {
             var settingDefinition = settingDefinitionManager.GetSettingDefinition(name);
 
             //Get for user if defined
             if (settingDefinition.Scopes.HasFlag(SettingScopes.User) && userId.HasValue)
             {
-                var settingValue = await GetSettingValueForUserOrNullAsync(new UserIdentifier(tenantId, userId.Value), name);
+                var settingValue =
+                    await GetSettingValueForUserOrNullAsync(new UserIdentifier(tenantId, userId.Value), name);
                 if (settingValue != null)
                 {
                     return settingValue.Value;
@@ -288,7 +293,8 @@ namespace StudioX.Configuration
             return settingDefinition.DefaultValue;
         }
 
-        private async Task<SettingInfo> InsertOrUpdateOrDeleteSettingValueAsync(string name, string value, int? tenantId, long? userId)
+        private async Task<SettingInfo> InsertOrUpdateOrDeleteSettingValueAsync(string name, string value,
+            int? tenantId, long? userId)
         {
             var settingDefinition = settingDefinitionManager.GetSettingDefinition(name);
             var settingValue = await SettingStore.GetSettingOrNullAsync(tenantId, userId, name);
@@ -457,9 +463,9 @@ namespace StudioX.Configuration
 
         private class SettingValueObject : ISettingValue
         {
-            public string Name { get; private set; }
+            public string Name { get; }
 
-            public string Value { get; private set; }
+            public string Value { get; }
 
             public SettingValueObject(string name, string value)
             {

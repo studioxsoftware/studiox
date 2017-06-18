@@ -5,7 +5,7 @@
     {
         Required,
         RequiresNew,
-        Suppress,
+        Suppress
     }
 
     /// <summary>Specifies the isolation level of a transaction.</summary>
@@ -17,14 +17,17 @@
         ReadUncommitted,
         Snapshot,
         Chaos,
-        Unspecified,
+        Unspecified
     }
 
-    /// <summary>[Supported in the .NET Framework 4.5.1 and later versions] Specifies whether transaction flow across thread continuations is enabled for <see cref="T:System.Transactions.TransactionScope" />.</summary>
+    /// <summary>
+    ///     [Supported in the .NET Framework 4.5.1 and later versions] Specifies whether transaction flow across thread
+    ///     continuations is enabled for <see cref="T:System.Transactions.TransactionScope" />.
+    /// </summary>
     public enum TransactionScopeAsyncFlowOption
     {
         Suppress,
-        Enabled,
+        Enabled
     }
 #endif
 }

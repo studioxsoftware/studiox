@@ -1,24 +1,25 @@
 using System.Collections.Generic;
-#if NET46
-using System.Configuration;
-#endif
 using System.Threading.Tasks;
 using StudioX.Logging;
 using StudioX.Threading;
+#if NET46
+using System.Configuration;
+#endif
 
 namespace StudioX.Configuration
 {
     /// <summary>
-    /// Implements default behavior for ISettingStore.
-    /// Only <see cref="GetSettingOrNullAsync"/> method is implemented and it gets setting's value
-    /// from application's configuration file if exists, or returns null if not.
+    ///     Implements default behavior for ISettingStore.
+    ///     Only <see cref="GetSettingOrNullAsync" /> method is implemented and it gets setting's value
+    ///     from application's configuration file if exists, or returns null if not.
     /// </summary>
     public class DefaultConfigSettingStore : ISettingStore
     {
         /// <summary>
-        /// Gets singleton instance.
+        ///     Gets singleton instance.
         /// </summary>
         public static DefaultConfigSettingStore Instance { get; } = new DefaultConfigSettingStore();
+
         private DefaultConfigSettingStore()
         {
         }
@@ -38,31 +39,36 @@ namespace StudioX.Configuration
             return Task.FromResult<SettingInfo>(null);
 #endif
         }
-        /// <inheritdoc/>
+
+        /// <inheritdoc />
         public Task DeleteAsync(SettingInfo setting)
         {
-            LogHelper.Logger.Warn("ISettingStore is not implemented, using DefaultConfigSettingStore which does not support DeleteAsync.");
+            LogHelper.Logger.Warn(
+                "ISettingStore is not implemented, using DefaultConfigSettingStore which does not support DeleteAsync.");
             return StudioXTaskCache.CompletedTask;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public Task CreateAsync(SettingInfo setting)
         {
-            LogHelper.Logger.Warn("ISettingStore is not implemented, using DefaultConfigSettingStore which does not support CreateAsync.");
+            LogHelper.Logger.Warn(
+                "ISettingStore is not implemented, using DefaultConfigSettingStore which does not support CreateAsync.");
             return StudioXTaskCache.CompletedTask;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public Task UpdateAsync(SettingInfo setting)
         {
-            LogHelper.Logger.Warn("ISettingStore is not implemented, using DefaultConfigSettingStore which does not support UpdateAsync.");
+            LogHelper.Logger.Warn(
+                "ISettingStore is not implemented, using DefaultConfigSettingStore which does not support UpdateAsync.");
             return StudioXTaskCache.CompletedTask;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public Task<List<SettingInfo>> GetAllListAsync(int? tenantId, long? userId)
         {
-            LogHelper.Logger.Warn("ISettingStore is not implemented, using DefaultConfigSettingStore which does not support GetAllListAsync.");
+            LogHelper.Logger.Warn(
+                "ISettingStore is not implemented, using DefaultConfigSettingStore which does not support GetAllListAsync.");
             return Task.FromResult(new List<SettingInfo>());
         }
     }

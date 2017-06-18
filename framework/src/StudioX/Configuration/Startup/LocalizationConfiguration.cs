@@ -4,26 +4,26 @@ using StudioX.Localization;
 namespace StudioX.Configuration.Startup
 {
     /// <summary>
-    /// Used for localization configurations.
+    ///     Used for localization configurations.
     /// </summary>
     internal class LocalizationConfiguration : ILocalizationConfiguration
     {
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public IList<LanguageInfo> Languages { get; }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public ILocalizationSourceList Sources { get; }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public bool IsEnabled { get; set; }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public bool ReturnGivenTextIfNotFound { get; set; }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public bool WrapGivenTextIfNotFound { get; set; }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public bool HumanizeTextIfNotFound { get; set; }
 
         public bool LogWarnMessageIfNotFound { get; set; }
