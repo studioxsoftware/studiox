@@ -1,11 +1,11 @@
 namespace StudioX.Dependency
 {
-    internal class DisposableDependencyObjectWrapper : DisposableDependencyObjectWrapper<object>, IDisposableDependencyObjectWrapper
+    internal class DisposableDependencyObjectWrapper : DisposableDependencyObjectWrapper<object>,
+        IDisposableDependencyObjectWrapper
     {
         public DisposableDependencyObjectWrapper(IIocResolver iocResolver, object obj)
             : base(iocResolver, obj)
         {
-
         }
     }
 
@@ -13,7 +13,7 @@ namespace StudioX.Dependency
     {
         private readonly IIocResolver iocResolver;
 
-        public T Object { get; private set; }
+        public T Object { get; }
 
         public DisposableDependencyObjectWrapper(IIocResolver iocResolver, T obj)
         {

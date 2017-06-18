@@ -22,12 +22,12 @@ namespace StudioX.Dependency
 
         public T Resolve<T>(Type type)
         {
-            return (T)Resolve(type);
+            return (T) Resolve(type);
         }
 
         public T Resolve<T>(object argumentsAsAnonymousType)
         {
-            return (T)Resolve(typeof(T), argumentsAsAnonymousType);
+            return (T) Resolve(typeof(T), argumentsAsAnonymousType);
         }
 
         public object Resolve(Type type)
