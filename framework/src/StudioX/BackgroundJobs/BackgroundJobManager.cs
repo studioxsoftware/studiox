@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using StudioX.Dependency;
 using StudioX.Events.Bus;
 using StudioX.Events.Bus.Exceptions;
@@ -9,20 +10,19 @@ using StudioX.Threading;
 using StudioX.Threading.BackgroundWorkers;
 using StudioX.Threading.Timers;
 using StudioX.Timing;
-using Newtonsoft.Json;
 
 namespace StudioX.BackgroundJobs
 {
     /// <summary>
-    /// Default implementation of <see cref="IBackgroundJobManager"/>.
+    ///     Default implementation of <see cref="IBackgroundJobManager" />.
     /// </summary>
     public class BackgroundJobManager : PeriodicBackgroundWorkerBase, IBackgroundJobManager, ISingletonDependency
     {
         public IEventBus EventBus { get; set; }
-        
+
         /// <summary>
-        /// Interval between polling jobs from <see cref="IBackgroundJobStore"/>.
-        /// Default value: 5000 (5 seconds).
+        ///     Interval between polling jobs from <see cref="IBackgroundJobStore" />.
+        ///     Default value: 5000 (5 seconds).
         /// </summary>
         public static int JobPollPeriod { get; set; }
 
@@ -35,7 +35,7 @@ namespace StudioX.BackgroundJobs
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BackgroundJobManager"/> class.
+        ///     Initializes a new instance of the <see cref="BackgroundJobManager" /> class.
         /// </summary>
         public BackgroundJobManager(
             IIocResolver iocResolver,
@@ -51,7 +51,8 @@ namespace StudioX.BackgroundJobs
             Timer.Period = JobPollPeriod;
         }
 
-        public async Task EnqueueAsync<TJob, TArgs>(TArgs args, BackgroundJobPriority priority = BackgroundJobPriority.Normal, TimeSpan? delay = null)
+        public async Task EnqueueAsync<TJob, TArgs>(TArgs args,
+            BackgroundJobPriority priority = BackgroundJobPriority.Normal, TimeSpan? delay = null)
             where TJob : IBackgroundJob<TArgs>
         {
             var jobInfo = new BackgroundJobInfo
@@ -95,7 +96,7 @@ namespace StudioX.BackgroundJobs
                         var argsType = jobExecuteMethod.GetParameters()[0].ParameterType;
                         var argsObj = JsonConvert.DeserializeObject(jobInfo.JobArgs, argsType);
 
-                        jobExecuteMethod.Invoke(job.Object, new[] { argsObj });
+                        jobExecuteMethod.Invoke(job.Object, new[] {argsObj});
 
                         AsyncHelper.RunSync(() => store.DeleteAsync(jobInfo));
                     }
@@ -119,9 +120,9 @@ namespace StudioX.BackgroundJobs
                             this,
                             new StudioXHandledExceptionData(
                                 new BackgroundJobException(
-                                    "A background job execution is failed. See inner exception for details. See BackgroundJob property to get information on the background job.", 
+                                    "A background job execution is failed. See inner exception for details. See BackgroundJob property to get information on the background job.",
                                     ex
-                                    )
+                                )
                                 {
                                     BackgroundJob = jobInfo,
                                     JobObject = job.Object
