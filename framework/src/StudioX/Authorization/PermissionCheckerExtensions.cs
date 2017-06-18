@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using StudioX.Collections.Extensions;
@@ -9,12 +8,12 @@ using StudioX.Threading;
 namespace StudioX.Authorization
 {
     /// <summary>
-    /// Extension methods for <see cref="IPermissionChecker"/>
+    ///     Extension methods for <see cref="IPermissionChecker" />
     /// </summary>
     public static class PermissionCheckerExtensions
     {
         /// <summary>
-        /// Checks if current user is granted for a permission.
+        ///     Checks if current user is granted for a permission.
         /// </summary>
         /// <param name="permissionChecker">Permission checker</param>
         /// <param name="permissionName">Name of the permission</param>
@@ -24,36 +23,39 @@ namespace StudioX.Authorization
         }
 
         /// <summary>
-        /// Checks if a user is granted for a permission.
+        ///     Checks if a user is granted for a permission.
         /// </summary>
         /// <param name="permissionChecker">Permission checker</param>
         /// <param name="user">User to check</param>
         /// <param name="permissionName">Name of the permission</param>
-        public static bool IsGranted(this IPermissionChecker permissionChecker, UserIdentifier user, string permissionName)
+        public static bool IsGranted(this IPermissionChecker permissionChecker, UserIdentifier user,
+            string permissionName)
         {
             return AsyncHelper.RunSync(() => permissionChecker.IsGrantedAsync(user, permissionName));
         }
 
         /// <summary>
-        /// Checks if given user is granted for given permission.
+        ///     Checks if given user is granted for given permission.
         /// </summary>
         /// <param name="permissionChecker">Permission checker</param>
         /// <param name="user">User</param>
         /// <param name="requiresAll">True, to require all given permissions are granted. False, to require one or more.</param>
         /// <param name="permissionNames">Name of the permissions</param>
-        public static bool IsGranted(this IPermissionChecker permissionChecker, UserIdentifier user, bool requiresAll, params string[] permissionNames)
+        public static bool IsGranted(this IPermissionChecker permissionChecker, UserIdentifier user, bool requiresAll,
+            params string[] permissionNames)
         {
             return AsyncHelper.RunSync(() => IsGrantedAsync(permissionChecker, user, requiresAll, permissionNames));
         }
 
         /// <summary>
-        /// Checks if given user is granted for given permission.
+        ///     Checks if given user is granted for given permission.
         /// </summary>
         /// <param name="permissionChecker">Permission checker</param>
         /// <param name="user">User</param>
         /// <param name="requiresAll">True, to require all given permissions are granted. False, to require one or more.</param>
         /// <param name="permissionNames">Name of the permissions</param>
-        public static async Task<bool> IsGrantedAsync(this IPermissionChecker permissionChecker, UserIdentifier user, bool requiresAll, params string[] permissionNames)
+        public static async Task<bool> IsGrantedAsync(this IPermissionChecker permissionChecker, UserIdentifier user,
+            bool requiresAll, params string[] permissionNames)
         {
             if (permissionNames.IsNullOrEmpty())
             {
@@ -64,7 +66,7 @@ namespace StudioX.Authorization
             {
                 foreach (var permissionName in permissionNames)
                 {
-                    if (!(await permissionChecker.IsGrantedAsync(user, permissionName)))
+                    if (!await permissionChecker.IsGrantedAsync(user, permissionName))
                     {
                         return false;
                     }
@@ -72,38 +74,37 @@ namespace StudioX.Authorization
 
                 return true;
             }
-            else
+            foreach (var permissionName in permissionNames)
             {
-                foreach (var permissionName in permissionNames)
+                if (await permissionChecker.IsGrantedAsync(user, permissionName))
                 {
-                    if (await permissionChecker.IsGrantedAsync(user, permissionName))
-                    {
-                        return true;
-                    }
+                    return true;
                 }
-
-                return false;
             }
+
+            return false;
         }
 
         /// <summary>
-        /// Checks if current user is granted for given permission.
+        ///     Checks if current user is granted for given permission.
         /// </summary>
         /// <param name="permissionChecker">Permission checker</param>
         /// <param name="requiresAll">True, to require all given permissions are granted. False, to require one or more.</param>
         /// <param name="permissionNames">Name of the permissions</param>
-        public static bool IsGranted(this IPermissionChecker permissionChecker, bool requiresAll, params string[] permissionNames)
+        public static bool IsGranted(this IPermissionChecker permissionChecker, bool requiresAll,
+            params string[] permissionNames)
         {
             return AsyncHelper.RunSync(() => IsGrantedAsync(permissionChecker, requiresAll, permissionNames));
         }
 
         /// <summary>
-        /// Checks if current user is granted for given permission.
+        ///     Checks if current user is granted for given permission.
         /// </summary>
         /// <param name="permissionChecker">Permission checker</param>
         /// <param name="requiresAll">True, to require all given permissions are granted. False, to require one or more.</param>
         /// <param name="permissionNames">Name of the permissions</param>
-        public static async Task<bool> IsGrantedAsync(this IPermissionChecker permissionChecker, bool requiresAll, params string[] permissionNames)
+        public static async Task<bool> IsGrantedAsync(this IPermissionChecker permissionChecker, bool requiresAll,
+            params string[] permissionNames)
         {
             if (permissionNames.IsNullOrEmpty())
             {
@@ -114,7 +115,7 @@ namespace StudioX.Authorization
             {
                 foreach (var permissionName in permissionNames)
                 {
-                    if (!(await permissionChecker.IsGrantedAsync(permissionName)))
+                    if (!await permissionChecker.IsGrantedAsync(permissionName))
                     {
                         return false;
                     }
@@ -122,24 +123,21 @@ namespace StudioX.Authorization
 
                 return true;
             }
-            else
+            foreach (var permissionName in permissionNames)
             {
-                foreach (var permissionName in permissionNames)
+                if (await permissionChecker.IsGrantedAsync(permissionName))
                 {
-                    if (await permissionChecker.IsGrantedAsync(permissionName))
-                    {
-                        return true;
-                    }
+                    return true;
                 }
-
-                return false;
             }
+
+            return false;
         }
 
         /// <summary>
-        /// Authorizes current user for given permission or permissions,
-        /// throws <see cref="StudioXAuthorizationException"/> if not authorized.
-        /// User it authorized if any of the <see cref="permissionNames"/> are granted.
+        ///     Authorizes current user for given permission or permissions,
+        ///     throws <see cref="StudioXAuthorizationException" /> if not authorized.
+        ///     User it authorized if any of the <see cref="permissionNames" /> are granted.
         /// </summary>
         /// <param name="permissionChecker">Permission checker</param>
         /// <param name="permissionNames">Name of the permissions to authorize</param>
@@ -150,26 +148,27 @@ namespace StudioX.Authorization
         }
 
         /// <summary>
-        /// Authorizes current user for given permission or permissions,
-        /// throws <see cref="StudioXAuthorizationException"/> if not authorized.
-        /// User it authorized if any of the <see cref="permissionNames"/> are granted.
+        ///     Authorizes current user for given permission or permissions,
+        ///     throws <see cref="StudioXAuthorizationException" /> if not authorized.
+        ///     User it authorized if any of the <see cref="permissionNames" /> are granted.
         /// </summary>
         /// <param name="permissionChecker">Permission checker</param>
         /// <param name="requireAll">
-        /// If this is set to true, all of the <see cref="permissionNames"/> must be granted.
-        /// If it's false, at least one of the <see cref="permissionNames"/> must be granted.
+        ///     If this is set to true, all of the <see cref="permissionNames" /> must be granted.
+        ///     If it's false, at least one of the <see cref="permissionNames" /> must be granted.
         /// </param>
         /// <param name="permissionNames">Name of the permissions to authorize</param>
         /// <exception cref="StudioXAuthorizationException">Throws authorization exception if</exception>
-        public static void Authorize(this IPermissionChecker permissionChecker, bool requireAll, params string[] permissionNames)
+        public static void Authorize(this IPermissionChecker permissionChecker, bool requireAll,
+            params string[] permissionNames)
         {
             AsyncHelper.RunSync(() => AuthorizeAsync(permissionChecker, requireAll, permissionNames));
         }
 
         /// <summary>
-        /// Authorizes current user for given permission or permissions,
-        /// throws <see cref="StudioXAuthorizationException"/> if not authorized.
-        /// User it authorized if any of the <see cref="permissionNames"/> are granted.
+        ///     Authorizes current user for given permission or permissions,
+        ///     throws <see cref="StudioXAuthorizationException" /> if not authorized.
+        ///     User it authorized if any of the <see cref="permissionNames" /> are granted.
         /// </summary>
         /// <param name="permissionChecker">Permission checker</param>
         /// <param name="permissionNames">Name of the permissions to authorize</param>
@@ -180,17 +179,18 @@ namespace StudioX.Authorization
         }
 
         /// <summary>
-        /// Authorizes current user for given permission or permissions,
-        /// throws <see cref="StudioXAuthorizationException"/> if not authorized.
+        ///     Authorizes current user for given permission or permissions,
+        ///     throws <see cref="StudioXAuthorizationException" /> if not authorized.
         /// </summary>
         /// <param name="permissionChecker">Permission checker</param>
         /// <param name="requireAll">
-        /// If this is set to true, all of the <see cref="permissionNames"/> must be granted.
-        /// If it's false, at least one of the <see cref="permissionNames"/> must be granted.
+        ///     If this is set to true, all of the <see cref="permissionNames" /> must be granted.
+        ///     If it's false, at least one of the <see cref="permissionNames" /> must be granted.
         /// </param>
         /// <param name="permissionNames">Name of the permissions to authorize</param>
         /// <exception cref="StudioXAuthorizationException">Throws authorization exception if</exception>
-        public static async Task AuthorizeAsync(this IPermissionChecker permissionChecker, bool requireAll, params string[] permissionNames)
+        public static async Task AuthorizeAsync(this IPermissionChecker permissionChecker, bool requireAll,
+            params string[] permissionNames)
         {
             if (await IsGrantedAsync(permissionChecker, requireAll, permissionNames))
             {
@@ -212,19 +212,16 @@ namespace StudioX.Authorization
                     )
                 );
             }
-            else
-            {
-                throw new StudioXAuthorizationException(
-                    string.Format(
-                        L(
-                            permissionChecker,
-                            "AtLeastOneOfThesePermissionsMustBeGranted",
-                            "Required permissions are not granted. At least one of these permissions must be granted: {0}"
-                        ),
-                        string.Join(", ", localizedPermissionNames)
-                    )
-                );
-            }
+            throw new StudioXAuthorizationException(
+                string.Format(
+                    L(
+                        permissionChecker,
+                        "AtLeastOneOfThesePermissionsMustBeGranted",
+                        "Required permissions are not granted. At least one of these permissions must be granted: {0}"
+                    ),
+                    string.Join(", ", localizedPermissionNames)
+                )
+            );
         }
 
         public static string L(IPermissionChecker permissionChecker, string name, string defaultValue)

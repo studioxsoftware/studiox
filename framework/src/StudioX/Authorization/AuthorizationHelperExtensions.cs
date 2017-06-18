@@ -7,19 +7,22 @@ namespace StudioX.Authorization
 {
     public static class AuthorizationHelperExtensions
     {
-        public static async Task AuthorizeAsync(this IAuthorizationHelper authorizationHelper, IStudioXAuthorizeAttribute authorizeAttribute)
+        public static async Task AuthorizeAsync(this IAuthorizationHelper authorizationHelper,
+            IStudioXAuthorizeAttribute authorizeAttribute)
         {
-            await authorizationHelper.AuthorizeAsync(new[] { authorizeAttribute });
+            await authorizationHelper.AuthorizeAsync(new[] {authorizeAttribute});
         }
 
-        public static void Authorize(this IAuthorizationHelper authorizationHelper, IEnumerable<IStudioXAuthorizeAttribute> authorizeAttributes)
+        public static void Authorize(this IAuthorizationHelper authorizationHelper,
+            IEnumerable<IStudioXAuthorizeAttribute> authorizeAttributes)
         {
             AsyncHelper.RunSync(() => authorizationHelper.AuthorizeAsync(authorizeAttributes));
         }
 
-        public static void Authorize(this IAuthorizationHelper authorizationHelper, IStudioXAuthorizeAttribute authorizeAttribute)
+        public static void Authorize(this IAuthorizationHelper authorizationHelper,
+            IStudioXAuthorizeAttribute authorizeAttribute)
         {
-            authorizationHelper.Authorize(new[] { authorizeAttribute });
+            authorizationHelper.Authorize(new[] {authorizeAttribute});
         }
 
         public static void Authorize(this IAuthorizationHelper authorizationHelper, MethodInfo methodInfo)

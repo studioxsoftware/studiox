@@ -15,9 +15,9 @@ namespace StudioX.Authorization
         }
 
         public Permission CreatePermission(
-            string name, 
-            ILocalizableString displayName = null, 
-            ILocalizableString description = null, 
+            string name,
+            ILocalizableString displayName = null,
+            ILocalizableString description = null,
             MultiTenancySides multiTenancySides = MultiTenancySides.Host | MultiTenancySides.Tenant,
             IFeatureDependency featureDependency = null)
         {

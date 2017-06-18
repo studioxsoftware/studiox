@@ -4,12 +4,12 @@ using System.Linq;
 namespace StudioX.Authorization
 {
     /// <summary>
-    /// Used to store and manipulate dictionary of permissions.
+    ///     Used to store and manipulate dictionary of permissions.
     /// </summary>
     internal class PermissionDictionary : Dictionary<string, Permission>
     {
         /// <summary>
-        /// Adds all child permissions of current permissions recursively.
+        ///     Adds all child permissions of current permissions recursively.
         /// </summary>
         public void AddAllPermissions()
         {
@@ -20,7 +20,7 @@ namespace StudioX.Authorization
         }
 
         /// <summary>
-        /// Adds a permission and it's all child permissions to dictionary.
+        ///     Adds a permission and it's all child permissions to dictionary.
         /// </summary>
         /// <param name="permission">Permission to be added</param>
         private void AddPermissionRecursively(Permission permission)
@@ -31,7 +31,8 @@ namespace StudioX.Authorization
             {
                 if (existingPermission != permission)
                 {
-                    throw new StudioXInitializationException("Duplicate permission name detected for " + permission.Name);                    
+                    throw new StudioXInitializationException(
+                        "Duplicate permission name detected for " + permission.Name);
                 }
             }
             else

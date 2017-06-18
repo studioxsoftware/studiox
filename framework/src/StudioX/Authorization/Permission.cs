@@ -8,52 +8,53 @@ using StudioX.MultiTenancy;
 namespace StudioX.Authorization
 {
     /// <summary>
-    /// Represents a permission.
-    /// A permission is used to restrict functionalities of the application from unauthorized users.
+    ///     Represents a permission.
+    ///     A permission is used to restrict functionalities of the application from unauthorized users.
     /// </summary>
     public sealed class Permission
     {
         /// <summary>
-        /// Parent of this permission if one exists.
-        /// If set, this permission can be granted only if parent is granted.
+        ///     Parent of this permission if one exists.
+        ///     If set, this permission can be granted only if parent is granted.
         /// </summary>
         public Permission Parent { get; private set; }
 
         /// <summary>
-        /// Unique name of the permission.
-        /// This is the key name to grant permissions.
+        ///     Unique name of the permission.
+        ///     This is the key name to grant permissions.
         /// </summary>
         public string Name { get; }
 
         /// <summary>
-        /// Display name of the permission.
-        /// This can be used to show permission to the user.
+        ///     Display name of the permission.
+        ///     This can be used to show permission to the user.
         /// </summary>
         public ILocalizableString DisplayName { get; set; }
 
         /// <summary>
-        /// A brief description for this permission.
+        ///     A brief description for this permission.
         /// </summary>
         public ILocalizableString Description { get; set; }
 
         /// <summary>
-        /// Which side can use this permission.
+        ///     Which side can use this permission.
         /// </summary>
         public MultiTenancySides MultiTenancySides { get; set; }
 
         /// <summary>
-        /// Depended feature(s) of this permission.
+        ///     Depended feature(s) of this permission.
         /// </summary>
         public IFeatureDependency FeatureDependency { get; set; }
 
         /// <summary>
-        /// List of child permissions. A child permission can be granted only if parent is granted.
+        ///     List of child permissions. A child permission can be granted only if parent is granted.
         /// </summary>
         public IReadOnlyList<Permission> Children => children.ToImmutableList();
+
         private readonly List<Permission> children;
 
         /// <summary>
-        /// Creates a new Permission.
+        ///     Creates a new Permission.
         /// </summary>
         /// <param name="name">Unique name of the permission</param>
         /// <param name="displayName">Display name of the permission</param>
@@ -82,18 +83,19 @@ namespace StudioX.Authorization
         }
 
         /// <summary>
-        /// Adds a child permission.
-        /// A child permission can be granted only if parent is granted.
+        ///     Adds a child permission.
+        ///     A child permission can be granted only if parent is granted.
         /// </summary>
         /// <returns>Returns newly created child permission</returns>
         public Permission CreateChildPermission(
-            string name, 
-            ILocalizableString displayName = null, 
-            ILocalizableString description = null, 
+            string name,
+            ILocalizableString displayName = null,
+            ILocalizableString description = null,
             MultiTenancySides multiTenancySides = MultiTenancySides.Host | MultiTenancySides.Tenant,
             IFeatureDependency featureDependency = null)
         {
-            var permission = new Permission(name, displayName, description, multiTenancySides, featureDependency) { Parent = this };
+            var permission =
+                new Permission(name, displayName, description, multiTenancySides, featureDependency) {Parent = this};
             children.Add(permission);
             return permission;
         }

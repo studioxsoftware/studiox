@@ -11,7 +11,7 @@ using StudioX.Runtime.Session;
 namespace StudioX.Authorization
 {
     /// <summary>
-    /// Permission manager.
+    ///     Permission manager.
     /// </summary>
     internal class PermissionManager : PermissionDefinitionContextBase, IPermissionManager, ISingletonDependency
     {
@@ -21,7 +21,7 @@ namespace StudioX.Authorization
         private readonly IAuthorizationConfiguration authorizationConfiguration;
 
         /// <summary>
-        /// Constructor.
+        ///     Constructor.
         /// </summary>
         public PermissionManager(
             IIocManager iocManager,
@@ -82,8 +82,8 @@ namespace StudioX.Authorization
                     .Where(p =>
                         p.FeatureDependency == null ||
                         StudioXSession.MultiTenancySide == MultiTenancySides.Host ||
-                        (p.MultiTenancySides.HasFlag(MultiTenancySides.Host) &&
-                         multiTenancySides.HasFlag(MultiTenancySides.Host)) ||
+                        p.MultiTenancySides.HasFlag(MultiTenancySides.Host) &&
+                        multiTenancySides.HasFlag(MultiTenancySides.Host) ||
                         p.FeatureDependency.IsSatisfied(featureDependencyContextObject)
                     ).ToImmutableList();
             }
