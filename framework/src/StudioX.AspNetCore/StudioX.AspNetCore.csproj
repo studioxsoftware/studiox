@@ -20,8 +20,11 @@
   
   <ItemGroup>
     <Compile Remove="Localization\**" />
+    <Compile Remove="Wrapping\**" />
     <EmbeddedResource Remove="Localization\**" />
+    <EmbeddedResource Remove="Wrapping\**" />
     <None Remove="Localization\**" />
+    <None Remove="Wrapping\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -50,10 +53,6 @@
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Transactions" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Wrapping\Results\Mvc\AspNetCore\" />
   </ItemGroup>
 
 </Project>
