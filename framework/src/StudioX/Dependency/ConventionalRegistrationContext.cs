@@ -3,26 +3,27 @@
 namespace StudioX.Dependency
 {
     /// <summary>
-    /// This class is used to pass needed objects on conventional registration process.
+    ///     This class is used to pass needed objects on conventional registration process.
     /// </summary>
     internal class ConventionalRegistrationContext : IConventionalRegistrationContext
     {
         /// <summary>
-        /// Gets the registering Assembly.
+        ///     Gets the registering Assembly.
         /// </summary>
-        public Assembly Assembly { get; private set; }
+        public Assembly Assembly { get; }
 
         /// <summary>
-        /// Reference to the IOC Container to register types.
+        ///     Reference to the IOC Container to register types.
         /// </summary>
-        public IIocManager IocManager { get; private set; }
+        public IIocManager IocManager { get; }
 
         /// <summary>
-        /// Registration configuration.
+        ///     Registration configuration.
         /// </summary>
-        public ConventionalRegistrationConfig Config { get; private set; }
+        public ConventionalRegistrationConfig Config { get; }
 
-        internal ConventionalRegistrationContext(Assembly assembly, IIocManager iocManager, ConventionalRegistrationConfig config)
+        internal ConventionalRegistrationContext(Assembly assembly, IIocManager iocManager,
+            ConventionalRegistrationConfig config)
         {
             Assembly = assembly;
             IocManager = iocManager;
