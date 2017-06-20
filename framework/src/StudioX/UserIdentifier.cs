@@ -5,32 +5,31 @@ using StudioX.Extensions;
 namespace StudioX
 {
     /// <summary>
-    /// Used to identify a user.
+    ///     Used to identify a user.
     /// </summary>
     [Serializable]
     public class UserIdentifier : IUserIdentifier
     {
         /// <summary>
-        /// Tenant Id of the user.
-        /// Can be null for host users in a multi tenant application.
+        ///     Tenant Id of the user.
+        ///     Can be null for host users in a multi tenant application.
         /// </summary>
         public int? TenantId { get; protected set; }
 
         /// <summary>
-        /// Id of the user.
+        ///     Id of the user.
         /// </summary>
         public long UserId { get; protected set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="UserIdentifier"/> class.
+        ///     Initializes a new instance of the <see cref="UserIdentifier" /> class.
         /// </summary>
         protected UserIdentifier()
         {
-
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="UserIdentifier"/> class.
+        ///     Initializes a new instance of the <see cref="UserIdentifier" /> class.
         /// </summary>
         /// <param name="tenantId">Tenant Id of the user.</param>
         /// <param name="userId">Id of the user.</param>
@@ -41,13 +40,12 @@ namespace StudioX
         }
 
         /// <summary>
-        /// Parses given string and creates a new <see cref="UserIdentifier"/> object.
+        ///     Parses given string and creates a new <see cref="UserIdentifier" /> object.
         /// </summary>
         /// <param name="userIdentifierString">
-        /// Should be formatted one of the followings:
-        /// 
-        /// - "userId@tenantId". Ex: "42@3" (for tenant users).
-        /// - "userId". Ex: 1 (for host users)
+        ///     Should be formatted one of the followings:
+        ///     - "userId@tenantId". Ex: "42@3" (for tenant users).
+        ///     - "userId". Ex: 1 (for host users)
         /// </param>
         public static UserIdentifier Parse(string userIdentifierString)
         {
@@ -60,7 +58,6 @@ namespace StudioX
             if (splitted.Length == 1)
             {
                 return new UserIdentifier(null, splitted[0].To<long>());
-
             }
 
             if (splitted.Length == 2)
@@ -72,13 +69,12 @@ namespace StudioX
         }
 
         /// <summary>
-        /// Creates a string represents this <see cref="UserIdentifier"/> instance.
-        /// Formatted one of the followings:
-        /// 
-        /// - "userId@tenantId". Ex: "42@3" (for tenant users).
-        /// - "userId". Ex: 1 (for host users)
-        /// 
-        /// Returning string can be used in <see cref="Parse"/> method to re-create identical <see cref="UserIdentifier"/> object.
+        ///     Creates a string represents this <see cref="UserIdentifier" /> instance.
+        ///     Formatted one of the followings:
+        ///     - "userId@tenantId". Ex: "42@3" (for tenant users).
+        ///     - "userId". Ex: 1 (for host users)
+        ///     Returning string can be used in <see cref="Parse" /> method to re-create identical <see cref="UserIdentifier" />
+        ///     object.
         /// </summary>
         public string ToUserIdentifierString()
         {
@@ -104,12 +100,13 @@ namespace StudioX
             }
 
             //Transient objects are not considered as equal
-            var other = (UserIdentifier)obj;
+            var other = (UserIdentifier) obj;
 
             //Must have a IS-A relation of types or must be same type
             var typeOfThis = GetType();
             var typeOfOther = other.GetType();
-            if (!typeOfThis.GetTypeInfo().IsAssignableFrom(typeOfOther) && !typeOfOther.GetTypeInfo().IsAssignableFrom(typeOfThis))
+            if (!typeOfThis.GetTypeInfo().IsAssignableFrom(typeOfOther) &&
+                !typeOfOther.GetTypeInfo().IsAssignableFrom(typeOfThis))
             {
                 return false;
             }
@@ -117,13 +114,13 @@ namespace StudioX
             return TenantId == other.TenantId && UserId == other.UserId;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public override int GetHashCode()
         {
-            return TenantId == null ? (int)UserId : (int)(TenantId.Value ^ UserId);
+            return TenantId == null ? (int) UserId : (int) (TenantId.Value ^ UserId);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public static bool operator ==(UserIdentifier left, UserIdentifier right)
         {
             if (Equals(left, null))
@@ -134,7 +131,7 @@ namespace StudioX
             return left.Equals(right);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public static bool operator !=(UserIdentifier left, UserIdentifier right)
         {
             return !(left == right);

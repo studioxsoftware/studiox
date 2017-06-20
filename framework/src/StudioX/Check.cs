@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using JetBrains.Annotations;
 using StudioX.Collections.Extensions;
 using StudioX.Extensions;
-using JetBrains.Annotations;
 
 namespace StudioX
 {
@@ -44,7 +44,8 @@ namespace StudioX
         }
 
         [ContractAnnotation("value:null => halt")]
-        public static ICollection<T> NotNullOrEmpty<T>(ICollection<T> value, [InvokerParameterName] [NotNull] string parameterName)
+        public static ICollection<T> NotNullOrEmpty<T>(ICollection<T> value,
+            [InvokerParameterName] [NotNull] string parameterName)
         {
             if (value.IsNullOrEmpty())
             {
