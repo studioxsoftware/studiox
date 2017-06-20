@@ -59,12 +59,8 @@ namespace StudioX.AspNetCore.MultiTenancy
             }
 
             var tenantInfo = tenantStore.Find(tenancyName);
-            if (tenantInfo == null)
-            {
-                return null;
-            }
 
-            return tenantInfo.Id;
+            return tenantInfo?.Id;
         }
     }
 }
