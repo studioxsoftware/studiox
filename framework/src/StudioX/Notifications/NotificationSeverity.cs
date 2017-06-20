@@ -1,34 +1,32 @@
-﻿using System;
-
-namespace StudioX.Notifications
+﻿namespace StudioX.Notifications
 {
     /// <summary>
-    /// Notification severity.
+    ///     Notification severity.
     /// </summary>
     public enum NotificationSeverity : byte
     {
         /// <summary>
-        /// Info.
+        ///     Info.
         /// </summary>
         Info = 0,
-        
+
         /// <summary>
-        /// Success.
+        ///     Success.
         /// </summary>
         Success = 1,
-        
+
         /// <summary>
-        /// Warn.
+        ///     Warn.
         /// </summary>
         Warn = 2,
-        
+
         /// <summary>
-        /// Error.
+        ///     Error.
         /// </summary>
         Error = 3,
 
         /// <summary>
-        /// Fatal.
+        ///     Fatal.
         /// </summary>
         Fatal = 4
     }

@@ -13,25 +13,22 @@ using StudioX.Runtime.Session;
 namespace StudioX.Notifications
 {
     /// <summary>
-    /// Implements <see cref="INotificationPublisher"/>.
+    ///     Implements <see cref="INotificationPublisher" />.
     /// </summary>
     public class NotificationPublisher : StudioXServiceBase, INotificationPublisher, ITransientDependency
     {
         public const int MaxUserCountToDirectlyDistributeANotification = 5;
 
         /// <summary>
-        /// Indicates all tenants.
+        ///     Indicates all tenants.
         /// </summary>
         public static int[] AllTenants
         {
-            get
-            {
-                return new[] { NotificationInfo.AllTenantIds.To<int>() };
-            }
+            get { return new[] {NotificationInfo.AllTenantIds.To<int>()}; }
         }
 
         /// <summary>
-        /// Reference to StudioX session.
+        ///     Reference to StudioX session.
         /// </summary>
         public IStudioXSession StudioXSession { get; set; }
 
@@ -41,7 +38,7 @@ namespace StudioX.Notifications
         private readonly IGuidGenerator guidGenerator;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NotificationPublisher"/> class.
+        ///     Initializes a new instance of the <see cref="NotificationPublisher" /> class.
         /// </summary>
         public NotificationPublisher(
             INotificationStore store,
@@ -89,8 +86,14 @@ namespace StudioX.Notifications
                 EntityTypeAssemblyQualifiedName = entityIdentifier?.Type.AssemblyQualifiedName,
                 EntityId = entityIdentifier?.Id.ToJsonString(),
                 Severity = severity,
-                UserIds = userIds.IsNullOrEmpty() ? null : userIds.Select(uid => uid.ToUserIdentifierString()).JoinAsString(","),
-                ExcludedUserIds = excludedUserIds.IsNullOrEmpty() ? null : excludedUserIds.Select(uid => uid.ToUserIdentifierString()).JoinAsString(","),
+                UserIds =
+                    userIds.IsNullOrEmpty()
+                        ? null
+                        : userIds.Select(uid => uid.ToUserIdentifierString()).JoinAsString(","),
+                ExcludedUserIds =
+                    excludedUserIds.IsNullOrEmpty()
+                        ? null
+                        : excludedUserIds.Select(uid => uid.ToUserIdentifierString()).JoinAsString(","),
                 TenantIds = tenantIds.IsNullOrEmpty() ? null : tenantIds.JoinAsString(","),
                 Data = data?.ToJsonString(),
                 DataTypeName = data?.GetType().AssemblyQualifiedName
@@ -111,8 +114,8 @@ namespace StudioX.Notifications
                 await backgroundJobManager.EnqueueAsync<NotificationDistributionJob, NotificationDistributionJobArgs>(
                     new NotificationDistributionJobArgs(
                         notificationInfo.Id
-                        )
-                    );
+                    )
+                );
             }
         }
     }

@@ -7,23 +7,25 @@ using StudioX.Dependency;
 namespace StudioX.Notifications
 {
     /// <summary>
-    /// Implements  <see cref="IUserNotificationManager"/>.
+    ///     Implements  <see cref="IUserNotificationManager" />.
     /// </summary>
     public class UserNotificationManager : IUserNotificationManager, ISingletonDependency
     {
         private readonly INotificationStore store;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="UserNotificationManager"/> class.
+        ///     Initializes a new instance of the <see cref="UserNotificationManager" /> class.
         /// </summary>
         public UserNotificationManager(INotificationStore store)
         {
             this.store = store;
         }
 
-        public async Task<List<UserNotification>> GetUserNotificationsAsync(UserIdentifier user, UserNotificationState? state = null, int skipCount = 0, int maxResultCount = int.MaxValue)
+        public async Task<List<UserNotification>> GetUserNotificationsAsync(UserIdentifier user,
+            UserNotificationState? state = null, int skipCount = 0, int maxResultCount = int.MaxValue)
         {
-            var userNotifications = await store.GetUserNotificationsWithNotificationsAsync(user, state, skipCount, maxResultCount);
+            var userNotifications = await store.GetUserNotificationsWithNotificationsAsync(user, state, skipCount,
+                maxResultCount);
             return userNotifications
                 .Select(un => un.ToUserNotification())
                 .ToList();
@@ -37,8 +39,8 @@ namespace StudioX.Notifications
         public async Task<UserNotification> GetUserNotificationAsync(int? tenantId, Guid userNotificationId)
         {
             var userNotification = await store.GetUserNotificationWithNotificationOrNullAsync(
-                    tenantId, userNotificationId
-                );
+                tenantId, userNotificationId
+            );
             return userNotification?.ToUserNotification();
         }
 

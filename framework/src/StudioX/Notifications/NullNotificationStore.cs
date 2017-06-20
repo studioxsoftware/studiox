@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 namespace StudioX.Notifications
 {
     /// <summary>
-    /// Null pattern implementation of <see cref="INotificationStore"/>.
+    ///     Null pattern implementation of <see cref="INotificationStore" />.
     /// </summary>
     public class NullNotificationStore : INotificationStore
     {
@@ -14,7 +14,8 @@ namespace StudioX.Notifications
             return Task.FromResult(0);
         }
 
-        public Task DeleteSubscriptionAsync(UserIdentifier user, string notificationName, string entityTypeName, string entityId)
+        public Task DeleteSubscriptionAsync(UserIdentifier user, string notificationName, string entityTypeName,
+            string entityId)
         {
             return Task.FromResult(0);
         }
@@ -34,12 +35,14 @@ namespace StudioX.Notifications
             return Task.FromResult(0);
         }
 
-        public Task<List<NotificationSubscriptionInfo>> GetSubscriptionsAsync(string notificationName, string entityTypeName = null, string entityId = null)
+        public Task<List<NotificationSubscriptionInfo>> GetSubscriptionsAsync(string notificationName,
+            string entityTypeName = null, string entityId = null)
         {
             return Task.FromResult(new List<NotificationSubscriptionInfo>());
         }
 
-        public Task<List<NotificationSubscriptionInfo>> GetSubscriptionsAsync(int?[] tenantIds, string notificationName, string entityTypeName, string entityId)
+        public Task<List<NotificationSubscriptionInfo>> GetSubscriptionsAsync(int?[] tenantIds, string notificationName,
+            string entityTypeName, string entityId)
         {
             return Task.FromResult(new List<NotificationSubscriptionInfo>());
         }
@@ -49,12 +52,14 @@ namespace StudioX.Notifications
             return Task.FromResult(new List<NotificationSubscriptionInfo>());
         }
 
-        public Task<bool> IsSubscribedAsync(UserIdentifier user, string notificationName, string entityTypeName, string entityId)
+        public Task<bool> IsSubscribedAsync(UserIdentifier user, string notificationName, string entityTypeName,
+            string entityId)
         {
             return Task.FromResult(false);
         }
 
-        public Task UpdateUserNotificationStateAsync(int? notificationId, Guid userNotificationId, UserNotificationState state)
+        public Task UpdateUserNotificationStateAsync(int? notificationId, Guid userNotificationId,
+            UserNotificationState state)
         {
             return Task.FromResult(0);
         }
@@ -74,7 +79,9 @@ namespace StudioX.Notifications
             return Task.FromResult(0);
         }
 
-        public Task<List<UserNotificationInfoWithNotificationInfo>> GetUserNotificationsWithNotificationsAsync(UserIdentifier user, UserNotificationState? state = null, int skipCount = 0, int maxResultCount = int.MaxValue)
+        public Task<List<UserNotificationInfoWithNotificationInfo>> GetUserNotificationsWithNotificationsAsync(
+            UserIdentifier user, UserNotificationState? state = null, int skipCount = 0,
+            int maxResultCount = int.MaxValue)
         {
             return Task.FromResult(new List<UserNotificationInfoWithNotificationInfo>());
         }
@@ -84,9 +91,10 @@ namespace StudioX.Notifications
             return Task.FromResult(0);
         }
 
-        public Task<UserNotificationInfoWithNotificationInfo> GetUserNotificationWithNotificationOrNullAsync(int? tenantId, Guid userNotificationId)
+        public Task<UserNotificationInfoWithNotificationInfo> GetUserNotificationWithNotificationOrNullAsync(
+            int? tenantId, Guid userNotificationId)
         {
-            return Task.FromResult((UserNotificationInfoWithNotificationInfo)null);
+            return Task.FromResult((UserNotificationInfoWithNotificationInfo) null);
         }
 
         public Task InsertTenantNotificationAsync(TenantNotificationInfo tenantNotificationInfo)
