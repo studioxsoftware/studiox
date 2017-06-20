@@ -1,17 +1,15 @@
-﻿using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
+﻿using System.Linq;
 using JetBrains.Annotations;
 
 namespace StudioX.RealTime
 {
     /// <summary>
-    /// Extension methods for <see cref="IOnlineClientManager"/>.
+    ///     Extension methods for <see cref="IOnlineClientManager" />.
     /// </summary>
     public static class OnlineClientManagerExtensions
     {
         /// <summary>
-        /// Determines whether the specified user is online or not.
+        ///     Determines whether the specified user is online or not.
         /// </summary>
         /// <param name="onlineClientManager">The online client manager.</param>
         /// <param name="user">User.</param>

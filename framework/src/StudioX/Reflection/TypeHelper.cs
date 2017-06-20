@@ -4,7 +4,7 @@ using System.Reflection;
 namespace StudioX.Reflection
 {
     /// <summary>
-    /// Some simple type-checking methods used internally.
+    ///     Some simple type-checking methods used internally.
     /// </summary>
     internal static class TypeHelper
     {
@@ -51,12 +51,12 @@ namespace StudioX.Reflection
                 return true;
             }
 
-            return type == typeof (string) ||
-                   type == typeof (decimal) ||
-                   type == typeof (DateTime) ||
-                   type == typeof (DateTimeOffset) ||
-                   type == typeof (TimeSpan) ||
-                   type == typeof (Guid);
+            return type == typeof(string) ||
+                   type == typeof(decimal) ||
+                   type == typeof(DateTime) ||
+                   type == typeof(DateTimeOffset) ||
+                   type == typeof(TimeSpan) ||
+                   type == typeof(Guid);
         }
     }
 }

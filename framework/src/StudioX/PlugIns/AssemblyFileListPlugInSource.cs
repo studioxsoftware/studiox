@@ -4,9 +4,9 @@ using System.Linq;
 using System.Reflection;
 using StudioX.Collections.Extensions;
 using StudioX.Modules;
-
 #if !NET46
 using System.Runtime.Loader;
+
 #endif
 
 namespace StudioX.PlugIns
@@ -48,7 +48,8 @@ namespace StudioX.PlugIns
                 }
                 catch (Exception ex)
                 {
-                    throw new StudioXInitializationException("Could not get module types from assembly: " + assembly.FullName, ex);
+                    throw new StudioXInitializationException(
+                        "Could not get module types from assembly: " + assembly.FullName, ex);
                 }
             }
 
@@ -63,7 +64,7 @@ namespace StudioX.PlugIns
 #else
                 AssemblyLoadContext.Default.LoadFromAssemblyPath
 #endif
-                ).ToList();
+            ).ToList();
         }
     }
 }

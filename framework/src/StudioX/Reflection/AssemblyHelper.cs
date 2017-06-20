@@ -2,9 +2,9 @@
 using System.IO;
 using System.Linq;
 using System.Reflection;
-
 #if !NET46
 using System.Runtime.Loader;
+
 #endif
 
 namespace StudioX.Reflection
@@ -23,7 +23,7 @@ namespace StudioX.Reflection
 #else
                 AssemblyLoadContext.Default.LoadFromAssemblyPath
 #endif
-                ).ToList();
+            ).ToList();
         }
     }
 }
