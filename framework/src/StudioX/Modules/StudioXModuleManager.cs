@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using Castle.Core.Logging;
 using StudioX.Collections.Extensions;
 using StudioX.Configuration.Startup;
 using StudioX.Dependency;
 using StudioX.PlugIns;
-using Castle.Core.Logging;
 
 namespace StudioX.Modules
 {
     /// <summary>
-    /// This class is used to manage modules.
+    ///     This class is used to manage modules.
     /// </summary>
     public class StudioXModuleManager : IStudioXModuleManager
     {
@@ -83,8 +83,9 @@ namespace StudioX.Modules
         {
             plugInModuleTypes = new List<Type>();
 
-            var modules = StudioXModule.FindDependedModuleTypesRecursivelyIncludingGivenModule(this.modules.StartupModuleType);
-            
+            var modules =
+                StudioXModule.FindDependedModuleTypesRecursivelyIncludingGivenModule(this.modules.StartupModuleType);
+
             foreach (var plugInModuleType in studioXPlugInManager.PlugInSources.GetAllModules())
             {
                 if (modules.AddIfNotContains(plugInModuleType))
@@ -103,7 +104,8 @@ namespace StudioX.Modules
                 var moduleObject = iocManager.Resolve(moduleType) as StudioXModule;
                 if (moduleObject == null)
                 {
-                    throw new StudioXInitializationException("This type is not an StudioX module: " + moduleType.AssemblyQualifiedName);
+                    throw new StudioXInitializationException("This type is not an StudioX module: " +
+                                                             moduleType.AssemblyQualifiedName);
                 }
 
                 moduleObject.IocManager = iocManager;
@@ -142,10 +144,12 @@ namespace StudioX.Modules
                     var dependedModuleInfo = modules.FirstOrDefault(m => m.Type == dependedModuleType);
                     if (dependedModuleInfo == null)
                     {
-                        throw new StudioXInitializationException("Could not find a depended module " + dependedModuleType.AssemblyQualifiedName + " for " + moduleInfo.Type.AssemblyQualifiedName);
+                        throw new StudioXInitializationException("Could not find a depended module " +
+                                                                 dependedModuleType.AssemblyQualifiedName + " for " +
+                                                                 moduleInfo.Type.AssemblyQualifiedName);
                     }
 
-                    if ((moduleInfo.Dependencies.FirstOrDefault(dm => dm.Type == dependedModuleType) == null))
+                    if (moduleInfo.Dependencies.FirstOrDefault(dm => dm.Type == dependedModuleType) == null)
                     {
                         moduleInfo.Dependencies.Add(dependedModuleInfo);
                     }

@@ -1,9 +1,9 @@
 using System;
 using System.Linq;
+using Castle.Core.Logging;
 using StudioX.Configuration.Startup;
 using StudioX.Dependency;
 using StudioX.Runtime;
-using Castle.Core.Logging;
 
 namespace StudioX.MultiTenancy
 {
