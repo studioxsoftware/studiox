@@ -10,10 +10,7 @@ namespace StudioX.Runtime.Caching
     /// <typeparam name="TValue"></typeparam>
     public class TypedCacheWrapper<TKey, TValue> : ITypedCache<TKey, TValue>
     {
-        public string Name
-        {
-            get { return InternalCache.Name; }
-        }
+        public string Name => InternalCache.Name;
 
         public TimeSpan DefaultSlidingExpireTime
         {
