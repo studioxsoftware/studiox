@@ -1,8 +1,8 @@
 ﻿using System.Globalization;
+using Castle.Core.Logging;
 using StudioX.Configuration.Startup;
 using StudioX.Extensions;
 using StudioX.Logging;
-using Castle.Core.Logging;
 
 namespace StudioX.Localization
 {
@@ -10,8 +10,8 @@ namespace StudioX.Localization
     {
         public static string ReturnGivenNameOrThrowException(
             ILocalizationConfiguration configuration,
-            string sourceName, 
-            string name, 
+            string sourceName,
+            string name,
             CultureInfo culture,
             ILogger logger = null)
         {

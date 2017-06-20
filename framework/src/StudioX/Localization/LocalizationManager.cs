@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using Castle.Core.Logging;
 using StudioX.Configuration.Startup;
 using StudioX.Dependency;
 using StudioX.Localization.Dictionaries;
 using StudioX.Localization.Sources;
-using Castle.Core.Logging;
 
 namespace StudioX.Localization
 {
@@ -20,11 +20,11 @@ namespace StudioX.Localization
         private readonly IDictionary<string, ILocalizationSource> sources;
 
         /// <summary>
-        /// Constructor.
+        ///     Constructor.
         /// </summary>
         public LocalizationManager(
             ILanguageManager languageManager,
-            ILocalizationConfiguration configuration, 
+            ILocalizationConfiguration configuration,
             IIocResolver iocResolver)
         {
             Logger = NullLogger.Instance;
@@ -52,7 +52,8 @@ namespace StudioX.Localization
             {
                 if (sources.ContainsKey(source.Name))
                 {
-                    throw new StudioXException("There are more than one source with name: " + source.Name + "! Source name must be unique!");
+                    throw new StudioXException("There are more than one source with name: " + source.Name +
+                                               "! Source name must be unique!");
                 }
 
                 sources[source.Name] = source;
@@ -78,7 +79,7 @@ namespace StudioX.Localization
         }
 
         /// <summary>
-        /// Gets a localization source with name.
+        ///     Gets a localization source with name.
         /// </summary>
         /// <param name="name">Unique name of the localization source</param>
         /// <returns>The localization source</returns>
@@ -104,7 +105,7 @@ namespace StudioX.Localization
         }
 
         /// <summary>
-        /// Gets all registered localization sources.
+        ///     Gets all registered localization sources.
         /// </summary>
         /// <returns>List of sources</returns>
         public IReadOnlyList<ILocalizationSource> GetAllSources()

@@ -8,7 +8,7 @@ namespace StudioX.Localization.Dictionaries.Xml
 
         public ILocalizationDictionary DefaultDictionary { get; protected set; }
 
-        public IDictionary<string, ILocalizationDictionary> Dictionaries { get; private set; }
+        public IDictionary<string, ILocalizationDictionary> Dictionaries { get; }
 
         protected LocalizationDictionaryProviderBase()
         {

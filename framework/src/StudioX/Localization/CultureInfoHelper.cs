@@ -7,7 +7,8 @@ namespace StudioX.Localization
 {
     public static class CultureInfoHelper
     {
-        private static readonly ConcurrentDictionary<string, CultureInfoCacheEntry> Cache = new ConcurrentDictionary<string, CultureInfoCacheEntry>();
+        private static readonly ConcurrentDictionary<string, CultureInfoCacheEntry> Cache =
+            new ConcurrentDictionary<string, CultureInfoCacheEntry>();
 
         public static IDisposable Use([NotNull] string culture, string uiCulture = null)
         {
@@ -34,7 +35,7 @@ namespace StudioX.Localization
         }
 
         /// <summary>
-        /// This method is a temporary solution since CultureInfo.GetCultureInfo() does not exists in netstandard yet.
+        ///     This method is a temporary solution since CultureInfo.GetCultureInfo() does not exists in netstandard yet.
         /// </summary>
         public static CultureInfo Get(string name)
         {
@@ -43,10 +44,8 @@ namespace StudioX.Localization
                 return null;
             }
 
-            return Cache.GetOrAdd(name, n =>
-            {
-                return new CultureInfoCacheEntry(CultureInfo.ReadOnly(new CultureInfo(n)));
-            }).CultureInfo;
+            return Cache.GetOrAdd(name, 
+                n => new CultureInfoCacheEntry(CultureInfo.ReadOnly(new CultureInfo(n)))).CultureInfo;
         }
 
         private class CultureInfoCacheEntry
@@ -55,7 +54,7 @@ namespace StudioX.Localization
 
             public CultureInfoCacheEntry(CultureInfo cultureInfo)
             {
-                this.CultureInfo = cultureInfo;
+                CultureInfo = cultureInfo;
             }
         }
     }
