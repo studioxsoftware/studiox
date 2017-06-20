@@ -1,12 +1,11 @@
-﻿using System;
-using StudioX.Configuration;
+﻿using StudioX.Configuration;
 using StudioX.Extensions;
 
 namespace StudioX.Net.Mail
 {
     /// <summary>
-    /// Implementation of <see cref="IEmailSenderConfiguration"/> that reads settings
-    /// from <see cref="ISettingManager"/>.
+    ///     Implementation of <see cref="IEmailSenderConfiguration" /> that reads settings
+    ///     from <see cref="ISettingManager" />.
     /// </summary>
     public abstract class EmailSenderConfiguration : IEmailSenderConfiguration
     {
@@ -23,7 +22,7 @@ namespace StudioX.Net.Mail
         protected readonly ISettingManager SettingManager;
 
         /// <summary>
-        /// Creates a new <see cref="EmailSenderConfiguration"/>.
+        ///     Creates a new <see cref="EmailSenderConfiguration" />.
         /// </summary>
         protected EmailSenderConfiguration(ISettingManager settingManager)
         {
@@ -31,7 +30,7 @@ namespace StudioX.Net.Mail
         }
 
         /// <summary>
-        /// Gets a setting value by checking. Throws <see cref="StudioXException"/> if it's null or empty.
+        ///     Gets a setting value by checking. Throws <see cref="StudioXException" /> if it's null or empty.
         /// </summary>
         /// <param name="name">Name of the setting</param>
         /// <returns>Value of the setting</returns>

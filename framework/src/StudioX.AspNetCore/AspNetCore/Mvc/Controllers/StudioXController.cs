@@ -115,6 +115,7 @@ namespace StudioX.AspNetCore.Mvc.Controllers
             }
             set => unitOfWorkManager = value;
         }
+
         private IUnitOfWorkManager unitOfWorkManager;
 
         /// <summary>

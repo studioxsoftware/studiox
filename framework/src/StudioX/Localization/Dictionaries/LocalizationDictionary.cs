@@ -6,14 +6,14 @@ using System.Globalization;
 namespace StudioX.Localization.Dictionaries
 {
     /// <summary>
-    /// Represents a simple implementation of <see cref="ILocalizationDictionary"/> interface.
+    ///     Represents a simple implementation of <see cref="ILocalizationDictionary" /> interface.
     /// </summary>
     public class LocalizationDictionary : ILocalizationDictionary, IEnumerable<LocalizedString>
     {
-        /// <inheritdoc/>
-        public CultureInfo CultureInfo { get; private set; }
+        /// <inheritdoc />
+        public CultureInfo CultureInfo { get; }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public virtual string this[string name]
         {
             get
@@ -21,16 +21,13 @@ namespace StudioX.Localization.Dictionaries
                 var localizedString = GetOrNull(name);
                 return localizedString?.Value;
             }
-            set
-            {
-                dictionary[name] = new LocalizedString(name, value, CultureInfo);
-            }
+            set { dictionary[name] = new LocalizedString(name, value, CultureInfo); }
         }
 
         private readonly Dictionary<string, LocalizedString> dictionary;
 
         /// <summary>
-        /// Creates a new <see cref="LocalizationDictionary"/> object.
+        ///     Creates a new <see cref="LocalizationDictionary" /> object.
         /// </summary>
         /// <param name="cultureInfo">Culture of the dictionary</param>
         public LocalizationDictionary(CultureInfo cultureInfo)
@@ -39,20 +36,20 @@ namespace StudioX.Localization.Dictionaries
             dictionary = new Dictionary<string, LocalizedString>();
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public virtual LocalizedString GetOrNull(string name)
         {
             LocalizedString localizedString;
             return dictionary.TryGetValue(name, out localizedString) ? localizedString : null;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public virtual IReadOnlyList<LocalizedString> GetAllStrings()
         {
             return dictionary.Values.ToImmutableList();
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public virtual IEnumerator<LocalizedString> GetEnumerator()
         {
             return GetAllStrings().GetEnumerator();

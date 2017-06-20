@@ -1,14 +1,16 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Threading;
 using StudioX.Dependency;
 
 namespace StudioX.Localization
 {
     public class LanguageManager : ILanguageManager, ITransientDependency
     {
-        public LanguageInfo CurrentLanguage { get { return GetCurrentLanguage(); } }
+        public LanguageInfo CurrentLanguage
+        {
+            get { return GetCurrentLanguage(); }
+        }
 
         private readonly ILanguageProvider languageProvider;
 

@@ -4,17 +4,17 @@ using StudioX.Events.Bus.Handlers;
 namespace StudioX.Events.Bus.Factories.Internals
 {
     /// <summary>
-    /// This <see cref="IEventHandlerFactory"/> implementation is used to handle events
-    /// by a single instance object. 
+    ///     This <see cref="IEventHandlerFactory" /> implementation is used to handle events
+    ///     by a single instance object.
     /// </summary>
     /// <remarks>
-    /// This class always gets the same single instance of handler.
+    ///     This class always gets the same single instance of handler.
     /// </remarks>
-    internal class TransientEventHandlerFactory<THandler> : IEventHandlerFactory 
+    internal class TransientEventHandlerFactory<THandler> : IEventHandlerFactory
         where THandler : IEventHandler, new()
     {
         /// <summary>
-        /// Creates a new instance of the handler object.
+        ///     Creates a new instance of the handler object.
         /// </summary>
         /// <returns>The handler object</returns>
         public IEventHandler GetHandler()
@@ -23,7 +23,7 @@ namespace StudioX.Events.Bus.Factories.Internals
         }
 
         /// <summary>
-        /// Disposes the handler object if it's <see cref="IDisposable"/>. Does nothing if it's not.
+        ///     Disposes the handler object if it's <see cref="IDisposable" />. Does nothing if it's not.
         /// </summary>
         /// <param name="handler">Handler to be released</param>
         public void ReleaseHandler(IEventHandler handler)

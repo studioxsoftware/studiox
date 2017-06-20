@@ -1,4 +1,3 @@
-
 using System.Text;
 using System.Threading.Tasks;
 using StudioX.Extensions;
@@ -10,14 +9,14 @@ using System.Net.Mail;
 namespace StudioX.Net.Mail
 {
     /// <summary>
-    /// This class can be used as base to implement <see cref="IEmailSender"/>.
+    ///     This class can be used as base to implement <see cref="IEmailSender" />.
     /// </summary>
     public abstract class EmailSenderBase : IEmailSender
     {
         public IEmailSenderConfiguration Configuration { get; }
 
         /// <summary>
-        /// Constructor.
+        ///     Constructor.
         /// </summary>
         /// <param name="configuration">Configuration</param>
         protected EmailSenderBase(IEmailSenderConfiguration configuration)
@@ -115,6 +114,5 @@ namespace StudioX.Net.Mail
 
         public abstract void Send(string from, string to, string subject, string body, bool isBodyHtml = true);
 #endif
-
     }
 }

@@ -9,7 +9,7 @@ using StudioX.Dependency;
 namespace StudioX.Notifications
 {
     /// <summary>
-    /// Implements <see cref="INotificationDefinitionManager"/>.
+    ///     Implements <see cref="INotificationDefinitionManager" />.
     /// </summary>
     internal class NotificationDefinitionManager : INotificationDefinitionManager, ISingletonDependency
     {
@@ -46,7 +46,9 @@ namespace StudioX.Notifications
         {
             if (notificationDefinitions.ContainsKey(notificationDefinition.Name))
             {
-                throw new StudioXInitializationException("There is already a notification definition with given name: " + notificationDefinition.Name + ". Notification names must be unique!");
+                throw new StudioXInitializationException(
+                    "There is already a notification definition with given name: " + notificationDefinition.Name +
+                    ". Notification names must be unique!");
             }
 
             notificationDefinitions[notificationDefinition.Name] = notificationDefinition;
@@ -87,7 +89,8 @@ namespace StudioX.Notifications
                 {
                     featureDependencyContext.Object.TenantId = user.TenantId;
 
-                    if (!await notificationDefinition.FeatureDependency.IsSatisfiedAsync(featureDependencyContext.Object))
+                    if (
+                        !await notificationDefinition.FeatureDependency.IsSatisfiedAsync(featureDependencyContext.Object))
                     {
                         return false;
                     }
@@ -100,7 +103,9 @@ namespace StudioX.Notifications
                 {
                     permissionDependencyContext.Object.User = user;
 
-                    if (!await notificationDefinition.PermissionDependency.IsSatisfiedAsync(permissionDependencyContext.Object))
+                    if (
+                        !await notificationDefinition.PermissionDependency.IsSatisfiedAsync(
+                            permissionDependencyContext.Object))
                     {
                         return false;
                     }
@@ -125,14 +130,16 @@ namespace StudioX.Notifications
                     foreach (var notificationDefinition in GetAll())
                     {
                         if (notificationDefinition.PermissionDependency != null &&
-                            !await notificationDefinition.PermissionDependency.IsSatisfiedAsync(permissionDependencyContext.Object))
+                            !await notificationDefinition.PermissionDependency.IsSatisfiedAsync(
+                                permissionDependencyContext.Object))
                         {
                             continue;
                         }
 
                         if (user.TenantId.HasValue &&
                             notificationDefinition.FeatureDependency != null &&
-                            !await notificationDefinition.FeatureDependency.IsSatisfiedAsync(featureDependencyContext.Object))
+                            !await notificationDefinition.FeatureDependency.IsSatisfiedAsync(
+                                featureDependencyContext.Object))
                         {
                             continue;
                         }

@@ -4,13 +4,14 @@ using StudioX.Dependency;
 namespace StudioX.Net.Mail.Smtp
 {
     /// <summary>
-    /// Implementation of <see cref="ISmtpEmailSenderConfiguration"/> that reads settings
-    /// from <see cref="ISettingManager"/>.
+    ///     Implementation of <see cref="ISmtpEmailSenderConfiguration" /> that reads settings
+    ///     from <see cref="ISettingManager" />.
     /// </summary>
-    public class SmtpEmailSenderConfiguration : EmailSenderConfiguration, ISmtpEmailSenderConfiguration, ITransientDependency
+    public class SmtpEmailSenderConfiguration : EmailSenderConfiguration, ISmtpEmailSenderConfiguration,
+        ITransientDependency
     {
         /// <summary>
-        /// SMTP Host name/IP.
+        ///     SMTP Host name/IP.
         /// </summary>
         public virtual string Host
         {
@@ -18,7 +19,7 @@ namespace StudioX.Net.Mail.Smtp
         }
 
         /// <summary>
-        /// SMTP Port.
+        ///     SMTP Port.
         /// </summary>
         public virtual int Port
         {
@@ -26,7 +27,7 @@ namespace StudioX.Net.Mail.Smtp
         }
 
         /// <summary>
-        /// User name to login to SMTP server.
+        ///     User name to login to SMTP server.
         /// </summary>
         public virtual string UserName
         {
@@ -34,7 +35,7 @@ namespace StudioX.Net.Mail.Smtp
         }
 
         /// <summary>
-        /// Password to login to SMTP server.
+        ///     Password to login to SMTP server.
         /// </summary>
         public virtual string Password
         {
@@ -42,7 +43,7 @@ namespace StudioX.Net.Mail.Smtp
         }
 
         /// <summary>
-        /// Domain name to login to SMTP server.
+        ///     Domain name to login to SMTP server.
         /// </summary>
         public virtual string Domain
         {
@@ -50,7 +51,7 @@ namespace StudioX.Net.Mail.Smtp
         }
 
         /// <summary>
-        /// Is SSL enabled?
+        ///     Is SSL enabled?
         /// </summary>
         public virtual bool EnableSsl
         {
@@ -58,7 +59,7 @@ namespace StudioX.Net.Mail.Smtp
         }
 
         /// <summary>
-        /// Use default credentials?
+        ///     Use default credentials?
         /// </summary>
         public virtual bool UseDefaultCredentials
         {
@@ -66,13 +67,12 @@ namespace StudioX.Net.Mail.Smtp
         }
 
         /// <summary>
-        /// Creates a new <see cref="SmtpEmailSenderConfiguration"/>.
+        ///     Creates a new <see cref="SmtpEmailSenderConfiguration" />.
         /// </summary>
         /// <param name="settingManager">Setting manager</param>
         public SmtpEmailSenderConfiguration(ISettingManager settingManager)
             : base(settingManager)
         {
-
         }
     }
 }

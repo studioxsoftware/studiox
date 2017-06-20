@@ -5,41 +5,41 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using Castle.Core.Logging;
 using StudioX.Events.Bus.Factories;
 using StudioX.Events.Bus.Factories.Internals;
 using StudioX.Events.Bus.Handlers;
 using StudioX.Events.Bus.Handlers.Internals;
 using StudioX.Extensions;
 using StudioX.Threading.Extensions;
-using Castle.Core.Logging;
 
 namespace StudioX.Events.Bus
 {
     /// <summary>
-    /// Implements EventBus as Singleton pattern.
+    ///     Implements EventBus as Singleton pattern.
     /// </summary>
     public class EventBus : IEventBus
     {
         /// <summary>
-        /// Gets the default <see cref="EventBus"/> instance.
+        ///     Gets the default <see cref="EventBus" /> instance.
         /// </summary>
         public static EventBus Default { get; } = new EventBus();
 
         /// <summary>
-        /// Reference to the Logger.
+        ///     Reference to the Logger.
         /// </summary>
         public ILogger Logger { get; set; }
 
         /// <summary>
-        /// All registered handler factories.
-        /// Key: Type of the event
-        /// Value: List of handler factories
+        ///     All registered handler factories.
+        ///     Key: Type of the event
+        ///     Value: List of handler factories
         /// </summary>
         private readonly ConcurrentDictionary<Type, List<IEventHandlerFactory>> handlerFactories;
 
         /// <summary>
-        /// Creates a new <see cref="EventBus"/> instance.
-        /// Instead of creating a new instace, you can use <see cref="Default"/> to use Global <see cref="EventBus"/>.
+        ///     Creates a new <see cref="EventBus" /> instance.
+        ///     Instead of creating a new instace, you can use <see cref="Default" /> to use Global <see cref="EventBus" />.
         /// </summary>
         public EventBus()
         {
@@ -47,19 +47,19 @@ namespace StudioX.Events.Bus
             Logger = NullLogger.Instance;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public IDisposable Register<TEventData>(Action<TEventData> action) where TEventData : IEventData
         {
             return Register(typeof(TEventData), new ActionEventHandler<TEventData>(action));
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public IDisposable Register<TEventData>(IEventHandler<TEventData> handler) where TEventData : IEventData
         {
             return Register(typeof(TEventData), handler);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public IDisposable Register<TEventData, THandler>()
             where TEventData : IEventData
             where THandler : IEventHandler<TEventData>, new()
@@ -67,19 +67,19 @@ namespace StudioX.Events.Bus
             return Register(typeof(TEventData), new TransientEventHandlerFactory<THandler>());
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public IDisposable Register(Type eventType, IEventHandler handler)
         {
             return Register(eventType, new SingleInstanceHandlerFactory(handler));
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public IDisposable Register<TEventData>(IEventHandlerFactory handlerFactory) where TEventData : IEventData
         {
             return Register(typeof(TEventData), handlerFactory);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public IDisposable Register(Type eventType, IEventHandlerFactory handlerFactory)
         {
             GetOrCreateHandlerFactories(eventType)
@@ -88,7 +88,7 @@ namespace StudioX.Events.Bus
             return new FactoryUnregistrar(this, eventType, handlerFactory);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public void Unregister<TEventData>(Action<TEventData> action) where TEventData : IEventData
         {
             Check.NotNull(action, nameof(action));
@@ -116,13 +116,13 @@ namespace StudioX.Events.Bus
                 });
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public void Unregister<TEventData>(IEventHandler<TEventData> handler) where TEventData : IEventData
         {
             Unregister(typeof(TEventData), handler);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public void Unregister(Type eventType, IEventHandler handler)
         {
             GetOrCreateHandlerFactories(eventType)
@@ -132,53 +132,53 @@ namespace StudioX.Events.Bus
                         factory =>
                             factory is SingleInstanceHandlerFactory &&
                             (factory as SingleInstanceHandlerFactory).HandlerInstance == handler
-                        );
+                    );
                 });
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public void Unregister<TEventData>(IEventHandlerFactory factory) where TEventData : IEventData
         {
             Unregister(typeof(TEventData), factory);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public void Unregister(Type eventType, IEventHandlerFactory factory)
         {
             GetOrCreateHandlerFactories(eventType).Locking(factories => factories.Remove(factory));
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public void UnregisterAll<TEventData>() where TEventData : IEventData
         {
             UnregisterAll(typeof(TEventData));
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public void UnregisterAll(Type eventType)
         {
             GetOrCreateHandlerFactories(eventType).Locking(factories => factories.Clear());
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public void Trigger<TEventData>(TEventData eventData) where TEventData : IEventData
         {
-            Trigger((object)null, eventData);
+            Trigger((object) null, eventData);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public void Trigger<TEventData>(object eventSource, TEventData eventData) where TEventData : IEventData
         {
             Trigger(typeof(TEventData), eventSource, eventData);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public void Trigger(Type eventType, IEventData eventData)
         {
             Trigger(eventType, null, eventData);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public void Trigger(Type eventType, object eventSource, IEventData eventData)
         {
             var exceptions = new List<Exception>();
@@ -192,11 +192,13 @@ namespace StudioX.Events.Bus
                     exceptions[0].ReThrow();
                 }
 
-                throw new AggregateException("More than one error has occurred while triggering the event: " + eventType, exceptions);
+                throw new AggregateException(
+                    "More than one error has occurred while triggering the event: " + eventType, exceptions);
             }
         }
 
-        private void TriggerHandlingException(Type eventType, object eventSource, IEventData eventData, List<Exception> exceptions)
+        private void TriggerHandlingException(Type eventType, object eventSource, IEventData eventData,
+            List<Exception> exceptions)
         {
             //TODO: This method can be optimized by adding all possibilities to a dictionary.
 
@@ -212,17 +214,18 @@ namespace StudioX.Events.Bus
                     {
                         if (eventHandler == null)
                         {
-                            throw new Exception($"Registered event handler for event type {handlerFactories.EventType.Name} does not implement IEventHandler<{handlerFactories.EventType.Name}> interface!");
+                            throw new Exception(
+                                $"Registered event handler for event type {handlerFactories.EventType.Name} does not implement IEventHandler<{handlerFactories.EventType.Name}> interface!");
                         }
 
                         var handlerType = typeof(IEventHandler<>).MakeGenericType(handlerFactories.EventType);
 
                         var method = handlerType.GetMethod(
                             "HandleEvent",
-                            new[] { handlerFactories.EventType }
+                            new[] {handlerFactories.EventType}
                         );
 
-                        method.Invoke(eventHandler, new object[] { eventData });
+                        method.Invoke(eventHandler, new object[] {eventData});
                     }
                     catch (TargetInvocationException ex)
                     {
@@ -261,7 +264,8 @@ namespace StudioX.Events.Bus
         {
             var handlerFactoryList = new List<EventTypeWithEventHandlerFactories>();
 
-            foreach (var handlerFactory in handlerFactories.Where(hf => ShouldTriggerEventForHandler(eventType, hf.Key)))
+            foreach (var handlerFactory in handlerFactories.Where(hf => ShouldTriggerEventForHandler(eventType, hf.Key))
+            )
             {
                 handlerFactoryList.Add(new EventTypeWithEventHandlerFactories(handlerFactory.Key, handlerFactory.Value));
             }
@@ -286,13 +290,13 @@ namespace StudioX.Events.Bus
             return false;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public Task TriggerAsync<TEventData>(TEventData eventData) where TEventData : IEventData
         {
-            return TriggerAsync((object)null, eventData);
+            return TriggerAsync((object) null, eventData);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public Task TriggerAsync<TEventData>(object eventSource, TEventData eventData) where TEventData : IEventData
         {
 #if  NET46
@@ -319,13 +323,13 @@ namespace StudioX.Events.Bus
             return task;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public Task TriggerAsync(Type eventType, IEventData eventData)
         {
             return TriggerAsync(eventType, null, eventData);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public Task TriggerAsync(Type eventType, object eventSource, IEventData eventData)
         {
 #if  NET46
@@ -354,7 +358,7 @@ namespace StudioX.Events.Bus
 
         private List<IEventHandlerFactory> GetOrCreateHandlerFactories(Type eventType)
         {
-            return handlerFactories.GetOrAdd(eventType, (type) => new List<IEventHandlerFactory>());
+            return handlerFactories.GetOrAdd(eventType, type => new List<IEventHandlerFactory>());
         }
 
         private class EventTypeWithEventHandlerFactories

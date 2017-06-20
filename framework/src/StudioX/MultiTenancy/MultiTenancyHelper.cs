@@ -16,13 +16,13 @@ namespace StudioX.MultiTenancy
         /// <param name="expectedTenantId">TenantId or null for host</param>
         public static bool IsTenantEntity(object entity, int? expectedTenantId)
         {
-            return (entity is IMayHaveTenant && entity.As<IMayHaveTenant>().TenantId == expectedTenantId) ||
-                   (entity is IMustHaveTenant && entity.As<IMustHaveTenant>().TenantId == expectedTenantId);
+            return entity is IMayHaveTenant && entity.As<IMayHaveTenant>().TenantId == expectedTenantId ||
+                   entity is IMustHaveTenant && entity.As<IMustHaveTenant>().TenantId == expectedTenantId;
         }
 
         public static bool IsHostEntity(object entity)
         {
-            MultiTenancySideAttribute attribute = entity.GetType().GetTypeInfo()
+            var attribute = entity.GetType().GetTypeInfo()
                 .GetCustomAttributes(typeof(MultiTenancySideAttribute), true)
                 .Cast<MultiTenancySideAttribute>()
                 .FirstOrDefault();

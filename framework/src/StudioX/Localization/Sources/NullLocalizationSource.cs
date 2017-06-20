@@ -6,16 +6,14 @@ using StudioX.Dependency;
 namespace StudioX.Localization.Sources
 {
     /// <summary>
-    /// Null object pattern for <see cref="ILocalizationSource"/>.
+    ///     Null object pattern for <see cref="ILocalizationSource" />.
     /// </summary>
     internal class NullLocalizationSource : ILocalizationSource
     {
         /// <summary>
-        /// Singleton instance.
+        ///     Singleton instance.
         /// </summary>
-        public static NullLocalizationSource Instance => SingletonInstance;
-
-        private static readonly NullLocalizationSource SingletonInstance = new NullLocalizationSource();
+        public static NullLocalizationSource Instance { get; } = new NullLocalizationSource();
 
         public string Name => null;
 
@@ -23,12 +21,10 @@ namespace StudioX.Localization.Sources
 
         private NullLocalizationSource()
         {
-            
         }
 
         public void Initialize(ILocalizationConfiguration configuration, IIocResolver iocResolver)
         {
-            
         }
 
         public string GetString(string name)

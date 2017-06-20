@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Globalization;
-using System.Threading;
 using StudioX.Localization.Sources;
 
 namespace StudioX.Localization
@@ -8,13 +7,12 @@ namespace StudioX.Localization
     public class NullLocalizationManager : ILocalizationManager
     {
         /// <summary>
-        /// Singleton instance.
+        ///     Singleton instance.
         /// </summary>
-        public static NullLocalizationManager Instance => SingletonInstance;
+        public static NullLocalizationManager Instance { get; } = new NullLocalizationManager();
 
-        private static readonly NullLocalizationManager SingletonInstance = new NullLocalizationManager();
-
-        public LanguageInfo CurrentLanguage => new LanguageInfo(CultureInfo.CurrentUICulture.Name, CultureInfo.CurrentUICulture.DisplayName);
+        public LanguageInfo CurrentLanguage
+            => new LanguageInfo(CultureInfo.CurrentUICulture.Name, CultureInfo.CurrentUICulture.DisplayName);
 
         private readonly IReadOnlyList<LanguageInfo> emptyLanguageArray = new LanguageInfo[0];
 
@@ -22,7 +20,6 @@ namespace StudioX.Localization
 
         private NullLocalizationManager()
         {
-            
         }
 
         public IReadOnlyList<LanguageInfo> GetAllLanguages()

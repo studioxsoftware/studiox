@@ -4,7 +4,7 @@ using Castle.Core.Logging;
 namespace StudioX.Logging
 {
     /// <summary>
-    /// Extensions for <see cref="ILogger"/>.
+    ///     Extensions for <see cref="ILogger" />.
     /// </summary>
     public static class LoggerExtensions
     {
