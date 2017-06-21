@@ -18,6 +18,7 @@ using StudioX.Zero.Configuration;
 
 namespace StudioX.Boilerplate.Roles
 {
+    [StudioXAuthorize(PermissionNames.System.Administration.Roles.MainMenu)]
     public class RoleAppService : BoilerplateAppServiceBase, IRoleAppService
     {
         private readonly RoleManager roleManager;
