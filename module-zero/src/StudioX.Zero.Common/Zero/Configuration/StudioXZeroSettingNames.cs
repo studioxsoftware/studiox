@@ -18,6 +18,11 @@ namespace StudioX.Zero.Configuration
             /// </summary>
             public const string IsEmailConfirmationRequiredForLogin = "StudioX.Zero.UserManagement.IsEmailConfirmationRequiredForLogin";
 
+            /// <summary>
+            /// "StudioX.Zero.UserManagement.IsNewRegisteredUserActiveByDefault".
+            /// </summary>
+            public const string IsNewRegisteredUserActiveByDefault = "StudioX.Zero.UserManagement.IsNewRegisteredUserActiveByDefault";
+
             public static class UserLockOut
             {
                 /// <summary>

@@ -17,6 +17,13 @@ namespace StudioX.Zero.Configuration
                            scopes: SettingScopes.Application | SettingScopes.Tenant,
                            isVisibleToClients: true
                            ),
+                        new SettingDefinition(
+                           StudioXZeroSettingNames.UserManagement.IsNewRegisteredUserActiveByDefault,
+                           "false",
+                           new FixedLocalizableString("Is new registered user active by default."),
+                           scopes: SettingScopes.Application | SettingScopes.Tenant,
+                           isVisibleToClients: true
+                           ),
 
                        new SettingDefinition(
                            StudioXZeroSettingNames.OrganizationUnits.MaxUserMembershipCount,

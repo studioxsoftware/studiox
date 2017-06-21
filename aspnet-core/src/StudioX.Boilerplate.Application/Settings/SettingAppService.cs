@@ -56,8 +56,8 @@ namespace StudioX.Boilerplate.Settings
             {
                 IsEmailConfirmationRequiredForLogin = SettingManager.GetSettingValue(
                     StudioXZeroSettingNames.UserManagement.IsEmailConfirmationRequiredForLogin).To<bool>(),
-                //IsNewRegisteredUserActiveByDefault = SettingManager.GetSettingValue(
-                //    StudioXZeroSettingNames.UserManagement.IsNewRegisteredUserActiveByDefault).To<bool>()
+                IsNewRegisteredUserActiveByDefault = SettingManager.GetSettingValue(
+                    StudioXZeroSettingNames.UserManagement.IsNewRegisteredUserActiveByDefault).To<bool>()
             };
 
             return setting;
@@ -82,15 +82,15 @@ namespace StudioX.Boilerplate.Settings
         {
             var setting = new PasswordComplexityDto
             {
-                MinLength = SettingManager.GetSettingValue(
+                RequiredLength = SettingManager.GetSettingValue(
                     StudioXZeroSettingNames.UserManagement.PasswordComplexity.RequiredLength).To<int>(),
-                UseNumbers = SettingManager.GetSettingValue(
+                RequireDigit = SettingManager.GetSettingValue(
                     StudioXZeroSettingNames.UserManagement.PasswordComplexity.RequireDigit).To<bool>(),
-                UseLowerCaseLetters = SettingManager.GetSettingValue(
+                RequireLowercase = SettingManager.GetSettingValue(
                     StudioXZeroSettingNames.UserManagement.PasswordComplexity.RequireLowercase).To<bool>(),
-                UseUpperCaseLetters = SettingManager.GetSettingValue(
+                RequireUppercase = SettingManager.GetSettingValue(
                     StudioXZeroSettingNames.UserManagement.PasswordComplexity.RequireUppercase).To<bool>(),
-                UsePunctuations = SettingManager.GetSettingValue(
+                RequireNonAlphanumeric = SettingManager.GetSettingValue(
                     StudioXZeroSettingNames.UserManagement.PasswordComplexity.RequireNonAlphanumeric).To<bool>()
             };
             return setting;
@@ -100,15 +100,15 @@ namespace StudioX.Boilerplate.Settings
         {
             var setting = new DefaultPasswordComplexityDto
             {
-                MinLength = settingDefinitionManager.GetSettingDefinition(
+                RequiredLength = settingDefinitionManager.GetSettingDefinition(
                     StudioXZeroSettingNames.UserManagement.PasswordComplexity.RequiredLength).DefaultValue.To<int>(),
-                UseNumbers = settingDefinitionManager.GetSettingDefinition(
+                RequireDigit = settingDefinitionManager.GetSettingDefinition(
                     StudioXZeroSettingNames.UserManagement.PasswordComplexity.RequireDigit).DefaultValue.To<bool>(),
-                UseLowerCaseLetters = settingDefinitionManager.GetSettingDefinition(
+                RequireLowercase = settingDefinitionManager.GetSettingDefinition(
                     StudioXZeroSettingNames.UserManagement.PasswordComplexity.RequireLowercase).DefaultValue.To<bool>(),
-                UseUpperCaseLetters = settingDefinitionManager.GetSettingDefinition(
+                RequireUppercase = settingDefinitionManager.GetSettingDefinition(
                     StudioXZeroSettingNames.UserManagement.PasswordComplexity.RequireUppercase).DefaultValue.To<bool>(),
-                UsePunctuations = settingDefinitionManager.GetSettingDefinition(
+                RequireNonAlphanumeric = settingDefinitionManager.GetSettingDefinition(
                     StudioXZeroSettingNames.UserManagement.PasswordComplexity.RequireNonAlphanumeric).DefaultValue.To<bool>()
             };
             return setting;
@@ -116,36 +116,31 @@ namespace StudioX.Boilerplate.Settings
 
         private async Task UpdateTenantSetting(int tenantId, SettingDto input)
         {
-            // PasswordComplexitySetting
-            //await SettingManager.ChangeSettingForTenantAsync(tenantId,
-            //    StudioXZeroSettingNames.UserManagement.PasswordComplexity.UseDefaultPasswordComplexitySettings,
-            //    input.PasswordComplexity.UseDefaultPasswordComplexitySettings.ToString().ToLower());
-
             await SettingManager.ChangeSettingForTenantAsync(tenantId,
                 StudioXZeroSettingNames.UserManagement.PasswordComplexity.RequiredLength,
-                input.PasswordComplexity.MinLength.ToString());
+                input.PasswordComplexity.RequiredLength.ToString());
        
 
             await SettingManager.ChangeSettingForTenantAsync(tenantId,
                 StudioXZeroSettingNames.UserManagement.PasswordComplexity.RequireDigit,
-                input.PasswordComplexity.UseNumbers.ToString().ToLower());
+                input.PasswordComplexity.RequireDigit.ToString().ToLower());
 
             await SettingManager.ChangeSettingForTenantAsync(tenantId,
                 StudioXZeroSettingNames.UserManagement.PasswordComplexity.RequireLowercase,
-                input.PasswordComplexity.UseLowerCaseLetters.ToString().ToLower());
+                input.PasswordComplexity.RequireLowercase.ToString().ToLower());
 
             await SettingManager.ChangeSettingForTenantAsync(tenantId,
                 StudioXZeroSettingNames.UserManagement.PasswordComplexity.RequireUppercase,
-                input.PasswordComplexity.UseUpperCaseLetters.ToString().ToLower());
+                input.PasswordComplexity.RequireUppercase.ToString().ToLower());
 
             await SettingManager.ChangeSettingForTenantAsync(tenantId,
                 StudioXZeroSettingNames.UserManagement.PasswordComplexity.RequireNonAlphanumeric,
-                input.PasswordComplexity.UsePunctuations.ToString().ToLower());
+                input.PasswordComplexity.RequireNonAlphanumeric.ToString().ToLower());
 
             // UserManagementSetting
-            //await SettingManager.ChangeSettingForTenantAsync(tenantId,
-            //    StudioXZeroSettingNames.UserManagement.IsNewRegisteredUserActiveByDefault,
-            //    input.UserManagement.IsNewRegisteredUserActiveByDefault.ToString().ToLower());
+            await SettingManager.ChangeSettingForTenantAsync(tenantId,
+                StudioXZeroSettingNames.UserManagement.IsNewRegisteredUserActiveByDefault,
+                input.UserManagement.IsNewRegisteredUserActiveByDefault.ToString().ToLower());
 
             await SettingManager.ChangeSettingForTenantAsync(tenantId,
                 StudioXZeroSettingNames.UserManagement.IsEmailConfirmationRequiredForLogin,
@@ -167,36 +162,31 @@ namespace StudioX.Boilerplate.Settings
 
         private async Task UpdateApplicationSetting(SettingDto input)
         {
-            // PasswordComplexitySetting
-            //await SettingManager.ChangeSettingForApplicationAsync(
-            //    StudioXZeroSettingNames.UserManagement.PasswordComplexity.UseDefaultPasswordComplexitySettings,
-            //    input.PasswordComplexity.UseDefaultPasswordComplexitySettings.ToString().ToLower());
-
             await SettingManager.ChangeSettingForApplicationAsync(
                 StudioXZeroSettingNames.UserManagement.PasswordComplexity.RequiredLength,
-                input.PasswordComplexity.MinLength.ToString());
+                input.PasswordComplexity.RequiredLength.ToString());
 
 
             await SettingManager.ChangeSettingForApplicationAsync(
                 StudioXZeroSettingNames.UserManagement.PasswordComplexity.RequireDigit,
-                input.PasswordComplexity.UseNumbers.ToString().ToLower());
+                input.PasswordComplexity.RequireDigit.ToString().ToLower());
 
             await SettingManager.ChangeSettingForApplicationAsync(
                 StudioXZeroSettingNames.UserManagement.PasswordComplexity.RequireLowercase,
-                input.PasswordComplexity.UseLowerCaseLetters.ToString().ToLower());
+                input.PasswordComplexity.RequireLowercase.ToString().ToLower());
 
             await SettingManager.ChangeSettingForApplicationAsync(
                 StudioXZeroSettingNames.UserManagement.PasswordComplexity.RequireUppercase,
-                input.PasswordComplexity.UseUpperCaseLetters.ToString().ToLower());
+                input.PasswordComplexity.RequireUppercase.ToString().ToLower());
 
             await SettingManager.ChangeSettingForApplicationAsync(
                 StudioXZeroSettingNames.UserManagement.PasswordComplexity.RequireNonAlphanumeric,
-                input.PasswordComplexity.UsePunctuations.ToString().ToLower());
+                input.PasswordComplexity.RequireNonAlphanumeric.ToString().ToLower());
 
             // UserManagementSetting
-            //await SettingManager.ChangeSettingForApplicationAsync(
-            //    StudioXZeroSettingNames.UserManagement.IsNewRegisteredUserActiveByDefault,
-            //    input.UserManagement.IsNewRegisteredUserActiveByDefault.ToString().ToLower());
+            await SettingManager.ChangeSettingForApplicationAsync(
+                StudioXZeroSettingNames.UserManagement.IsNewRegisteredUserActiveByDefault,
+                input.UserManagement.IsNewRegisteredUserActiveByDefault.ToString().ToLower());
 
             await SettingManager.ChangeSettingForApplicationAsync(
                 StudioXZeroSettingNames.UserManagement.IsEmailConfirmationRequiredForLogin,
