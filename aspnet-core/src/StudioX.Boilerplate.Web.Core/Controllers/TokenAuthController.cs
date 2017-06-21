@@ -35,7 +35,7 @@ namespace StudioX.Boilerplate.Controllers
         public TokenAuthController(
             LogInManager logInManager,
             ITenantCache tenantCache,
-            StudioXLoginResultTypeHelper loginResultTypeHelper,
+            StudioXLoginResultTypeHelper studioXLoginResultTypeHelper,
             TokenAuthConfiguration configuration,
             IExternalAuthConfiguration externalAuthConfiguration,
             IExternalAuthManager externalAuthManager,
@@ -43,7 +43,7 @@ namespace StudioX.Boilerplate.Controllers
         {
             this.logInManager = logInManager;
             this.tenantCache = tenantCache;
-            studioXLoginResultTypeHelper = loginResultTypeHelper;
+            this.studioXLoginResultTypeHelper = studioXLoginResultTypeHelper;
             this.configuration = configuration;
             this.externalAuthConfiguration = externalAuthConfiguration;
             this.externalAuthManager = externalAuthManager;
