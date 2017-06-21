@@ -16,7 +16,7 @@ namespace StudioX.Dependency
         /// <summary>
         ///     The Singleton instance.
         /// </summary>
-        public static IocManager Instance { get; private set; }
+        public static IocManager Instance { get; }
 
         /// <summary>
         ///     Reference to the Castle Windsor Container.
