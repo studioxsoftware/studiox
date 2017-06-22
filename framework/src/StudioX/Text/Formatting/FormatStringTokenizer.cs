@@ -21,7 +21,8 @@ namespace StudioX.Text.Formatting
                     case '{':
                         if (inDynamicValue)
                         {
-                            throw new FormatException("Incorrect syntax at char " + i + "! format string can not contain nested dynamic value expression!");
+                            throw new FormatException("Incorrect syntax at char " + i +
+                                                      "! format string can not contain nested dynamic value expression!");
                         }
 
                         inDynamicValue = true;
@@ -36,14 +37,16 @@ namespace StudioX.Text.Formatting
                     case '}':
                         if (!inDynamicValue)
                         {
-                            throw new FormatException("Incorrect syntax at char " + i + "! These is no opening brackets for the closing bracket }.");
+                            throw new FormatException("Incorrect syntax at char " + i +
+                                                      "! These is no opening brackets for the closing bracket }.");
                         }
 
                         inDynamicValue = false;
 
                         if (currentText.Length <= 0)
                         {
-                            throw new FormatException("Incorrect syntax at char " + i + "! Brackets does not containt any chars.");
+                            throw new FormatException("Incorrect syntax at char " + i +
+                                                      "! Brackets does not containt any chars.");
                         }
 
                         var dynamicValue = currentText.ToString();
