@@ -10,7 +10,9 @@ namespace StudioX.Timing
         {
             return new[]
             {
-                new SettingDefinition(TimingSettingNames.TimeZone, "UTC", L("TimeZone"), scopes: SettingScopes.Application | SettingScopes.Tenant | SettingScopes.User, isVisibleToClients: true)
+                new SettingDefinition(TimingSettingNames.TimeZone, "UTC", L("TimeZone"),
+                    scopes: SettingScopes.Application | SettingScopes.Tenant | SettingScopes.User,
+                    isVisibleToClients: true)
             };
         }
 
