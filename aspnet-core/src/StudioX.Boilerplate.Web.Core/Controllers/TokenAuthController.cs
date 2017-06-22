@@ -6,7 +6,6 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using StudioX.Authorization;
 using StudioX.Authorization.Users;
-using StudioX.AutoMapper;
 using StudioX.MultiTenancy;
 using StudioX.Runtime.Security;
 using StudioX.UI;
