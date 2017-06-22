@@ -6,6 +6,7 @@ using Castle.Core.Logging;
 using log4net;
 using log4net.Config;
 using log4net.Repository;
+using log4net.Repository.Hierarchy;
 
 namespace StudioX.Castle.Logging.Log4Net
 {
@@ -27,7 +28,7 @@ namespace StudioX.Castle.Logging.Log4Net
 #else
             loggerRepository = LogManager.CreateRepository(
                 Assembly.GetEntryAssembly(),
-                typeof(log4net.Repository.Hierarchy.Hierarchy)
+                typeof(Hierarchy)
             );
 
             var log4NetConfig = new XmlDocument();
@@ -52,7 +53,8 @@ namespace StudioX.Castle.Logging.Log4Net
 
         public override ILogger Create(string name, LoggerLevel level)
         {
-            throw new NotSupportedException("Logger levels cannot be set at runtime. Please review your configuration file.");
+            throw new NotSupportedException(
+                "Logger levels cannot be set at runtime. Please review your configuration file.");
         }
     }
 }

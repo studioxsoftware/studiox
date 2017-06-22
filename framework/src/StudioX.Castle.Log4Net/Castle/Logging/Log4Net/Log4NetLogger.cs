@@ -32,30 +32,15 @@ namespace StudioX.Castle.Logging.Log4Net
         {
         }
 
-        public bool IsDebugEnabled
-        {
-            get { return Logger.IsEnabledFor(Level.Debug); }
-        }
+        public bool IsDebugEnabled => Logger.IsEnabledFor(Level.Debug);
 
-        public bool IsErrorEnabled
-        {
-            get { return Logger.IsEnabledFor(Level.Error); }
-        }
+        public bool IsErrorEnabled => Logger.IsEnabledFor(Level.Error);
 
-        public bool IsFatalEnabled
-        {
-            get { return Logger.IsEnabledFor(Level.Fatal); }
-        }
+        public bool IsFatalEnabled => Logger.IsEnabledFor(Level.Fatal);
 
-        public bool IsInfoEnabled
-        {
-            get { return Logger.IsEnabledFor(Level.Info); }
-        }
+        public bool IsInfoEnabled => Logger.IsEnabledFor(Level.Info);
 
-        public bool IsWarnEnabled
-        {
-            get { return Logger.IsEnabledFor(Level.Warn); }
-        }
+        public bool IsWarnEnabled => Logger.IsEnabledFor(Level.Warn);
 
         protected internal Log4NetLoggerFactory Factory { get; set; }
 
@@ -66,7 +51,7 @@ namespace StudioX.Castle.Logging.Log4Net
             return Logger.ToString();
         }
 
-        public virtual global::Castle.Core.Logging.ILogger CreateChildLogger(string name)
+        public virtual ILogger CreateChildLogger(string name)
         {
             return Factory.Create(Logger.Name + "." + name);
         }
@@ -95,23 +80,25 @@ namespace StudioX.Castle.Logging.Log4Net
             }
         }
 
-        public void DebugFormat(string format, params Object[] args)
+        public void DebugFormat(string format, params object[] args)
         {
             if (IsDebugEnabled)
             {
-                Logger.Log(DeclaringType, Level.Debug, new SystemStringFormat(CultureInfo.InvariantCulture, format, args), null);
+                Logger.Log(DeclaringType, Level.Debug,
+                    new SystemStringFormat(CultureInfo.InvariantCulture, format, args), null);
             }
         }
 
-        public void DebugFormat(Exception exception, string format, params Object[] args)
+        public void DebugFormat(Exception exception, string format, params object[] args)
         {
             if (IsDebugEnabled)
             {
-                Logger.Log(DeclaringType, Level.Debug, new SystemStringFormat(CultureInfo.InvariantCulture, format, args), exception);
+                Logger.Log(DeclaringType, Level.Debug,
+                    new SystemStringFormat(CultureInfo.InvariantCulture, format, args), exception);
             }
         }
 
-        public void DebugFormat(IFormatProvider formatProvider, string format, params Object[] args)
+        public void DebugFormat(IFormatProvider formatProvider, string format, params object[] args)
         {
             if (IsDebugEnabled)
             {
@@ -119,7 +106,7 @@ namespace StudioX.Castle.Logging.Log4Net
             }
         }
 
-        public void DebugFormat(Exception exception, IFormatProvider formatProvider, string format, params Object[] args)
+        public void DebugFormat(Exception exception, IFormatProvider formatProvider, string format, params object[] args)
         {
             if (IsDebugEnabled)
             {
@@ -151,23 +138,25 @@ namespace StudioX.Castle.Logging.Log4Net
             }
         }
 
-        public void ErrorFormat(string format, params Object[] args)
+        public void ErrorFormat(string format, params object[] args)
         {
             if (IsErrorEnabled)
             {
-                Logger.Log(DeclaringType, Level.Error, new SystemStringFormat(CultureInfo.InvariantCulture, format, args), null);
+                Logger.Log(DeclaringType, Level.Error,
+                    new SystemStringFormat(CultureInfo.InvariantCulture, format, args), null);
             }
         }
 
-        public void ErrorFormat(Exception exception, string format, params Object[] args)
+        public void ErrorFormat(Exception exception, string format, params object[] args)
         {
             if (IsErrorEnabled)
             {
-                Logger.Log(DeclaringType, Level.Error, new SystemStringFormat(CultureInfo.InvariantCulture, format, args), exception);
+                Logger.Log(DeclaringType, Level.Error,
+                    new SystemStringFormat(CultureInfo.InvariantCulture, format, args), exception);
             }
         }
 
-        public void ErrorFormat(IFormatProvider formatProvider, string format, params Object[] args)
+        public void ErrorFormat(IFormatProvider formatProvider, string format, params object[] args)
         {
             if (IsErrorEnabled)
             {
@@ -175,7 +164,7 @@ namespace StudioX.Castle.Logging.Log4Net
             }
         }
 
-        public void ErrorFormat(Exception exception, IFormatProvider formatProvider, string format, params Object[] args)
+        public void ErrorFormat(Exception exception, IFormatProvider formatProvider, string format, params object[] args)
         {
             if (IsErrorEnabled)
             {
@@ -207,23 +196,25 @@ namespace StudioX.Castle.Logging.Log4Net
             }
         }
 
-        public void FatalFormat(string format, params Object[] args)
+        public void FatalFormat(string format, params object[] args)
         {
             if (IsFatalEnabled)
             {
-                Logger.Log(DeclaringType, Level.Fatal, new SystemStringFormat(CultureInfo.InvariantCulture, format, args), null);
+                Logger.Log(DeclaringType, Level.Fatal,
+                    new SystemStringFormat(CultureInfo.InvariantCulture, format, args), null);
             }
         }
 
-        public void FatalFormat(Exception exception, string format, params Object[] args)
+        public void FatalFormat(Exception exception, string format, params object[] args)
         {
             if (IsFatalEnabled)
             {
-                Logger.Log(DeclaringType, Level.Fatal, new SystemStringFormat(CultureInfo.InvariantCulture, format, args), exception);
+                Logger.Log(DeclaringType, Level.Fatal,
+                    new SystemStringFormat(CultureInfo.InvariantCulture, format, args), exception);
             }
         }
 
-        public void FatalFormat(IFormatProvider formatProvider, string format, params Object[] args)
+        public void FatalFormat(IFormatProvider formatProvider, string format, params object[] args)
         {
             if (IsFatalEnabled)
             {
@@ -231,7 +222,7 @@ namespace StudioX.Castle.Logging.Log4Net
             }
         }
 
-        public void FatalFormat(Exception exception, IFormatProvider formatProvider, string format, params Object[] args)
+        public void FatalFormat(Exception exception, IFormatProvider formatProvider, string format, params object[] args)
         {
             if (IsFatalEnabled)
             {
@@ -263,23 +254,25 @@ namespace StudioX.Castle.Logging.Log4Net
             }
         }
 
-        public void InfoFormat(string format, params Object[] args)
+        public void InfoFormat(string format, params object[] args)
         {
             if (IsInfoEnabled)
             {
-                Logger.Log(DeclaringType, Level.Info, new SystemStringFormat(CultureInfo.InvariantCulture, format, args), null);
+                Logger.Log(DeclaringType, Level.Info, new SystemStringFormat(CultureInfo.InvariantCulture, format, args),
+                    null);
             }
         }
 
-        public void InfoFormat(Exception exception, string format, params Object[] args)
+        public void InfoFormat(Exception exception, string format, params object[] args)
         {
             if (IsInfoEnabled)
             {
-                Logger.Log(DeclaringType, Level.Info, new SystemStringFormat(CultureInfo.InvariantCulture, format, args), exception);
+                Logger.Log(DeclaringType, Level.Info, new SystemStringFormat(CultureInfo.InvariantCulture, format, args),
+                    exception);
             }
         }
 
-        public void InfoFormat(IFormatProvider formatProvider, string format, params Object[] args)
+        public void InfoFormat(IFormatProvider formatProvider, string format, params object[] args)
         {
             if (IsInfoEnabled)
             {
@@ -287,7 +280,7 @@ namespace StudioX.Castle.Logging.Log4Net
             }
         }
 
-        public void InfoFormat(Exception exception, IFormatProvider formatProvider, string format, params Object[] args)
+        public void InfoFormat(Exception exception, IFormatProvider formatProvider, string format, params object[] args)
         {
             if (IsInfoEnabled)
             {
@@ -319,23 +312,25 @@ namespace StudioX.Castle.Logging.Log4Net
             }
         }
 
-        public void WarnFormat(string format, params Object[] args)
+        public void WarnFormat(string format, params object[] args)
         {
             if (IsWarnEnabled)
             {
-                Logger.Log(DeclaringType, Level.Warn, new SystemStringFormat(CultureInfo.InvariantCulture, format, args), null);
+                Logger.Log(DeclaringType, Level.Warn, new SystemStringFormat(CultureInfo.InvariantCulture, format, args),
+                    null);
             }
         }
 
-        public void WarnFormat(Exception exception, string format, params Object[] args)
+        public void WarnFormat(Exception exception, string format, params object[] args)
         {
             if (IsWarnEnabled)
             {
-                Logger.Log(DeclaringType, Level.Warn, new SystemStringFormat(CultureInfo.InvariantCulture, format, args), exception);
+                Logger.Log(DeclaringType, Level.Warn, new SystemStringFormat(CultureInfo.InvariantCulture, format, args),
+                    exception);
             }
         }
 
-        public void WarnFormat(IFormatProvider formatProvider, string format, params Object[] args)
+        public void WarnFormat(IFormatProvider formatProvider, string format, params object[] args)
         {
             if (IsWarnEnabled)
             {
@@ -343,7 +338,7 @@ namespace StudioX.Castle.Logging.Log4Net
             }
         }
 
-        public void WarnFormat(Exception exception, IFormatProvider formatProvider, string format, params Object[] args)
+        public void WarnFormat(Exception exception, IFormatProvider formatProvider, string format, params object[] args)
         {
             if (IsWarnEnabled)
             {
