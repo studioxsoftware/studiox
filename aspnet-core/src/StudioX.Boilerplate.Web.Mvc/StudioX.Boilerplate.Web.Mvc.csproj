@@ -16,33 +16,30 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="wwwroot\lib\studiox-web-resources\.npmignore" />
-    <Content Include="wwwroot\lib\studiox-web-resources\package.json" />
-    <Content Include="wwwroot\lib\studiox-web-resources\packages.config" />
-    <Content Include="wwwroot\lib\studiox-web-resources\StudioX\Framework\scripts\libs\studiox.toastr.js" />
-    <Content Include="wwwroot\lib\studiox-web-resources\StudioX\Framework\scripts\studiox.d.ts" />
-    <Content Include="wwwroot\lib\studiox-web-resources\StudioX\Framework\scripts\libs\studiox.blockUI.js" />
-    <Content Include="wwwroot\lib\studiox-web-resources\StudioX\Framework\scripts\libs\studiox.jquery.d.ts" />
-    <Content Include="wwwroot\lib\studiox-web-resources\StudioX\Framework\scripts\libs\studiox.moment.js" />
-    <Content Include="wwwroot\lib\studiox-web-resources\StudioX\Framework\scripts\libs\studiox.signalr.js" />
-    <Content Include="wwwroot\lib\studiox-web-resources\StudioX\Framework\scripts\libs\studiox.spin.js" />
-    <Content Include="wwwroot\lib\studiox-web-resources\StudioX\Framework\scripts\libs\angularjs\studiox.ng.js" />
-    <Content Include="wwwroot\lib\studiox-web-resources\StudioX\Framework\scripts\libs\requirejs\plugins\service.js" />
-    <Content Include="wwwroot\lib\studiox-web-resources\StudioX\Framework\scripts\libs\studiox.jquery.js" />
-    <Content Include="wwwroot\lib\studiox-web-resources\StudioX\Framework\scripts\libs\studiox.jtable.js" />
-    <Content Include="wwwroot\lib\studiox-web-resources\StudioX\Framework\scripts\libs\studiox.signalr.d.ts" />
-    <Content Include="wwwroot\lib\studiox-web-resources\StudioX\Framework\scripts\libs\studiox.sweet-alert.js" />
-    <Content Include="wwwroot\lib\studiox-web-resources\StudioX\Framework\scripts\libs\utils\ie10fix.js" />
-    <Content Include="wwwroot\lib\studiox-web-resources\StudioX\Framework\scripts\studiox.js" />
-    <Content Include="wwwroot\lib\studiox-web-resources\StudioX\Framework\styles\studiox.css" />
-    <Content Include="wwwroot\lib\studiox-web-resources\StudioX\Framework\styles\studiox.css.map" />
-    <Content Include="wwwroot\lib\studiox-web-resources\StudioX\Framework\styles\studiox.less" />
-    <Content Include="wwwroot\lib\studiox-web-resources\StudioX\Framework\styles\studiox.min.css" />
-    <Content Include="wwwroot\lib\studiox-web-resources\StudioX\Framework\styles\studiox.mixings.css" />
-    <Content Include="wwwroot\lib\studiox-web-resources\StudioX\Framework\styles\studiox.mixings.css.map" />
-    <Content Include="wwwroot\lib\studiox-web-resources\StudioX\Framework\styles\studiox.mixings.less" />
-    <Content Include="wwwroot\lib\studiox-web-resources\StudioX\Framework\styles\studiox.mixings.min.css" />
-    <Content Include="wwwroot\lib\studiox-web-resources\StudioX\Framework\styles\utils\ie10fix.css" />
+    <Content Include="wwwroot\StudioX\Framework\scripts\libs\angularjs\studiox.ng.js" />
+    <Content Include="wwwroot\StudioX\Framework\scripts\libs\requirejs\plugins\service.js" />
+    <Content Include="wwwroot\StudioX\Framework\scripts\libs\studiox.blockUI.js" />
+    <Content Include="wwwroot\StudioX\Framework\scripts\libs\studiox.jquery.d.ts" />
+    <Content Include="wwwroot\StudioX\Framework\scripts\libs\studiox.jquery.js" />
+    <Content Include="wwwroot\StudioX\Framework\scripts\libs\studiox.jtable.js" />
+    <Content Include="wwwroot\StudioX\Framework\scripts\libs\studiox.moment.js" />
+    <Content Include="wwwroot\StudioX\Framework\scripts\libs\studiox.signalr.d.ts" />
+    <Content Include="wwwroot\StudioX\Framework\scripts\libs\studiox.signalr.js" />
+    <Content Include="wwwroot\StudioX\Framework\scripts\libs\studiox.spin.js" />
+    <Content Include="wwwroot\StudioX\Framework\scripts\libs\studiox.sweet-alert.js" />
+    <Content Include="wwwroot\StudioX\Framework\scripts\libs\studiox.toastr.js" />
+    <Content Include="wwwroot\StudioX\Framework\scripts\libs\utils\ie10fix.js" />
+    <Content Include="wwwroot\StudioX\Framework\scripts\studiox.d.ts" />
+    <Content Include="wwwroot\StudioX\Framework\scripts\studiox.js" />
+    <Content Include="wwwroot\StudioX\Framework\styles\studiox.css" />
+    <Content Include="wwwroot\StudioX\Framework\styles\studiox.css.map" />
+    <Content Include="wwwroot\StudioX\Framework\styles\studiox.less" />
+    <Content Include="wwwroot\StudioX\Framework\styles\studiox.min.css" />
+    <Content Include="wwwroot\StudioX\Framework\styles\studiox.mixings.css" />
+    <Content Include="wwwroot\StudioX\Framework\styles\studiox.mixings.css.map" />
+    <Content Include="wwwroot\StudioX\Framework\styles\studiox.mixings.less" />
+    <Content Include="wwwroot\StudioX\Framework\styles\studiox.mixings.min.css" />
+    <Content Include="wwwroot\StudioX\Framework\styles\utils\ie10fix.css" />
     <Content Include="wwwroot\view-resources\Views\Shared\_Layout.js" />
   </ItemGroup>
 
