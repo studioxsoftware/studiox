@@ -3,19 +3,18 @@ using System.Collections.Immutable;
 using System.Data.Entity;
 using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
-using System.Linq;
 using System.Threading.Tasks;
+using Castle.Core.Internal;
 using StudioX.Dependency;
 using StudioX.Domain.Uow;
 using StudioX.EntityFramework.Utils;
 using StudioX.Extensions;
 using StudioX.MultiTenancy;
-using Castle.Core.Internal;
 
 namespace StudioX.EntityFramework.Uow
 {
     /// <summary>
-    /// Implements Unit of work for Entity Framework.
+    ///     Implements Unit of work for Entity Framework.
     /// </summary>
     public class EfUnitOfWork : UnitOfWorkBase, ITransientDependency
     {
@@ -27,7 +26,7 @@ namespace StudioX.EntityFramework.Uow
         private readonly IEfTransactionStrategy transactionStrategy;
 
         /// <summary>
-        /// Creates a new <see cref="EfUnitOfWork"/>.
+        ///     Creates a new <see cref="EfUnitOfWork" />.
         /// </summary>
         public EfUnitOfWork(
             IIocResolver iocResolver,
@@ -38,9 +37,9 @@ namespace StudioX.EntityFramework.Uow
             IDbContextTypeMatcher dbContextTypeMatcher,
             IEfTransactionStrategy transactionStrategy)
             : base(
-                  connectionStringResolver,
-                  defaultOptions,
-                  filterExecuter)
+                connectionStringResolver,
+                defaultOptions,
+                filterExecuter)
         {
             IocResolver = iocResolver;
             this.dbContextResolver = dbContextResolver;
@@ -95,7 +94,7 @@ namespace StudioX.EntityFramework.Uow
                 transactionStrategy.Commit();
             }
         }
-        
+
         public virtual TDbContext GetOrCreateDbContext<TDbContext>(MultiTenancySides? multiTenancySide = null)
             where TDbContext : DbContext
         {
@@ -125,17 +124,15 @@ namespace StudioX.EntityFramework.Uow
                     dbContext.Database.CommandTimeout = Options.Timeout.Value.TotalSeconds.To<int>();
                 }
 
-                ((IObjectContextAdapter)dbContext).ObjectContext.ObjectMaterialized += (sender, args) =>
-                {
-                    ObjectContext_ObjectMaterialized(dbContext, args);
-                };
+                ((IObjectContextAdapter) dbContext).ObjectContext.ObjectMaterialized +=
+                    (sender, args) => { ObjectContext_ObjectMaterialized(dbContext, args); };
 
                 FilterExecuter.As<IEfUnitOfWorkFilterExecuter>().ApplyCurrentFilters(this, dbContext);
-                
+
                 ActiveDbContexts[dbContextKey] = dbContext;
             }
 
-            return (TDbContext)dbContext;
+            return (TDbContext) dbContext;
         }
 
         protected override void DisposeUow()

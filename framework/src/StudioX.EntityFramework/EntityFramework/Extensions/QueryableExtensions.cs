@@ -2,27 +2,25 @@ using System;
 using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
-
+using JetBrains.Annotations;
 using StudioX.Dependency;
 using StudioX.Domain.Entities;
 using StudioX.Domain.Repositories;
 using StudioX.EntityFramework.Interceptors;
 using StudioX.Extensions;
 
-using JetBrains.Annotations;
-
 namespace StudioX.EntityFramework.Extensions
 {
     /// <summary>
-    /// Extension methods for <see cref="IQueryable"/> and <see cref="IQueryable{T}"/>.
+    ///     Extension methods for <see cref="IQueryable" /> and <see cref="IQueryable{T}" />.
     /// </summary>
     public static class QueryableExtensions
     {
         /// <summary>
-        /// Specifies the related objects to include in the query results.
+        ///     Specifies the related objects to include in the query results.
         /// </summary>
-        /// <param name="source">The source <see cref="IQueryable"/> on which to call Include.</param>
-        /// <param name="condition">A boolean value to determine to include <paramref name="path"/> or not.</param>
+        /// <param name="source">The source <see cref="IQueryable" /> on which to call Include.</param>
+        /// <param name="condition">A boolean value to determine to include <paramref name="path" /> or not.</param>
         /// <param name="path">The dot-separated list of related objects to return in the query results.</param>
         public static IQueryable IncludeIf(this IQueryable source, bool condition, string path)
         {
@@ -32,10 +30,10 @@ namespace StudioX.EntityFramework.Extensions
         }
 
         /// <summary>
-        /// Specifies the related objects to include in the query results.
+        ///     Specifies the related objects to include in the query results.
         /// </summary>
-        /// <param name="source">The source <see cref="IQueryable{T}"/> on which to call Include.</param>
-        /// <param name="condition">A boolean value to determine to include <paramref name="path"/> or not.</param>
+        /// <param name="source">The source <see cref="IQueryable{T}" /> on which to call Include.</param>
+        /// <param name="condition">A boolean value to determine to include <paramref name="path" /> or not.</param>
         /// <param name="path">The dot-separated list of related objects to return in the query results.</param>
         public static IQueryable<T> IncludeIf<T>(this IQueryable<T> source, bool condition, string path)
         {
@@ -45,12 +43,13 @@ namespace StudioX.EntityFramework.Extensions
         }
 
         /// <summary>
-        /// Specifies the related objects to include in the query results.
+        ///     Specifies the related objects to include in the query results.
         /// </summary>
-        /// <param name="source">The source <see cref="IQueryable{T}"/> on which to call Include.</param>
-        /// <param name="condition">A boolean value to determine to include <paramref name="path"/> or not.</param>
+        /// <param name="source">The source <see cref="IQueryable{T}" /> on which to call Include.</param>
+        /// <param name="condition">A boolean value to determine to include <paramref name="path" /> or not.</param>
         /// <param name="path">The type of navigation property being included.</param>
-        public static IQueryable<T> IncludeIf<T, TProperty>(this IQueryable<T> source, bool condition, Expression<Func<T, TProperty>> path)
+        public static IQueryable<T> IncludeIf<T, TProperty>(this IQueryable<T> source, bool condition,
+            Expression<Func<T, TProperty>> path)
         {
             return condition
                 ? source.Include(path)
@@ -58,20 +57,24 @@ namespace StudioX.EntityFramework.Extensions
         }
 
         /// <summary>
-        /// Nolockings the specified queryable.
+        ///     Nolockings the specified queryable.
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="repository">The repository.</param>
         /// <param name="queryable">The queryable.</param>
         /// <returns></returns>
-        public static TResult Nolocking<TEntity, TResult>(this IRepository<TEntity, int> repository, [NotNull] Func<IQueryable<TEntity>, TResult> queryable) where TEntity : class, IEntity<int>
+        public static TResult Nolocking<TEntity, TResult>(this IRepository<TEntity, int> repository,
+            [NotNull] Func<IQueryable<TEntity>, TResult> queryable) where TEntity : class, IEntity<int>
         {
             Check.NotNull(queryable, nameof(queryable));
 
             TResult result;
 
-            using (var nolockInterceptor = repository.As<StudioXRepositoryBase<TEntity, int>>().IocResolver.ResolveAsDisposable<WithNoLockInterceptor>())
+            using (
+                var nolockInterceptor =
+                    repository.As<StudioXRepositoryBase<TEntity, int>>()
+                        .IocResolver.ResolveAsDisposable<WithNoLockInterceptor>())
             {
                 using (nolockInterceptor.Object.UseNolocking())
                 {
@@ -83,7 +86,7 @@ namespace StudioX.EntityFramework.Extensions
         }
 
         /// <summary>
-        /// Nolockings the specified queryable.
+        ///     Nolockings the specified queryable.
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <typeparam name="TPrimaryKey">The type of the primary key.</typeparam>
@@ -91,13 +94,18 @@ namespace StudioX.EntityFramework.Extensions
         /// <param name="repository">The repository.</param>
         /// <param name="queryable">The queryable.</param>
         /// <returns></returns>
-        public static TResult Nolocking<TEntity, TPrimaryKey, TResult>(this IRepository<TEntity, TPrimaryKey> repository, [NotNull] Func<IQueryable<TEntity>, TResult> queryable) where TEntity : class, IEntity<TPrimaryKey>
+        public static TResult Nolocking<TEntity, TPrimaryKey, TResult>(
+            this IRepository<TEntity, TPrimaryKey> repository, [NotNull] Func<IQueryable<TEntity>, TResult> queryable)
+            where TEntity : class, IEntity<TPrimaryKey>
         {
             Check.NotNull(queryable, nameof(queryable));
 
             TResult result;
 
-            using (var nolockInterceptor = repository.As<StudioXRepositoryBase<TEntity, TPrimaryKey>>().IocResolver.ResolveAsDisposable<WithNoLockInterceptor>())
+            using (
+                var nolockInterceptor =
+                    repository.As<StudioXRepositoryBase<TEntity, TPrimaryKey>>()
+                        .IocResolver.ResolveAsDisposable<WithNoLockInterceptor>())
             {
                 using (nolockInterceptor.Object.UseNolocking())
                 {

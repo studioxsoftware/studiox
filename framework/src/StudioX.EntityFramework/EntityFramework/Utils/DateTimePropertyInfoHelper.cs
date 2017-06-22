@@ -12,8 +12,8 @@ namespace StudioX.EntityFramework.Utils
     internal static class DateTimePropertyInfoHelper
     {
         /// <summary>
-        /// Key: Entity type
-        /// Value: DateTime property infos
+        ///     Key: Entity type
+        ///     Value: DateTime property infos
         /// </summary>
         private static readonly ConcurrentDictionary<Type, EntityDateTimePropertiesInfo> DateTimeProperties;
 
@@ -25,9 +25,9 @@ namespace StudioX.EntityFramework.Utils
         public static EntityDateTimePropertiesInfo GetDatePropertyInfos(Type entityType)
         {
             return DateTimeProperties.GetOrAdd(
-                       entityType,
-                       key => FindDatePropertyInfosForType(entityType)
-                   );
+                entityType,
+                key => FindDatePropertyInfosForType(entityType)
+            );
         }
 
         public static void NormalizeDatePropertyKinds(object entity, Type entityType)
@@ -36,7 +36,7 @@ namespace StudioX.EntityFramework.Utils
 
             dateTimePropertyInfos.DateTimePropertyInfos.ForEach(property =>
             {
-                var dateTime = (DateTime?)property.GetValue(entity);
+                var dateTime = (DateTime?) property.GetValue(entity);
                 if (dateTime.HasValue)
                 {
                     property.SetValue(entity, Clock.Normalize(dateTime.Value));
@@ -45,7 +45,7 @@ namespace StudioX.EntityFramework.Utils
 
             dateTimePropertyInfos.ComplexTypePropertyPaths.ForEach(propertPath =>
             {
-                var dateTime = (DateTime?)ReflectionHelper.GetValueByPath(entity, entityType, propertPath);
+                var dateTime = (DateTime?) ReflectionHelper.GetValueByPath(entity, entityType, propertPath);
                 if (dateTime.HasValue)
                 {
                     ReflectionHelper.SetValueByPath(entity, entityType, propertPath, Clock.Normalize(dateTime.Value));
@@ -56,20 +56,21 @@ namespace StudioX.EntityFramework.Utils
         private static EntityDateTimePropertiesInfo FindDatePropertyInfosForType(Type entityType)
         {
             var datetimeProperties = entityType.GetProperties()
-                                     .Where(property =>
-                                         (property.PropertyType == typeof(DateTime) ||
-                                         property.PropertyType == typeof(DateTime?)) &&
-                                         property.CanWrite
-                                     ).ToList();
+                .Where(property =>
+                    (property.PropertyType == typeof(DateTime) ||
+                     property.PropertyType == typeof(DateTime?)) &&
+                    property.CanWrite
+                ).ToList();
 
             var complexTypeProperties = entityType.GetProperties()
-                                                   .Where(p => p.PropertyType.IsDefined(typeof(ComplexTypeAttribute), true))
-                                                   .ToList();
+                .Where(p => p.PropertyType.IsDefined(typeof(ComplexTypeAttribute), true))
+                .ToList();
 
             var complexTypeDateTimePropertyPaths = new List<string>();
             foreach (var complexTypeProperty in complexTypeProperties)
             {
-                AddComplexTypeDateTimePropertyPaths(entityType.FullName + "." + complexTypeProperty.Name, complexTypeProperty, complexTypeDateTimePropertyPaths);
+                AddComplexTypeDateTimePropertyPaths(entityType.FullName + "." + complexTypeProperty.Name,
+                    complexTypeProperty, complexTypeDateTimePropertyPaths);
             }
 
             return new EntityDateTimePropertiesInfo
@@ -79,7 +80,8 @@ namespace StudioX.EntityFramework.Utils
             };
         }
 
-        private static void AddComplexTypeDateTimePropertyPaths(string pathPrefix, PropertyInfo complexProperty, List<string> complexTypeDateTimePropertyPaths)
+        private static void AddComplexTypeDateTimePropertyPaths(string pathPrefix, PropertyInfo complexProperty,
+            List<string> complexTypeDateTimePropertyPaths)
         {
             if (!complexProperty.PropertyType.IsDefined(typeof(ComplexTypeAttribute), true))
             {
@@ -87,17 +89,17 @@ namespace StudioX.EntityFramework.Utils
             }
 
             var complexTypeDateProperties = complexProperty.PropertyType
-                                                            .GetProperties()
-                                                            .Where(property =>
-                                                                property.PropertyType == typeof(DateTime) ||
-                                                                property.PropertyType == typeof(DateTime?)
-                                                            ).Select(p => pathPrefix + "." + p.Name).ToList();
+                .GetProperties()
+                .Where(property =>
+                    property.PropertyType == typeof(DateTime) ||
+                    property.PropertyType == typeof(DateTime?)
+                ).Select(p => pathPrefix + "." + p.Name).ToList();
 
             complexTypeDateTimePropertyPaths.AddRange(complexTypeDateProperties);
 
             var complexTypeProperties = complexProperty.PropertyType.GetProperties()
-                                                  .Where(p => p.PropertyType.IsDefined(typeof(ComplexTypeAttribute), true))
-                                                  .ToList();
+                .Where(p => p.PropertyType.IsDefined(typeof(ComplexTypeAttribute), true))
+                .ToList();
 
             if (!complexTypeProperties.Any())
             {
@@ -106,7 +108,8 @@ namespace StudioX.EntityFramework.Utils
 
             foreach (var complexTypeProperty in complexTypeProperties)
             {
-                AddComplexTypeDateTimePropertyPaths(pathPrefix + "." + complexTypeProperty.Name, complexTypeProperty, complexTypeDateTimePropertyPaths);
+                AddComplexTypeDateTimePropertyPaths(pathPrefix + "." + complexTypeProperty.Name, complexTypeProperty,
+                    complexTypeDateTimePropertyPaths);
             }
         }
     }

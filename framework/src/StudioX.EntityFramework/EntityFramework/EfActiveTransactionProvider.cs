@@ -28,7 +28,7 @@ namespace StudioX.EntityFramework
 
         private DbContext GetDbContext(ActiveTransactionProviderArgs args)
         {
-            var dbContextProviderType = typeof(IDbContextProvider<>).MakeGenericType((Type)args["ContextType"]);
+            var dbContextProviderType = typeof(IDbContextProvider<>).MakeGenericType((Type) args["ContextType"]);
 
             using (var dbContextProviderWrapper = iocResolver.ResolveAsDisposable(dbContextProviderType))
             {
@@ -40,7 +40,7 @@ namespace StudioX.EntityFramework
 
                 return (DbContext) method.Invoke(
                     dbContextProviderWrapper.Object,
-                    new object[] { (MultiTenancySides?)args["MultiTenancySide"] }
+                    new object[] {(MultiTenancySides?) args["MultiTenancySide"]}
                 );
             }
         }

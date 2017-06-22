@@ -4,7 +4,7 @@ namespace StudioX.EntityFramework
 {
     public class DbContextTypeMatcher : DbContextTypeMatcher<StudioXDbContext>
     {
-        public DbContextTypeMatcher(ICurrentUnitOfWorkProvider currentUnitOfWorkProvider) 
+        public DbContextTypeMatcher(ICurrentUnitOfWorkProvider currentUnitOfWorkProvider)
             : base(currentUnitOfWorkProvider)
         {
         }

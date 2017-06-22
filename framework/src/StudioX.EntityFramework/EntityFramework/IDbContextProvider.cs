@@ -1,11 +1,9 @@
-using System;
 using System.Data.Entity;
 using StudioX.MultiTenancy;
 
 namespace StudioX.EntityFramework
 {
     /// <summary>
-    /// 
     /// </summary>
     /// <typeparam name="TDbContext"></typeparam>
     public interface IDbContextProvider<out TDbContext>
@@ -13,6 +11,6 @@ namespace StudioX.EntityFramework
     {
         TDbContext GetDbContext();
 
-        TDbContext GetDbContext(MultiTenancySides? multiTenancySide );
+        TDbContext GetDbContext(MultiTenancySides? multiTenancySide);
     }
 }

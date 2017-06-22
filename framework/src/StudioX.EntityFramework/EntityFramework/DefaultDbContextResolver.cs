@@ -30,10 +30,10 @@ namespace StudioX.EntityFramework
             where TDbContext : DbContext
         {
             var dbContextType = GetConcreteType<TDbContext>();
-            return (TDbContext)iocResolver.Resolve(dbContextType, new
+            return (TDbContext) iocResolver.Resolve(dbContextType, new
             {
-                existingConnection = existingConnection,
-                contextOwnsConnection = contextOwnsConnection
+                existingConnection,
+                contextOwnsConnection
             });
         }
 
