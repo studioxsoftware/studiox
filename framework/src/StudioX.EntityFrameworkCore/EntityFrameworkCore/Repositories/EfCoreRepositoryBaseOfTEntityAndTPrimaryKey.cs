@@ -4,41 +4,40 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using StudioX.Collections.Extensions;
 using StudioX.Domain.Entities;
 using StudioX.Domain.Repositories;
-using Microsoft.EntityFrameworkCore;
 
 namespace StudioX.EntityFrameworkCore.Repositories
 {
     /// <summary>
-    /// Implements IRepository for Entity Framework.
+    ///     Implements IRepository for Entity Framework.
     /// </summary>
-    /// <typeparam name="TDbContext">DbContext which contains <typeparamref name="TEntity"/>.</typeparam>
+    /// <typeparam name="TDbContext">DbContext which contains <typeparamref name="TEntity" />.</typeparam>
     /// <typeparam name="TEntity">Type of the Entity for this repository</typeparam>
     /// <typeparam name="TPrimaryKey">Primary key of the entity</typeparam>
-    public class EfCoreRepositoryBase<TDbContext, TEntity, TPrimaryKey> : 
+    public class EfCoreRepositoryBase<TDbContext, TEntity, TPrimaryKey> :
         StudioXRepositoryBase<TEntity, TPrimaryKey>,
         ISupportsExplicitLoading<TEntity, TPrimaryKey>,
         IRepositoryWithDbContext
-        
         where TEntity : class, IEntity<TPrimaryKey>
         where TDbContext : DbContext
     {
         /// <summary>
-        /// Gets EF DbContext object.
+        ///     Gets EF DbContext object.
         /// </summary>
         public virtual TDbContext Context => dbContextProvider.GetDbContext(MultiTenancySide);
 
         /// <summary>
-        /// Gets DbSet for given entity.
+        ///     Gets DbSet for given entity.
         /// </summary>
         public virtual DbSet<TEntity> Table => Context.Set<TEntity>();
 
         private readonly IDbContextProvider<TDbContext> dbContextProvider;
 
         /// <summary>
-        /// Constructor
+        ///     Constructor
         /// </summary>
         /// <param name="dbContextProvider"></param>
         public EfCoreRepositoryBase(IDbContextProvider<TDbContext> dbContextProvider)
@@ -184,7 +183,6 @@ namespace StudioX.EntityFrameworkCore.Repositories
             if (entity != null)
             {
                 Delete(entity);
-                return;
             }
 
             //Could not found the entity, do nothing.
@@ -227,8 +225,8 @@ namespace StudioX.EntityFrameworkCore.Repositories
         }
 
         public Task EnsureCollectionLoadedAsync<TProperty>(
-            TEntity entity, 
-            Expression<Func<TEntity, IEnumerable<TProperty>>> propertyExpression, 
+            TEntity entity,
+            Expression<Func<TEntity, IEnumerable<TProperty>>> propertyExpression,
             CancellationToken cancellationToken)
             where TProperty : class
         {

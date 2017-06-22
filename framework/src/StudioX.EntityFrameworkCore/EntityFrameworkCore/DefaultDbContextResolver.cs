@@ -1,18 +1,19 @@
-using StudioX.Dependency;
-using StudioX.EntityFramework;
-using StudioX.EntityFrameworkCore.Configuration;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Data.Common;
 using System.Reflection;
 using JetBrains.Annotations;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using StudioX.Dependency;
+using StudioX.EntityFramework;
+using StudioX.EntityFrameworkCore.Configuration;
 
 namespace StudioX.EntityFrameworkCore
 {
     public class DefaultDbContextResolver : IDbContextResolver, ITransientDependency
     {
-        private static readonly MethodInfo CreateOptionsMethod = typeof(DefaultDbContextResolver).GetMethod("CreateOptions", BindingFlags.NonPublic | BindingFlags.Instance);
+        private static readonly MethodInfo CreateOptionsMethod =
+            typeof(DefaultDbContextResolver).GetMethod("CreateOptions", BindingFlags.NonPublic | BindingFlags.Instance);
 
         private readonly IIocResolver iocResolver;
         private readonly IDbContextTypeMatcher dbContextTypeMatcher;
@@ -40,7 +41,7 @@ namespace StudioX.EntityFrameworkCore
 
             var concreteType = dbContextTypeMatcher.GetConcreteType(dbContextType);
 
-            return (TDbContext)iocResolver.Resolve(concreteType, new
+            return (TDbContext) iocResolver.Resolve(concreteType, new
             {
                 options = CreateOptionsForType(concreteType, connectionString, existingConnection)
             });
@@ -48,16 +49,19 @@ namespace StudioX.EntityFrameworkCore
 
         private object CreateOptionsForType(Type dbContextType, string connectionString, DbConnection existingConnection)
         {
-            return CreateOptionsMethod.MakeGenericMethod(dbContextType).Invoke(this, new object[] { connectionString, existingConnection });
+            return CreateOptionsMethod.MakeGenericMethod(dbContextType)
+                .Invoke(this, new object[] {connectionString, existingConnection});
         }
 
-        protected virtual DbContextOptions<TDbContext> CreateOptions<TDbContext>([NotNull] string connectionString, [CanBeNull] DbConnection existingConnection) where TDbContext : DbContext
+        protected virtual DbContextOptions<TDbContext> CreateOptions<TDbContext>([NotNull] string connectionString,
+            [CanBeNull] DbConnection existingConnection) where TDbContext : DbContext
         {
             if (iocResolver.IsRegistered<IStudioXDbContextConfigurer<TDbContext>>())
             {
                 var configuration = new StudioXDbContextConfiguration<TDbContext>(connectionString, existingConnection);
 
-                configuration.DbContextOptions.ReplaceService<IEntityMaterializerSource, StudioXEntityMaterializerSource>();
+                configuration.DbContextOptions
+                    .ReplaceService<IEntityMaterializerSource, StudioXEntityMaterializerSource>();
 
                 using (var configurer = iocResolver.ResolveAsDisposable<IStudioXDbContextConfigurer<TDbContext>>())
                 {
@@ -72,7 +76,8 @@ namespace StudioX.EntityFrameworkCore
                 return iocResolver.Resolve<DbContextOptions<TDbContext>>();
             }
 
-            throw new StudioXException($"Could not resolve DbContextOptions for {typeof(TDbContext).AssemblyQualifiedName}.");
+            throw new StudioXException(
+                $"Could not resolve DbContextOptions for {typeof(TDbContext).AssemblyQualifiedName}.");
         }
     }
 }

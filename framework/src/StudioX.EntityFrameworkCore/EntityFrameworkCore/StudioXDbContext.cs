@@ -4,6 +4,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Castle.Core.Logging;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using StudioX.Collections.Extensions;
 using StudioX.Configuration.Startup;
 using StudioX.Dependency;
@@ -13,64 +16,60 @@ using StudioX.Domain.Uow;
 using StudioX.Events.Bus;
 using StudioX.Events.Bus.Entities;
 using StudioX.Extensions;
-using StudioX.MultiTenancy;
 using StudioX.Reflection;
 using StudioX.Runtime.Session;
 using StudioX.Timing;
-using Castle.Core.Logging;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace StudioX.EntityFrameworkCore
 {
     /// <summary>
-    /// Base class for all DbContext classes in the application.
+    ///     Base class for all DbContext classes in the application.
     /// </summary>
     public abstract class StudioXDbContext : DbContext, ITransientDependency
     {
         /// <summary>
-        /// Used to get current session values.
+        ///     Used to get current session values.
         /// </summary>
         public IStudioXSession StudioXSession { get; set; }
 
         /// <summary>
-        /// Used to trigger entity change events.
+        ///     Used to trigger entity change events.
         /// </summary>
         public IEntityChangeEventHelper EntityChangeEventHelper { get; set; }
 
         /// <summary>
-        /// Reference to the logger.
+        ///     Reference to the logger.
         /// </summary>
         public ILogger Logger { get; set; }
 
         /// <summary>
-        /// Reference to the event bus.
+        ///     Reference to the event bus.
         /// </summary>
         public IEventBus EventBus { get; set; }
 
         /// <summary>
-        /// Reference to GUID generator.
+        ///     Reference to GUID generator.
         /// </summary>
         public IGuidGenerator GuidGenerator { get; set; }
 
         /// <summary>
-        /// Reference to the current UOW provider.
+        ///     Reference to the current UOW provider.
         /// </summary>
         public ICurrentUnitOfWorkProvider CurrentUnitOfWorkProvider { get; set; }
 
         /// <summary>
-        /// Reference to multi tenancy configuration.
+        ///     Reference to multi tenancy configuration.
         /// </summary>
         public IMultiTenancyConfig MultiTenancyConfig { get; set; }
 
         /// <summary>
-        /// Can be used to suppress automatically setting TenantId on SaveChanges.
-        /// Default: false.
+        ///     Can be used to suppress automatically setting TenantId on SaveChanges.
+        ///     Default: false.
         /// </summary>
         public bool SuppressAutoSetTenantId { get; set; }
 
         /// <summary>
-        /// Constructor.
+        ///     Constructor.
         /// </summary>
         protected StudioXDbContext(DbContextOptions options)
             : base(options)
@@ -107,7 +106,8 @@ namespace StudioX.EntityFrameworkCore
             }
         }
 
-        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
+        public override async Task<int> SaveChangesAsync(
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             try
             {
@@ -145,11 +145,13 @@ namespace StudioX.EntityFrameworkCore
                         if (entry.Entity is ISoftDelete && entry.Entity.As<ISoftDelete>().IsDeleted)
                         {
                             SetDeletionAuditProperties(entry.Entity, userId);
-                            changeReport.ChangedEntities.Add(new EntityChangeEntry(entry.Entity, EntityChangeType.Deleted));
+                            changeReport.ChangedEntities.Add(new EntityChangeEntry(entry.Entity,
+                                EntityChangeType.Deleted));
                         }
                         else
                         {
-                            changeReport.ChangedEntities.Add(new EntityChangeEntry(entry.Entity, EntityChangeType.Updated));
+                            changeReport.ChangedEntities.Add(new EntityChangeEntry(entry.Entity,
+                                EntityChangeType.Updated));
                         }
 
                         break;
@@ -179,7 +181,9 @@ namespace StudioX.EntityFrameworkCore
                 return;
             }
 
-            domainEvents.AddRange(generatesDomainEventsEntity.DomainEvents.Select(eventData => new DomainEventEntry(entityAsObj, eventData)));
+            domainEvents.AddRange(
+                generatesDomainEventsEntity.DomainEvents.Select(
+                    eventData => new DomainEventEntry(entityAsObj, eventData)));
             generatesDomainEventsEntity.DomainEvents.Clear();
         }
 
@@ -191,7 +195,7 @@ namespace StudioX.EntityFrameworkCore
             {
                 var dbGeneratedAttr = ReflectionHelper
                     .GetSingleAttributeOrDefault<DatabaseGeneratedAttribute>(
-                    entry.Property("Id").Metadata.PropertyInfo
+                        entry.Property("Id").Metadata.PropertyInfo
                     );
 
                 if (dbGeneratedAttr == null || dbGeneratedAttr.DatabaseGeneratedOption == DatabaseGeneratedOption.None)
@@ -266,12 +270,14 @@ namespace StudioX.EntityFrameworkCore
 
         protected virtual void SetCreationAuditProperties(object entityAsObj, long? userId)
         {
-            EntityAuditingHelper.SetCreationAuditProperties(MultiTenancyConfig, entityAsObj, StudioXSession.TenantId, userId);
+            EntityAuditingHelper.SetCreationAuditProperties(MultiTenancyConfig, entityAsObj, StudioXSession.TenantId,
+                userId);
         }
 
         protected virtual void SetModificationAuditProperties(object entityAsObj, long? userId)
         {
-            EntityAuditingHelper.SetModificationAuditProperties(MultiTenancyConfig, entityAsObj, StudioXSession.TenantId, userId);
+            EntityAuditingHelper.SetModificationAuditProperties(MultiTenancyConfig, entityAsObj, StudioXSession.TenantId,
+                userId);
         }
 
         protected virtual void CancelDeletionForSoftDelete(EntityEntry entry)
@@ -317,8 +323,8 @@ namespace StudioX.EntityFrameworkCore
                 if (entity is IMayHaveTenant || entity is IMustHaveTenant)
                 {
                     //Sets LastModifierUserId only if current user is in same tenant/host with the given entity
-                    if ((entity is IMayHaveTenant && entity.As<IMayHaveTenant>().TenantId == StudioXSession.TenantId) ||
-                        (entity is IMustHaveTenant && entity.As<IMustHaveTenant>().TenantId == StudioXSession.TenantId))
+                    if (entity is IMayHaveTenant && entity.As<IMayHaveTenant>().TenantId == StudioXSession.TenantId ||
+                        entity is IMustHaveTenant && entity.As<IMustHaveTenant>().TenantId == StudioXSession.TenantId)
                     {
                         entity.DeleterUserId = userId;
                     }

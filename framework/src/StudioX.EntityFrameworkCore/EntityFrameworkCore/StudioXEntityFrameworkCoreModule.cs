@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using Castle.MicroKernel.Registration;
 using StudioX.Collections.Extensions;
 using StudioX.Dependency;
 using StudioX.EntityFramework;
@@ -11,12 +12,11 @@ using StudioX.Modules;
 using StudioX.Orm;
 using StudioX.Reflection;
 using StudioX.Reflection.Extensions;
-using Castle.MicroKernel.Registration;
 
 namespace StudioX.EntityFrameworkCore
 {
     /// <summary>
-    /// This module is used to implement "Data Access Layer" in EntityFramework.
+    ///     This module is used to implement "Data Access Layer" in EntityFramework.
     /// </summary>
     [DependsOn(typeof(StudioXEntityFrameworkCommonModule))]
     public class StudioXEntityFrameworkCoreModule : StudioXModule
@@ -41,7 +41,7 @@ namespace StudioX.EntityFrameworkCore
                 Component.For(typeof(IDbContextProvider<>))
                     .ImplementedBy(typeof(UnitOfWorkDbContextProvider<>))
                     .LifestyleTransient()
-                );
+            );
 
             RegisterGenericRepositoriesAndMatchDbContexes();
         }
@@ -64,18 +64,20 @@ namespace StudioX.EntityFrameworkCore
                 return;
             }
 
-            using (IScopedIocResolver scope = IocManager.CreateScope())
+            using (var scope = IocManager.CreateScope())
             {
                 foreach (var dbContextType in dbContextTypes)
                 {
                     Logger.Debug("Registering DbContext: " + dbContextType.AssemblyQualifiedName);
-                    scope.Resolve<IEfGenericRepositoryRegistrar>().RegisterForDbContext(dbContextType, IocManager, EfCoreAutoRepositoryTypes.Default);
- 
-                      IocManager.IocContainer.Register(
+                    scope.Resolve<IEfGenericRepositoryRegistrar>()
+                        .RegisterForDbContext(dbContextType, IocManager, EfCoreAutoRepositoryTypes.Default);
+
+                    IocManager.IocContainer.Register(
                         Component.For<ISecondaryOrmRegistrar>()
-                                 .Named(Guid.NewGuid().ToString("N"))
-                                 .Instance(new EfCoreBasedSecondaryOrmRegistrar(dbContextType, scope.Resolve<IDbContextEntityFinder>()))
-                                 .LifestyleTransient()
+                            .Named(Guid.NewGuid().ToString("N"))
+                            .Instance(new EfCoreBasedSecondaryOrmRegistrar(dbContextType,
+                                scope.Resolve<IDbContextEntityFinder>()))
+                            .LifestyleTransient()
                     );
                 }
 

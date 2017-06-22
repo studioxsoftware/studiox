@@ -1,18 +1,17 @@
-using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using StudioX.Dependency;
 using StudioX.Domain.Uow;
 using StudioX.EntityFramework;
 using StudioX.Extensions;
 using StudioX.MultiTenancy;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Threading.Tasks;
 
 namespace StudioX.EntityFrameworkCore.Uow
 {
     /// <summary>
-    /// Implements Unit of work for Entity Framework.
+    ///     Implements Unit of work for Entity Framework.
     /// </summary>
     public class EfCoreUnitOfWork : UnitOfWorkBase, ITransientDependency
     {
@@ -24,7 +23,7 @@ namespace StudioX.EntityFrameworkCore.Uow
         private readonly IEfCoreTransactionStrategy transactionStrategy;
 
         /// <summary>
-        /// Creates a new <see cref="EfCoreUnitOfWork"/>.
+        ///     Creates a new <see cref="EfCoreUnitOfWork" />.
         /// </summary>
         public EfCoreUnitOfWork(
             IIocResolver iocResolver,
@@ -35,9 +34,9 @@ namespace StudioX.EntityFrameworkCore.Uow
             IDbContextTypeMatcher dbContextTypeMatcher,
             IEfCoreTransactionStrategy transactionStrategy)
             : base(
-                  connectionStringResolver,
-                  defaultOptions,
-                  filterExecuter)
+                connectionStringResolver,
+                defaultOptions,
+                filterExecuter)
         {
             IocResolver = iocResolver;
             this.dbContextResolver = dbContextResolver;
@@ -121,7 +120,7 @@ namespace StudioX.EntityFrameworkCore.Uow
                 }
 
                 if (Options.Timeout.HasValue &&
-                    dbContext.Database.IsRelational() && 
+                    dbContext.Database.IsRelational() &&
                     !dbContext.Database.GetCommandTimeout().HasValue)
                 {
                     dbContext.Database.SetCommandTimeout(Options.Timeout.Value.TotalSeconds.To<int>());
@@ -133,7 +132,7 @@ namespace StudioX.EntityFrameworkCore.Uow
                 ActiveDbContexts[dbContextKey] = dbContext;
             }
 
-            return (TDbContext)dbContext;
+            return (TDbContext) dbContext;
         }
 
         protected override void DisposeUow()

@@ -1,5 +1,4 @@
 ﻿using System;
-
 using StudioX.EntityFramework;
 
 namespace StudioX.EntityFrameworkCore

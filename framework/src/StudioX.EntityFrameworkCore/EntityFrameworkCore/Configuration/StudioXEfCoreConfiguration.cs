@@ -1,7 +1,7 @@
 ﻿using System;
-using StudioX.Dependency;
 using Castle.MicroKernel.Registration;
 using Microsoft.EntityFrameworkCore;
+using StudioX.Dependency;
 
 namespace StudioX.EntityFrameworkCore.Configuration
 {
@@ -14,7 +14,7 @@ namespace StudioX.EntityFrameworkCore.Configuration
             this.iocManager = iocManager;
         }
 
-        public void AddDbContext<TDbContext>(Action<StudioXDbContextConfiguration<TDbContext>> action) 
+        public void AddDbContext<TDbContext>(Action<StudioXDbContextConfiguration<TDbContext>> action)
             where TDbContext : DbContext
         {
             iocManager.IocContainer.Register(

@@ -1,7 +1,7 @@
 ﻿using System;
-using StudioX.EntityFrameworkCore.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using StudioX.EntityFrameworkCore.Configuration;
 
 namespace StudioX.EntityFrameworkCore
 {

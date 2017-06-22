@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Data;
 using System.Reflection;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using StudioX.Data;
 using StudioX.Dependency;
 using StudioX.MultiTenancy;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
 
 namespace StudioX.EntityFrameworkCore
 {
@@ -30,19 +30,19 @@ namespace StudioX.EntityFrameworkCore
 
         private DbContext GetDbContext(ActiveTransactionProviderArgs args)
         {
-            Type dbContextProviderType = typeof(IDbContextProvider<>).MakeGenericType((Type)args["ContextType"]);
+            var dbContextProviderType = typeof(IDbContextProvider<>).MakeGenericType((Type) args["ContextType"]);
 
-            using (IDisposableDependencyObjectWrapper dbContextProviderWrapper = iocResolver.ResolveAsDisposable(dbContextProviderType))
+            using (var dbContextProviderWrapper = iocResolver.ResolveAsDisposable(dbContextProviderType))
             {
-                MethodInfo method = dbContextProviderWrapper.Object.GetType()
-                                                            .GetMethod(
-                                                                nameof(IDbContextProvider<StudioXDbContext>.GetDbContext),
-                                                                new[] { typeof(MultiTenancySides) }
-                                                            );
+                var method = dbContextProviderWrapper.Object.GetType()
+                    .GetMethod(
+                        nameof(IDbContextProvider<StudioXDbContext>.GetDbContext),
+                        new[] {typeof(MultiTenancySides)}
+                    );
 
-                return (DbContext)method.Invoke(
+                return (DbContext) method.Invoke(
                     dbContextProviderWrapper.Object,
-                    new object[] { (MultiTenancySides?)args["MultiTenancySide"] }
+                    new object[] {(MultiTenancySides?) args["MultiTenancySide"]}
                 );
             }
         }
