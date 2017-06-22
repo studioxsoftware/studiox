@@ -3,12 +3,12 @@
 namespace StudioX.AutoMapper
 {
     /// <summary>
-    /// Defines extension methods to <see cref="IModuleConfigurations"/> to allow to configure StudioX.AutoMapper module.
+    ///     Defines extension methods to <see cref="IModuleConfigurations" /> to allow to configure StudioX.AutoMapper module.
     /// </summary>
     public static class StudioXAutoMapperConfigurationExtensions
     {
         /// <summary>
-        /// Used to configure StudioX.AutoMapper module.
+        ///     Used to configure StudioX.AutoMapper module.
         /// </summary>
         public static IStudioXAutoMapperConfiguration StudioXAutoMapper(this IModuleConfigurations configurations)
         {

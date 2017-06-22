@@ -1,11 +1,12 @@
 ﻿using System;
-using StudioX.Localization;
-using StudioX.Modules;
 using System.Reflection;
-using StudioX.Configuration.Startup;
-using StudioX.Reflection;
 using AutoMapper;
 using Castle.MicroKernel.Registration;
+using StudioX.Configuration.Startup;
+using StudioX.Localization;
+using StudioX.Modules;
+using StudioX.Reflection;
+using IObjectMapper = StudioX.ObjectMapping.IObjectMapper;
 
 namespace StudioX.AutoMapper
 {
@@ -16,7 +17,7 @@ namespace StudioX.AutoMapper
 
         private static volatile bool createdMappingsBefore;
         private static readonly object SyncObj = new object();
-        
+
         public StudioXAutoMapperModule(ITypeFinder typeFinder)
         {
             this.typeFinder = typeFinder;
@@ -26,7 +27,7 @@ namespace StudioX.AutoMapper
         {
             IocManager.Register<IStudioXAutoMapperConfiguration, StudioXAutoMapperConfiguration>();
 
-            Configuration.ReplaceService<ObjectMapping.IObjectMapper, AutoMapperObjectMapper>();
+            Configuration.ReplaceService<IObjectMapper, AutoMapperObjectMapper>();
 
             Configuration.Modules.StudioXAutoMapper().Configurators.Add(CreateCoreMappings);
         }
@@ -97,7 +98,8 @@ namespace StudioX.AutoMapper
             var localizationContext = IocManager.Resolve<ILocalizationContext>();
 
             configuration.CreateMap<ILocalizableString, string>().ConvertUsing(ls => ls?.Localize(localizationContext));
-            configuration.CreateMap<LocalizableString, string>().ConvertUsing(ls => ls == null ? null : localizationContext.LocalizationManager.GetString(ls));
+            configuration.CreateMap<LocalizableString, string>()
+                .ConvertUsing(ls => ls == null ? null : localizationContext.LocalizationManager.GetString(ls));
         }
     }
 }

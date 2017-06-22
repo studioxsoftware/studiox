@@ -1,6 +1,6 @@
 ﻿using System;
-using StudioX.Collections.Extensions;
 using AutoMapper;
+using StudioX.Collections.Extensions;
 
 namespace StudioX.AutoMapper
 {
@@ -9,7 +9,6 @@ namespace StudioX.AutoMapper
         public AutoMapAttribute(params Type[] targetTypes)
             : base(targetTypes)
         {
-
         }
 
         public override void CreateMap(IMapperConfigurationExpression configuration, Type type)
