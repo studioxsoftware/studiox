@@ -18,7 +18,7 @@ namespace StudioX.Timing
         /// </summary>
         public DateTime EndTime { get; set; }
 
-        private static DateTime Now { get { return Clock.Now; } }
+        private static DateTime Now => Clock.Now;
 
         /// <summary>
         /// Creates a new <see cref="DateTimeRange"/> object.
