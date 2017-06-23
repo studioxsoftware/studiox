@@ -1,12 +1,17 @@
  <div class="row">
     <h2>Example</h2>
     <div class="card card-block panel panel-default panel-body">      
+     
       <div class="row">
         <div class="col-md-4">
-          <input *ngIf="config.filtering" placeholder="Filter all columns"
-                [ngTableFiltering]="config.filtering"
-                class="form-control"
-                (tableChanged)="onChangeTable(config)"/>
+            <div class="form-group">
+              <div class="form-line">
+                 <input *ngIf="config.filtering" placeholder="Filter all columns"
+                        [ngTableFiltering]="config.filtering"
+                        class="form-control"
+                        (tableChanged)="onChangeTable(config)"/>
+              </div>
+            </div>         
         </div>
       </div>
       <br>
