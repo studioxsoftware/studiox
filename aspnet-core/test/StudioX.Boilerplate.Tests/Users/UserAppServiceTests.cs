@@ -33,17 +33,17 @@ namespace StudioX.Boilerplate.Tests.Users
             await userAppService.Create(
                 new CreateUserInput
                 {
-                    EmailAddress = "john@studiox.com",
+                    EmailAddress = "long@studiox.com",
                     IsActive = true,
-                    FirstName = "John",
-                    LastName = "Nash",
+                    FirstName = "Long",
+                    LastName = "Huynh",
                     Password = "123qwe",
-                    UserName = "john.nash"
+                    UserName = "long.huynh"
                 });
 
             await UsingDbContextAsync(async context =>
             {
-                var johnNashUser = await context.Users.FirstOrDefaultAsync(u => u.UserName == "john.nash");
+                var johnNashUser = await context.Users.FirstOrDefaultAsync(u => u.UserName == "long.huynh");
                 johnNashUser.ShouldNotBeNull();
             });
         }
