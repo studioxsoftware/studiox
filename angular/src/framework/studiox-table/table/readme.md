@@ -1,6 +1,6 @@
 ### Usage
 ```typescript
-import { Ng2TableModule } from 'ng2-table/ng2-table';
+import { StudioXTableModule } from 'ng2-table/ng2-table';
 ```
 or if you want to import specified plugins (Table component is required, the others are optional):
 ```typescript

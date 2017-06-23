@@ -1,2 +1,2 @@
-export declare class Ng2TableModule {
+export declare class StudioXTableModule {
 }

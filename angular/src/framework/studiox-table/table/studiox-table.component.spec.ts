@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Ng2TableModule } from '../studiox-table-module';
+import { StudioXTableModule } from '../studiox-table-module';
 
 const html = ``;
 
@@ -14,7 +14,7 @@ describe('Component: ng2-table', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [TestTableComponent],
-      imports: [Ng2TableModule]
+      imports: [StudioXTableModule]
     });
     TestBed.overrideComponent(TestTableComponent, {set: {template: html}});
     fixture = TestBed.createComponent(TestTableComponent);

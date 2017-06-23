@@ -11,5 +11,5 @@ import { NgTableSortingDirective } from './table/studiox-table-sorting.directive
   declarations: [NgTableComponent, NgTableFilteringDirective, NgTablePagingDirective, NgTableSortingDirective],
   exports: [NgTableComponent, NgTableFilteringDirective, NgTablePagingDirective, NgTableSortingDirective]
 })
-export class Ng2TableModule {
+export class StudioXTableModule {
 }

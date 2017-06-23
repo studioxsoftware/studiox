@@ -27,7 +27,7 @@ import { SideBarFooterComponent } from '@app/layout/sidebar-footer.component';
 import { RightSideBarComponent } from '@app/layout/right-sidebar.component';
 
 import { PaginationModule } from 'ngx-bootstrap';
-import { Ng2TableModule } from '@studiox-table/studiox-table-module';
+import { StudioXTableModule } from '@studiox-table/studiox-table-module';
 import { TableDemoComponent } from '@app/table-demo/table-demo.component';
 
 @NgModule({
@@ -58,7 +58,7 @@ import { TableDemoComponent } from '@app/table-demo/table-demo.component';
         ServiceProxyModule,
         SharedModule,
         PaginationModule.forRoot(),
-        Ng2TableModule
+        StudioXTableModule
     ],
     providers: [
 
