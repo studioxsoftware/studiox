@@ -16,21 +16,13 @@ export class SideBarNavComponent extends AppComponentBase {
         new MenuItem(this.l("About"), "", "info", "/app/about"),
 
         new MenuItem(this.l("MultiLevelMenu"), "", "menu", "", [
-            new MenuItem("ASP.NET Boilerplate", "", "", "", [
-                new MenuItem("Home", "", "", "https://aspnetboilerplate.com"),
-                new MenuItem("Templates", "", "", "https://aspnetboilerplate.com/Templates"),
-                new MenuItem("Samples", "", "", "https://aspnetboilerplate.com/Samples"),
-                new MenuItem("Documents", "", "", "https://aspnetboilerplate.com/Pages/Documents"),
-                new MenuItem("Forum", "", "", "https://forum.aspnetboilerplate.com/"),
-                new MenuItem("About", "", "", "https://aspnetboilerplate.com/About")
+            new MenuItem("StudioX Boilerplate", "", "", "/app/demo", [
+                new MenuItem("Home", "", "", ""),
+                new MenuItem("Templates", "", "", "/app/demo")             
             ]),
-            new MenuItem("ASP.NET Zero", "", "", "", [
-                new MenuItem("Home", "", "", "https://aspnetzero.com?ref=studioxtmpl"),
-                new MenuItem("Description", "", "", "https://aspnetzero.com/?ref=studioxtmpl#description"),
-                new MenuItem("Features", "", "", "https://aspnetzero.com/?ref=studioxtmpl#features"),
-                new MenuItem("Pricing", "", "", "https://aspnetzero.com/?ref=studioxtmpl#pricing"),
-                new MenuItem("Faq", "", "", "https://aspnetzero.com/Faq?ref=studioxtmpl"),
-                new MenuItem("Documents", "", "", "https://aspnetzero.com/Documents?ref=studioxtmpl")
+            new MenuItem("StudioX Zero", "", "", "/app/demo", [
+                new MenuItem("Home", "", "", ""),
+                new MenuItem("Templates", "", "", "/app/demo")    
             ])
         ])
     ];
