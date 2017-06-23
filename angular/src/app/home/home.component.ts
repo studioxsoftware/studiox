@@ -28,13 +28,12 @@ export class HomeComponent extends AppComponentBase implements AfterViewInit {
             });
 
             initRealTimeChart();
-            initDonutChart();
+            initPieChart();
             initSparkline();
         });
 
         var realtime = 'on';
-        function initRealTimeChart() {
-            //Real time ==========================================================================================
+        function initRealTimeChart() {         
             var plot = ($ as any).plot('#real_time_chart', [getRandomData()], {
                 series: {
                     shadowSize: 0,
@@ -75,8 +74,7 @@ export class HomeComponent extends AppComponentBase implements AfterViewInit {
             $('#realtime').on('change', function () {
                 realtime = this.checked ? 'on' : 'off';
                 updateRealTime();
-            });
-            //====================================================================================================
+            });            
         }
 
         function initSparkline() {
@@ -86,34 +84,42 @@ export class HomeComponent extends AppComponentBase implements AfterViewInit {
             });
         }
 
-        function initDonutChart() {
-            ((window as any).Morris).Donut({
-                element: 'donut_chart',
-                data: [{
-                        label: 'Chrome',
-                        value: 37
-                    }, {
-                        label: 'Firefox',
-                        value: 30
-                    }, {
-                        label: 'Safari',
-                        value: 18
-                    }, {
-                        label: 'Opera',
-                        value: 12
-                    },
-                    {
-                        label: 'Other',
-                        value: 3
-                    }],
-                colors: ['rgb(233, 30, 99)', 'rgb(0, 188, 212)', 'rgb(255, 152, 0)', 'rgb(0, 150, 136)', 'rgb(96, 125, 139)'],
-                formatter: function (y) {
-                    return y + '%'
+        var pieChartData = [   
+                                { label: 'Chrome', data: 33, color:'#E91E63'}, 
+                                { label: 'Firefox',data: 30, color:'#03A9F4'}, 
+                                { label: 'Safari', data: 18, color:'#FFC107'}, 
+                                { label: 'Opera', data: 12, color:'#009688' },
+                                { label: 'Other', data: 7, color:'#8DC44E' }
+                            ]; 
+
+        function initPieChart() {
+            var plot = ($ as any).plot('#pie_chart', pieChartData, {
+                series: {
+                    pie: {
+                        show: true,
+                        radius: 1,
+                        label: {
+                            show: true,
+                            radius: 3 / 4,
+                            formatter: labelFormatter,
+                            background: {
+                                opacity: 0.5
+                            }
+                        }
+                    }
+                },
+                legend: {
+                    show: false
                 }
             });
         }
 
+        function labelFormatter(label, series) {
+            return '<div style="font-size:8pt; text-align:center; padding:2px; color:white;">' + label + '<br/>' + Math.round(series.percent) + '%</div>';
+        }
+
         var data = [], totalPoints = 110;
+        
         function getRandomData() {
             if (data.length > 0) data = data.slice(1);
 
