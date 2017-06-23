@@ -13,7 +13,7 @@
         "favicon.ico",
         {
           "glob": "studiox.signalr.js",
-          "input": "framework/studiox-web-resources/StudioX/Framework/scripts/libs/",
+          "input": "framework/studiox/scripts/libs/",
           "output": "./assets/studiox/"
         }
       ],
@@ -64,13 +64,13 @@
         "../node_modules/flot/jquery.flot.categories.js",
         "../node_modules/flot/jquery.flot.time.js",
         "../node_modules/jquery-sparkline/jquery.sparkline.min.js",
-        "../src/framework/studiox-web-resources/StudioX/Framework/scripts/studiox.js",
-        "../src/framework/studiox-web-resources/StudioX/Framework/scripts/libs/studiox.jquery.js",
-        "../src/framework/studiox-web-resources/StudioX/Framework/scripts/libs/studiox.toastr.js",
-        "../src/framework/studiox-web-resources/StudioX/Framework/scripts/libs/studiox.blockUI.js",
-        "../src/framework/studiox-web-resources/StudioX/Framework/scripts/libs/studiox.spin.js",
-        "../src/framework/studiox-web-resources/StudioX/Framework/scripts/libs/studiox.sweet-alert.js",
-        "../src/framework/studiox-web-resources/StudioX/Framework/scripts/libs/studiox.moment.js",
+        "../src/framework/studiox/scripts/studiox.js",
+        "../src/framework/studiox/scripts/libs/studiox.jquery.js",
+        "../src/framework/studiox/scripts/libs/studiox.toastr.js",
+        "../src/framework/studiox/scripts/libs/studiox.blockUI.js",
+        "../src/framework/studiox/scripts/libs/studiox.spin.js",
+        "../src/framework/studiox/scripts/libs/studiox.sweet-alert.js",
+        "../src/framework/studiox/scripts/libs/studiox.moment.js",
         "../src/bsb-theme/js/admin.js",
         "../src/bsb-theme/js/demo.js"
       ],

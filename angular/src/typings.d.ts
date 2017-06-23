@@ -1,7 +1,7 @@
 ﻿///<reference path="../node_modules/@types/jquery/index.d.ts"/>
-///<reference path="../src/framework/studiox-web-resources/StudioX/Framework/scripts/studiox.d.ts"/>
-///<reference path="../src/framework/studiox-web-resources/StudioX/Framework/scripts/libs/studiox.jquery.d.ts"/>
-///<reference path="../src/framework/studiox-web-resources/StudioX/Framework/scripts/libs/studiox.signalr.d.ts"/>
+///<reference path="../src/framework/studiox/scripts/studiox.d.ts"/>
+///<reference path="../src/framework/studiox/scripts/libs/studiox.jquery.d.ts"/>
+///<reference path="../src/framework/studiox/scripts/libs/studiox.signalr.d.ts"/>
 ///<reference path="../node_modules/moment/moment.d.ts"/>
 ///<reference path="../node_modules/@types/moment-timezone/index.d.ts"/>
 ///<reference path="../node_modules/@types/bootstrap/index.d.ts"/>
