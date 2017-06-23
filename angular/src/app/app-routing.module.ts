@@ -2,11 +2,11 @@
 import { Routes, RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
 import { AppRouteGuard } from '@shared/auth/auth-route-guard';
-import { HomeComponent } from './home/home.component';
-import { AboutComponent } from './about/about.component';
-import { UsersComponent } from './users/users.component';
-import { TenantsComponent } from './tenants/tenants.component';
-import { TableDemoComponent } from '@app/table-demo/table-demo.component';
+import { HomeComponent } from './pages/home/home.component';
+import { AboutComponent } from './pages/about/about.component';
+import { UsersComponent } from './system/users/users.component';
+import { TenantsComponent } from './system/tenants/tenants.component';
+import { TableDemoComponent } from '@app/demo/table/table-demo.component';
 
 @NgModule({
     imports: [

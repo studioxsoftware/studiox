@@ -16,7 +16,7 @@
                 [rows]="rows" [columns]="columns">
       </studiox-table>
       <pagination *ngIf="config.paging"
-                  class="pagination-sm"
+                  class="pagination-sm pull-right"
                   [(ngModel)]="page"
                   [totalItems]="length"
                   [itemsPerPage]="itemsPerPage"
@@ -25,7 +25,6 @@
                   [rotate]="false"
                   (pageChanged)="onChangeTable(config, $event)"
                   (numPages)="numPages = $event">
-      </pagination>
-      <pre *ngIf="config.paging" class="card card-block card-header">Page: {{page}} / {{numPages}}</pre>
+      </pagination>     
     </div>
   </div>

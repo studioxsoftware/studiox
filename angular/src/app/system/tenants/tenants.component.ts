@@ -2,7 +2,7 @@
 import { AppComponentBase } from '@shared/app-component-base';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { TenantServiceProxy, TenantListDto } from '@shared/service-proxies/service-proxies';
-import { CreateTenantModalComponent } from '@app/tenants/create-tenant-modal.component';
+import { CreateTenantModalComponent } from './create-tenant-modal.component';
 
 @Component({
     templateUrl: './tenants.component.html',
