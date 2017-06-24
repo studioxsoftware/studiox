@@ -50,22 +50,22 @@ namespace StudioX.Boilerplate.Web.Startup
                         icon: "menu"
                     ).AddItem(
                         new MenuItemDefinition(
-                            "AspNetBoilerplate",
-                            new FixedLocalizableString("ASP.NET Boilerplate")
+                            "StudioXBoilerplate",
+                            new FixedLocalizableString("StudioX Boilerplate")
                         ).AddItem(
                             new MenuItemDefinition(
-                                "AspNetBoilerplateHome",
+                                "StudioXBoilerplateHome",
                                 new FixedLocalizableString("Home"),
                                 url: ""
                             )
                         )
                     ).AddItem(
                         new MenuItemDefinition(
-                            "AspNetZero",
-                            new FixedLocalizableString("ASP.NET Zero")
+                            "StudioXBoilerplateZero",
+                            new FixedLocalizableString("StudioX Boilerplate Zero")
                         ).AddItem(
                             new MenuItemDefinition(
-                                "AspNetZeroHome",
+                                "StudioXBoilerplateZeroHome",
                                 new FixedLocalizableString("Home"),
                                 url: ""
                             )

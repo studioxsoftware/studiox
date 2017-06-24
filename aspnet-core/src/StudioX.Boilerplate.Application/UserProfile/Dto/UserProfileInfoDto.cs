@@ -17,8 +17,5 @@ namespace StudioX.Boilerplate.UserProfile.Dto
         public string PhoneNumber { get; set; }
 
         public string EmailAddress { get; set; }
-
-        [DisableAuditing]
-        public string Password { get; set; }
     }
 }
