@@ -22,6 +22,10 @@
       </studiox-table>
       <pagination *ngIf="config.paging"
                   class="pagination-sm pull-right"
+                  firstText="<<"
+                  previousText="<"
+                  nextText=">"
+                  lastText=">>"
                   [(ngModel)]="page"
                   [totalItems]="length"
                   [itemsPerPage]="itemsPerPage"
