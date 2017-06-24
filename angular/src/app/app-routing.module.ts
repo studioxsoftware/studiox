@@ -15,8 +15,8 @@ import { TableDemoComponent } from '@app/demo/table/table-demo.component';
                 path: '',
                 component: AppComponent,
                 children: [
-                    { path: 'home', component: HomeComponent,  canActivate: [AppRouteGuard] },
                     { path: 'demo', component: TableDemoComponent},
+                    { path: 'home', component: HomeComponent,  canActivate: [AppRouteGuard] },                  
                     {
                         path: 'users',
                         component: UsersComponent,
