@@ -27,7 +27,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StudioX.MemoryDb", "src\Stu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StudioX.MemoryDb.Tests", "test\StudioX.MemoryDb.Tests\StudioX.MemoryDb.Tests.csproj", "{221C96FA-49F3-456E-AA6A-53BB22956578}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StudioX.MongoDB", "src\StudioX.MongoDB\StudioX.MongoDB.csproj", "{B8978FDF-E9A9-42D0-9234-32C8BA0411A9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StudioX.MongoDb", "src\StudioX.MongoDb\StudioX.MongoDb.csproj", "{B8978FDF-E9A9-42D0-9234-32C8BA0411A9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StudioX.TestBase", "src\StudioX.TestBase\StudioX.TestBase.csproj", "{BCA80B2B-871B-4A6F-B719-5FF6017BC572}"
 EndProject
