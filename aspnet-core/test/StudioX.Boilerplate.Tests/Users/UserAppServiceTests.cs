@@ -43,8 +43,8 @@ namespace StudioX.Boilerplate.Tests.Users
 
             await UsingDbContextAsync(async context =>
             {
-                var johnNashUser = await context.Users.FirstOrDefaultAsync(u => u.UserName == "long.huynh");
-                johnNashUser.ShouldNotBeNull();
+                var user = await context.Users.FirstOrDefaultAsync(u => u.UserName == "long.huynh");
+                user.ShouldNotBeNull();
             });
         }
     }

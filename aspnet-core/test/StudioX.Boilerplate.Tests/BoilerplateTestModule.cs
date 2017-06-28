@@ -17,7 +17,7 @@ namespace StudioX.Boilerplate.Tests
         typeof(BoilerplateApplicationModule),
         typeof(BoilerplateEntityFrameworkModule),
         typeof(StudioXTestBaseModule)
-        )]
+    )]
     public class BoilerplateTestModule : StudioXModule
     {
         public BoilerplateTestModule(BoilerplateEntityFrameworkModule boilerplateEntityFrameworkModule)
@@ -29,7 +29,7 @@ namespace StudioX.Boilerplate.Tests
         {
             Configuration.UnitOfWork.Timeout = TimeSpan.FromMinutes(30);
 
-            //Disable static mapper usage since it breaks unit tests (see https://github.com/aspnetboilerplate/aspnetboilerplate/issues/2052)
+            //Disable static mapper usage since it breaks unit tests
             Configuration.Modules.StudioXAutoMapper().UseStaticMapper = false;
 
             Configuration.BackgroundJobs.IsJobExecutionEnabled = false;
