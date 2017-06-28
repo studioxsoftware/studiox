@@ -9,6 +9,7 @@
     <PackageId>StudioX.HangFire.AspNetCore</PackageId>
     <PackageTags>asp.net;asp.net mvc;boilerplate;application framework;web framework;framework;domain driven design;HangFire;background jobs; aspnet core</PackageTags>
     <RootNamespace>StudioX</RootNamespace>
+    <Version>1.1.3</Version>
   </PropertyGroup>
 
   <ItemGroup>
