@@ -12,6 +12,8 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <RootNamespace>StudioX</RootNamespace>
+    <Version>1.1.3</Version>
+    <PackageProjectUrl>https://github.com/studioxsoftware/studiox</PackageProjectUrl>
   </PropertyGroup>
 
   <ItemGroup>
