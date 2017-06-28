@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using Shouldly;
 using StudioX.Domain.Entities;
 using StudioX.Extensions;
 using StudioX.Json;
-using Shouldly;
 using Xunit;
 
 namespace StudioX.Tests.Domain.Entities
@@ -25,7 +25,11 @@ namespace StudioX.Tests.Domain.Entities
             Assert.Equal(42, entity.GetData<byte>("Age"));
 
             entity.SetData("BirthDate", new DateTime(2015, 05, 25, 13, 24, 00, DateTimeKind.Utc));
-            Assert.Equal(new DateTime(2015, 05, 25, 13, 24, 00, DateTimeKind.Utc), entity.GetData<DateTime>("BirthDate"));
+            Assert.Equal(new DateTime(2015, 05, 25, 13, 24, 00, DateTimeKind.Utc),
+                entity.GetData<DateTime>("BirthDate"));
+
+            entity.SetData("EnumVal", MyEnum.Value2);
+            entity.GetData<MyEnum>("EnumVal").ShouldBe(MyEnum.Value2);
 
             entity.GetData<string>("NonExistingValue").ShouldBe(null);
         }
@@ -53,7 +57,7 @@ namespace StudioX.Tests.Domain.Entities
 
             obj.ToJsonString().ShouldBe(obj2.ToJsonString());
 
-            entity.SetData("ComplexData", (MyComplexType)null);
+            entity.SetData("ComplexData", (MyComplexType) null);
             entity.GetData<MyComplexType>("ComplexData").ShouldBe(null);
         }
 
@@ -170,7 +174,6 @@ namespace StudioX.Tests.Domain.Entities
 
             public virtual void CatMethod()
             {
-
             }
         }
 
@@ -178,7 +181,6 @@ namespace StudioX.Tests.Domain.Entities
         {
             public void LionMethod()
             {
-
             }
         }
 
@@ -186,8 +188,13 @@ namespace StudioX.Tests.Domain.Entities
         {
             public void TigerMethod()
             {
-
             }
+        }
+
+        public enum MyEnum
+        {
+            Value1,
+            Value2
         }
     }
 }

@@ -141,8 +141,8 @@ namespace StudioX.Runtime.Validation.Interception
             if (parameterValue == null)
             {
                 if (!parameterInfo.IsOptional && 
-                    !parameterInfo.IsOut && 
-                    !TypeHelper.IsPrimitiveExtendedIncludingNullable(parameterInfo.ParameterType))
+                    !parameterInfo.IsOut &&
+                    !TypeHelper.IsPrimitiveExtendedIncludingNullable(parameterInfo.ParameterType, includeEnums: true))
                 {
                     ValidationErrors.Add(new ValidationResult(parameterInfo.Name + " is null!", new[] { parameterInfo.Name }));
                 }

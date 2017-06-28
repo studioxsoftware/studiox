@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Shouldly;
 using StudioX.Application.Services;
 using StudioX.Dependency;
 using StudioX.Runtime.Validation;
 using StudioX.Timing;
-using Shouldly;
 using Xunit;
 
 namespace StudioX.TestBase.Tests.Application.Services
@@ -23,15 +23,18 @@ namespace StudioX.TestBase.Tests.Application.Services
         [Fact]
         public void ShouldWorkProperWithRightInputs()
         {
-            var output = myAppService.MyMethod(new MyMethodInput { MyStringValue = "test" });
+            var output = myAppService.MyMethod(new MyMethodInput {MyStringValue = "test"});
             output.Result.ShouldBe(42);
         }
 
         [Fact]
         public void ShouldNotWorkWithWrongInputs()
         {
-            Assert.Throws<StudioXValidationException>(() => myAppService.MyMethod(new MyMethodInput())); //MyStringValue is not supplied!
-            Assert.Throws<StudioXValidationException>(() => myAppService.MyMethod(new MyMethodInput { MyStringValue = "a" })); //MyStringValue's min length should be 3!
+            Assert.Throws<StudioXValidationException>(
+                () => myAppService.MyMethod(new MyMethodInput())); //MyStringValue is not supplied!
+            Assert.Throws<StudioXValidationException>(
+                () => myAppService.MyMethod(
+                    new MyMethodInput {MyStringValue = "a"})); //MyStringValue's min length should be 3!
         }
 
         [Fact]
@@ -40,7 +43,7 @@ namespace StudioX.TestBase.Tests.Application.Services
             var output = myAppService.MyMethod2(new MyMethod2Input
             {
                 MyStringValue2 = "test 1",
-                Input1 = new MyMethodInput { MyStringValue = "test 2" },
+                Input1 = new MyMethodInput {MyStringValue = "test 2"},
                 DateTimeValue = Clock.Now
             });
             output.Result.ShouldBe(42);
@@ -76,9 +79,9 @@ namespace StudioX.TestBase.Tests.Application.Services
                     {
                         MyStringValue2 = "test 1",
                         ListItems = new List<MyClassInList>
-                                    {
-                                        new MyClassInList {ValueInList = null}
-                                    }
+                        {
+                            new MyClassInList {ValueInList = null}
+                        }
                     }));
         }
 
@@ -91,9 +94,9 @@ namespace StudioX.TestBase.Tests.Application.Services
                     {
                         MyStringValue2 = "test 1",
                         ArrayItems = new[]
-                                     {
-                                         new MyClassInList {ValueInList = null}
-                                     }
+                        {
+                            new MyClassInList {ValueInList = null}
+                        }
                     }));
         }
 
@@ -101,8 +104,8 @@ namespace StudioX.TestBase.Tests.Application.Services
         public void ShouldNotWorkIfArrayIsNull()
         {
             Assert.Throws<StudioXValidationException>(() =>
-                myAppService.MyMethod4(new MyMethod4Input()) //ArrayItems is null!
-                );
+                    myAppService.MyMethod4(new MyMethod4Input()) //ArrayItems is null!
+            );
         }
 
         [Fact]
@@ -148,7 +151,13 @@ namespace StudioX.TestBase.Tests.Application.Services
         [Fact]
         public void ShouldStopRecursiveValidationInAConstantDepth()
         {
-            myAppService.MyMethod8(new MyClassWithRecursiveReference { Value = "42" }).Result.ShouldBe(42);
+            myAppService.MyMethod8(new MyClassWithRecursiveReference {Value = "42"}).Result.ShouldBe(42);
+        }
+
+        [Fact]
+        public void ShouldAllowNullForNullableEnums()
+        {
+            myAppService.MyMethodWithNullableEnum(null);
         }
 
         #region Nested Classes
@@ -164,54 +173,59 @@ namespace StudioX.TestBase.Tests.Application.Services
             MyMethodOutput MyMethod6(MyMethod6Input input);
             MyMethodOutput MyMethod7(MyMethod7Input input);
             MyMethodOutput MyMethod8(MyClassWithRecursiveReference input);
+            void MyMethodWithNullableEnum(MyEnum? value);
         }
 
         public class MyAppService : IMyAppService, IApplicationService
         {
             public MyMethodOutput MyMethod(MyMethodInput input)
             {
-                return new MyMethodOutput { Result = 42 };
+                return new MyMethodOutput {Result = 42};
             }
 
             public MyMethodOutput MyMethod2(MyMethod2Input input)
             {
-                return new MyMethodOutput { Result = 42 };
+                return new MyMethodOutput {Result = 42};
             }
 
             public MyMethodOutput MyMethod3(MyMethod3Input input)
             {
-                return new MyMethodOutput { Result = 42 };
+                return new MyMethodOutput {Result = 42};
             }
 
             public MyMethodOutput MyMethod4(MyMethod4Input input)
             {
-                return new MyMethodOutput { Result = 42 };
+                return new MyMethodOutput {Result = 42};
             }
 
             [DisableValidation]
             public MyMethodOutput MyMethod42(MyMethod4Input input)
             {
-                return new MyMethodOutput { Result = 42 };
+                return new MyMethodOutput {Result = 42};
             }
 
             public MyMethodOutput MyMethod5(MyMethod5Input input)
             {
-                return new MyMethodOutput { Result = 42 };
+                return new MyMethodOutput {Result = 42};
             }
 
             public MyMethodOutput MyMethod6(MyMethod6Input input)
             {
-                return new MyMethodOutput { Result = 42 };
+                return new MyMethodOutput {Result = 42};
             }
 
             public MyMethodOutput MyMethod7(MyMethod7Input input)
             {
-                return new MyMethodOutput { Result = 42 };
+                return new MyMethodOutput {Result = 42};
             }
 
             public MyMethodOutput MyMethod8(MyClassWithRecursiveReference input)
             {
-                return new MyMethodOutput { Result = 42 };
+                return new MyMethodOutput {Result = 42};
+            }
+
+            public void MyMethodWithNullableEnum(MyEnum? value)
+            {
             }
         }
 
@@ -323,6 +337,12 @@ namespace StudioX.TestBase.Tests.Application.Services
             {
                 Reference = this;
             }
+        }
+
+        public enum MyEnum
+        {
+            Value1,
+            Value2
         }
 
         #endregion
