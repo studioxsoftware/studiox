@@ -7,11 +7,11 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 
 [assembly: AssemblyTitle("StudioX.Zero")]
-[assembly: AssemblyDescription("ASP.NET Boilerplate - Module Zero")]
+[assembly: AssemblyDescription("StudioX - Module Zero")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Volosoft")]
 [assembly: AssemblyProduct("StudioX.Zero")]
-[assembly: AssemblyCopyright("Copyright © 2016")]
+[assembly: AssemblyCopyright("Copyright © 2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

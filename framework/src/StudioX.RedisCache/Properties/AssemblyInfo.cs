@@ -1,12 +1,12 @@
 ﻿using System.Reflection;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitle("ASP.NET Boilerplate - Redis cache implementation")]
-[assembly: AssemblyDescription("ASP.NET Boilerplate - Redis cache implementation")]
+[assembly: AssemblyTitle("StudioX - Redis cache implementation")]
+[assembly: AssemblyDescription("StudioX Boilerplate - Redis cache implementation")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("StudioX")]
 [assembly: AssemblyProduct("StudioX.RedisCache")]
-[assembly: AssemblyCopyright("Copyright © 2016")]
+[assembly: AssemblyCopyright("Copyright © 2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

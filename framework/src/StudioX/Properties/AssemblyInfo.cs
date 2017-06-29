@@ -7,12 +7,12 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 using StudioX;
 
-[assembly: AssemblyTitle("ASP.NET Boilerplate")]
-[assembly: AssemblyDescription("ASP.NET Boilerplate")]
+[assembly: AssemblyTitle("StudioX")]
+[assembly: AssemblyDescription("StudioX")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("StudioX")]
 [assembly: AssemblyProduct("StudioX")]
-[assembly: AssemblyCopyright("Copyright © 2016")]
+[assembly: AssemblyCopyright("Copyright © 2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

@@ -6,12 +6,12 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 
-[assembly: AssemblyTitle("ASP.NET Boilerplate - EntityFramework adapter")]
-[assembly: AssemblyDescription("ASP.NET Boilerplate - EntityFramework adapter")]
+[assembly: AssemblyTitle("StudioX - EntityFramework adapter")]
+[assembly: AssemblyDescription("StudioX Boilerplate - EntityFramework adapter")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("StudioX")]
 [assembly: AssemblyProduct("StudioX.EntityFramework")]
-[assembly: AssemblyCopyright("Copyright © 2016")]
+[assembly: AssemblyCopyright("Copyright © 2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

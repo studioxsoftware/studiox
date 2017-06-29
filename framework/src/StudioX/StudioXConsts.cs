@@ -6,7 +6,7 @@ namespace StudioX
     public static class StudioXConsts
     {
         /// <summary>
-        ///     Localization source name of ASP.NET Boilerplate framework.
+        ///     Localization source name of StudioX framework.
         /// </summary>
         public const string LocalizationSourceName = "StudioX";
 

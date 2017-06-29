@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 
-[assembly: AssemblyTitle("ASP.NET Boilerplate - Memory DB")]
-[assembly: AssemblyDescription("ASP.NET Boilerplate - Memory DB")]
+[assembly: AssemblyTitle("StudioX - Memory DB")]
+[assembly: AssemblyDescription("StudioX Boilerplate - Memory DB")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("StudioX")]
 [assembly: AssemblyProduct("StudioX.MemoryDb")]
-[assembly: AssemblyCopyright("Copyright © 2016")]
+[assembly: AssemblyCopyright("Copyright © 2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

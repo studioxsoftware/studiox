@@ -9,6 +9,10 @@ User Interface is based on [BSB Admin theme](https://github.com/gurayyarar/Admin
  
 # Screenshots
 
+#### Swagger
+
+![](_screenshots/swagger.png)
+
 #### Login Page
 
 ![](_screenshots/login.png)

@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 
 [assembly: AssemblyTitle("StudioX.Zero.EntityFramework")]
-[assembly: AssemblyDescription("ASP.NET Boilerplate - Module Zero - EntityFramework Integration")]
+[assembly: AssemblyDescription("StudioX - Module Zero - EntityFramework Integration")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Volosoft")]
 [assembly: AssemblyProduct("StudioX.Zero.EntityFramework")]
-[assembly: AssemblyCopyright("Copyright © 2016")]
+[assembly: AssemblyCopyright("Copyright © 2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

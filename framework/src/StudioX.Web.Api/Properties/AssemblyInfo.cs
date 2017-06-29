@@ -6,12 +6,12 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 
-[assembly: AssemblyTitle("ASP.NET Boilerplate - Web API")]
-[assembly: AssemblyDescription("ASP.NET Boilerplate - Web API Layer")]
+[assembly: AssemblyTitle("StudioX - Web API")]
+[assembly: AssemblyDescription("StudioX - Web API Layer")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("StudioX")]
 [assembly: AssemblyProduct("StudioX.Web.Api")]
-[assembly: AssemblyCopyright("Copyright © 2016")]
+[assembly: AssemblyCopyright("Copyright © 2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: InternalsVisibleTo("StudioX.Web.Api.Tests")]
