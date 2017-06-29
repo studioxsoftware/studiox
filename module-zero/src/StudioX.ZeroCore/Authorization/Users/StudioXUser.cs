@@ -13,6 +13,11 @@ namespace StudioX.Authorization.Users
         where TUser : StudioXUser<TUser>
     {
         /// <summary>
+        /// Maximum length of the <see cref="ConcurrencyStamp"/> property.
+        /// </summary>
+        public const int MaxConcurrencyStampLength = 50;
+
+        /// <summary>
         /// User name.
         /// User name must be unique for it's tenant.
         /// </summary>
@@ -31,6 +36,7 @@ namespace StudioX.Authorization.Users
         /// <summary>
         /// A random value that must change whenever a user is persisted to the store
         /// </summary>
+        [StringLength(MaxConcurrencyStampLength)]
         public virtual string ConcurrencyStamp { get; set; } = Guid.NewGuid().ToString();
 
         public virtual ICollection<UserToken> Tokens { get; set; }
