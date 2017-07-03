@@ -7,7 +7,7 @@ using StudioX.Events.Bus.Handlers;
 namespace StudioX.Authorization.Users
 {
     /// <summary>
-    /// Removes the user from all organization units when a user is deleted.
+    /// Removes the user from all user roles when a user is deleted.
     /// </summary>
     public class UserRoleRemover :
         IEventHandler<EntityDeletedEventData<StudioXUserBase>>,
