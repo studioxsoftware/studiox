@@ -5,28 +5,14 @@ using StudioX.Boilerplate.Users.Dto;
 
 namespace StudioX.Boilerplate.Users
 {
-    public interface IUserAppService : IApplicationService
+    public interface IUserAppService : IAsyncCrudAppService<UserDto, long, PagedResultRequestDto, CreateUserInput, UpdateUserInput>
     {
-        Task<ListResultDto<UserListDto>> GetAll();
-
-        PagedResultDto<UserListDto> PagedResult(GetUsersInput input);
-
-        Task<UserDto> Get(long id);
-
         Task ProhibitPermission(ProhibitPermissionInput input);
 
         Task ResetUserSpecificPermissions(long id);
 
         Task Unlock(long id);
 
-        Task Create(CreateUserInput input);
-
-        Task UpdateUserPermissions(UserPermissionsInput input);
-
-        Task Update(UpdateUserInput input);
-
         Task ResetPassword(ChangeUserPasswordInput input);
-
-        Task Delete(long id);
     }
 }

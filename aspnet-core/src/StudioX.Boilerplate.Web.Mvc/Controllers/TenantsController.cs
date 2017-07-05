@@ -1,8 +1,11 @@
-﻿using StudioX.AspNetCore.Mvc.Authorization;
+﻿using System.Threading.Tasks;
+using StudioX.AspNetCore.Mvc.Authorization;
 using StudioX.Boilerplate.Authorization;
 using StudioX.Boilerplate.Controllers;
 using StudioX.Boilerplate.MultiTenancy;
 using Microsoft.AspNetCore.Mvc;
+using StudioX.Application.Services.Dto;
+using StudioX.Threading;
 
 namespace StudioX.Boilerplate.Web.Controllers
 {
@@ -16,9 +19,9 @@ namespace StudioX.Boilerplate.Web.Controllers
             this.tenantAppService = tenantAppService;
         }
 
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
-            var output = tenantAppService.GetTenants();
+            var output = await tenantAppService.GetAll(new PagedResultRequestDto { MaxResultCount = 20, SkipCount = 0 });
             return View(output);
         }
     }

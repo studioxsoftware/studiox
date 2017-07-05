@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using StudioX.Application.Services.Dto;
 using StudioX.Authorization.Roles;
 using StudioX.AutoMapper;
@@ -7,27 +8,26 @@ using StudioX.Boilerplate.Authorization.Roles;
 namespace StudioX.Boilerplate.Roles.Dto
 {
     [AutoMapFrom(typeof(Role))]
-    public class RoleDto : CreationAuditedEntityDto
+    public class RoleDto : EntityDto
     {
-        public virtual int? TenantId { get; set; }
+        [Required]
+        [StringLength(StudioXRoleBase.MaxNameLength)]
+        public string Name { get; set; }
 
-        /// <summary>
-        /// Display name of this role.
-        /// </summary>
-        public virtual string DisplayName { get; set; }
+        [Required]
+        [StringLength(StudioXRoleBase.MaxDisplayNameLength)]
+        public string DisplayName { get; set; }
 
-        /// <summary>
-        /// Is this a static role?
-        /// Static roles can not be deleted, can not change their name.
-        /// They can be used programmatically.
-        /// </summary>
-        public virtual bool IsStatic { get; set; }
+        public string NormalizedName { get; set; }
 
-        /// <summary>
-        /// Is this role will be assigned to new users as default?
-        /// </summary>
-        public virtual bool IsDefault { get; set; }
+        [Required]
+        [StringLength(Role.MaxDescriptionLength)]
+        public string Description { get; set; }
 
-        public virtual ICollection<RolePermissionSetting> Permissions { get; set; }
+        public bool IsActive { get; set; }
+
+        public bool IsStatic { get; set; }
+
+        public List<string> Permissions { get; set; }
     }
 }

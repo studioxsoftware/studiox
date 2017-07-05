@@ -3,6 +3,7 @@ using StudioX.Boilerplate.Users;
 using StudioX.Boilerplate.Users.Dto;
 using Microsoft.EntityFrameworkCore;
 using Shouldly;
+using StudioX.Application.Services.Dto;
 using Xunit;
 
 namespace StudioX.Boilerplate.Tests.Users
@@ -20,7 +21,7 @@ namespace StudioX.Boilerplate.Tests.Users
         public async Task GetUsersTest()
         {
             //Act
-            var output = await userAppService.GetAll();
+            var output = await userAppService.GetAll(new PagedResultRequestDto { MaxResultCount = 20, SkipCount = 0 });
 
             //Assert
             output.Items.Count.ShouldBeGreaterThan(0);

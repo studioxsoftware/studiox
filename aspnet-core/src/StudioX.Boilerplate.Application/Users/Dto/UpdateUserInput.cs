@@ -1,4 +1,6 @@
+using System;
 using System.ComponentModel.DataAnnotations;
+using StudioX.Application.Services.Dto;
 using StudioX.Authorization.Users;
 using StudioX.AutoMapper;
 using StudioX.Boilerplate.Authorization.Users;
@@ -6,10 +8,8 @@ using StudioX.Boilerplate.Authorization.Users;
 namespace StudioX.Boilerplate.Users.Dto
 {
     [AutoMapTo(typeof(User))]
-    public class UpdateUserInput 
+    public class UpdateUserInput : EntityDto<long>
     {
-        public long Id { get; set; }
-
         [Required]
         [StringLength(StudioXUserBase.MaxUserNameLength)]
         public string UserName { get; set; }
@@ -27,11 +27,14 @@ namespace StudioX.Boilerplate.Users.Dto
         [StringLength(StudioXUserBase.MaxEmailAddressLength)]
         public string EmailAddress { get; set; }
 
-        [StringLength(StudioXUserBase.MaxPhoneNumberLength)]
-        public virtual string PhoneNumber { get; set; }
-
         public bool IsActive { get; set; }
 
-        public string[] RoleNames { get; set; }
+        public string FullName { get; set; }
+
+        public DateTime? LastLoginTime { get; set; }
+
+        public DateTime CreationTime { get; set; }
+
+        public string[] Roles { get; set; }
     }
 }

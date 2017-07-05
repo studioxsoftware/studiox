@@ -1,143 +1,153 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Dynamic.Core;
+﻿using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using StudioX.Application.Services;
 using StudioX.Application.Services.Dto;
 using StudioX.Authorization;
 using StudioX.AutoMapper;
-using StudioX.Configuration;
-using StudioX.Extensions;
-using StudioX.Linq.Extensions;
-using StudioX.UI;
 using StudioX.Boilerplate.Authorization;
 using StudioX.Boilerplate.Authorization.Roles;
-using StudioX.Boilerplate.Configuration;
+using StudioX.Boilerplate.Authorization.Users;
+using StudioX.Boilerplate.MultiTenancy;
 using StudioX.Boilerplate.Roles.Dto;
+using StudioX.Domain.Repositories;
+using StudioX.Domain.Uow;
+using StudioX.Extensions;
+using StudioX.IdentityFramework;
+using StudioX.Linq.Extensions;
+using StudioX.UI;
 using StudioX.Zero.Configuration;
 
 namespace StudioX.Boilerplate.Roles
 {
     [StudioXAuthorize(PermissionNames.System.Administration.Roles.MainMenu)]
-    public class RoleAppService : BoilerplateAppServiceBase, IRoleAppService
+    public class RoleAppService :
+        AsyncCrudAppService<Role, RoleDto, int, PagedResultRequestDto, CreateRoleInput, UpdateRoleInput>,
+        IRoleAppService
+
     {
         private readonly RoleManager roleManager;
+        private UserManager userManager;
+        private TenantManager tenantManager;
 
-        public RoleAppService(
-            RoleManager roleManager
-        )
+        public RoleAppService(IRepository<Role> roleRepository, 
+            RoleManager roleManager, 
+            UserManager userManager)
+            : base(roleRepository)
         {
             this.roleManager = roleManager;
         }
 
-        [StudioXAuthorize(PermissionNames.System.Administration.Roles.View)]
-        public async Task<ListResultDto<RoleListDto>> GetAll()
+        protected override IQueryable<Role> CreateFilteredQuery(PagedResultRequestDto input)
         {
-            var roles = roleManager.Roles
-                .OrderByDescending(r => r.IsStatic)
-                .ThenByDescending(r => r.IsDefault)
-                .ThenBy(r => r.DisplayName)
-                .ToList();
-
-            return new ListResultDto<RoleListDto>(
-                   ObjectMapper.Map<List<RoleListDto>>(roles)
-               );
+            return Repository.GetAllIncluding(x => x.Permissions);
         }
 
-        [StudioXAuthorize(PermissionNames.System.Administration.Roles.View)]
-        public PagedResultDto<RoleListDto> PagedResult(GetRolesInput input)
+        protected override async Task<Role> GetEntityByIdAsync(int id)
         {
-            if (input.MaxResultCount <= 0)
-                input.MaxResultCount = SettingManager.GetSettingValue<int>(BoilerplateSettingProvider.RolesDefaultPageSize);
+            return await CreateFilteredQuery(null)
+                .Where(x => x.Id == id)
+                .FirstOrDefaultAsync();
+        }
 
-            if (input.Sorting.IsNullOrEmpty())
-                input.Sorting = GetRolesInput.DefaultSorting;
-
-            var query = roleManager.Roles
-                .WhereIf(!input.PermissionName.IsNullOrEmpty(),
-                    x => x.Permissions.Any(p => p.Name == input.PermissionName));
-
-            var roles = query.OrderBy(input.Sorting)
-                .PageBy(input)
-                .ToList();
-            var totalCount = query.Count();
-
-            return new PagedResultDto<RoleListDto>
+        // Sorting has to be re-applied after paging, .Take resets the sorting
+        protected override IQueryable<Role> ApplyPaging(IQueryable<Role> query, PagedResultRequestDto input)
+        {
+            //Try to use paging if available
+            var pagedInput = input as IPagedResultRequest;
+            if (pagedInput != null)
             {
-                TotalCount = totalCount,
-                Items = roles.MapTo<List<RoleListDto>>()
-            };
-        }
-
-        [StudioXAuthorize(PermissionNames.System.Administration.Roles.View)]
-        public async Task<RoleDto> GetDefaultRole()
-        {
-            var defaultRole = await roleManager.Roles.FirstOrDefaultAsync(r => r.IsDefault);
-            return defaultRole.MapTo<RoleDto>();
-        }
-        
-        [StudioXAuthorize(PermissionNames.System.Administration.Roles.View)]
-        public async Task<RoleDto> Get(int id)
-        {
-            var role = await roleManager.Roles.FirstOrDefaultAsync(x => x.Id == id);
-            return role.MapTo<RoleDto>();
-        }
-
-        [StudioXAuthorize(PermissionNames.System.Administration.Roles.Create)]
-        public async Task Create(CreateRoleInput input)
-        {
-            if (input.IsDefault)
-            {
-                var defaultRoles = roleManager.Roles.Where(r => r.IsDefault);
-                foreach (var defaultRole in defaultRoles)
-                    defaultRole.IsDefault = false;
+                // Sort again after paging // .take resets the orderby
+                query = query.PageBy(pagedInput);
+                query = ApplySorting(query, input);
+                return query;
             }
 
-            var role = new Role
+            // Try to limit query result if available
+            var limitedInput = input as ILimitedResultRequest;
+            if (limitedInput != null)
             {
-                Name = new RegularGuidGenerator().Create().ToString().Replace("-", ""),
-                DisplayName = input.DisplayName,
-                IsDefault = input.IsDefault
-            };
+                query = query.Take(limitedInput.MaxResultCount);
+                query = ApplySorting(query, input);
+                return query;
+            }
 
-            await roleManager.CreateAsync(role);
-            await CurrentUnitOfWork.SaveChangesAsync();
+            // No paging
+            return query;
+        }
+
+        [UnitOfWork]
+        public override async Task<RoleDto> Create(CreateRoleInput input)
+        {
+            CheckCreatePermission();
+
+            var role = ObjectMapper.Map<Role>(input);
+            role.SetNormalizedName();
+
+            var result = await roleManager.CreateAsync(role);
+            CheckErrors(result);
 
             var grantedPermissions = PermissionManager
                 .GetAllPermissions()
-                .Where(p => input.GrantedPermissionNames.Contains(p.Name))
+                .Where(p => input.Permissions.Contains(p.Name))
                 .ToList();
 
             await roleManager.SetGrantedPermissionsAsync(role, grantedPermissions);
+
+            return MapToEntityDto(role);
         }
 
-        [StudioXAuthorize(PermissionNames.System.Administration.Roles.Edit)]
-        public async Task Update(UpdateRoleInput input)
+        [UnitOfWork]
+        public override async Task<RoleDto> Update(UpdateRoleInput input)
         {
+            CheckUpdatePermission();
+
             var role = await roleManager.GetRoleByIdAsync(input.Id);
 
+            // Update role
             var mapped = input.MapTo(role);
 
-            await roleManager.UpdateAsync(mapped);
-            await roleManager.ResetAllPermissionsAsync(role);
+            CheckErrors(await roleManager.UpdateAsync(role));
 
             var grantedPermissions = PermissionManager
                 .GetAllPermissions()
-                .Where(p => input.GrantedPermissionNames.Contains(p.Name))
+                .Where(p => input.Permissions.Contains(p.Name))
                 .ToList();
 
             await roleManager.SetGrantedPermissionsAsync(role, grantedPermissions);
+
+            // should reload entity fresh from db after changes
+            return MapToEntityDto(role);
         }
 
-        [StudioXAuthorize(PermissionNames.System.Administration.Roles.Delete)]
-        public async Task Delete(int id)
+        [UnitOfWork]
+        public override async Task Delete(EntityDto<int> input)
         {
-            var role = await roleManager.GetRoleByIdAsync(id);
-            if (role != null && !role.IsStatic)
+            CheckDeletePermission();
+
+            var role = await roleManager.FindByIdAsync(input.Id.ToString());
+            if (role.IsStatic)
             {
-                await roleManager.ResetAllPermissionsAsync(role);
-                await roleManager.DeleteAsync(role);
+                throw new UserFriendlyException("CannotDeleteAStaticRole");
             }
+
+            var users = await userManager.GetUsersInRoleAsync(role.NormalizedName);
+
+            foreach (var user in users)
+            {
+                CheckErrors(await userManager.RemoveFromRoleAsync(user, role.NormalizedName));
+            }
+
+            var result = await roleManager.DeleteAsync(role);
+
+
+            CheckErrors(result);
+        }
+
+        protected virtual void CheckErrors(IdentityResult identityResult)
+        {
+            identityResult.CheckErrors(LocalizationManager);
         }
 
         // TODO: Will change to other permission name
@@ -157,7 +167,7 @@ namespace StudioX.Boilerplate.Roles
         {
             await CheckPassword(password);
 
-            var tenants = TenantManager.Tenants.ToList();
+            var tenants = tenantManager.Tenants.ToList();
 
             foreach (var tenant in tenants)
             {
@@ -176,7 +186,7 @@ namespace StudioX.Boilerplate.Roles
                 throw new UserFriendlyException("Password can not be null or empty!");
 
             var actualPassword = await SettingManager.GetSettingValueAsync(
-                    StudioXZeroSettingNames.UserManagement.SecurityPassword.MaintainanceAdminPassword);
+                StudioXZeroSettingNames.UserManagement.SecurityPassword.MaintainanceAdminPassword);
 
             if (actualPassword != password)
                 throw new UserFriendlyException("Password is not correct!");

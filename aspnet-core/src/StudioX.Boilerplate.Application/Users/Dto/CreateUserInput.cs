@@ -13,44 +13,31 @@ namespace StudioX.Boilerplate.Users.Dto
         [StringLength(StudioXUserBase.MaxUserNameLength)]
         public string UserName { get; set; }
 
-        /// <summary>
-        /// First name of the user.
-        /// </summary>
         [Required]
         [StringLength(StudioXUserBase.MaxFirstNameLength)]
         public string FirstName { get; set; }
 
-        /// <summary>
-        /// Last name of the user.
-        /// </summary>
         [Required]
         [StringLength(StudioXUserBase.MaxLastNameLength)]
         public string LastName { get; set; }
 
-        /// <summary>
-        ///  Email address of the user.
-        /// </summary>
         [Required]
         [EmailAddress]
         [StringLength(StudioXUserBase.MaxEmailAddressLength)]
         public string EmailAddress { get; set; }
 
-        /// <summary>
-        /// Gets or sets the phone number.
-        /// </summary>
-        [StringLength(StudioXUserBase.MaxPhoneNumberLength)]
-        public virtual string PhoneNumber { get; set; }
+        public bool IsActive { get; set; }
 
-        /// <summary>
-        ///  Password of the user.
-        /// </summary>
+        public string[] Roles { get; set; }
+
         [Required]
-        [StringLength(StudioXUserBase.MaxPlainPasswordLength)]
+        [StringLength(User.MaxPlainPasswordLength)]
         [DisableAuditing]
         public string Password { get; set; }
 
-        public bool IsActive { get; set; }
-
-        public string[] RoleNames { get; set; }
+        [Required]
+        [StringLength(User.MaxPlainPasswordLength)]
+        [DisableAuditing]
+        public string ConfirmPassword { get; set; }
     }
 }

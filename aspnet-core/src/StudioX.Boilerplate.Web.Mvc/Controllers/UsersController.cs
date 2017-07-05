@@ -4,6 +4,7 @@ using StudioX.Boilerplate.Authorization;
 using StudioX.Boilerplate.Controllers;
 using StudioX.Boilerplate.Users;
 using Microsoft.AspNetCore.Mvc;
+using StudioX.Application.Services.Dto;
 
 namespace StudioX.Boilerplate.Web.Controllers
 {
@@ -19,7 +20,7 @@ namespace StudioX.Boilerplate.Web.Controllers
 
         public async Task<ActionResult> Index()
         {
-            var output = await userAppService.GetAll();
+            var output = await userAppService.GetAll(new PagedResultRequestDto { MaxResultCount = 20, SkipCount = 0 });
             return View(output);
         }
     }

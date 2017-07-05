@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using StudioX.Authorization.Roles;
 using StudioX.AutoMapper;
 using StudioX.Boilerplate.Authorization.Roles;
 
@@ -8,17 +9,24 @@ namespace StudioX.Boilerplate.Roles.Dto
     [AutoMapTo(typeof(Role))]
     public class CreateRoleInput
     {
-        /// <summary>
-        /// Display name of this role.
-        /// </summary>
         [Required]
-        public virtual string DisplayName { get; set; }
+        [StringLength(StudioXRoleBase.MaxNameLength)]
+        public string Name { get; set; }
 
-        /// <summary>
-        /// Is this role will be assigned to new users as default?
-        /// </summary>
-        public virtual bool IsDefault { get; set; }
+        [Required]
+        [StringLength(StudioXRoleBase.MaxDisplayNameLength)]
+        public string DisplayName { get; set; }
 
-        public List<string> GrantedPermissionNames { get; set; }
+        public string NormalizedName { get; set; }
+
+        [Required]
+        [StringLength(Role.MaxDescriptionLength)]
+        public string Description { get; set; }
+
+        public bool IsActive { get; set; }
+
+        public bool IsStatic { get; set; }
+
+        public List<string> Permissions { get; set; }
     }
 }

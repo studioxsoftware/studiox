@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using StudioX.Application.Services.Dto;
 using StudioX.Authorization.Users;
 using StudioX.AutoMapper;
 using StudioX.MultiTenancy;
@@ -6,7 +7,7 @@ using StudioX.MultiTenancy;
 namespace StudioX.Boilerplate.MultiTenancy.Dto
 {
     [AutoMapTo(typeof(Tenant))]
-    public class CreateTenantInput
+    public class UpdateTenantInput : EntityDto
     {
         [Required]
         [StringLength(StudioXTenantBase.MaxTenancyNameLength)]

@@ -1,54 +1,88 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
+using StudioX.Application.Services;
 using StudioX.Application.Services.Dto;
-using StudioX.Authorization;
-using StudioX.Extensions;
-using StudioX.MultiTenancy;
-using StudioX.Runtime.Security;
 using StudioX.Boilerplate.Authorization;
 using StudioX.Boilerplate.Authorization.Roles;
 using StudioX.Boilerplate.Authorization.Users;
 using StudioX.Boilerplate.Editions;
 using StudioX.Boilerplate.MultiTenancy.Dto;
-using Microsoft.AspNetCore.Identity;
+using StudioX.Domain.Repositories;
+using StudioX.Domain.Uow;
+using StudioX.Extensions;
+using StudioX.IdentityFramework;
+using StudioX.MultiTenancy;
+using StudioX.Runtime.Security;
+using StudioX.UI;
 
 namespace StudioX.Boilerplate.MultiTenancy
 {
-    [StudioXAuthorize(PermissionNames.System.Administration.Tenants.MainMenu)]
-    public class TenantAppService : BoilerplateAppServiceBase, ITenantAppService
+    public class TenantAppService :
+        AsyncCrudAppService<Tenant, TenantDto, int, PagedResultRequestDto, CreateTenantInput, UpdateTenantInput>,
+        ITenantAppService
     {
         private readonly TenantManager tenantManager;
-        private readonly RoleManager roleManager;
         private readonly EditionManager editionManager;
+        private readonly RoleManager roleManager;
+        private readonly UserManager userManager;
         private readonly IStudioXZeroDbMigrator studioXZeroDbMigrator;
         private readonly IPasswordHasher<User> passwordHasher;
+        private readonly IRepository<User, long> userRepository;
 
         public TenantAppService(
-            TenantManager tenantManager, 
-            RoleManager roleManager, 
-            EditionManager editionManager, 
-            IStudioXZeroDbMigrator zeroDbMigrator, 
-            IPasswordHasher<User> passwordHasher)
+            IRepository<Tenant, int> service,
+            IRepository<User, long> userRepository,
+            TenantManager tenantManager,
+            EditionManager editionManager,
+            UserManager userManager,
+            RoleManager roleManager,
+            IStudioXZeroDbMigrator studioXZeroDbMigrator,
+            IPasswordHasher<User> passwordHasher
+        ) : base(service)
         {
             this.tenantManager = tenantManager;
-            this.roleManager = roleManager;
             this.editionManager = editionManager;
-            studioXZeroDbMigrator = zeroDbMigrator;
+            this.roleManager = roleManager;
+            this.studioXZeroDbMigrator = studioXZeroDbMigrator;
             this.passwordHasher = passwordHasher;
+            this.userManager = userManager;
+            this.userRepository = userRepository;
+
+            CreatePermissionName = PermissionNames.System.Administration.Tenants.Create;
+            GetAllPermissionName = PermissionNames.System.Administration.Tenants.MainMenu;
+            GetPermissionName = PermissionNames.System.Administration.Tenants.MainMenu;
+            UpdatePermissionName = PermissionNames.System.Administration.Tenants.Edit;
+            DeletePermissionName = PermissionNames.System.Administration.Tenants.Delete;
         }
 
-        public ListResultDto<TenantListDto> GetTenants()
+        public override async Task<TenantDto> Get(EntityDto<int> input)
         {
-            return new ListResultDto<TenantListDto>(
-                ObjectMapper.Map<List<TenantListDto>>(
-                    tenantManager.Tenants.OrderBy(t => t.TenancyName).ToList()
-                )
-            );
+            CheckGetPermission();
+
+            var tenantDto = await base.Get(input);
+
+            Role tenantAdminRole = null;
+            User tenantAdminUser = null;
+            using (CurrentUnitOfWork.SetTenantId(tenantDto.Id))
+            {
+                tenantAdminRole = await roleManager.GetRoleByNameAsync("Admin");
+                tenantAdminUser =
+                    userRepository.GetAllIncluding(x => x.Roles)
+                        .Single(y => y.Roles.Any(z => z.RoleId == tenantAdminRole.Id));
+            }
+
+            tenantDto.AdminEmailAddress = tenantAdminUser.EmailAddress;
+
+            return tenantDto;
         }
 
-        public async Task CreateTenant(CreateTenantInput input)
+        [UnitOfWork]
+        public override async Task<TenantDto> Create(CreateTenantInput input)
         {
+            CheckCreatePermission();
+
             //Create tenant
             var tenant = ObjectMapper.Map<Tenant>(input);
             tenant.ConnectionString = input.ConnectionString.IsNullOrEmpty()
@@ -61,7 +95,7 @@ namespace StudioX.Boilerplate.MultiTenancy
                 tenant.EditionId = defaultEdition.Id;
             }
 
-            await TenantManager.CreateAsync(tenant);
+            await tenantManager.CreateAsync(tenant);
             await CurrentUnitOfWork.SaveChangesAsync(); //To get new tenant's id.
 
             //Create tenant database
@@ -70,6 +104,10 @@ namespace StudioX.Boilerplate.MultiTenancy
             //We are working entities of new tenant, so changing tenant filter
             using (CurrentUnitOfWork.SetTenantId(tenant.Id))
             {
+                // Check directly
+                var isGranted =
+                    await PermissionChecker.IsGrantedAsync(PermissionNames.System.Administration.Tenants.MainMenu);
+
                 //Create static roles for new tenant
                 CheckErrors(await roleManager.CreateStaticRoles(tenant.Id));
 
@@ -82,13 +120,77 @@ namespace StudioX.Boilerplate.MultiTenancy
                 //Create admin user for the tenant
                 var adminUser = User.CreateTenantAdminUser(tenant.Id, input.AdminEmailAddress);
                 adminUser.Password = passwordHasher.HashPassword(adminUser, User.DefaultPassword);
-                CheckErrors(await UserManager.CreateAsync(adminUser));
+                CheckErrors(await userManager.CreateAsync(adminUser));
                 await CurrentUnitOfWork.SaveChangesAsync(); //To get admin user's id
 
                 //Assign admin user to role!
-                CheckErrors(await UserManager.AddToRoleAsync(adminUser, adminRole.Name));
+                CheckErrors(await userManager.AddToRoleAsync(adminUser, adminRole.Name));
                 await CurrentUnitOfWork.SaveChangesAsync();
             }
+
+            return MapToEntityDto(tenant);
+        }
+
+        [UnitOfWork]
+        public override async Task<TenantDto> Update(UpdateTenantInput input)
+        {
+            CheckUpdatePermission();
+
+            var tenant = tenantManager.GetById(input.Id);
+
+            Role tenantAdminRole = null;
+            User tenantAdminUser = null;
+            using (CurrentUnitOfWork.SetTenantId(tenant.Id))
+            {
+                tenantAdminRole = await roleManager.GetRoleByNameAsync("Admin");
+
+                tenantAdminUser = userRepository.GetAll()
+                    .FirstOrDefault(x => x.TenantId == tenant.Id && x.Roles.Any(y => y.RoleId == tenantAdminRole.Id));
+            }
+
+            // Update the admin email address
+            if (input.AdminEmailAddress != tenantAdminUser.EmailAddress)
+            {
+                User existingUser = null;
+                using (CurrentUnitOfWork.SetTenantId(tenant.Id))
+                {
+                    existingUser = userRepository.GetAll()
+                        .FirstOrDefault(x => x.EmailAddress == input.AdminEmailAddress && x.TenantId == tenant.Id);
+                }
+
+                if (existingUser != null)
+                {
+                    throw new UserFriendlyException("There is an existing user for the tenant with email address " +
+                                                    input.AdminEmailAddress);
+                }
+
+                tenantAdminUser.EmailAddress = input.AdminEmailAddress;
+                tenantAdminUser.SetNormalizedNames();
+            }
+
+            var connectionString = tenant.ConnectionString.IsNullOrEmpty()
+                ? null
+                : SimpleStringCipher.Instance.Decrypt(tenant.ConnectionString);
+            if (connectionString != input.ConnectionString)
+            {
+                throw new UserFriendlyException("Changing Connection string is not supported.");
+            }
+
+            return MapToEntityDto(tenant);
+        }
+
+        [UnitOfWork]
+        public override async Task Delete(EntityDto<int> input)
+        {
+            CheckDeletePermission();
+
+            var tenant = await tenantManager.GetByIdAsync(input.Id);
+            await tenantManager.DeleteAsync(tenant);
+        }
+
+        protected virtual void CheckErrors(IdentityResult identityResult)
+        {
+            identityResult.CheckErrors(LocalizationManager);
         }
     }
 }
