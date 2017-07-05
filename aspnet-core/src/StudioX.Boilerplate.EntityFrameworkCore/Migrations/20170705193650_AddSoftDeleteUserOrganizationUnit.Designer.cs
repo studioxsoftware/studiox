@@ -11,9 +11,10 @@ using StudioX.Notifications;
 namespace StudioX.Boilerplate.Migrations
 {
     [DbContext(typeof(BoilerplateDbContext))]
-    partial class BoilerplateDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170705193650_AddSoftDeleteUserOrganizationUnit")]
+    partial class AddSoftDeleteUserOrganizationUnit
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.2")
