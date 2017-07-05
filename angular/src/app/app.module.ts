@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule, JsonpModule } from '@angular/http';
 
 import { ModalModule } from 'ngx-bootstrap';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -15,10 +16,19 @@ import { SharedModule } from '@shared/shared.module';
 
 import { HomeComponent } from '@app/pages/home/home.component';
 import { AboutComponent } from '@app/pages/about/about.component';
+
 import { UsersComponent } from '@app/system/users/users.component';
-import { CreateUserModalComponent } from '@app/system/users/create-user-modal.component';
+import { CreateUserComponent } from '@app/system/users/create-user.component';
+import { EditUserComponent } from '@app/system/users/edit-user.component';
+
+import { RolesComponent } from '@app/system/roles/roles.component';
+import { CreateRoleComponent } from '@app/system/roles/create-role.component';
+import { EditRoleComponent } from '@app/system/roles/edit-role.component';
+
 import { TenantsComponent } from '@app/system/tenants/tenants.component';
-import { CreateTenantModalComponent } from '@app/system/tenants/create-tenant-modal.component';
+import { CreateTenantComponent } from '@app/system/tenants/create-tenant.component';
+import { EditTenantComponent } from '@app/system/tenants/edit-tenant.component';
+
 import { TopBarComponent } from '@app/layout/topbar.component';
 import { TopBarLanguageSwitchComponent } from '@app/layout/topbar-languageswitch.component';
 import { SideBarUserAreaComponent } from '@app/layout/sidebar-user-area.component';
@@ -36,9 +46,14 @@ import { TableDemoComponent } from '@app/demo/table/table-demo.component';
         HomeComponent,
         AboutComponent,
         UsersComponent,
-        CreateUserModalComponent,
+            CreateUserComponent,
+ 		    EditUserComponent,
         TenantsComponent,
-        CreateTenantModalComponent,
+            CreateTenantComponent,
+            EditTenantComponent,        
+        RolesComponent,        
+ 		    CreateRoleComponent,
+ 		    EditRoleComponent,
         TopBarComponent,
         TopBarLanguageSwitchComponent,
         SideBarUserAreaComponent,
@@ -57,6 +72,7 @@ import { TableDemoComponent } from '@app/demo/table/table-demo.component';
         AppRoutingModule,
         ServiceProxyModule,
         SharedModule,
+        NgxPaginationModule,
         PaginationModule.forRoot(),
         StudioXTableModule
     ],

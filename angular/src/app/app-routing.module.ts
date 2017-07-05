@@ -6,6 +6,7 @@ import { HomeComponent } from './pages/home/home.component';
 import { AboutComponent } from './pages/about/about.component';
 import { UsersComponent } from './system/users/users.component';
 import { TenantsComponent } from './system/tenants/tenants.component';
+import { RolesComponent } from "./system/roles/roles.component";
 import { TableDemoComponent } from '@app/demo/table/table-demo.component';
 
 @NgModule({
@@ -21,6 +22,12 @@ import { TableDemoComponent } from '@app/demo/table/table-demo.component';
                         path: 'users',
                         component: UsersComponent,
                         data: { permission: 'System.Administration.Users' },
+                        canActivate: [AppRouteGuard]
+                    },
+                    {
+                        path: 'roles',
+                        component: RolesComponent,
+                        data: { permission: 'System.Administration.Roles' },
                         canActivate: [AppRouteGuard]
                     },
                     {

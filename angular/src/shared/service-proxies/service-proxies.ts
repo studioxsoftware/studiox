@@ -412,186 +412,7 @@ export class RoleServiceProxy {
     /**
      * @return Success
      */
-    getAll(): Observable<ListResultDtoOfRoleListDto> {
-        let url_ = this.baseUrl + "/api/services/app/Role/GetAll";
-
-        const content_ = "";
-        
-        return this.http.request(url_, {
-            body: content_,
-            method: "get",
-            headers: new Headers({
-                "Content-Type": "application/json; charset=UTF-8", 
-				"Accept": "application/json; charset=UTF-8"
-            })
-        }).map((response) => {
-            return this.processGetAll(response);
-        }).catch((response: any, caught: any) => {
-            if (response instanceof Response) {
-                try {
-                    return Observable.of(this.processGetAll(response));
-                } catch (e) {
-                    return <Observable<ListResultDtoOfRoleListDto>><any>Observable.throw(e);
-                }
-            } else
-                return <Observable<ListResultDtoOfRoleListDto>><any>Observable.throw(response);
-        });
-    }
-
-    protected processGetAll(response: Response): ListResultDtoOfRoleListDto {
-        const responseText = response.text();
-        const status = response.status; 
-
-        if (status === 200) {
-            let result200: ListResultDtoOfRoleListDto = null;
-            let resultData200 = responseText === "" ? null : JSON.parse(responseText, this.jsonParseReviver);
-            result200 = resultData200 ? ListResultDtoOfRoleListDto.fromJS(resultData200) : new ListResultDtoOfRoleListDto();
-            return result200;
-        } else if (status !== 200 && status !== 204) {
-            this.throwException("An unexpected server error occurred.", status, responseText);
-        }
-        return null;
-    }
-
-    /**
-     * @return Success
-     */
-    pagedResult(input: GetRolesInput): Observable<PagedResultDtoOfRoleListDto> {
-        let url_ = this.baseUrl + "/api/services/app/Role/PagedResult";
-
-        const content_ = JSON.stringify(input ? input.toJS() : null);
-        
-        return this.http.request(url_, {
-            body: content_,
-            method: "post",
-            headers: new Headers({
-                "Content-Type": "application/json; charset=UTF-8", 
-				"Accept": "application/json; charset=UTF-8"
-            })
-        }).map((response) => {
-            return this.processPagedResult(response);
-        }).catch((response: any, caught: any) => {
-            if (response instanceof Response) {
-                try {
-                    return Observable.of(this.processPagedResult(response));
-                } catch (e) {
-                    return <Observable<PagedResultDtoOfRoleListDto>><any>Observable.throw(e);
-                }
-            } else
-                return <Observable<PagedResultDtoOfRoleListDto>><any>Observable.throw(response);
-        });
-    }
-
-    protected processPagedResult(response: Response): PagedResultDtoOfRoleListDto {
-        const responseText = response.text();
-        const status = response.status; 
-
-        if (status === 200) {
-            let result200: PagedResultDtoOfRoleListDto = null;
-            let resultData200 = responseText === "" ? null : JSON.parse(responseText, this.jsonParseReviver);
-            result200 = resultData200 ? PagedResultDtoOfRoleListDto.fromJS(resultData200) : new PagedResultDtoOfRoleListDto();
-            return result200;
-        } else if (status !== 200 && status !== 204) {
-            this.throwException("An unexpected server error occurred.", status, responseText);
-        }
-        return null;
-    }
-
-    /**
-     * @return Success
-     */
-    getDefaultRole(): Observable<RoleDto> {
-        let url_ = this.baseUrl + "/api/services/app/Role/GetDefaultRole";
-
-        const content_ = "";
-        
-        return this.http.request(url_, {
-            body: content_,
-            method: "get",
-            headers: new Headers({
-                "Content-Type": "application/json; charset=UTF-8", 
-				"Accept": "application/json; charset=UTF-8"
-            })
-        }).map((response) => {
-            return this.processGetDefaultRole(response);
-        }).catch((response: any, caught: any) => {
-            if (response instanceof Response) {
-                try {
-                    return Observable.of(this.processGetDefaultRole(response));
-                } catch (e) {
-                    return <Observable<RoleDto>><any>Observable.throw(e);
-                }
-            } else
-                return <Observable<RoleDto>><any>Observable.throw(response);
-        });
-    }
-
-    protected processGetDefaultRole(response: Response): RoleDto {
-        const responseText = response.text();
-        const status = response.status; 
-
-        if (status === 200) {
-            let result200: RoleDto = null;
-            let resultData200 = responseText === "" ? null : JSON.parse(responseText, this.jsonParseReviver);
-            result200 = resultData200 ? RoleDto.fromJS(resultData200) : new RoleDto();
-            return result200;
-        } else if (status !== 200 && status !== 204) {
-            this.throwException("An unexpected server error occurred.", status, responseText);
-        }
-        return null;
-    }
-
-    /**
-     * @return Success
-     */
-    get(id: number): Observable<RoleDto> {
-        let url_ = this.baseUrl + "/api/services/app/Role/Get?";
-        if (id !== undefined)
-        
-            url_ += "id=" + encodeURIComponent("" + id) + "&";
-
-        const content_ = "";
-        
-        return this.http.request(url_, {
-            body: content_,
-            method: "get",
-            headers: new Headers({
-                "Content-Type": "application/json; charset=UTF-8", 
-				"Accept": "application/json; charset=UTF-8"
-            })
-        }).map((response) => {
-            return this.processGet(response);
-        }).catch((response: any, caught: any) => {
-            if (response instanceof Response) {
-                try {
-                    return Observable.of(this.processGet(response));
-                } catch (e) {
-                    return <Observable<RoleDto>><any>Observable.throw(e);
-                }
-            } else
-                return <Observable<RoleDto>><any>Observable.throw(response);
-        });
-    }
-
-    protected processGet(response: Response): RoleDto {
-        const responseText = response.text();
-        const status = response.status; 
-
-        if (status === 200) {
-            let result200: RoleDto = null;
-            let resultData200 = responseText === "" ? null : JSON.parse(responseText, this.jsonParseReviver);
-            result200 = resultData200 ? RoleDto.fromJS(resultData200) : new RoleDto();
-            return result200;
-        } else if (status !== 200 && status !== 204) {
-            this.throwException("An unexpected server error occurred.", status, responseText);
-        }
-        return null;
-    }
-
-    /**
-     * @return Success
-     */
-    create(input: CreateRoleInput): Observable<void> {
+    create(input: CreateRoleInput): Observable<RoleDto> {
         let url_ = this.baseUrl + "/api/services/app/Role/Create";
 
         const content_ = JSON.stringify(input ? input.toJS() : null);
@@ -610,19 +431,22 @@ export class RoleServiceProxy {
                 try {
                     return Observable.of(this.processCreate(response));
                 } catch (e) {
-                    return <Observable<void>><any>Observable.throw(e);
+                    return <Observable<RoleDto>><any>Observable.throw(e);
                 }
             } else
-                return <Observable<void>><any>Observable.throw(response);
+                return <Observable<RoleDto>><any>Observable.throw(response);
         });
     }
 
-    protected processCreate(response: Response): void {
+    protected processCreate(response: Response): RoleDto {
         const responseText = response.text();
         const status = response.status; 
 
         if (status === 200) {
-            return null;
+            let result200: RoleDto = null;
+            let resultData200 = responseText === "" ? null : JSON.parse(responseText, this.jsonParseReviver);
+            result200 = resultData200 ? RoleDto.fromJS(resultData200) : new RoleDto();
+            return result200;
         } else if (status !== 200 && status !== 204) {
             this.throwException("An unexpected server error occurred.", status, responseText);
         }
@@ -632,7 +456,7 @@ export class RoleServiceProxy {
     /**
      * @return Success
      */
-    update(input: UpdateRoleInput): Observable<void> {
+    update(input: UpdateRoleInput): Observable<RoleDto> {
         let url_ = this.baseUrl + "/api/services/app/Role/Update";
 
         const content_ = JSON.stringify(input ? input.toJS() : null);
@@ -651,19 +475,22 @@ export class RoleServiceProxy {
                 try {
                     return Observable.of(this.processUpdate(response));
                 } catch (e) {
-                    return <Observable<void>><any>Observable.throw(e);
+                    return <Observable<RoleDto>><any>Observable.throw(e);
                 }
             } else
-                return <Observable<void>><any>Observable.throw(response);
+                return <Observable<RoleDto>><any>Observable.throw(response);
         });
     }
 
-    protected processUpdate(response: Response): void {
+    protected processUpdate(response: Response): RoleDto {
         const responseText = response.text();
         const status = response.status; 
 
         if (status === 200) {
-            return null;
+            let result200: RoleDto = null;
+            let resultData200 = responseText === "" ? null : JSON.parse(responseText, this.jsonParseReviver);
+            result200 = resultData200 ? RoleDto.fromJS(resultData200) : new RoleDto();
+            return result200;
         } else if (status !== 200 && status !== 204) {
             this.throwException("An unexpected server error occurred.", status, responseText);
         }
@@ -677,7 +504,7 @@ export class RoleServiceProxy {
         let url_ = this.baseUrl + "/api/services/app/Role/Delete?";
         if (id !== undefined)
         
-            url_ += "id=" + encodeURIComponent("" + id) + "&";
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
 
         const content_ = "";
         
@@ -796,6 +623,104 @@ export class RoleServiceProxy {
 
         if (status === 200) {
             return null;
+        } else if (status !== 200 && status !== 204) {
+            this.throwException("An unexpected server error occurred.", status, responseText);
+        }
+        return null;
+    }
+
+    /**
+     * @return Success
+     */
+    get(id: number): Observable<RoleDto> {
+        let url_ = this.baseUrl + "/api/services/app/Role/Get?";
+        if (id !== undefined)
+        
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+
+        const content_ = "";
+        
+        return this.http.request(url_, {
+            body: content_,
+            method: "get",
+            headers: new Headers({
+                "Content-Type": "application/json; charset=UTF-8", 
+				"Accept": "application/json; charset=UTF-8"
+            })
+        }).map((response) => {
+            return this.processGet(response);
+        }).catch((response: any, caught: any) => {
+            if (response instanceof Response) {
+                try {
+                    return Observable.of(this.processGet(response));
+                } catch (e) {
+                    return <Observable<RoleDto>><any>Observable.throw(e);
+                }
+            } else
+                return <Observable<RoleDto>><any>Observable.throw(response);
+        });
+    }
+
+    protected processGet(response: Response): RoleDto {
+        const responseText = response.text();
+        const status = response.status; 
+
+        if (status === 200) {
+            let result200: RoleDto = null;
+            let resultData200 = responseText === "" ? null : JSON.parse(responseText, this.jsonParseReviver);
+            result200 = resultData200 ? RoleDto.fromJS(resultData200) : new RoleDto();
+            return result200;
+        } else if (status !== 200 && status !== 204) {
+            this.throwException("An unexpected server error occurred.", status, responseText);
+        }
+        return null;
+    }
+
+    /**
+     * @return Success
+     */
+    getAll(skipCount: number, maxResultCount: number): Observable<PagedResultDtoOfRoleDto> {
+        let url_ = this.baseUrl + "/api/services/app/Role/GetAll?";
+        if (skipCount !== undefined)
+        
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&"; 
+        
+        if (maxResultCount !== undefined)
+        
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+
+        const content_ = "";
+        
+        return this.http.request(url_, {
+            body: content_,
+            method: "get",
+            headers: new Headers({
+                "Content-Type": "application/json; charset=UTF-8", 
+				"Accept": "application/json; charset=UTF-8"
+            })
+        }).map((response) => {
+            return this.processGetAll(response);
+        }).catch((response: any, caught: any) => {
+            if (response instanceof Response) {
+                try {
+                    return Observable.of(this.processGetAll(response));
+                } catch (e) {
+                    return <Observable<PagedResultDtoOfRoleDto>><any>Observable.throw(e);
+                }
+            } else
+                return <Observable<PagedResultDtoOfRoleDto>><any>Observable.throw(response);
+        });
+    }
+
+    protected processGetAll(response: Response): PagedResultDtoOfRoleDto {
+        const responseText = response.text();
+        const status = response.status; 
+
+        if (status === 200) {
+            let result200: PagedResultDtoOfRoleDto = null;
+            let resultData200 = responseText === "" ? null : JSON.parse(responseText, this.jsonParseReviver);
+            result200 = resultData200 ? PagedResultDtoOfRoleDto.fromJS(resultData200) : new PagedResultDtoOfRoleDto();
+            return result200;
         } else if (status !== 200 && status !== 204) {
             this.throwException("An unexpected server error occurred.", status, responseText);
         }
@@ -1039,8 +964,11 @@ export class TenantServiceProxy {
     /**
      * @return Success
      */
-    getTenants(): Observable<ListResultDtoOfTenantListDto> {
-        let url_ = this.baseUrl + "/api/services/app/Tenant/GetTenants";
+    get(id: number): Observable<TenantDto> {
+        let url_ = this.baseUrl + "/api/services/app/Tenant/Get?";
+        if (id !== undefined)
+        
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
 
         const content_ = "";
         
@@ -1052,27 +980,27 @@ export class TenantServiceProxy {
 				"Accept": "application/json; charset=UTF-8"
             })
         }).map((response) => {
-            return this.processGetTenants(response);
+            return this.processGet(response);
         }).catch((response: any, caught: any) => {
             if (response instanceof Response) {
                 try {
-                    return Observable.of(this.processGetTenants(response));
+                    return Observable.of(this.processGet(response));
                 } catch (e) {
-                    return <Observable<ListResultDtoOfTenantListDto>><any>Observable.throw(e);
+                    return <Observable<TenantDto>><any>Observable.throw(e);
                 }
             } else
-                return <Observable<ListResultDtoOfTenantListDto>><any>Observable.throw(response);
+                return <Observable<TenantDto>><any>Observable.throw(response);
         });
     }
 
-    protected processGetTenants(response: Response): ListResultDtoOfTenantListDto {
+    protected processGet(response: Response): TenantDto {
         const responseText = response.text();
         const status = response.status; 
 
         if (status === 200) {
-            let result200: ListResultDtoOfTenantListDto = null;
+            let result200: TenantDto = null;
             let resultData200 = responseText === "" ? null : JSON.parse(responseText, this.jsonParseReviver);
-            result200 = resultData200 ? ListResultDtoOfTenantListDto.fromJS(resultData200) : new ListResultDtoOfTenantListDto();
+            result200 = resultData200 ? TenantDto.fromJS(resultData200) : new TenantDto();
             return result200;
         } else if (status !== 200 && status !== 204) {
             this.throwException("An unexpected server error occurred.", status, responseText);
@@ -1083,8 +1011,8 @@ export class TenantServiceProxy {
     /**
      * @return Success
      */
-    createTenant(input: CreateTenantInput): Observable<void> {
-        let url_ = this.baseUrl + "/api/services/app/Tenant/CreateTenant";
+    create(input: CreateTenantInput): Observable<TenantDto> {
+        let url_ = this.baseUrl + "/api/services/app/Tenant/Create";
 
         const content_ = JSON.stringify(input ? input.toJS() : null);
         
@@ -1096,11 +1024,102 @@ export class TenantServiceProxy {
 				"Accept": "application/json; charset=UTF-8"
             })
         }).map((response) => {
-            return this.processCreateTenant(response);
+            return this.processCreate(response);
         }).catch((response: any, caught: any) => {
             if (response instanceof Response) {
                 try {
-                    return Observable.of(this.processCreateTenant(response));
+                    return Observable.of(this.processCreate(response));
+                } catch (e) {
+                    return <Observable<TenantDto>><any>Observable.throw(e);
+                }
+            } else
+                return <Observable<TenantDto>><any>Observable.throw(response);
+        });
+    }
+
+    protected processCreate(response: Response): TenantDto {
+        const responseText = response.text();
+        const status = response.status; 
+
+        if (status === 200) {
+            let result200: TenantDto = null;
+            let resultData200 = responseText === "" ? null : JSON.parse(responseText, this.jsonParseReviver);
+            result200 = resultData200 ? TenantDto.fromJS(resultData200) : new TenantDto();
+            return result200;
+        } else if (status !== 200 && status !== 204) {
+            this.throwException("An unexpected server error occurred.", status, responseText);
+        }
+        return null;
+    }
+
+    /**
+     * @return Success
+     */
+    update(input: UpdateTenantInput): Observable<TenantDto> {
+        let url_ = this.baseUrl + "/api/services/app/Tenant/Update";
+
+        const content_ = JSON.stringify(input ? input.toJS() : null);
+        
+        return this.http.request(url_, {
+            body: content_,
+            method: "put",
+            headers: new Headers({
+                "Content-Type": "application/json; charset=UTF-8", 
+				"Accept": "application/json; charset=UTF-8"
+            })
+        }).map((response) => {
+            return this.processUpdate(response);
+        }).catch((response: any, caught: any) => {
+            if (response instanceof Response) {
+                try {
+                    return Observable.of(this.processUpdate(response));
+                } catch (e) {
+                    return <Observable<TenantDto>><any>Observable.throw(e);
+                }
+            } else
+                return <Observable<TenantDto>><any>Observable.throw(response);
+        });
+    }
+
+    protected processUpdate(response: Response): TenantDto {
+        const responseText = response.text();
+        const status = response.status; 
+
+        if (status === 200) {
+            let result200: TenantDto = null;
+            let resultData200 = responseText === "" ? null : JSON.parse(responseText, this.jsonParseReviver);
+            result200 = resultData200 ? TenantDto.fromJS(resultData200) : new TenantDto();
+            return result200;
+        } else if (status !== 200 && status !== 204) {
+            this.throwException("An unexpected server error occurred.", status, responseText);
+        }
+        return null;
+    }
+
+    /**
+     * @return Success
+     */
+    delete(id: number): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Tenant/Delete?";
+        if (id !== undefined)
+        
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+
+        const content_ = "";
+        
+        return this.http.request(url_, {
+            body: content_,
+            method: "delete",
+            headers: new Headers({
+                "Content-Type": "application/json; charset=UTF-8", 
+				"Accept": "application/json; charset=UTF-8"
+            })
+        }).map((response) => {
+            return this.processDelete(response);
+        }).catch((response: any, caught: any) => {
+            if (response instanceof Response) {
+                try {
+                    return Observable.of(this.processDelete(response));
                 } catch (e) {
                     return <Observable<void>><any>Observable.throw(e);
                 }
@@ -1109,12 +1128,63 @@ export class TenantServiceProxy {
         });
     }
 
-    protected processCreateTenant(response: Response): void {
+    protected processDelete(response: Response): void {
         const responseText = response.text();
         const status = response.status; 
 
         if (status === 200) {
             return null;
+        } else if (status !== 200 && status !== 204) {
+            this.throwException("An unexpected server error occurred.", status, responseText);
+        }
+        return null;
+    }
+
+    /**
+     * @return Success
+     */
+    getAll(skipCount: number, maxResultCount: number): Observable<PagedResultDtoOfTenantDto> {
+        let url_ = this.baseUrl + "/api/services/app/Tenant/GetAll?";
+        if (skipCount !== undefined)
+        
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&"; 
+        
+        if (maxResultCount !== undefined)
+        
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+
+        const content_ = "";
+        
+        return this.http.request(url_, {
+            body: content_,
+            method: "get",
+            headers: new Headers({
+                "Content-Type": "application/json; charset=UTF-8", 
+				"Accept": "application/json; charset=UTF-8"
+            })
+        }).map((response) => {
+            return this.processGetAll(response);
+        }).catch((response: any, caught: any) => {
+            if (response instanceof Response) {
+                try {
+                    return Observable.of(this.processGetAll(response));
+                } catch (e) {
+                    return <Observable<PagedResultDtoOfTenantDto>><any>Observable.throw(e);
+                }
+            } else
+                return <Observable<PagedResultDtoOfTenantDto>><any>Observable.throw(response);
+        });
+    }
+
+    protected processGetAll(response: Response): PagedResultDtoOfTenantDto {
+        const responseText = response.text();
+        const status = response.status; 
+
+        if (status === 200) {
+            let result200: PagedResultDtoOfTenantDto = null;
+            let resultData200 = responseText === "" ? null : JSON.parse(responseText, this.jsonParseReviver);
+            result200 = resultData200 ? PagedResultDtoOfTenantDto.fromJS(resultData200) : new PagedResultDtoOfTenantDto();
+            return result200;
         } else if (status !== 200 && status !== 204) {
             this.throwException("An unexpected server error occurred.", status, responseText);
         }
@@ -1298,52 +1368,8 @@ export class UserServiceProxy {
     /**
      * @return Success
      */
-    getAll(): Observable<ListResultDtoOfUserListDto> {
-        let url_ = this.baseUrl + "/api/services/app/User/GetAll";
-
-        const content_ = "";
-        
-        return this.http.request(url_, {
-            body: content_,
-            method: "get",
-            headers: new Headers({
-                "Content-Type": "application/json; charset=UTF-8", 
-				"Accept": "application/json; charset=UTF-8"
-            })
-        }).map((response) => {
-            return this.processGetAll(response);
-        }).catch((response: any, caught: any) => {
-            if (response instanceof Response) {
-                try {
-                    return Observable.of(this.processGetAll(response));
-                } catch (e) {
-                    return <Observable<ListResultDtoOfUserListDto>><any>Observable.throw(e);
-                }
-            } else
-                return <Observable<ListResultDtoOfUserListDto>><any>Observable.throw(response);
-        });
-    }
-
-    protected processGetAll(response: Response): ListResultDtoOfUserListDto {
-        const responseText = response.text();
-        const status = response.status; 
-
-        if (status === 200) {
-            let result200: ListResultDtoOfUserListDto = null;
-            let resultData200 = responseText === "" ? null : JSON.parse(responseText, this.jsonParseReviver);
-            result200 = resultData200 ? ListResultDtoOfUserListDto.fromJS(resultData200) : new ListResultDtoOfUserListDto();
-            return result200;
-        } else if (status !== 200 && status !== 204) {
-            this.throwException("An unexpected server error occurred.", status, responseText);
-        }
-        return null;
-    }
-
-    /**
-     * @return Success
-     */
-    pagedResult(input: GetUsersInput): Observable<PagedResultDtoOfUserListDto> {
-        let url_ = this.baseUrl + "/api/services/app/User/PagedResult";
+    create(input: CreateUserInput): Observable<UserDto> {
+        let url_ = this.baseUrl + "/api/services/app/User/Create";
 
         const content_ = JSON.stringify(input ? input.toJS() : null);
         
@@ -1355,27 +1381,27 @@ export class UserServiceProxy {
 				"Accept": "application/json; charset=UTF-8"
             })
         }).map((response) => {
-            return this.processPagedResult(response);
+            return this.processCreate(response);
         }).catch((response: any, caught: any) => {
             if (response instanceof Response) {
                 try {
-                    return Observable.of(this.processPagedResult(response));
+                    return Observable.of(this.processCreate(response));
                 } catch (e) {
-                    return <Observable<PagedResultDtoOfUserListDto>><any>Observable.throw(e);
+                    return <Observable<UserDto>><any>Observable.throw(e);
                 }
             } else
-                return <Observable<PagedResultDtoOfUserListDto>><any>Observable.throw(response);
+                return <Observable<UserDto>><any>Observable.throw(response);
         });
     }
 
-    protected processPagedResult(response: Response): PagedResultDtoOfUserListDto {
+    protected processCreate(response: Response): UserDto {
         const responseText = response.text();
         const status = response.status; 
 
         if (status === 200) {
-            let result200: PagedResultDtoOfUserListDto = null;
+            let result200: UserDto = null;
             let resultData200 = responseText === "" ? null : JSON.parse(responseText, this.jsonParseReviver);
-            result200 = resultData200 ? PagedResultDtoOfUserListDto.fromJS(resultData200) : new PagedResultDtoOfUserListDto();
+            result200 = resultData200 ? UserDto.fromJS(resultData200) : new UserDto();
             return result200;
         } else if (status !== 200 && status !== 204) {
             this.throwException("An unexpected server error occurred.", status, responseText);
@@ -1386,27 +1412,24 @@ export class UserServiceProxy {
     /**
      * @return Success
      */
-    get(id: number): Observable<UserDto> {
-        let url_ = this.baseUrl + "/api/services/app/User/Get?";
-        if (id !== undefined)
-        
-            url_ += "id=" + encodeURIComponent("" + id) + "&";
+    update(input: UpdateUserInput): Observable<UserDto> {
+        let url_ = this.baseUrl + "/api/services/app/User/Update";
 
-        const content_ = "";
+        const content_ = JSON.stringify(input ? input.toJS() : null);
         
         return this.http.request(url_, {
             body: content_,
-            method: "get",
+            method: "put",
             headers: new Headers({
                 "Content-Type": "application/json; charset=UTF-8", 
 				"Accept": "application/json; charset=UTF-8"
             })
         }).map((response) => {
-            return this.processGet(response);
+            return this.processUpdate(response);
         }).catch((response: any, caught: any) => {
             if (response instanceof Response) {
                 try {
-                    return Observable.of(this.processGet(response));
+                    return Observable.of(this.processUpdate(response));
                 } catch (e) {
                     return <Observable<UserDto>><any>Observable.throw(e);
                 }
@@ -1415,7 +1438,7 @@ export class UserServiceProxy {
         });
     }
 
-    protected processGet(response: Response): UserDto {
+    protected processUpdate(response: Response): UserDto {
         const responseText = response.text();
         const status = response.status; 
 
@@ -1424,6 +1447,50 @@ export class UserServiceProxy {
             let resultData200 = responseText === "" ? null : JSON.parse(responseText, this.jsonParseReviver);
             result200 = resultData200 ? UserDto.fromJS(resultData200) : new UserDto();
             return result200;
+        } else if (status !== 200 && status !== 204) {
+            this.throwException("An unexpected server error occurred.", status, responseText);
+        }
+        return null;
+    }
+
+    /**
+     * @return Success
+     */
+    delete(id: number): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/User/Delete?";
+        if (id !== undefined)
+        
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+
+        const content_ = "";
+        
+        return this.http.request(url_, {
+            body: content_,
+            method: "delete",
+            headers: new Headers({
+                "Content-Type": "application/json; charset=UTF-8", 
+				"Accept": "application/json; charset=UTF-8"
+            })
+        }).map((response) => {
+            return this.processDelete(response);
+        }).catch((response: any, caught: any) => {
+            if (response instanceof Response) {
+                try {
+                    return Observable.of(this.processDelete(response));
+                } catch (e) {
+                    return <Observable<void>><any>Observable.throw(e);
+                }
+            } else
+                return <Observable<void>><any>Observable.throw(response);
+        });
+    }
+
+    protected processDelete(response: Response): void {
+        const responseText = response.text();
+        const status = response.status; 
+
+        if (status === 200) {
+            return null;
         } else if (status !== 200 && status !== 204) {
             this.throwException("An unexpected server error occurred.", status, responseText);
         }
@@ -1603,88 +1670,6 @@ export class UserServiceProxy {
     /**
      * @return Success
      */
-    create(input: CreateUserInput): Observable<void> {
-        let url_ = this.baseUrl + "/api/services/app/User/Create";
-
-        const content_ = JSON.stringify(input ? input.toJS() : null);
-        
-        return this.http.request(url_, {
-            body: content_,
-            method: "post",
-            headers: new Headers({
-                "Content-Type": "application/json; charset=UTF-8", 
-				"Accept": "application/json; charset=UTF-8"
-            })
-        }).map((response) => {
-            return this.processCreate(response);
-        }).catch((response: any, caught: any) => {
-            if (response instanceof Response) {
-                try {
-                    return Observable.of(this.processCreate(response));
-                } catch (e) {
-                    return <Observable<void>><any>Observable.throw(e);
-                }
-            } else
-                return <Observable<void>><any>Observable.throw(response);
-        });
-    }
-
-    protected processCreate(response: Response): void {
-        const responseText = response.text();
-        const status = response.status; 
-
-        if (status === 200) {
-            return null;
-        } else if (status !== 200 && status !== 204) {
-            this.throwException("An unexpected server error occurred.", status, responseText);
-        }
-        return null;
-    }
-
-    /**
-     * @return Success
-     */
-    update(input: UpdateUserInput): Observable<void> {
-        let url_ = this.baseUrl + "/api/services/app/User/Update";
-
-        const content_ = JSON.stringify(input ? input.toJS() : null);
-        
-        return this.http.request(url_, {
-            body: content_,
-            method: "put",
-            headers: new Headers({
-                "Content-Type": "application/json; charset=UTF-8", 
-				"Accept": "application/json; charset=UTF-8"
-            })
-        }).map((response) => {
-            return this.processUpdate(response);
-        }).catch((response: any, caught: any) => {
-            if (response instanceof Response) {
-                try {
-                    return Observable.of(this.processUpdate(response));
-                } catch (e) {
-                    return <Observable<void>><any>Observable.throw(e);
-                }
-            } else
-                return <Observable<void>><any>Observable.throw(response);
-        });
-    }
-
-    protected processUpdate(response: Response): void {
-        const responseText = response.text();
-        const status = response.status; 
-
-        if (status === 200) {
-            return null;
-        } else if (status !== 200 && status !== 204) {
-            this.throwException("An unexpected server error occurred.", status, responseText);
-        }
-        return null;
-    }
-
-    /**
-     * @return Success
-     */
     resetPassword(input: ChangeUserPasswordInput): Observable<void> {
         let url_ = this.baseUrl + "/api/services/app/User/ResetPassword";
 
@@ -1726,41 +1711,95 @@ export class UserServiceProxy {
     /**
      * @return Success
      */
-    delete(id: number): Observable<void> {
-        let url_ = this.baseUrl + "/api/services/app/User/Delete?";
+    get(id: number): Observable<UserDto> {
+        let url_ = this.baseUrl + "/api/services/app/User/Get?";
         if (id !== undefined)
         
-            url_ += "id=" + encodeURIComponent("" + id) + "&";
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
 
         const content_ = "";
         
         return this.http.request(url_, {
             body: content_,
-            method: "delete",
+            method: "get",
             headers: new Headers({
                 "Content-Type": "application/json; charset=UTF-8", 
 				"Accept": "application/json; charset=UTF-8"
             })
         }).map((response) => {
-            return this.processDelete(response);
+            return this.processGet(response);
         }).catch((response: any, caught: any) => {
             if (response instanceof Response) {
                 try {
-                    return Observable.of(this.processDelete(response));
+                    return Observable.of(this.processGet(response));
                 } catch (e) {
-                    return <Observable<void>><any>Observable.throw(e);
+                    return <Observable<UserDto>><any>Observable.throw(e);
                 }
             } else
-                return <Observable<void>><any>Observable.throw(response);
+                return <Observable<UserDto>><any>Observable.throw(response);
         });
     }
 
-    protected processDelete(response: Response): void {
+    protected processGet(response: Response): UserDto {
         const responseText = response.text();
         const status = response.status; 
 
         if (status === 200) {
-            return null;
+            let result200: UserDto = null;
+            let resultData200 = responseText === "" ? null : JSON.parse(responseText, this.jsonParseReviver);
+            result200 = resultData200 ? UserDto.fromJS(resultData200) : new UserDto();
+            return result200;
+        } else if (status !== 200 && status !== 204) {
+            this.throwException("An unexpected server error occurred.", status, responseText);
+        }
+        return null;
+    }
+
+    /**
+     * @return Success
+     */
+    getAll(skipCount: number, maxResultCount: number): Observable<PagedResultDtoOfUserDto> {
+        let url_ = this.baseUrl + "/api/services/app/User/GetAll?";
+        if (skipCount !== undefined)
+        
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&"; 
+        
+        if (maxResultCount !== undefined)
+        
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+
+        const content_ = "";
+        
+        return this.http.request(url_, {
+            body: content_,
+            method: "get",
+            headers: new Headers({
+                "Content-Type": "application/json; charset=UTF-8", 
+				"Accept": "application/json; charset=UTF-8"
+            })
+        }).map((response) => {
+            return this.processGetAll(response);
+        }).catch((response: any, caught: any) => {
+            if (response instanceof Response) {
+                try {
+                    return Observable.of(this.processGetAll(response));
+                } catch (e) {
+                    return <Observable<PagedResultDtoOfUserDto>><any>Observable.throw(e);
+                }
+            } else
+                return <Observable<PagedResultDtoOfUserDto>><any>Observable.throw(response);
+        });
+    }
+
+    protected processGetAll(response: Response): PagedResultDtoOfUserDto {
+        const responseText = response.text();
+        const status = response.status; 
+
+        if (status === 200) {
+            let result200: PagedResultDtoOfUserDto = null;
+            let resultData200 = responseText === "" ? null : JSON.parse(responseText, this.jsonParseReviver);
+            result200 = resultData200 ? PagedResultDtoOfUserDto.fromJS(resultData200) : new PagedResultDtoOfUserDto();
+            return result200;
         } else if (status !== 200 && status !== 204) {
             this.throwException("An unexpected server error occurred.", status, responseText);
         }
@@ -2409,28 +2448,46 @@ export class PermissionDto {
     }
 }
 
-export class ListResultDtoOfRoleListDto { 
-    items: RoleListDto[];
+export class CreateRoleInput { 
+    name: string; 
+    displayName: string; 
+    normalizedName: string; 
+    description: string; 
+    isActive: boolean; 
+    isStatic: boolean; 
+    permissions: string[];
     constructor(data?: any) {
         if (data !== undefined) {
-            if (data["items"] && data["items"].constructor === Array) {
-                this.items = [];
-                for (let item of data["items"])
-                    this.items.push(RoleListDto.fromJS(item));
+            this.name = data["name"] !== undefined ? data["name"] : null;
+            this.displayName = data["displayName"] !== undefined ? data["displayName"] : null;
+            this.normalizedName = data["normalizedName"] !== undefined ? data["normalizedName"] : null;
+            this.description = data["description"] !== undefined ? data["description"] : null;
+            this.isActive = data["isActive"] !== undefined ? data["isActive"] : null;
+            this.isStatic = data["isStatic"] !== undefined ? data["isStatic"] : null;
+            if (data["permissions"] && data["permissions"].constructor === Array) {
+                this.permissions = [];
+                for (let item of data["permissions"])
+                    this.permissions.push(item);
             }
         }
     }
 
-    static fromJS(data: any): ListResultDtoOfRoleListDto {
-        return new ListResultDtoOfRoleListDto(data);
+    static fromJS(data: any): CreateRoleInput {
+        return new CreateRoleInput(data);
     }
 
     toJS(data?: any) {
         data = data === undefined ? {} : data;
-        if (this.items && this.items.constructor === Array) {
-            data["items"] = [];
-            for (let item of this.items)
-                data["items"].push(item.toJS());
+        data["name"] = this.name !== undefined ? this.name : null;
+        data["displayName"] = this.displayName !== undefined ? this.displayName : null;
+        data["normalizedName"] = this.normalizedName !== undefined ? this.normalizedName : null;
+        data["description"] = this.description !== undefined ? this.description : null;
+        data["isActive"] = this.isActive !== undefined ? this.isActive : null;
+        data["isStatic"] = this.isStatic !== undefined ? this.isStatic : null;
+        if (this.permissions && this.permissions.constructor === Array) {
+            data["permissions"] = [];
+            for (let item of this.permissions)
+                data["permissions"].push(item);
         }
         return data; 
     }
@@ -2441,45 +2498,53 @@ export class ListResultDtoOfRoleListDto {
 
     clone() {
         const json = this.toJSON();
-        return new ListResultDtoOfRoleListDto(JSON.parse(json));
+        return new CreateRoleInput(JSON.parse(json));
     }
 }
 
-export class RoleListDto { 
-    tenantId: number; 
+export class RoleDto { 
     name: string; 
     displayName: string; 
+    normalizedName: string; 
+    description: string; 
+    isActive: boolean; 
     isStatic: boolean; 
-    isDefault: boolean; 
-    creationTime: moment.Moment; 
-    creatorUserId: number; 
+    permissions: string[]; 
     id: number;
     constructor(data?: any) {
         if (data !== undefined) {
-            this.tenantId = data["tenantId"] !== undefined ? data["tenantId"] : null;
             this.name = data["name"] !== undefined ? data["name"] : null;
             this.displayName = data["displayName"] !== undefined ? data["displayName"] : null;
+            this.normalizedName = data["normalizedName"] !== undefined ? data["normalizedName"] : null;
+            this.description = data["description"] !== undefined ? data["description"] : null;
+            this.isActive = data["isActive"] !== undefined ? data["isActive"] : null;
             this.isStatic = data["isStatic"] !== undefined ? data["isStatic"] : null;
-            this.isDefault = data["isDefault"] !== undefined ? data["isDefault"] : null;
-            this.creationTime = data["creationTime"] ? moment(data["creationTime"].toString()) : null;
-            this.creatorUserId = data["creatorUserId"] !== undefined ? data["creatorUserId"] : null;
+            if (data["permissions"] && data["permissions"].constructor === Array) {
+                this.permissions = [];
+                for (let item of data["permissions"])
+                    this.permissions.push(item);
+            }
             this.id = data["id"] !== undefined ? data["id"] : null;
         }
     }
 
-    static fromJS(data: any): RoleListDto {
-        return new RoleListDto(data);
+    static fromJS(data: any): RoleDto {
+        return new RoleDto(data);
     }
 
     toJS(data?: any) {
         data = data === undefined ? {} : data;
-        data["tenantId"] = this.tenantId !== undefined ? this.tenantId : null;
         data["name"] = this.name !== undefined ? this.name : null;
         data["displayName"] = this.displayName !== undefined ? this.displayName : null;
+        data["normalizedName"] = this.normalizedName !== undefined ? this.normalizedName : null;
+        data["description"] = this.description !== undefined ? this.description : null;
+        data["isActive"] = this.isActive !== undefined ? this.isActive : null;
         data["isStatic"] = this.isStatic !== undefined ? this.isStatic : null;
-        data["isDefault"] = this.isDefault !== undefined ? this.isDefault : null;
-        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : null;
-        data["creatorUserId"] = this.creatorUserId !== undefined ? this.creatorUserId : null;
+        if (this.permissions && this.permissions.constructor === Array) {
+            data["permissions"] = [];
+            for (let item of this.permissions)
+                data["permissions"].push(item);
+        }
         data["id"] = this.id !== undefined ? this.id : null;
         return data; 
     }
@@ -2490,34 +2555,54 @@ export class RoleListDto {
 
     clone() {
         const json = this.toJSON();
-        return new RoleListDto(JSON.parse(json));
+        return new RoleDto(JSON.parse(json));
     }
 }
 
-export class GetRolesInput { 
-    maxResultCount: number; 
-    skipCount: number; 
-    sorting: string; 
-    permissionName: string;
+export class UpdateRoleInput { 
+    name: string; 
+    displayName: string; 
+    normalizedName: string; 
+    description: string; 
+    isActive: boolean; 
+    isStatic: boolean; 
+    permissions: string[]; 
+    id: number;
     constructor(data?: any) {
         if (data !== undefined) {
-            this.maxResultCount = data["maxResultCount"] !== undefined ? data["maxResultCount"] : null;
-            this.skipCount = data["skipCount"] !== undefined ? data["skipCount"] : null;
-            this.sorting = data["sorting"] !== undefined ? data["sorting"] : null;
-            this.permissionName = data["permissionName"] !== undefined ? data["permissionName"] : null;
+            this.name = data["name"] !== undefined ? data["name"] : null;
+            this.displayName = data["displayName"] !== undefined ? data["displayName"] : null;
+            this.normalizedName = data["normalizedName"] !== undefined ? data["normalizedName"] : null;
+            this.description = data["description"] !== undefined ? data["description"] : null;
+            this.isActive = data["isActive"] !== undefined ? data["isActive"] : null;
+            this.isStatic = data["isStatic"] !== undefined ? data["isStatic"] : null;
+            if (data["permissions"] && data["permissions"].constructor === Array) {
+                this.permissions = [];
+                for (let item of data["permissions"])
+                    this.permissions.push(item);
+            }
+            this.id = data["id"] !== undefined ? data["id"] : null;
         }
     }
 
-    static fromJS(data: any): GetRolesInput {
-        return new GetRolesInput(data);
+    static fromJS(data: any): UpdateRoleInput {
+        return new UpdateRoleInput(data);
     }
 
     toJS(data?: any) {
         data = data === undefined ? {} : data;
-        data["maxResultCount"] = this.maxResultCount !== undefined ? this.maxResultCount : null;
-        data["skipCount"] = this.skipCount !== undefined ? this.skipCount : null;
-        data["sorting"] = this.sorting !== undefined ? this.sorting : null;
-        data["permissionName"] = this.permissionName !== undefined ? this.permissionName : null;
+        data["name"] = this.name !== undefined ? this.name : null;
+        data["displayName"] = this.displayName !== undefined ? this.displayName : null;
+        data["normalizedName"] = this.normalizedName !== undefined ? this.normalizedName : null;
+        data["description"] = this.description !== undefined ? this.description : null;
+        data["isActive"] = this.isActive !== undefined ? this.isActive : null;
+        data["isStatic"] = this.isStatic !== undefined ? this.isStatic : null;
+        if (this.permissions && this.permissions.constructor === Array) {
+            data["permissions"] = [];
+            for (let item of this.permissions)
+                data["permissions"].push(item);
+        }
+        data["id"] = this.id !== undefined ? this.id : null;
         return data; 
     }
 
@@ -2527,26 +2612,26 @@ export class GetRolesInput {
 
     clone() {
         const json = this.toJSON();
-        return new GetRolesInput(JSON.parse(json));
+        return new UpdateRoleInput(JSON.parse(json));
     }
 }
 
-export class PagedResultDtoOfRoleListDto { 
+export class PagedResultDtoOfRoleDto { 
     totalCount: number; 
-    items: RoleListDto[];
+    items: RoleDto[];
     constructor(data?: any) {
         if (data !== undefined) {
             this.totalCount = data["totalCount"] !== undefined ? data["totalCount"] : null;
             if (data["items"] && data["items"].constructor === Array) {
                 this.items = [];
                 for (let item of data["items"])
-                    this.items.push(RoleListDto.fromJS(item));
+                    this.items.push(RoleDto.fromJS(item));
             }
         }
     }
 
-    static fromJS(data: any): PagedResultDtoOfRoleListDto {
-        return new PagedResultDtoOfRoleListDto(data);
+    static fromJS(data: any): PagedResultDtoOfRoleDto {
+        return new PagedResultDtoOfRoleDto(data);
     }
 
     toJS(data?: any) {
@@ -2566,197 +2651,7 @@ export class PagedResultDtoOfRoleListDto {
 
     clone() {
         const json = this.toJSON();
-        return new PagedResultDtoOfRoleListDto(JSON.parse(json));
-    }
-}
-
-export class RoleDto { 
-    tenantId: number; 
-    displayName: string; 
-    isStatic: boolean; 
-    isDefault: boolean; 
-    permissions: RolePermissionSetting[]; 
-    creationTime: moment.Moment; 
-    creatorUserId: number; 
-    id: number;
-    constructor(data?: any) {
-        if (data !== undefined) {
-            this.tenantId = data["tenantId"] !== undefined ? data["tenantId"] : null;
-            this.displayName = data["displayName"] !== undefined ? data["displayName"] : null;
-            this.isStatic = data["isStatic"] !== undefined ? data["isStatic"] : null;
-            this.isDefault = data["isDefault"] !== undefined ? data["isDefault"] : null;
-            if (data["permissions"] && data["permissions"].constructor === Array) {
-                this.permissions = [];
-                for (let item of data["permissions"])
-                    this.permissions.push(RolePermissionSetting.fromJS(item));
-            }
-            this.creationTime = data["creationTime"] ? moment(data["creationTime"].toString()) : null;
-            this.creatorUserId = data["creatorUserId"] !== undefined ? data["creatorUserId"] : null;
-            this.id = data["id"] !== undefined ? data["id"] : null;
-        }
-    }
-
-    static fromJS(data: any): RoleDto {
-        return new RoleDto(data);
-    }
-
-    toJS(data?: any) {
-        data = data === undefined ? {} : data;
-        data["tenantId"] = this.tenantId !== undefined ? this.tenantId : null;
-        data["displayName"] = this.displayName !== undefined ? this.displayName : null;
-        data["isStatic"] = this.isStatic !== undefined ? this.isStatic : null;
-        data["isDefault"] = this.isDefault !== undefined ? this.isDefault : null;
-        if (this.permissions && this.permissions.constructor === Array) {
-            data["permissions"] = [];
-            for (let item of this.permissions)
-                data["permissions"].push(item.toJS());
-        }
-        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : null;
-        data["creatorUserId"] = this.creatorUserId !== undefined ? this.creatorUserId : null;
-        data["id"] = this.id !== undefined ? this.id : null;
-        return data; 
-    }
-
-    toJSON() {
-        return JSON.stringify(this.toJS());
-    }
-
-    clone() {
-        const json = this.toJSON();
-        return new RoleDto(JSON.parse(json));
-    }
-}
-
-export class RolePermissionSetting { 
-    roleId: number; 
-    tenantId: number; 
-    name: string; 
-    isGranted: boolean; 
-    creationTime: moment.Moment; 
-    creatorUserId: number; 
-    id: number;
-    constructor(data?: any) {
-        if (data !== undefined) {
-            this.roleId = data["roleId"] !== undefined ? data["roleId"] : null;
-            this.tenantId = data["tenantId"] !== undefined ? data["tenantId"] : null;
-            this.name = data["name"] !== undefined ? data["name"] : null;
-            this.isGranted = data["isGranted"] !== undefined ? data["isGranted"] : null;
-            this.creationTime = data["creationTime"] ? moment(data["creationTime"].toString()) : null;
-            this.creatorUserId = data["creatorUserId"] !== undefined ? data["creatorUserId"] : null;
-            this.id = data["id"] !== undefined ? data["id"] : null;
-        }
-    }
-
-    static fromJS(data: any): RolePermissionSetting {
-        return new RolePermissionSetting(data);
-    }
-
-    toJS(data?: any) {
-        data = data === undefined ? {} : data;
-        data["roleId"] = this.roleId !== undefined ? this.roleId : null;
-        data["tenantId"] = this.tenantId !== undefined ? this.tenantId : null;
-        data["name"] = this.name !== undefined ? this.name : null;
-        data["isGranted"] = this.isGranted !== undefined ? this.isGranted : null;
-        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : null;
-        data["creatorUserId"] = this.creatorUserId !== undefined ? this.creatorUserId : null;
-        data["id"] = this.id !== undefined ? this.id : null;
-        return data; 
-    }
-
-    toJSON() {
-        return JSON.stringify(this.toJS());
-    }
-
-    clone() {
-        const json = this.toJSON();
-        return new RolePermissionSetting(JSON.parse(json));
-    }
-}
-
-export class CreateRoleInput { 
-    displayName: string; 
-    isDefault: boolean; 
-    grantedPermissionNames: string[];
-    constructor(data?: any) {
-        if (data !== undefined) {
-            this.displayName = data["displayName"] !== undefined ? data["displayName"] : null;
-            this.isDefault = data["isDefault"] !== undefined ? data["isDefault"] : null;
-            if (data["grantedPermissionNames"] && data["grantedPermissionNames"].constructor === Array) {
-                this.grantedPermissionNames = [];
-                for (let item of data["grantedPermissionNames"])
-                    this.grantedPermissionNames.push(item);
-            }
-        }
-    }
-
-    static fromJS(data: any): CreateRoleInput {
-        return new CreateRoleInput(data);
-    }
-
-    toJS(data?: any) {
-        data = data === undefined ? {} : data;
-        data["displayName"] = this.displayName !== undefined ? this.displayName : null;
-        data["isDefault"] = this.isDefault !== undefined ? this.isDefault : null;
-        if (this.grantedPermissionNames && this.grantedPermissionNames.constructor === Array) {
-            data["grantedPermissionNames"] = [];
-            for (let item of this.grantedPermissionNames)
-                data["grantedPermissionNames"].push(item);
-        }
-        return data; 
-    }
-
-    toJSON() {
-        return JSON.stringify(this.toJS());
-    }
-
-    clone() {
-        const json = this.toJSON();
-        return new CreateRoleInput(JSON.parse(json));
-    }
-}
-
-export class UpdateRoleInput { 
-    id: number; 
-    displayName: string; 
-    isDefault: boolean; 
-    grantedPermissionNames: string[] = [];
-    constructor(data?: any) {
-        if (data !== undefined) {
-            this.id = data["id"] !== undefined ? data["id"] : null;
-            this.displayName = data["displayName"] !== undefined ? data["displayName"] : null;
-            this.isDefault = data["isDefault"] !== undefined ? data["isDefault"] : null;
-            if (data["grantedPermissionNames"] && data["grantedPermissionNames"].constructor === Array) {
-                this.grantedPermissionNames = [];
-                for (let item of data["grantedPermissionNames"])
-                    this.grantedPermissionNames.push(item);
-            }
-        }
-    }
-
-    static fromJS(data: any): UpdateRoleInput {
-        return new UpdateRoleInput(data);
-    }
-
-    toJS(data?: any) {
-        data = data === undefined ? {} : data;
-        data["id"] = this.id !== undefined ? this.id : null;
-        data["displayName"] = this.displayName !== undefined ? this.displayName : null;
-        data["isDefault"] = this.isDefault !== undefined ? this.isDefault : null;
-        if (this.grantedPermissionNames && this.grantedPermissionNames.constructor === Array) {
-            data["grantedPermissionNames"] = [];
-            for (let item of this.grantedPermissionNames)
-                data["grantedPermissionNames"].push(item);
-        }
-        return data; 
-    }
-
-    toJSON() {
-        return JSON.stringify(this.toJS());
-    }
-
-    clone() {
-        const json = this.toJSON();
-        return new UpdateRoleInput(JSON.parse(json));
+        return new PagedResultDtoOfRoleDto(JSON.parse(json));
     }
 }
 
@@ -3130,24 +3025,153 @@ export class UserManagementDto {
     }
 }
 
-export class ListResultDtoOfTenantListDto { 
-    items: TenantListDto[];
+export class TenantDto { 
+    tenancyName: string; 
+    name: string; 
+    adminEmailAddress: string; 
+    connectionString: string; 
+    isActive: boolean; 
+    id: number;
     constructor(data?: any) {
         if (data !== undefined) {
-            if (data["items"] && data["items"].constructor === Array) {
-                this.items = [];
-                for (let item of data["items"])
-                    this.items.push(TenantListDto.fromJS(item));
-            }
+            this.tenancyName = data["tenancyName"] !== undefined ? data["tenancyName"] : null;
+            this.name = data["name"] !== undefined ? data["name"] : null;
+            this.adminEmailAddress = data["adminEmailAddress"] !== undefined ? data["adminEmailAddress"] : null;
+            this.connectionString = data["connectionString"] !== undefined ? data["connectionString"] : null;
+            this.isActive = data["isActive"] !== undefined ? data["isActive"] : null;
+            this.id = data["id"] !== undefined ? data["id"] : null;
         }
     }
 
-    static fromJS(data: any): ListResultDtoOfTenantListDto {
-        return new ListResultDtoOfTenantListDto(data);
+    static fromJS(data: any): TenantDto {
+        return new TenantDto(data);
     }
 
     toJS(data?: any) {
         data = data === undefined ? {} : data;
+        data["tenancyName"] = this.tenancyName !== undefined ? this.tenancyName : null;
+        data["name"] = this.name !== undefined ? this.name : null;
+        data["adminEmailAddress"] = this.adminEmailAddress !== undefined ? this.adminEmailAddress : null;
+        data["connectionString"] = this.connectionString !== undefined ? this.connectionString : null;
+        data["isActive"] = this.isActive !== undefined ? this.isActive : null;
+        data["id"] = this.id !== undefined ? this.id : null;
+        return data; 
+    }
+
+    toJSON() {
+        return JSON.stringify(this.toJS());
+    }
+
+    clone() {
+        const json = this.toJSON();
+        return new TenantDto(JSON.parse(json));
+    }
+}
+
+export class CreateTenantInput { 
+    tenancyName: string; 
+    name: string; 
+    adminEmailAddress: string; 
+    connectionString: string; 
+    isActive: boolean;
+    constructor(data?: any) {
+        if (data !== undefined) {
+            this.tenancyName = data["tenancyName"] !== undefined ? data["tenancyName"] : null;
+            this.name = data["name"] !== undefined ? data["name"] : null;
+            this.adminEmailAddress = data["adminEmailAddress"] !== undefined ? data["adminEmailAddress"] : null;
+            this.connectionString = data["connectionString"] !== undefined ? data["connectionString"] : null;
+            this.isActive = data["isActive"] !== undefined ? data["isActive"] : null;
+        }
+    }
+
+    static fromJS(data: any): CreateTenantInput {
+        return new CreateTenantInput(data);
+    }
+
+    toJS(data?: any) {
+        data = data === undefined ? {} : data;
+        data["tenancyName"] = this.tenancyName !== undefined ? this.tenancyName : null;
+        data["name"] = this.name !== undefined ? this.name : null;
+        data["adminEmailAddress"] = this.adminEmailAddress !== undefined ? this.adminEmailAddress : null;
+        data["connectionString"] = this.connectionString !== undefined ? this.connectionString : null;
+        data["isActive"] = this.isActive !== undefined ? this.isActive : null;
+        return data; 
+    }
+
+    toJSON() {
+        return JSON.stringify(this.toJS());
+    }
+
+    clone() {
+        const json = this.toJSON();
+        return new CreateTenantInput(JSON.parse(json));
+    }
+}
+
+export class UpdateTenantInput { 
+    tenancyName: string; 
+    name: string; 
+    adminEmailAddress: string; 
+    connectionString: string; 
+    isActive: boolean; 
+    id: number;
+    constructor(data?: any) {
+        if (data !== undefined) {
+            this.tenancyName = data["tenancyName"] !== undefined ? data["tenancyName"] : null;
+            this.name = data["name"] !== undefined ? data["name"] : null;
+            this.adminEmailAddress = data["adminEmailAddress"] !== undefined ? data["adminEmailAddress"] : null;
+            this.connectionString = data["connectionString"] !== undefined ? data["connectionString"] : null;
+            this.isActive = data["isActive"] !== undefined ? data["isActive"] : null;
+            this.id = data["id"] !== undefined ? data["id"] : null;
+        }
+    }
+
+    static fromJS(data: any): UpdateTenantInput {
+        return new UpdateTenantInput(data);
+    }
+
+    toJS(data?: any) {
+        data = data === undefined ? {} : data;
+        data["tenancyName"] = this.tenancyName !== undefined ? this.tenancyName : null;
+        data["name"] = this.name !== undefined ? this.name : null;
+        data["adminEmailAddress"] = this.adminEmailAddress !== undefined ? this.adminEmailAddress : null;
+        data["connectionString"] = this.connectionString !== undefined ? this.connectionString : null;
+        data["isActive"] = this.isActive !== undefined ? this.isActive : null;
+        data["id"] = this.id !== undefined ? this.id : null;
+        return data; 
+    }
+
+    toJSON() {
+        return JSON.stringify(this.toJS());
+    }
+
+    clone() {
+        const json = this.toJSON();
+        return new UpdateTenantInput(JSON.parse(json));
+    }
+}
+
+export class PagedResultDtoOfTenantDto { 
+    totalCount: number; 
+    items: TenantDto[];
+    constructor(data?: any) {
+        if (data !== undefined) {
+            this.totalCount = data["totalCount"] !== undefined ? data["totalCount"] : null;
+            if (data["items"] && data["items"].constructor === Array) {
+                this.items = [];
+                for (let item of data["items"])
+                    this.items.push(TenantDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): PagedResultDtoOfTenantDto {
+        return new PagedResultDtoOfTenantDto(data);
+    }
+
+    toJS(data?: any) {
+        data = data === undefined ? {} : data;
+        data["totalCount"] = this.totalCount !== undefined ? this.totalCount : null;
         if (this.items && this.items.constructor === Array) {
             data["items"] = [];
             for (let item of this.items)
@@ -3162,78 +3186,7 @@ export class ListResultDtoOfTenantListDto {
 
     clone() {
         const json = this.toJSON();
-        return new ListResultDtoOfTenantListDto(JSON.parse(json));
-    }
-}
-
-export class TenantListDto { 
-    tenancyName: string; 
-    name: string; 
-    id: number;
-    constructor(data?: any) {
-        if (data !== undefined) {
-            this.tenancyName = data["tenancyName"] !== undefined ? data["tenancyName"] : null;
-            this.name = data["name"] !== undefined ? data["name"] : null;
-            this.id = data["id"] !== undefined ? data["id"] : null;
-        }
-    }
-
-    static fromJS(data: any): TenantListDto {
-        return new TenantListDto(data);
-    }
-
-    toJS(data?: any) {
-        data = data === undefined ? {} : data;
-        data["tenancyName"] = this.tenancyName !== undefined ? this.tenancyName : null;
-        data["name"] = this.name !== undefined ? this.name : null;
-        data["id"] = this.id !== undefined ? this.id : null;
-        return data; 
-    }
-
-    toJSON() {
-        return JSON.stringify(this.toJS());
-    }
-
-    clone() {
-        const json = this.toJSON();
-        return new TenantListDto(JSON.parse(json));
-    }
-}
-
-export class CreateTenantInput { 
-    tenancyName: string; 
-    name: string; 
-    adminEmailAddress: string; 
-    connectionString: string;
-    constructor(data?: any) {
-        if (data !== undefined) {
-            this.tenancyName = data["tenancyName"] !== undefined ? data["tenancyName"] : null;
-            this.name = data["name"] !== undefined ? data["name"] : null;
-            this.adminEmailAddress = data["adminEmailAddress"] !== undefined ? data["adminEmailAddress"] : null;
-            this.connectionString = data["connectionString"] !== undefined ? data["connectionString"] : null;
-        }
-    }
-
-    static fromJS(data: any): CreateTenantInput {
-        return new CreateTenantInput(data);
-    }
-
-    toJS(data?: any) {
-        data = data === undefined ? {} : data;
-        data["tenancyName"] = this.tenancyName !== undefined ? this.tenancyName : null;
-        data["name"] = this.name !== undefined ? this.name : null;
-        data["adminEmailAddress"] = this.adminEmailAddress !== undefined ? this.adminEmailAddress : null;
-        data["connectionString"] = this.connectionString !== undefined ? this.connectionString : null;
-        return data; 
-    }
-
-    toJSON() {
-        return JSON.stringify(this.toJS());
-    }
-
-    clone() {
-        const json = this.toJSON();
-        return new CreateTenantInput(JSON.parse(json));
+        return new PagedResultDtoOfTenantDto(JSON.parse(json));
     }
 }
 
@@ -3410,90 +3363,50 @@ export class ExternalAuthenticateResultModel {
     }
 }
 
-export class ListResultDtoOfUserListDto { 
-    items: UserListDto[];
-    constructor(data?: any) {
-        if (data !== undefined) {
-            if (data["items"] && data["items"].constructor === Array) {
-                this.items = [];
-                for (let item of data["items"])
-                    this.items.push(UserListDto.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): ListResultDtoOfUserListDto {
-        return new ListResultDtoOfUserListDto(data);
-    }
-
-    toJS(data?: any) {
-        data = data === undefined ? {} : data;
-        if (this.items && this.items.constructor === Array) {
-            data["items"] = [];
-            for (let item of this.items)
-                data["items"].push(item.toJS());
-        }
-        return data; 
-    }
-
-    toJSON() {
-        return JSON.stringify(this.toJS());
-    }
-
-    clone() {
-        const json = this.toJSON();
-        return new ListResultDtoOfUserListDto(JSON.parse(json));
-    }
-}
-
-export class UserListDto { 
+export class CreateUserInput { 
+    userName: string; 
     firstName: string; 
     lastName: string; 
-    userName: string; 
-    fullName: string; 
     emailAddress: string; 
-    isEmailConfirmed: boolean; 
-    lastLoginTime: moment.Moment; 
     isActive: boolean; 
-    isLockoutEnabled: boolean; 
-    isAdmin: boolean; 
-    creationTime: moment.Moment; 
-    id: number;
+    roles: string[]; 
+    password: string; 
+    confirmPassword: string;
     constructor(data?: any) {
         if (data !== undefined) {
+            this.userName = data["userName"] !== undefined ? data["userName"] : null;
             this.firstName = data["firstName"] !== undefined ? data["firstName"] : null;
             this.lastName = data["lastName"] !== undefined ? data["lastName"] : null;
-            this.userName = data["userName"] !== undefined ? data["userName"] : null;
-            this.fullName = data["fullName"] !== undefined ? data["fullName"] : null;
             this.emailAddress = data["emailAddress"] !== undefined ? data["emailAddress"] : null;
-            this.isEmailConfirmed = data["isEmailConfirmed"] !== undefined ? data["isEmailConfirmed"] : null;
-            this.lastLoginTime = data["lastLoginTime"] ? moment(data["lastLoginTime"].toString()) : null;
             this.isActive = data["isActive"] !== undefined ? data["isActive"] : null;
-            this.isLockoutEnabled = data["isLockoutEnabled"] !== undefined ? data["isLockoutEnabled"] : null;
-            this.isAdmin = data["isAdmin"] !== undefined ? data["isAdmin"] : null;
-            this.creationTime = data["creationTime"] ? moment(data["creationTime"].toString()) : null;
-            this.id = data["id"] !== undefined ? data["id"] : null;
+            if (data["roles"] && data["roles"].constructor === Array) {
+                this.roles = [];
+                for (let item of data["roles"])
+                    this.roles.push(item);
+            }
+            this.password = data["password"] !== undefined ? data["password"] : null;
+            this.confirmPassword = data["confirmPassword"] !== undefined ? data["confirmPassword"] : null;
         }
     }
 
-    static fromJS(data: any): UserListDto {
-        return new UserListDto(data);
+    static fromJS(data: any): CreateUserInput {
+        return new CreateUserInput(data);
     }
 
     toJS(data?: any) {
         data = data === undefined ? {} : data;
+        data["userName"] = this.userName !== undefined ? this.userName : null;
         data["firstName"] = this.firstName !== undefined ? this.firstName : null;
         data["lastName"] = this.lastName !== undefined ? this.lastName : null;
-        data["userName"] = this.userName !== undefined ? this.userName : null;
-        data["fullName"] = this.fullName !== undefined ? this.fullName : null;
         data["emailAddress"] = this.emailAddress !== undefined ? this.emailAddress : null;
-        data["isEmailConfirmed"] = this.isEmailConfirmed !== undefined ? this.isEmailConfirmed : null;
-        data["lastLoginTime"] = this.lastLoginTime ? this.lastLoginTime.toISOString() : null;
         data["isActive"] = this.isActive !== undefined ? this.isActive : null;
-        data["isLockoutEnabled"] = this.isLockoutEnabled !== undefined ? this.isLockoutEnabled : null;
-        data["isAdmin"] = this.isAdmin !== undefined ? this.isAdmin : null;
-        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : null;
-        data["id"] = this.id !== undefined ? this.id : null;
+        if (this.roles && this.roles.constructor === Array) {
+            data["roles"] = [];
+            for (let item of this.roles)
+                data["roles"].push(item);
+        }
+        data["password"] = this.password !== undefined ? this.password : null;
+        data["confirmPassword"] = this.confirmPassword !== undefined ? this.confirmPassword : null;
         return data; 
     }
 
@@ -3503,143 +3416,35 @@ export class UserListDto {
 
     clone() {
         const json = this.toJSON();
-        return new UserListDto(JSON.parse(json));
-    }
-}
-
-export class GetUsersInput { 
-    maxResultCount: number; 
-    skipCount: number; 
-    sorting: string; 
-    searchString: string; 
-    permissionNames: string[]; 
-    roleIds: number[];
-    constructor(data?: any) {
-        if (data !== undefined) {
-            this.maxResultCount = data["maxResultCount"] !== undefined ? data["maxResultCount"] : null;
-            this.skipCount = data["skipCount"] !== undefined ? data["skipCount"] : null;
-            this.sorting = data["sorting"] !== undefined ? data["sorting"] : null;
-            this.searchString = data["searchString"] !== undefined ? data["searchString"] : null;
-            if (data["permissionNames"] && data["permissionNames"].constructor === Array) {
-                this.permissionNames = [];
-                for (let item of data["permissionNames"])
-                    this.permissionNames.push(item);
-            }
-            if (data["roleIds"] && data["roleIds"].constructor === Array) {
-                this.roleIds = [];
-                for (let item of data["roleIds"])
-                    this.roleIds.push(item);
-            }
-        }
-    }
-
-    static fromJS(data: any): GetUsersInput {
-        return new GetUsersInput(data);
-    }
-
-    toJS(data?: any) {
-        data = data === undefined ? {} : data;
-        data["maxResultCount"] = this.maxResultCount !== undefined ? this.maxResultCount : null;
-        data["skipCount"] = this.skipCount !== undefined ? this.skipCount : null;
-        data["sorting"] = this.sorting !== undefined ? this.sorting : null;
-        data["searchString"] = this.searchString !== undefined ? this.searchString : null;
-        if (this.permissionNames && this.permissionNames.constructor === Array) {
-            data["permissionNames"] = [];
-            for (let item of this.permissionNames)
-                data["permissionNames"].push(item);
-        }
-        if (this.roleIds && this.roleIds.constructor === Array) {
-            data["roleIds"] = [];
-            for (let item of this.roleIds)
-                data["roleIds"].push(item);
-        }
-        return data; 
-    }
-
-    toJSON() {
-        return JSON.stringify(this.toJS());
-    }
-
-    clone() {
-        const json = this.toJSON();
-        return new GetUsersInput(JSON.parse(json));
-    }
-}
-
-export class PagedResultDtoOfUserListDto { 
-    totalCount: number; 
-    items: UserListDto[];
-    constructor(data?: any) {
-        if (data !== undefined) {
-            this.totalCount = data["totalCount"] !== undefined ? data["totalCount"] : null;
-            if (data["items"] && data["items"].constructor === Array) {
-                this.items = [];
-                for (let item of data["items"])
-                    this.items.push(UserListDto.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): PagedResultDtoOfUserListDto {
-        return new PagedResultDtoOfUserListDto(data);
-    }
-
-    toJS(data?: any) {
-        data = data === undefined ? {} : data;
-        data["totalCount"] = this.totalCount !== undefined ? this.totalCount : null;
-        if (this.items && this.items.constructor === Array) {
-            data["items"] = [];
-            for (let item of this.items)
-                data["items"].push(item.toJS());
-        }
-        return data; 
-    }
-
-    toJSON() {
-        return JSON.stringify(this.toJS());
-    }
-
-    clone() {
-        const json = this.toJSON();
-        return new PagedResultDtoOfUserListDto(JSON.parse(json));
+        return new CreateUserInput(JSON.parse(json));
     }
 }
 
 export class UserDto { 
+    userName: string; 
     firstName: string; 
     lastName: string; 
-    userName: string; 
-    fullName: string; 
     emailAddress: string; 
-    isEmailConfirmed: boolean; 
-    lastLoginTime: moment.Moment; 
     isActive: boolean; 
-    isLockoutEnabled: boolean; 
+    fullName: string; 
+    lastLoginTime: moment.Moment; 
     creationTime: moment.Moment; 
-    roles: UserRole[]; 
-    permissions: UserPermissionSetting[]; 
+    roles: string[]; 
     id: number;
     constructor(data?: any) {
         if (data !== undefined) {
+            this.userName = data["userName"] !== undefined ? data["userName"] : null;
             this.firstName = data["firstName"] !== undefined ? data["firstName"] : null;
             this.lastName = data["lastName"] !== undefined ? data["lastName"] : null;
-            this.userName = data["userName"] !== undefined ? data["userName"] : null;
-            this.fullName = data["fullName"] !== undefined ? data["fullName"] : null;
             this.emailAddress = data["emailAddress"] !== undefined ? data["emailAddress"] : null;
-            this.isEmailConfirmed = data["isEmailConfirmed"] !== undefined ? data["isEmailConfirmed"] : null;
-            this.lastLoginTime = data["lastLoginTime"] ? moment(data["lastLoginTime"].toString()) : null;
             this.isActive = data["isActive"] !== undefined ? data["isActive"] : null;
-            this.isLockoutEnabled = data["isLockoutEnabled"] !== undefined ? data["isLockoutEnabled"] : null;
+            this.fullName = data["fullName"] !== undefined ? data["fullName"] : null;
+            this.lastLoginTime = data["lastLoginTime"] ? moment(data["lastLoginTime"].toString()) : null;
             this.creationTime = data["creationTime"] ? moment(data["creationTime"].toString()) : null;
             if (data["roles"] && data["roles"].constructor === Array) {
                 this.roles = [];
                 for (let item of data["roles"])
-                    this.roles.push(UserRole.fromJS(item));
-            }
-            if (data["permissions"] && data["permissions"].constructor === Array) {
-                this.permissions = [];
-                for (let item of data["permissions"])
-                    this.permissions.push(UserPermissionSetting.fromJS(item));
+                    this.roles.push(item);
             }
             this.id = data["id"] !== undefined ? data["id"] : null;
         }
@@ -3651,25 +3456,18 @@ export class UserDto {
 
     toJS(data?: any) {
         data = data === undefined ? {} : data;
+        data["userName"] = this.userName !== undefined ? this.userName : null;
         data["firstName"] = this.firstName !== undefined ? this.firstName : null;
         data["lastName"] = this.lastName !== undefined ? this.lastName : null;
-        data["userName"] = this.userName !== undefined ? this.userName : null;
-        data["fullName"] = this.fullName !== undefined ? this.fullName : null;
         data["emailAddress"] = this.emailAddress !== undefined ? this.emailAddress : null;
-        data["isEmailConfirmed"] = this.isEmailConfirmed !== undefined ? this.isEmailConfirmed : null;
-        data["lastLoginTime"] = this.lastLoginTime ? this.lastLoginTime.toISOString() : null;
         data["isActive"] = this.isActive !== undefined ? this.isActive : null;
-        data["isLockoutEnabled"] = this.isLockoutEnabled !== undefined ? this.isLockoutEnabled : null;
+        data["fullName"] = this.fullName !== undefined ? this.fullName : null;
+        data["lastLoginTime"] = this.lastLoginTime ? this.lastLoginTime.toISOString() : null;
         data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : null;
         if (this.roles && this.roles.constructor === Array) {
             data["roles"] = [];
             for (let item of this.roles)
-                data["roles"].push(item.toJS());
-        }
-        if (this.permissions && this.permissions.constructor === Array) {
-            data["permissions"] = [];
-            for (let item of this.permissions)
-                data["permissions"].push(item.toJS());
+                data["roles"].push(item);
         }
         data["id"] = this.id !== undefined ? this.id : null;
         return data; 
@@ -3685,35 +3483,55 @@ export class UserDto {
     }
 }
 
-export class UserRole { 
-    tenantId: number; 
-    userId: number; 
-    roleId: number; 
+export class UpdateUserInput { 
+    userName: string; 
+    firstName: string; 
+    lastName: string; 
+    emailAddress: string; 
+    isActive: boolean; 
+    fullName: string; 
+    lastLoginTime: moment.Moment; 
     creationTime: moment.Moment; 
-    creatorUserId: number; 
+    roles: string[]; 
     id: number;
     constructor(data?: any) {
         if (data !== undefined) {
-            this.tenantId = data["tenantId"] !== undefined ? data["tenantId"] : null;
-            this.userId = data["userId"] !== undefined ? data["userId"] : null;
-            this.roleId = data["roleId"] !== undefined ? data["roleId"] : null;
+            this.userName = data["userName"] !== undefined ? data["userName"] : null;
+            this.firstName = data["firstName"] !== undefined ? data["firstName"] : null;
+            this.lastName = data["lastName"] !== undefined ? data["lastName"] : null;
+            this.emailAddress = data["emailAddress"] !== undefined ? data["emailAddress"] : null;
+            this.isActive = data["isActive"] !== undefined ? data["isActive"] : null;
+            this.fullName = data["fullName"] !== undefined ? data["fullName"] : null;
+            this.lastLoginTime = data["lastLoginTime"] ? moment(data["lastLoginTime"].toString()) : null;
             this.creationTime = data["creationTime"] ? moment(data["creationTime"].toString()) : null;
-            this.creatorUserId = data["creatorUserId"] !== undefined ? data["creatorUserId"] : null;
+            if (data["roles"] && data["roles"].constructor === Array) {
+                this.roles = [];
+                for (let item of data["roles"])
+                    this.roles.push(item);
+            }
             this.id = data["id"] !== undefined ? data["id"] : null;
         }
     }
 
-    static fromJS(data: any): UserRole {
-        return new UserRole(data);
+    static fromJS(data: any): UpdateUserInput {
+        return new UpdateUserInput(data);
     }
 
     toJS(data?: any) {
         data = data === undefined ? {} : data;
-        data["tenantId"] = this.tenantId !== undefined ? this.tenantId : null;
-        data["userId"] = this.userId !== undefined ? this.userId : null;
-        data["roleId"] = this.roleId !== undefined ? this.roleId : null;
+        data["userName"] = this.userName !== undefined ? this.userName : null;
+        data["firstName"] = this.firstName !== undefined ? this.firstName : null;
+        data["lastName"] = this.lastName !== undefined ? this.lastName : null;
+        data["emailAddress"] = this.emailAddress !== undefined ? this.emailAddress : null;
+        data["isActive"] = this.isActive !== undefined ? this.isActive : null;
+        data["fullName"] = this.fullName !== undefined ? this.fullName : null;
+        data["lastLoginTime"] = this.lastLoginTime ? this.lastLoginTime.toISOString() : null;
         data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : null;
-        data["creatorUserId"] = this.creatorUserId !== undefined ? this.creatorUserId : null;
+        if (this.roles && this.roles.constructor === Array) {
+            data["roles"] = [];
+            for (let item of this.roles)
+                data["roles"].push(item);
+        }
         data["id"] = this.id !== undefined ? this.id : null;
         return data; 
     }
@@ -3724,53 +3542,7 @@ export class UserRole {
 
     clone() {
         const json = this.toJSON();
-        return new UserRole(JSON.parse(json));
-    }
-}
-
-export class UserPermissionSetting { 
-    userId: number; 
-    tenantId: number; 
-    name: string; 
-    isGranted: boolean; 
-    creationTime: moment.Moment; 
-    creatorUserId: number; 
-    id: number;
-    constructor(data?: any) {
-        if (data !== undefined) {
-            this.userId = data["userId"] !== undefined ? data["userId"] : null;
-            this.tenantId = data["tenantId"] !== undefined ? data["tenantId"] : null;
-            this.name = data["name"] !== undefined ? data["name"] : null;
-            this.isGranted = data["isGranted"] !== undefined ? data["isGranted"] : null;
-            this.creationTime = data["creationTime"] ? moment(data["creationTime"].toString()) : null;
-            this.creatorUserId = data["creatorUserId"] !== undefined ? data["creatorUserId"] : null;
-            this.id = data["id"] !== undefined ? data["id"] : null;
-        }
-    }
-
-    static fromJS(data: any): UserPermissionSetting {
-        return new UserPermissionSetting(data);
-    }
-
-    toJS(data?: any) {
-        data = data === undefined ? {} : data;
-        data["userId"] = this.userId !== undefined ? this.userId : null;
-        data["tenantId"] = this.tenantId !== undefined ? this.tenantId : null;
-        data["name"] = this.name !== undefined ? this.name : null;
-        data["isGranted"] = this.isGranted !== undefined ? this.isGranted : null;
-        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : null;
-        data["creatorUserId"] = this.creatorUserId !== undefined ? this.creatorUserId : null;
-        data["id"] = this.id !== undefined ? this.id : null;
-        return data; 
-    }
-
-    toJSON() {
-        return JSON.stringify(this.toJS());
-    }
-
-    clone() {
-        const json = this.toJSON();
-        return new UserPermissionSetting(JSON.parse(json));
+        return new UpdateUserInput(JSON.parse(json));
     }
 }
 
@@ -3844,120 +3616,6 @@ export class UserPermissionsInput {
     }
 }
 
-export class CreateUserInput { 
-    userName: string; 
-    firstName: string; 
-    lastName: string; 
-    emailAddress: string; 
-    phoneNumber: string; 
-    password: string; 
-    isActive: boolean; 
-    roleNames: string[];
-    constructor(data?: any) {
-        if (data !== undefined) {
-            this.userName = data["userName"] !== undefined ? data["userName"] : null;
-            this.firstName = data["firstName"] !== undefined ? data["firstName"] : null;
-            this.lastName = data["lastName"] !== undefined ? data["lastName"] : null;
-            this.emailAddress = data["emailAddress"] !== undefined ? data["emailAddress"] : null;
-            this.phoneNumber = data["phoneNumber"] !== undefined ? data["phoneNumber"] : null;
-            this.password = data["password"] !== undefined ? data["password"] : null;
-            this.isActive = data["isActive"] !== undefined ? data["isActive"] : null;
-            if (data["roleNames"] && data["roleNames"].constructor === Array) {
-                this.roleNames = [];
-                for (let item of data["roleNames"])
-                    this.roleNames.push(item);
-            }
-        }
-    }
-
-    static fromJS(data: any): CreateUserInput {
-        return new CreateUserInput(data);
-    }
-
-    toJS(data?: any) {
-        data = data === undefined ? {} : data;
-        data["userName"] = this.userName !== undefined ? this.userName : null;
-        data["firstName"] = this.firstName !== undefined ? this.firstName : null;
-        data["lastName"] = this.lastName !== undefined ? this.lastName : null;
-        data["emailAddress"] = this.emailAddress !== undefined ? this.emailAddress : null;
-        data["phoneNumber"] = this.phoneNumber !== undefined ? this.phoneNumber : null;
-        data["password"] = this.password !== undefined ? this.password : null;
-        data["isActive"] = this.isActive !== undefined ? this.isActive : null;
-        if (this.roleNames && this.roleNames.constructor === Array) {
-            data["roleNames"] = [];
-            for (let item of this.roleNames)
-                data["roleNames"].push(item);
-        }
-        return data; 
-    }
-
-    toJSON() {
-        return JSON.stringify(this.toJS());
-    }
-
-    clone() {
-        const json = this.toJSON();
-        return new CreateUserInput(JSON.parse(json));
-    }
-}
-
-export class UpdateUserInput { 
-    id: number; 
-    userName: string; 
-    firstName: string; 
-    lastName: string; 
-    emailAddress: string; 
-    phoneNumber: string; 
-    isActive: boolean; 
-    roleNames: string[];
-    constructor(data?: any) {
-        if (data !== undefined) {
-            this.id = data["id"] !== undefined ? data["id"] : null;
-            this.userName = data["userName"] !== undefined ? data["userName"] : null;
-            this.firstName = data["firstName"] !== undefined ? data["firstName"] : null;
-            this.lastName = data["lastName"] !== undefined ? data["lastName"] : null;
-            this.emailAddress = data["emailAddress"] !== undefined ? data["emailAddress"] : null;
-            this.phoneNumber = data["phoneNumber"] !== undefined ? data["phoneNumber"] : null;
-            this.isActive = data["isActive"] !== undefined ? data["isActive"] : null;
-            if (data["roleNames"] && data["roleNames"].constructor === Array) {
-                this.roleNames = [];
-                for (let item of data["roleNames"])
-                    this.roleNames.push(item);
-            }
-        }
-    }
-
-    static fromJS(data: any): UpdateUserInput {
-        return new UpdateUserInput(data);
-    }
-
-    toJS(data?: any) {
-        data = data === undefined ? {} : data;
-        data["id"] = this.id !== undefined ? this.id : null;
-        data["userName"] = this.userName !== undefined ? this.userName : null;
-        data["firstName"] = this.firstName !== undefined ? this.firstName : null;
-        data["lastName"] = this.lastName !== undefined ? this.lastName : null;
-        data["emailAddress"] = this.emailAddress !== undefined ? this.emailAddress : null;
-        data["phoneNumber"] = this.phoneNumber !== undefined ? this.phoneNumber : null;
-        data["isActive"] = this.isActive !== undefined ? this.isActive : null;
-        if (this.roleNames && this.roleNames.constructor === Array) {
-            data["roleNames"] = [];
-            for (let item of this.roleNames)
-                data["roleNames"].push(item);
-        }
-        return data; 
-    }
-
-    toJSON() {
-        return JSON.stringify(this.toJS());
-    }
-
-    clone() {
-        const json = this.toJSON();
-        return new UpdateUserInput(JSON.parse(json));
-    }
-}
-
 export class ChangeUserPasswordInput { 
     id: number; 
     password: string;
@@ -3989,13 +3647,51 @@ export class ChangeUserPasswordInput {
     }
 }
 
+export class PagedResultDtoOfUserDto { 
+    totalCount: number; 
+    items: UserDto[];
+    constructor(data?: any) {
+        if (data !== undefined) {
+            this.totalCount = data["totalCount"] !== undefined ? data["totalCount"] : null;
+            if (data["items"] && data["items"].constructor === Array) {
+                this.items = [];
+                for (let item of data["items"])
+                    this.items.push(UserDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): PagedResultDtoOfUserDto {
+        return new PagedResultDtoOfUserDto(data);
+    }
+
+    toJS(data?: any) {
+        data = data === undefined ? {} : data;
+        data["totalCount"] = this.totalCount !== undefined ? this.totalCount : null;
+        if (this.items && this.items.constructor === Array) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJS());
+        }
+        return data; 
+    }
+
+    toJSON() {
+        return JSON.stringify(this.toJS());
+    }
+
+    clone() {
+        const json = this.toJSON();
+        return new PagedResultDtoOfUserDto(JSON.parse(json));
+    }
+}
+
 export class UserProfileInfoDto { 
     firstName: string; 
     lastName: string; 
     userName: string; 
     phoneNumber: string; 
     emailAddress: string; 
-    password: string; 
     id: number;
     constructor(data?: any) {
         if (data !== undefined) {
@@ -4004,7 +3700,6 @@ export class UserProfileInfoDto {
             this.userName = data["userName"] !== undefined ? data["userName"] : null;
             this.phoneNumber = data["phoneNumber"] !== undefined ? data["phoneNumber"] : null;
             this.emailAddress = data["emailAddress"] !== undefined ? data["emailAddress"] : null;
-            this.password = data["password"] !== undefined ? data["password"] : null;
             this.id = data["id"] !== undefined ? data["id"] : null;
         }
     }
@@ -4020,7 +3715,6 @@ export class UserProfileInfoDto {
         data["userName"] = this.userName !== undefined ? this.userName : null;
         data["phoneNumber"] = this.phoneNumber !== undefined ? this.phoneNumber : null;
         data["emailAddress"] = this.emailAddress !== undefined ? this.emailAddress : null;
-        data["password"] = this.password !== undefined ? this.password : null;
         data["id"] = this.id !== undefined ? this.id : null;
         return data; 
     }

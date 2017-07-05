@@ -71,7 +71,8 @@
         "../src/framework/studiox/scripts/libs/studiox.sweet-alert.js",
         "../src/framework/studiox/scripts/libs/studiox.moment.js",
         "../src/bsb-theme/js/admin.js",
-        "../src/bsb-theme/js/demo.js"
+        "../src/bsb-theme/js/demo.js",
+        "../src/bsb-theme/js/jquery.validate.js"
       ],
       "environmentSource": "environments/environment.ts",
       "environments": {
