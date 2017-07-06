@@ -24,7 +24,7 @@ namespace StudioX.Domain.Uow
         /// <param name="invocation">Method invocation arguments</param>
         public void Intercept(IInvocation invocation)
         {
-            var unitOfWorkAttr = unitOfWorkOptions.GetUnitOfWorkAttributeOrNull(invocation.MethodInvocationTarget);
+            var unitOfWorkAttr = unitOfWorkOptions.GetUnitOfWorkAttributeOrNull(invocation.GetConcreteMethod());
             if (unitOfWorkAttr == null || unitOfWorkAttr.IsDisabled)
             {
                 //No need to a uow

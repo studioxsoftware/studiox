@@ -1,17 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
+using Microsoft.EntityFrameworkCore;
+using Shouldly;
 using StudioX.Dapper.Repositories;
 using StudioX.Domain.Repositories;
 using StudioX.Domain.Uow;
 using StudioX.EntityFrameworkCore.Dapper.Tests.Domain;
-
-using Microsoft.EntityFrameworkCore;
-
-using Shouldly;
-
 using Xunit;
 
 namespace StudioX.EntityFrameworkCore.Dapper.Tests.Tests
@@ -22,6 +17,8 @@ namespace StudioX.EntityFrameworkCore.Dapper.Tests.Tests
         private readonly IRepository<Blog> blogRepository;
         private readonly IDapperRepository<Post, Guid> postDapperRepository;
         private readonly IRepository<Post, Guid> postRepository;
+        private readonly IRepository<Comment, long> commentRepository;
+        private readonly IDapperRepository<Comment, long> commentDapperRepository;
         private readonly IUnitOfWorkManager uowManager;
 
         public RepositoryTests()
@@ -31,14 +28,16 @@ namespace StudioX.EntityFrameworkCore.Dapper.Tests.Tests
             postRepository = Resolve<IRepository<Post, Guid>>();
             blogDapperRepository = Resolve<IDapperRepository<Blog>>();
             postDapperRepository = Resolve<IDapperRepository<Post, Guid>>();
+            commentRepository = Resolve<IRepository<Comment, long>>();
+            commentDapperRepository = Resolve<IDapperRepository<Comment, long>>();
         }
 
         [Fact]
         public void ShouldGetInitialBlogs()
         {
             //Act
-            List<Blog> blogs = blogRepository.GetAllList();
-            IEnumerable<Blog> blogsFromDapper = blogDapperRepository.GetAll();
+            var blogs = blogRepository.GetAllList();
+            var blogsFromDapper = blogDapperRepository.GetAll();
 
             //Assert
             blogs.Count.ShouldBeGreaterThan(0);
@@ -53,16 +52,16 @@ namespace StudioX.EntityFrameworkCore.Dapper.Tests.Tests
 
             //Act
 
-            using (IUnitOfWorkCompleteHandle uow = uowManager.Begin())
+            using (var uow = uowManager.Begin())
             {
-                Blog blog1 = await blogRepository.SingleAsync(b => b.Name == "test-blog-1");
+                var blog1 = await blogRepository.SingleAsync(b => b.Name == "test-blog-1");
                 blog1Id = blog1.Id;
 
                 blog1.Name = "test-blog-1-updated";
 
                 await blogDapperRepository.InsertAsync(new Blog("test-blog-2", "www"));
 
-                Blog blog2 = blogRepository.Single(x => x.Name == "test-blog-2");
+                var blog2 = blogRepository.Single(x => x.Name == "test-blog-2");
                 blog2Id = blog2.Id;
 
                 blog2.Name = "test-blog-2-updated";
@@ -76,10 +75,10 @@ namespace StudioX.EntityFrameworkCore.Dapper.Tests.Tests
 
             await UsingDbContextAsync(async context =>
             {
-                Blog blog1 = await context.Blogs.SingleAsync(b => b.Id == blog1Id);
+                var blog1 = await context.Blogs.SingleAsync(b => b.Id == blog1Id);
                 blog1.Name.ShouldBe("test-blog-1-updated");
 
-                Blog blog2 = await context.Blogs.SingleAsync(b => b.Id == blog2Id);
+                var blog2 = await context.Blogs.SingleAsync(b => b.Id == blog2Id);
                 blog2.Name.ShouldBe("test-blog-2-updated");
             });
         }
@@ -90,9 +89,9 @@ namespace StudioX.EntityFrameworkCore.Dapper.Tests.Tests
             int blog1Id;
 
             //Act
-            using (IUnitOfWorkCompleteHandle uow = uowManager.Begin())
+            using (var uow = uowManager.Begin())
             {
-                Blog blog1 = await blogDapperRepository.SingleAsync(b => b.Name == "test-blog-1");
+                var blog1 = await blogDapperRepository.SingleAsync(b => b.Name == "test-blog-1");
                 blog1Id = blog1.Id;
 
                 blog1.Name = "test-blog-1-updated";
@@ -105,7 +104,7 @@ namespace StudioX.EntityFrameworkCore.Dapper.Tests.Tests
 
             await UsingDbContextAsync(async context =>
             {
-                Blog blog1 = await context.Blogs.SingleAsync(b => b.Id == blog1Id);
+                var blog1 = await context.Blogs.SingleAsync(b => b.Id == blog1Id);
                 blog1.Name.ShouldBe("test-blog-1-updated");
             });
         }
@@ -115,9 +114,9 @@ namespace StudioX.EntityFrameworkCore.Dapper.Tests.Tests
         {
             //EF Core does not support lazy loading yet, so navigation properties will not be loaded if not included
 
-            using (IUnitOfWorkCompleteHandle uow = uowManager.Begin())
+            using (var uow = uowManager.Begin())
             {
-                Post post = await postRepository.GetAll().FirstAsync();
+                var post = await postRepository.GetAll().FirstAsync();
 
                 post.Blog.ShouldBeNull();
 
@@ -128,9 +127,9 @@ namespace StudioX.EntityFrameworkCore.Dapper.Tests.Tests
         [Fact]
         public async Task ShouldIncludeNavigationPropertiesIfRequested()
         {
-            using (IUnitOfWorkCompleteHandle uow = uowManager.Begin())
+            using (var uow = uowManager.Begin())
             {
-                Post post = await postRepository.GetAllIncluding(p => p.Blog).FirstAsync();
+                var post = await postRepository.GetAllIncluding(p => p.Blog).FirstAsync();
 
                 post.Blog.ShouldNotBeNull();
                 post.Blog.Name.ShouldBe("test-blog-1");
@@ -142,7 +141,7 @@ namespace StudioX.EntityFrameworkCore.Dapper.Tests.Tests
         [Fact]
         public async Task ShouldInsertNewEntity()
         {
-            using (IUnitOfWorkCompleteHandle uow = uowManager.Begin())
+            using (var uow = uowManager.Begin())
             {
                 var blog = new Blog("blog2", "http://myblog2.com");
                 blog.IsTransient().ShouldBeTrue();
@@ -155,7 +154,7 @@ namespace StudioX.EntityFrameworkCore.Dapper.Tests.Tests
         [Fact]
         public async Task ShouldInsertNewEntitywithdapper()
         {
-            using (IUnitOfWorkCompleteHandle uow = uowManager.Begin())
+            using (var uow = uowManager.Begin())
             {
                 var blog = new Blog("blog2", "http://myblog2.com");
                 blog.IsTransient().ShouldBeTrue();
@@ -168,9 +167,9 @@ namespace StudioX.EntityFrameworkCore.Dapper.Tests.Tests
         [Fact]
         public async Task ShouldInsertNewEntityWithGuidId()
         {
-            using (IUnitOfWorkCompleteHandle uow = uowManager.Begin())
+            using (var uow = uowManager.Begin())
             {
-                Blog blog1 = await blogRepository.GetAsync(1);
+                var blog1 = await blogRepository.GetAsync(1);
                 var post = new Post(blog1, "a test title", "a test body");
                 post.IsTransient().ShouldBeTrue();
                 await postRepository.InsertAsync(post);
@@ -182,9 +181,9 @@ namespace StudioX.EntityFrameworkCore.Dapper.Tests.Tests
         [Fact]
         public async Task ShouldInsertNewEntityWithGuidIdwithdapper()
         {
-            using (IUnitOfWorkCompleteHandle uow = uowManager.Begin())
+            using (var uow = uowManager.Begin())
             {
-                Blog blog1 = await blogRepository.GetAsync(1);
+                var blog1 = await blogRepository.GetAsync(1);
                 var post = new Post(blog1.Id, "a test title", "a test body");
                 post.IsTransient().ShouldBeTrue();
                 await postDapperRepository.InsertAsync(post);
@@ -196,11 +195,11 @@ namespace StudioX.EntityFrameworkCore.Dapper.Tests.Tests
         [Fact]
         public void DapperandEfCoreshouldworkundersameunitofwork()
         {
-            using (IUnitOfWorkCompleteHandle uow = Resolve<IUnitOfWorkManager>().Begin())
+            using (var uow = Resolve<IUnitOfWorkManager>().Begin())
             {
-                int blogId = blogDapperRepository.InsertAndGetId(new Blog("OguzhanSameUow", "www"));
+                var blogId = blogDapperRepository.InsertAndGetId(new Blog("LongSameUow", "www"));
 
-                Blog blog = blogRepository.Get(blogId);
+                var blog = blogRepository.Get(blogId);
 
                 blog.ShouldNotBeNull();
 
@@ -211,12 +210,25 @@ namespace StudioX.EntityFrameworkCore.Dapper.Tests.Tests
         [Fact]
         public async Task ExecuteMethodForVoidSqlShouldWork()
         {
-            int blogId = blogDapperRepository.InsertAndGetId(new Blog("OguzhanBlog", "wwww.studiox.com"));
+            var blogId = blogDapperRepository.InsertAndGetId(new Blog("LongBlog", "wwww.studiox.com"));
 
-            await blogDapperRepository.ExecuteAsync("Update Blogs Set Name = @name where Id =@id", new { id = blogId, name = "OguzhanNewBlog" });
+            await blogDapperRepository.ExecuteAsync("Update Blogs Set Name = @name where Id =@id",
+                new {id = blogId, name = "LongNewBlog"});
 
-            blogDapperRepository.Get(blogId).Name.ShouldBe("OguzhanNewBlog");
-            blogRepository.Get(blogId).Name.ShouldBe("OguzhanNewBlog");
+            blogDapperRepository.Get(blogId).Name.ShouldBe("LongNewBlog");
+            blogRepository.Get(blogId).Name.ShouldBe("LongNewBlog");
+        }
+
+        [Fact]
+        public void QueryingWithTEntityTPrimaryKeyShouldWorkOnDapperRepositories()
+        {
+            commentRepository.Insert(new Comment("hey!"));
+
+            var comments = commentDapperRepository.Query("select * from Comments").ToList();
+            var comments2 = commentDapperRepository.Query<Comment>("select * from Comments").ToList();
+
+            comments2.Count.ShouldBe(1);
+            comments.Count.ShouldBe(1);
         }
     }
 }

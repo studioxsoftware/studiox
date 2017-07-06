@@ -30,6 +30,10 @@ namespace StudioX.EntityFrameworkCore.Dapper.Tests.Domain
 
         public int BlogId { get; set; }
 
+        public Comment Comment { get; set; }
+ 
+        public int CommentId { get; set; }
+
         public string Title { get; set; }
 
         public string Body { get; set; }
