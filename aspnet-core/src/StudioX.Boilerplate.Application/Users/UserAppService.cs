@@ -1,35 +1,44 @@
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using StudioX.Application.Services;
 using StudioX.Application.Services.Dto;
 using StudioX.Authorization;
 using StudioX.Boilerplate.Authorization;
 using StudioX.Boilerplate.Authorization.Users;
 using StudioX.Boilerplate.Users.Dto;
 using StudioX.Collections.Extensions;
-using StudioX.Linq.Extensions;
-using StudioX.UI;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using StudioX.Application.Services;
 using StudioX.Domain.Repositories;
 using StudioX.Domain.Uow;
 using StudioX.IdentityFramework;
+using StudioX.Linq.Extensions;
+using StudioX.UI;
 
 namespace StudioX.Boilerplate.Users
 {
     [StudioXAuthorize(PermissionNames.System.Administration.Users.MainMenu)]
-    public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedResultRequestDto, CreateUserInput, UpdateUserInput>, IUserAppService
+    public class UserAppService :
+        AsyncCrudAppService<User, UserDto, long, PagedResultRequestDto, CreateUserInput, UpdateUserInput>,
+        IUserAppService
     {
         private readonly UserManager userManager;
         private readonly IPasswordHasher<User> passwordHasher;
 
-        public UserAppService(IRepository<User, long> userRepository, 
-            UserManager userManager, 
+        public UserAppService(IRepository<User, long> userRepository,
+            UserManager userManager,
             IPasswordHasher<User> passwordHasher) : base(userRepository)
         {
             this.userManager = userManager;
             this.passwordHasher = passwordHasher;
+
+            GetAllPermissionName = PermissionNames.System.Administration.Users.MainMenu;
+            GetPermissionName = PermissionNames.System.Administration.Users.MainMenu;
+            CreatePermissionName = PermissionNames.System.Administration.Users.Create;
+            UpdatePermissionName = PermissionNames.System.Administration.Users.Edit;
+            DeletePermissionName = PermissionNames.System.Administration.Users.Delete;
         }
+
         protected override IQueryable<User> CreateFilteredQuery(PagedResultRequestDto input)
         {
             return Repository.GetAllIncluding(x => x.Roles).OrderByDescending(x => x.Id);
@@ -38,12 +47,13 @@ namespace StudioX.Boilerplate.Users
         protected override async Task<User> GetEntityByIdAsync(long id)
         {
             return await CreateFilteredQuery(null)
-                            .Where(x => x.Id == id)
-                            .FirstOrDefaultAsync();
+                .Where(x => x.Id == id)
+                .FirstOrDefaultAsync();
         }
+
         protected override User MapToEntity(CreateUserInput createInput)
         {
-            User user = ObjectMapper.Map<User>(createInput);
+            var user = ObjectMapper.Map<User>(createInput);
             user.SetNormalizedNames();
 
             return user;
@@ -81,11 +91,11 @@ namespace StudioX.Boilerplate.Users
         }
 
         [UnitOfWork]
-        public async override Task<UserDto> Create(CreateUserInput input)
+        public override async Task<UserDto> Create(CreateUserInput input)
         {
             CheckCreatePermission();
 
-            User user = ObjectMapper.Map<User>(input);
+            var user = ObjectMapper.Map<User>(input);
             user.TenantId = StudioXSession.TenantId;
             user.Password = passwordHasher.HashPassword(user, input.Password);
             user.IsEmailConfirmed = true;
@@ -98,25 +108,25 @@ namespace StudioX.Boilerplate.Users
         }
 
         [UnitOfWork]
-        public async override Task<UserDto> Update(UpdateUserInput input)
+        public override async Task<UserDto> Update(UpdateUserInput input)
         {
             CheckUpdatePermission();
 
-            User user = await userManager.GetUserByIdAsync(input.Id);
+            var user = await userManager.GetUserByIdAsync(input.Id);
 
             MapToEntity(input, user);
 
-            CheckErrors(await this.userManager.UpdateAsync(user));
+            CheckErrors(await userManager.UpdateAsync(user));
             CheckErrors(await userManager.SetRoles(user, input.Roles));
 
-            // get the user again after updating the roles
+            // Get the user again after updating the roles
             return await Get(input);
         }
 
         [UnitOfWork]
-        public async override Task Delete(EntityDto<long> input)
+        public override async Task Delete(EntityDto<long> input)
         {
-            User user = await userManager.GetUserByIdAsync(input.Id);
+            var user = await userManager.GetUserByIdAsync(input.Id);
             await userManager.DeleteAsync(user);
         }
 

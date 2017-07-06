@@ -50,9 +50,9 @@ namespace StudioX.Boilerplate.MultiTenancy
             this.userManager = userManager;
             this.userRepository = userRepository;
 
-            CreatePermissionName = PermissionNames.System.Administration.Tenants.Create;
             GetAllPermissionName = PermissionNames.System.Administration.Tenants.MainMenu;
             GetPermissionName = PermissionNames.System.Administration.Tenants.MainMenu;
+            CreatePermissionName = PermissionNames.System.Administration.Tenants.Create;
             UpdatePermissionName = PermissionNames.System.Administration.Tenants.Edit;
             DeletePermissionName = PermissionNames.System.Administration.Tenants.Delete;
         }

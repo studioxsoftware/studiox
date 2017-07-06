@@ -31,12 +31,18 @@ namespace StudioX.Boilerplate.Roles
         private UserManager userManager;
         private TenantManager tenantManager;
 
-        public RoleAppService(IRepository<Role> roleRepository, 
-            RoleManager roleManager, 
+        public RoleAppService(IRepository<Role> roleRepository,
+            RoleManager roleManager,
             UserManager userManager)
             : base(roleRepository)
         {
             this.roleManager = roleManager;
+
+            GetAllPermissionName = PermissionNames.System.Administration.Roles.MainMenu;
+            GetPermissionName = PermissionNames.System.Administration.Roles.MainMenu;
+            CreatePermissionName = PermissionNames.System.Administration.Roles.Create;
+            UpdatePermissionName = PermissionNames.System.Administration.Roles.Edit;
+            DeletePermissionName = PermissionNames.System.Administration.Roles.Delete;
         }
 
         protected override IQueryable<Role> CreateFilteredQuery(PagedResultRequestDto input)
