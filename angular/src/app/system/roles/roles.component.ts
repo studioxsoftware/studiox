@@ -20,7 +20,7 @@ export class RolesComponent extends PagedListingComponentBase<RoleDto> {
 	constructor(
 		private injector:Injector,
 		private _permissionService: PermissionServiceProxy,
-		private rolesService: RoleServiceProxy
+		private _rolesService: RoleServiceProxy
 	) {
 		super(injector);
 	}
@@ -34,13 +34,13 @@ export class RolesComponent extends PagedListingComponentBase<RoleDto> {
 			"Change role '" + role.displayName + "' to " + (!role.isActive?'active':'inActive'),
 			(result:boolean) => {
 				if(result) {
-					this.rolesService.get(role.id)
+					this._rolesService.get(role.id)
 						.finally(()=>{})
 						.subscribe((result)=>{
 							result.isActive = !result.isActive
 							
 							// update
-							this.rolesService.update(result)
+							this._rolesService.update(result)
 									.finally(()=>{
 										this.refresh();
 									})
@@ -52,7 +52,7 @@ export class RolesComponent extends PagedListingComponentBase<RoleDto> {
 	}
 
 	list(request: PagedRequestDto, pageNumber: number, finishedCallback: Function): void {
-		this.rolesService.getAll(request.skipCount, request.maxResultCount)
+		this._rolesService.getAll(request.skipCount, request.maxResultCount)
 			.finally( ()=> {
 				finishedCallback();
 			})
@@ -69,7 +69,7 @@ export class RolesComponent extends PagedListingComponentBase<RoleDto> {
 			(result:boolean) =>{
 				if(result)
 				{
-					this.rolesService.delete(role.id)
+					this._rolesService.delete(role.id)
 						.finally(() => {
 							studiox.message.success("Deleted Role: " + role.displayName );
 							this.refresh();

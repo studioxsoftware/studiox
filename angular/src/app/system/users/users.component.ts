@@ -32,11 +32,11 @@ export class UsersComponent extends PagedListingComponentBase<UserDto> {
         return "div.main-content>>table";
     }
 
-    changePassword(user:UserDto) {
+    changePassword(user: UserDto) {
         studiox.message.info("Change Password", "Change Password");
     }
 
-	toggleActive(user:UserDto) {
+	toggleActive(user: UserDto) {
         let newStatus = (!user.isActive?'active':'in active');
 		studiox.message.confirm(
 			"Change user '" + user.fullName + "' to " + newStatus,
@@ -60,7 +60,7 @@ export class UsersComponent extends PagedListingComponentBase<UserDto> {
 		);
 	}
 
-    protected list(request:PagedRequestDto, pageNumber:number, finishedCallback: Function): void
+    protected list(request: PagedRequestDto, pageNumber: number, finishedCallback: Function): void
     {
         this._userService.getAll(request.skipCount, request.maxResultCount)
             .finally(()=>{

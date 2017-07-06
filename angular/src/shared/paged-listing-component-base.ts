@@ -42,7 +42,7 @@ export abstract class PagedListingComponentBase<EntityDto> extends AppComponentB
         this.pageNumber = pageNumber;
     }
 
-    public getDataPage(page:number): void {
+    public getDataPage(page: number): void {
         var req = new PagedRequestDto();
         req.maxResultCount = this.pageSize;
         req.skipCount = (page-1) * this.pageSize;
@@ -55,6 +55,6 @@ export abstract class PagedListingComponentBase<EntityDto> extends AppComponentB
     }
 
     protected abstract getUIPanelSelector(): string;
-    protected abstract list(request:PagedRequestDto, pageNumber:number, finishedCallback: Function): void;
+    protected abstract list(request: PagedRequestDto, pageNumber: number, finishedCallback: Function): void;
     protected abstract delete(entity: EntityDto): void;
 }

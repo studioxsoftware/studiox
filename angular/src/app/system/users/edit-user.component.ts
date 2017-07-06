@@ -41,7 +41,7 @@ export class EditUserComponent extends AppComponentBase {
 		}
 	}
 
-    show(id:number): void {
+    show(id: number): void {
         this._roleService.getAll(0,1000)
             .subscribe((result) => {
                 this.roles = result.items;

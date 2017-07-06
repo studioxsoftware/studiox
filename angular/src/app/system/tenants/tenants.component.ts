@@ -29,7 +29,7 @@ export class TenantsComponent extends PagedListingComponentBase<TenantDto> {
         return "div.main-content>>table";
     }
 
-	toggleActive(tenant:TenantDto): void {
+	toggleActive(tenant: TenantDto): void {
         let newStatus = (!tenant.isActive?'active':'in-active');
 		studiox.message.confirm(
 			"Change tenant '" + tenant.tenancyName + "' to " + newStatus,
@@ -55,7 +55,7 @@ export class TenantsComponent extends PagedListingComponentBase<TenantDto> {
 		);
 	}
 
-    list(request:PagedRequestDto, pageNumber:number, finishedCallback: Function): void {
+    list(request: PagedRequestDto, pageNumber: number, finishedCallback: Function): void {
         this._tenantService.getAll(request.skipCount, request.maxResultCount)
             .finally(()=>{
                 finishedCallback();
