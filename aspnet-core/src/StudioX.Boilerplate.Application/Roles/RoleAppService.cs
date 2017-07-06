@@ -135,7 +135,7 @@ namespace StudioX.Boilerplate.Roles
             var role = await roleManager.FindByIdAsync(input.Id.ToString());
             if (role.IsStatic)
             {
-                throw new UserFriendlyException("CannotDeleteAStaticRole");
+                throw new UserFriendlyException(this.L("CannotDeleteAStaticRole"));
             }
 
             var users = await userManager.GetUsersInRoleAsync(role.NormalizedName);

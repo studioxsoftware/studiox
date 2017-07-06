@@ -7,8 +7,8 @@ import { CreateRoleComponent } from "@app/system/roles/create-role.component";
 import { EditRoleComponent } from "@app/system/roles/edit-role.component";
 
 @Component({
-  templateUrl: './roles.component.html',
-  animations: [appModuleAnimation()]
+	templateUrl: './roles.component.html',
+	animations: [appModuleAnimation()]
 })
 export class RolesComponent extends PagedListingComponentBase<RoleDto> {
 
@@ -64,14 +64,14 @@ export class RolesComponent extends PagedListingComponentBase<RoleDto> {
 
 	delete(role: RoleDto): void {
 		studiox.message.confirm(
-			"Remove Users from Role and delete Role '"+ role.displayName +"'?",
-			"Permanently delete this Role",
+			this.l("DeleteRoleRemoveUsersFromRoleNamed{0}", role.displayName),
+			this.l("DeleteRoleTitle"),
 			(result:boolean) =>{
 				if(result)
 				{
 					this._rolesService.delete(role.id)
 						.finally(() => {
-							studiox.message.success("Deleted Role: " + role.displayName );
+							studiox.message.success(this.l("DeletedRoleWithName{0}", role.displayName));
 							this.refresh();
 						})
 						.subscribe(() => {

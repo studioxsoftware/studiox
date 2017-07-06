@@ -4,8 +4,8 @@ import { RoleServiceProxy, PermissionServiceProxy, CreateRoleInput, RoleDto, Lis
 import { AppComponentBase } from '@shared/app-component-base';
 
 @Component({
-  selector: 'create-role-modal',
-  templateUrl: './create-role.component.html'
+    selector: 'create-role-modal',
+    templateUrl: './create-role.component.html'
 })
 export class CreateRoleComponent extends AppComponentBase implements OnInit {
 @ViewChild('createRoleModal') modal: ModalDirective;

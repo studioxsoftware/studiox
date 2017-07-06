@@ -10,20 +10,20 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                     <h4 class="modal-title">
-                        <span>{{l("EditRole")}}</span>
+                         <span>{{l("EditRole")}} <span *ngIf="role.isStatic"> (<span class="red-text">static</span>)</span></span>
                     </h4>
                 </div>
                 <div class="modal-body">
 
                     <ul class="nav nav-tabs tab-nav-right" role="tablist">
-                        <li role="presentation" class="active"><a href="#role-details" data-toggle="tab">Role Details</a></li>
-                        <li role="presentation"><a href="#role-description" data-toggle="tab">Role Description</a></li>
+                        <li role="presentation" class="active"><a href="#role-details" data-toggle="tab">{{l("RoleDetails")}}</a></li>
+                        <li role="presentation"><a href="#role-description" data-toggle="tab">{{l("RoleDescription")}}</a></li>
                     </ul>
                     <div class="tab-content">
                         
                         <div role="tabpanel" class="tab-pane animated fadeIn active" id="role-details">
                             <div *ngIf="role.isStatic">
-                                <h5 style="color:red">Static Role</h5>
+                                <h5 class="red-text">Static Role</h5>
                             </div>
                             <div class="row clearfix" style="margin-top:20px;">
                                 <div class="col-sm-6">
@@ -62,7 +62,7 @@
 
 									<ng-template ngFor let-permission [ngForOf]="permissions.items" let-permissionIndex="index">
 									<div class="col-sm-6">
-										<input [disabled]="role.isStatic" type="checkbox" name="permission" value="{{permission.name}}" class="filled-in" id="permission-{{permissionIndex}}" checked="{{checkPermission(permission.name)}}" />
+										<input [disabled]="role.isStatic" type="checkbox" name="permission" value="{{permission.name}}" class="form-control" id="permission-{{permissionIndex}}" checked="{{checkPermission(permission.name)}}" />
 										<label for="permission-{{permissionIndex}}">{{permission.displayName}}</label>
 									</div>
 									</ng-template>

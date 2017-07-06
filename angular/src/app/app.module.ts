@@ -45,15 +45,19 @@ import { TableDemoComponent } from '@app/demo/table/table-demo.component';
         AppComponent,
         HomeComponent,
         AboutComponent,
+        
         UsersComponent,
-            CreateUserComponent,
- 		    EditUserComponent,
+        CreateUserComponent,
+ 		EditUserComponent,
+        
         TenantsComponent,
-            CreateTenantComponent,
-            EditTenantComponent,        
+        CreateTenantComponent,
+        EditTenantComponent, 
+
         RolesComponent,        
- 		    CreateRoleComponent,
- 		    EditRoleComponent,
+ 		CreateRoleComponent,
+ 		EditRoleComponent,
+         
         TopBarComponent,
         TopBarLanguageSwitchComponent,
         SideBarUserAreaComponent,

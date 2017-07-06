@@ -4,8 +4,8 @@ import { RoleServiceProxy, PermissionServiceProxy, RoleDto, ListResultDtoOfPermi
 import { AppComponentBase } from '@shared/app-component-base';
 
 @Component({
-  selector: 'edit-role-modal',
-  templateUrl: './edit-role.component.html'
+    selector: 'edit-role-modal',
+    templateUrl: './edit-role.component.html'
 })
 export class EditRoleComponent extends AppComponentBase implements OnInit {
 @ViewChild('editRoleModal') modal: ModalDirective;
@@ -31,7 +31,6 @@ export class EditRoleComponent extends AppComponentBase implements OnInit {
             .subscribe((permissions:ListResultDtoOfPermissionDto) => 
             {
                 this.permissions = permissions;
-                console.log(permissions);
             });
 	}
 
@@ -62,7 +61,7 @@ export class EditRoleComponent extends AppComponentBase implements OnInit {
         });
     }
 
-	checkPermission(permissionName:string): string {
+	checkPermission(permissionName: string): string {
 		if(this.role.permissions.indexOf(permissionName) != -1)
 		{
 			return "checked";
@@ -76,7 +75,7 @@ export class EditRoleComponent extends AppComponentBase implements OnInit {
     save(): void {
         var permissions = [];
         $(this.modalContent.nativeElement).find("[name=permission]").each(
-            function( index:number, elem: Element){
+            function (index:number, elem: Element){
                 if($(elem).is(":checked") == true){
                     permissions.push(elem.getAttribute("value").valueOf());
                 }

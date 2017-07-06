@@ -6,8 +6,8 @@ import { AppComponentBase } from '@shared/app-component-base';
 import * as _ from "lodash";
 
 @Component({
-  selector: 'edit-user-modal',
-  templateUrl: './edit-user.component.html'
+    selector: 'edit-user-modal',
+    templateUrl: './edit-user.component.html'
 })
 export class EditUserComponent extends AppComponentBase {
 

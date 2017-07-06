@@ -19,10 +19,7 @@ export class SideBarNavComponent extends AppComponentBase {
         new MenuItem(this.l("MultiLevelMenu"), "", "menu", "", [
             new MenuItem("Demo", "", "", "/app/demo", [
                 new MenuItem("Table", "", "", "/app/demo")             
-            ]),
-            new MenuItem("StudioX", "", "", "/app/about", [
-                new MenuItem(this.l("About"), "", "info", "/app/about")
-            ])
+            ])            
         ])
     ];
 

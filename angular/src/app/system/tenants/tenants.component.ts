@@ -76,8 +76,7 @@ export class TenantsComponent extends PagedListingComponentBase<TenantDto> {
 							studiox.message.success("Deleted tenant: " + tenant.name );
 							this.refresh();
 						})
-						.subscribe(() => {
-						});
+						.subscribe(() => { });
 				}
 			}
 		);

@@ -12,6 +12,14 @@
     border: 0px transparent !important;
 }
 
+.text-red{
+    color: red;
+}
+
+.text-green{
+    color: green;
+}
+
 /* Ngx Pagination ============================== */
 a{cursor: pointer;
     text-decoration: none;
@@ -78,7 +86,7 @@ a{cursor: pointer;
   height: 1px;
   overflow: hidden;
   clip: rect(0, 0, 0, 0); }
-  
+
 /* Navbar ====================================== */
 .navbar {
   font-family: "Roboto", sans-serif;
