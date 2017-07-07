@@ -22,4 +22,4 @@ User Interface is based on [BSB Admin theme](https://github.com/gurayyarar/Admin
 
 # License
 
-[MIT](LICENSE).
+[MIT](https://opensource.org/licenses/MIT)
