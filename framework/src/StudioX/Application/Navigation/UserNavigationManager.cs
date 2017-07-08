@@ -64,9 +64,13 @@ namespace StudioX.Application.Navigation
 
             var addedMenuItemCount = 0;
 
-            using (var featureDependencyContext = iocResolver.ResolveAsDisposable<FeatureDependencyContext>())
+            using (var scope = iocResolver.CreateScope())
             {
-                featureDependencyContext.Object.TenantId = user == null ? null : user.TenantId;
+                var permissionDependencyContext = scope.Resolve<PermissionDependencyContext>();
+                permissionDependencyContext.User = user;
+
+                var featureDependencyContext = scope.Resolve<FeatureDependencyContext>();
+                featureDependencyContext.TenantId = user == null ? null : user.TenantId;
 
                 foreach (var menuItemDefinition in menuItemDefinitions)
                 {
@@ -75,24 +79,30 @@ namespace StudioX.Application.Navigation
                         continue;
                     }
 
-                    if (!string.IsNullOrEmpty(menuItemDefinition.RequiredPermissionName) &&
-                        (user == null ||
-                         !await PermissionChecker.IsGrantedAsync(user, menuItemDefinition.RequiredPermissionName)))
+                    if (!string.IsNullOrEmpty(menuItemDefinition.RequiredPermissionName))
+                    {
+                        var permissionDependency = new SimplePermissionDependency(menuItemDefinition.RequiredPermissionName);
+                        if (user == null || !(await permissionDependency.IsSatisfiedAsync(permissionDependencyContext)))
+                        {
+                            continue;
+                        }
+                    }
+
+                    if (menuItemDefinition.PermissionDependency != null &&
+                        (user == null || !(await menuItemDefinition.PermissionDependency.IsSatisfiedAsync(permissionDependencyContext))))
                     {
                         continue;
                     }
 
                     if (menuItemDefinition.FeatureDependency != null &&
-                        (StudioXSession.MultiTenancySide == MultiTenancySides.Tenant ||
-                         user != null && user.TenantId != null) &&
-                        !await menuItemDefinition.FeatureDependency.IsSatisfiedAsync(featureDependencyContext.Object))
+                        (StudioXSession.MultiTenancySide == MultiTenancySides.Tenant || (user != null && user.TenantId != null)) &&
+                        !(await menuItemDefinition.FeatureDependency.IsSatisfiedAsync(featureDependencyContext)))
                     {
                         continue;
                     }
 
                     var userMenuItem = new UserMenuItem(menuItemDefinition, localizationContext);
-                    if (menuItemDefinition.IsLeaf ||
-                        await FillUserMenuItems(user, menuItemDefinition.Items, userMenuItem.Items) > 0)
+                    if (menuItemDefinition.IsLeaf || (await FillUserMenuItems(user, menuItemDefinition.Items, userMenuItem.Items)) > 0)
                     {
                         userMenuItems.Add(userMenuItem);
                         ++addedMenuItemCount;

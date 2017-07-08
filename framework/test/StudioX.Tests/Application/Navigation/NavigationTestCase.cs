@@ -1,12 +1,12 @@
 using System.Threading.Tasks;
+using Castle.MicroKernel.Registration;
+using NSubstitute;
 using StudioX.Application.Features;
 using StudioX.Application.Navigation;
 using StudioX.Authorization;
 using StudioX.Configuration.Startup;
 using StudioX.Dependency;
 using StudioX.Localization;
-using Castle.MicroKernel.Registration;
-using NSubstitute;
 
 namespace StudioX.Tests.Application.Navigation
 {
@@ -45,23 +45,30 @@ namespace StudioX.Tests.Application.Navigation
             NavigationManager.Initialize();
 
             iocManager.IocContainer.Register(
+                Component.For<IPermissionDependencyContext, PermissionDependencyContext>()
+                    .UsingFactoryMethod(
+                        () => new PermissionDependencyContext(iocManager)
+                        {
+                            PermissionChecker = CreateMockPermissionChecker()
+                        })
+            );
+
+            iocManager.IocContainer.Register(
                 Component.For<IFeatureDependencyContext, FeatureDependencyContext>()
                     .UsingFactoryMethod(
-                        () => new FeatureDependencyContext(iocManager, Substitute.For<IFeatureChecker>()))
-                );
-
+                        () => new FeatureDependencyContext(iocManager, Substitute.For<IFeatureChecker>())));
             //Create user navigation manager to test
-            UserNavigationManager = new UserNavigationManager(NavigationManager, Substitute.For<ILocalizationContext>(), iocManager)
-            {
-                PermissionChecker = CreateMockPermissionChecker()
-            };
+            UserNavigationManager = new UserNavigationManager(NavigationManager, Substitute.For<ILocalizationContext>(),
+                iocManager);
         }
 
         private static IPermissionChecker CreateMockPermissionChecker()
         {
             var permissionChecker = Substitute.For<IPermissionChecker>();
-            permissionChecker.IsGrantedAsync(new UserIdentifier(1, 1), "StudioX.Zero.UserManagement").Returns(Task.FromResult(true));
-            permissionChecker.IsGrantedAsync(new UserIdentifier(1, 1), "StudioX.Zero.RoleManagement").Returns(Task.FromResult(false));
+            permissionChecker.IsGrantedAsync(new UserIdentifier(1, 1), "StudioX.Zero.UserManagement")
+                .Returns(Task.FromResult(true));
+            permissionChecker.IsGrantedAsync(new UserIdentifier(1, 1), "StudioX.Zero.RoleManagement")
+                .Returns(Task.FromResult(false));
             return permissionChecker;
         }
 
@@ -75,25 +82,25 @@ namespace StudioX.Tests.Application.Navigation
                         new FixedLocalizableString("Administration"),
                         "fa fa-asterisk",
                         requiresAuthentication: true
-                        ).AddItem(
-                            new MenuItemDefinition(
-                                "StudioX.Zero.Administration.User",
-                                new FixedLocalizableString("User management"),
-                                "fa fa-users",
-                                "#/admin/users",
-                                requiredPermissionName: "StudioX.Zero.UserManagement",
-                                customData: "A simple test data"
-                                )
-                        ).AddItem(
-                            new MenuItemDefinition(
-                                "StudioX.Zero.Administration.Role",
-                                new FixedLocalizableString("Role management"),
-                                "fa fa-star-o",
-                                "#/admin/roles",
-                                requiredPermissionName: "StudioX.Zero.RoleManagement"
-                                )
+                    ).AddItem(
+                        new MenuItemDefinition(
+                            "StudioX.Zero.Administration.User",
+                            new FixedLocalizableString("User management"),
+                            "fa fa-users",
+                            "#/admin/users",
+                            permissionDependency: new SimplePermissionDependency("StudioX.Zero.UserManagement"),
+                            customData: "A simple test data"
                         )
-                    );
+                    ).AddItem(
+                        new MenuItemDefinition(
+                            "StudioX.Zero.Administration.Role",
+                            new FixedLocalizableString("Role management"),
+                            "fa fa-star-o",
+                            "#/admin/roles",
+                            permissionDependency: new SimplePermissionDependency("StudioX.Zero.RoleManagement")
+                        )
+                    )
+                );
             }
         }
 
@@ -106,11 +113,11 @@ namespace StudioX.Tests.Application.Navigation
                     new MenuItemDefinition(
                         "StudioX.Zero.Administration.Setting",
                         new FixedLocalizableString("Setting management"),
-                        icon: "fa fa-cog",
-                        url: "#/admin/settings",
-                        customData: new MyCustomDataClass { Data1 = 42, Data2 = "FortyTwo" }
-                        )
-                    );
+                        "fa fa-cog",
+                        "#/admin/settings",
+                        customData: new MyCustomDataClass {Data1 = 42, Data2 = "FortyTwo"}
+                    )
+                );
             }
         }
 

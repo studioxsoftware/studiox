@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using StudioX.Application.Features;
+using StudioX.Authorization;
 using StudioX.Collections.Extensions;
 using StudioX.Localization;
 
@@ -41,6 +43,12 @@ namespace StudioX.Application.Navigation
         ///     Optional.
         /// </summary>
         public string RequiredPermissionName { get; set; }
+
+        /// <summary>
+        ///     A permission dependency. Only users that can satisfy this permission dependency can see this menu item.
+        ///     Optional.
+        /// </summary>
+        public IPermissionDependency PermissionDependency { get; set; }
 
         /// <summary>
         ///     A feature dependency.
@@ -93,6 +101,7 @@ namespace StudioX.Application.Navigation
             string url = null,
             bool requiresAuthentication = false,
             string requiredPermissionName = null,
+            IPermissionDependency permissionDependency = null,
             int order = 0,
             object customData = null,
             IFeatureDependency featureDependency = null,
@@ -109,6 +118,7 @@ namespace StudioX.Application.Navigation
             Url = url;
             RequiresAuthentication = requiresAuthentication;
             RequiredPermissionName = requiredPermissionName;
+            PermissionDependency = permissionDependency;
             Order = order;
             CustomData = customData;
             FeatureDependency = featureDependency;
