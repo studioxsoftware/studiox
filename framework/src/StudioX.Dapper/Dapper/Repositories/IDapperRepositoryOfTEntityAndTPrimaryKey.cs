@@ -231,14 +231,14 @@ namespace StudioX.Dapper.Repositories
         /// </summary>
         /// <param name="query"></param>
         /// <param name="parameters"></param>
-        void Execute([NotNull] string query, [CanBeNull] object parameters = null);
+        int Execute([NotNull] string query, [CanBeNull] object parameters = null);
 
         /// <summary>
         ///     Executes as async the given query text
         /// </summary>
         /// <param name="query"></param>
         /// <param name="parameters"></param>
-        Task ExecuteAsync([NotNull] string query, [CanBeNull] object parameters = null);
+        Task<int> ExecuteAsync([NotNull] string query, [CanBeNull] object parameters = null);
 
         /// <summary>
         ///     Gets the set.

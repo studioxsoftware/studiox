@@ -1,31 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data.Common;
-using System.Data.SqlClient;
+using System.Data.SQLite;
 using System.IO;
 using System.Reflection;
-
+using Castle.MicroKernel.Registration;
+using Dapper;
 using StudioX.Configuration.Startup;
 using StudioX.TestBase;
-
-using Castle.MicroKernel.Registration;
-
-using Dapper;
 
 namespace StudioX.Dapper.Tests
 {
     public abstract class DapperApplicationTestBase : StudioXIntegratedTestBase<StudioXDapperTestModule>
     {
-        private readonly string connectionString;
-
         protected DapperApplicationTestBase()
         {
             Resolve<IMultiTenancyConfig>().IsEnabled = true;
-            string executable = AppDomain.CurrentDomain.BaseDirectory;
-            string path = Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(executable))) + @"\Db\StudioXDapperTest.mdf";
-            connectionString = $@"Data Source=(localdb)\MsSqlLocalDb;Integrated Security=SSPI;AttachDBFilename={path}";
 
-            Resolve<IStudioXStartupConfiguration>().DefaultNameOrConnectionString = connectionString;
+            Resolve<IStudioXStartupConfiguration>().DefaultNameOrConnectionString = "Data Source=:memory:";
 
             StudioXSession.UserId = 1;
             StudioXSession.TenantId = 1;
@@ -37,30 +28,31 @@ namespace StudioX.Dapper.Tests
 
             LocalIocManager.IocContainer.Register(
                 Component.For<DbConnection>()
-                         .UsingFactoryMethod(() =>
-                         {
-                             var connection = new SqlConnection(connectionString);
+                    .UsingFactoryMethod(() =>
+                    {
+                        var connection =
+                            new SQLiteConnection(Resolve<IStudioXStartupConfiguration>().DefaultNameOrConnectionString);
+                        connection.Open();
+                        var files = new List<string>
+                        {
+                            ReadScriptFile("CreateInitialTables")
+                        };
 
-                             var files = new List<string>
-                             {
-                                 ReadScriptFile("CreateInitialTables")
-                             };
+                        foreach (var setupFile in files)
+                        {
+                            connection.Execute(setupFile);
+                        }
 
-                             foreach (string setupFile in files)
-                             {
-                                 connection.Execute(setupFile);
-                             }
-
-                             return connection;
-                         })
-                         .LifestyleSingleton()
+                        return connection;
+                    })
+                    .LifestyleSingleton()
             );
         }
 
         private string ReadScriptFile(string name)
         {
-            string fileName = GetType().Namespace + ".Scripts" + "." + name + ".sql";
-            using (Stream resource = Assembly.GetExecutingAssembly().GetManifestResourceStream(fileName))
+            var fileName = GetType().Namespace + ".Scripts" + "." + name + ".sql";
+            using (var resource = Assembly.GetExecutingAssembly().GetManifestResourceStream(fileName))
             {
                 if (resource != null)
                 {
