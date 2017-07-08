@@ -1,8 +1,0 @@
-﻿{
-  "culture": "tr",
-  "texts": {
-    "HelloWorld": "Merhaba Dünya!",
-    "WelcomeMessage": "StudioX AspNet Core Demo uygulamasına hoşgeldiniz.",
-    "AboutDescription": "Bu uygulama, ASP.NET Core ve StudioX framework ile geliştirilmiş örnek bir uygulamadır."
-  }
-}

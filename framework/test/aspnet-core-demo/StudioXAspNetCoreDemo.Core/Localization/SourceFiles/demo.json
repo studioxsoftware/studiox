@@ -1,8 +1,0 @@
-﻿{
-  "culture": "en",
-  "texts": {
-    "HelloWorld": "Hello World!",
-    "WelcomeMessage": "Welcome to StudioX AspNet Core Demo application.",
-    "AboutDescription":  "This is a demo application built with ASP.NET Core and StudioX framework" 
-  }
-}
