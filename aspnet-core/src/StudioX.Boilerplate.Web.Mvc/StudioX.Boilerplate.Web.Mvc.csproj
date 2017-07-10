@@ -96,6 +96,7 @@
 
   <ItemGroup>
     <Folder Include="App_Data\Logs\" />
+    <Folder Include="wwwroot\lib\" />
     <Folder Include="wwwroot\view-resources\Views\_Bundles\" />
     <Folder Include="wwwroot\view-resources\Views\_Bundles\" />
   </ItemGroup>
