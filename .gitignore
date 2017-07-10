@@ -6,6 +6,7 @@ obj/
 bin/
 aspnet-core/src/StudioX.Boilerplate.Web.Host/App_Data/Logs/
 aspnet-core/src/StudioX.Boilerplate.Web.Mvc/App_Data/Logs/
+aspnet-core/src/StudioX.Boilerplate.Web.Mvc/wwwroot/lib/
 framework/test/StudioX.Dapper.Tests\Db
 
 # Database files
