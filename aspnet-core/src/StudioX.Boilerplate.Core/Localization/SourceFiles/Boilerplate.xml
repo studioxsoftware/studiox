@@ -72,6 +72,9 @@
     <text name="DeletedTenantWithName{0}" value="Deleted tenant: {0}" />
     <text name="DeleteTenantTitle" value="Delete Tenant" />
 
+    <text name="Edit">Edit</text>
+    <text name="Delete">Delete</text>
+
     <!-- Change Tenant Component -->
     <text name="LeaveEmptyToSwitchToHost">Leave empty to switch to the host</text>
     <text name="CurrentTenant">Current tenant</text>

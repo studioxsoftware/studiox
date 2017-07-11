@@ -1,0 +1,45 @@
+@using StudioX.MultiTenancy
+@using StudioX.Boilerplate.MultiTenancy.Dto
+@using StudioX.Boilerplate.Web.Models.Common.Modals
+@using StudioX.Authorization.Users
+@using StudioX.Boilerplate.MultiTenancy
+
+@model TenantDto
+@{
+    Layout = null;
+}
+@Html.Partial("~/Views/Shared/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(L("ChangeTenant")))
+
+<div class="modal-body">
+    <form name="TenantEditForm" role="form" novalidate class="form-validation">
+        <input type="hidden" name="Id" value="@Model.Id" />
+        <div class="form-group form-float">
+            <div class="form-line">
+                <input class="form-control" type="text" name="TenancyName" value="@Model.TenancyName" required maxlength="@StudioXTenantBase.MaxTenancyNameLength" minlength="2">
+                <label class="form-label">@L("TenancyName")</label>
+            </div>
+        </div>
+        <div class="form-group form-float">
+            <div class="form-line">
+                <input type="text" name="Name" class="form-control" value="@Model.Name" required maxlength="@Tenant.MaxNameLength">
+                <label class="form-label">@L("Name")</label>
+            </div>
+        </div>
+        <div class="form-group form-float">
+            <div class="form-line">
+                <input type="email" name="AdminEmailAddress" class="form-control" value="@Model.AdminEmailAddress" required maxlength="@StudioXUserBase.MaxEmailAddressLength">
+                <label class="form-label">@L("AdminEmailAddress")</label>
+            </div>
+        </div>
+        <div class="form-group form-float">
+            <div class="">
+                <input id="isactive" type="checkbox" name="IsActive" value="true" @(Model.IsActive ? "checked" : "") class="form-control" />
+                <label for="isactive" class="form-label">@L("IsActive")</label>
+            </div>
+        </div>
+    </form>
+</div>
+
+@Html.Partial("~/Views/Shared/Modals/_ModalFooterWithSaveAndCancel.cshtml")
+
+<script src="~/view-resources/Views/Tenants/_EditTenantModal.js" asp-append-version="true"></script>

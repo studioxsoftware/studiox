@@ -41,6 +41,7 @@
     <Content Include="wwwroot\StudioX\Framework\styles\studiox.mixings.min.css" />
     <Content Include="wwwroot\StudioX\Framework\styles\utils\ie10fix.css" />
     <Content Include="wwwroot\view-resources\Views\Shared\_Layout.js" />
+    <Content Include="wwwroot\view-resources\Views\Tenants\_EditTenantModal.js" />
   </ItemGroup>
 
   <ItemGroup>

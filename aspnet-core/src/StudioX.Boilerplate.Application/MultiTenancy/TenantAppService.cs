@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using StudioX.Application.Services;
 using StudioX.Application.Services.Dto;
+using StudioX.AutoMapper;
 using StudioX.Boilerplate.Authorization;
 using StudioX.Boilerplate.Authorization.Roles;
 using StudioX.Boilerplate.Authorization.Users;
@@ -105,8 +106,7 @@ namespace StudioX.Boilerplate.MultiTenancy
             using (CurrentUnitOfWork.SetTenantId(tenant.Id))
             {
                 // Check directly
-                var isGranted =
-                    await PermissionChecker.IsGrantedAsync(PermissionNames.System.Administration.Tenants.MainMenu);
+                var isGranted = await PermissionChecker.IsGrantedAsync(PermissionNames.System.Administration.Tenants.MainMenu);
 
                 //Create static roles for new tenant
                 CheckErrors(await roleManager.CreateStaticRoles(tenant.Id));
@@ -143,19 +143,16 @@ namespace StudioX.Boilerplate.MultiTenancy
             using (CurrentUnitOfWork.SetTenantId(tenant.Id))
             {
                 tenantAdminRole = await roleManager.GetRoleByNameAsync("Admin");
-
-                tenantAdminUser = userRepository.GetAll()
-                    .FirstOrDefault(x => x.TenantId == tenant.Id && x.Roles.Any(y => y.RoleId == tenantAdminRole.Id));
+                tenantAdminUser = userRepository.GetAll().FirstOrDefault(x => x.Roles.Any(y => y.RoleId == tenantAdminRole.Id));
             }
 
             // Update the admin email address
-            if (input.AdminEmailAddress != tenantAdminUser.EmailAddress)
+            if (tenantAdminUser != null && input.AdminEmailAddress != tenantAdminUser.EmailAddress)
             {
                 User existingUser = null;
                 using (CurrentUnitOfWork.SetTenantId(tenant.Id))
                 {
-                    existingUser = userRepository.GetAll()
-                        .FirstOrDefault(x => x.EmailAddress == input.AdminEmailAddress && x.TenantId == tenant.Id);
+                    existingUser = userRepository.GetAll().FirstOrDefault(x => x.EmailAddress == input.AdminEmailAddress);
                 }
 
                 if (existingUser != null)
@@ -175,6 +172,10 @@ namespace StudioX.Boilerplate.MultiTenancy
             {
                 throw new UserFriendlyException("Changing Connection string is not supported.");
             }
+
+            var mapped = input.MapTo(tenant);
+            await tenantManager.UpdateAsync(mapped);
+            await CurrentUnitOfWork.SaveChangesAsync();
 
             return MapToEntityDto(tenant);
         }
