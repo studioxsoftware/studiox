@@ -59,10 +59,10 @@ namespace StudioX.Boilerplate.Users
             return user;
         }
 
-        protected override void MapToEntity(UpdateUserInput input, User user)
+        protected override void MapToEntity(UpdateUserInput input, User role)
         {
-            ObjectMapper.Map(input, user);
-            user.SetNormalizedNames();
+            ObjectMapper.Map(input, role);
+            role.SetNormalizedNames();
         }
 
         protected override IQueryable<User> ApplyPaging(IQueryable<User> query, PagedResultRequestDto input)

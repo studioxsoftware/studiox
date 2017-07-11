@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using AutoMapper;
 using StudioX.Authorization.Roles;
 using StudioX.AutoMapper;
 using StudioX.Boilerplate.Authorization.Roles;
@@ -19,7 +20,6 @@ namespace StudioX.Boilerplate.Roles.Dto
 
         public string NormalizedName { get; set; }
 
-        [Required]
         [StringLength(Role.MaxDescriptionLength)]
         public string Description { get; set; }
 

@@ -74,7 +74,7 @@
 
     <text name="Edit">Edit</text>
     <text name="Delete">Delete</text>
-
+    
     <!-- Change Tenant Component -->
     <text name="LeaveEmptyToSwitchToHost">Leave empty to switch to the host</text>
     <text name="CurrentTenant">Current tenant</text>

@@ -1,11 +1,12 @@
-﻿using StudioX.Authorization;
+﻿using StudioX.Application.Services.Dto;
+using StudioX.Authorization;
 using StudioX.AutoMapper;
 using StudioX.Localization;
 
 namespace StudioX.Boilerplate.Permissions.Dto
 {
     [AutoMapFrom(typeof(Permission))]
-    public class PermissionDto
+    public class PermissionDto : EntityDto<long>
     {
         public virtual string Name { get; set; }
 

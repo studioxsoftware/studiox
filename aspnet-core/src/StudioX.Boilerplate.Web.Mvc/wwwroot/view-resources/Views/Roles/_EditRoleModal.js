@@ -1,8 +1,8 @@
 ﻿(function ($) {
 
-    var userService = studiox.services.app.user;
-    var $modal = $('#UserEditModal');
-    var $form = $('form[name=UserEditForm]');
+    var roleService = studiox.services.app.role;
+    var $modal = $('#RoleEditModal');
+    var $form = $('form[name=RoleEditForm]');
 
     function save() {
 
@@ -10,21 +10,20 @@
             return;
         }
 
-        var user = $form.serializeFormToObject(); //serializeFormToObject is defined in main.js
-        user.roles = [];
-        var $roleCheckboxes = $("input[name='role']:checked:visible");
-
-        if ($roleCheckboxes) {
-            for (var roleIndex = 0; roleIndex < $roleCheckboxes.length; roleIndex++) {
-                var $roleCheckbox = $($roleCheckboxes[roleIndex]);
-                user.roles.push($roleCheckbox.val());
+        var role = $form.serializeFormToObject(); //serializeFormToObject is defined in main.js
+        role.permissions = [];
+        var $permissionCheckboxes = $("input[name='permission']:checked:visible");
+        if ($permissionCheckboxes) {
+            for (var permissionIndex = 0; permissionIndex < $permissionCheckboxes.length; permissionIndex++) {
+                var $permissionCheckbox = $($permissionCheckboxes[permissionIndex]);
+                role.permissions.push($permissionCheckbox.val());
             }
         }
 
         studiox.ui.setBusy($form);
-        userService.update(user).done(function () {
+        roleService.update(role).done(function () {
             $modal.modal('hide');
-            location.reload(true); //reload page to see edited user!
+            location.reload(true); //reload page to see edited role!
         }).always(function () {
             studiox.ui.clearBusy($modal);
         });

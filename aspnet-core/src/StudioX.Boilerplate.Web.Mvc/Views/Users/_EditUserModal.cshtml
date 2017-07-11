@@ -80,7 +80,7 @@
                         @foreach (var role in Model.Roles)
                         {
                             <div class="col-sm-6">
-                                <input type="checkbox" name="role" value="@role.NormalizedName" title="@role.Description" class="filled-in" id="role-@role.Id" @(Model.UserIsInRole(role) ? "checked" :"") />
+                                <input type="checkbox" name="role" value="@role.NormalizedName" title="@role.Description"  class="form-control"  id="role-@role.Id" @(Model.UserIsInRole(role) ? "checked" :"") />
                                 <label for="role-@role.Id" title="@role.DisplayName">@role.Name</label>
                             </div>
                         }

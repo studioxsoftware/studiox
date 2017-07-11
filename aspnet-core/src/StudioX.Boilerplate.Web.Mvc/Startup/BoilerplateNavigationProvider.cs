@@ -36,6 +36,15 @@ namespace StudioX.Boilerplate.Web.Startup
                         icon: "people",
                         requiredPermissionName: PermissionNames.System.Administration.Users.MainMenu
                     )
+                )
+                .AddItem(
+                    new MenuItemDefinition(
+                        PageNames.Roles,
+                        L("Roles"),
+                        url: "Roles",
+                        icon: "local_offer",
+                        requiredPermissionName: PermissionNames.System.Administration.Roles.MainMenu
+                    )
                 ).AddItem(
                     new MenuItemDefinition(
                         PageNames.About,
