@@ -50,17 +50,8 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
     <Content Include="wwwroot\view-resources\Views\Roles\_EditRoleModal.min.js" />
-    <Content Include="wwwroot\view-resources\Views\Roles\_EditUserModal.min.js">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
     <Content Include="wwwroot\view-resources\Views\Shared\_Layout.js" />
     <Content Include="wwwroot\view-resources\Views\Tenants\_EditTenantModal.js" />
-    <Content Include="wwwroot\view-resources\Views\Users\Index - Copy.js">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Include="wwwroot\view-resources\Views\Users\Index - Copy.min.js">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
     <Content Include="wwwroot\view-resources\Views\Users\_EditUserModal.js" />
     <Content Include="wwwroot\view-resources\Views\Users\_EditUserModal.min.js" />
   </ItemGroup>
