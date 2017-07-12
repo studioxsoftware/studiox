@@ -54,9 +54,9 @@ namespace StudioX.Boilerplate.Tests
 
         protected abstract Task<TEntity> CreateEntity(int entityNumer);
 
-        protected abstract TCreateDto GetCreateDto();
+        protected abstract TCreateDto GetCreateInput();
 
-        protected abstract TUpdateDto GetUpdateDto(TPrimaryKey key);
+        protected abstract TUpdateDto GetUpdateInput(TPrimaryKey key);
 
         protected virtual async Task<TUpdateDto> CheckForValidationErrors(Func<Task<TUpdateDto>> callBack)
         {
@@ -108,24 +108,25 @@ namespace StudioX.Boilerplate.Tests
         public async Task CreateTest()
         {
             //Arrange
-            var createDto = GetCreateDto();
+            var createInput = GetCreateInput();
 
             //Act
-            var createdEntityDto =
-                await CheckForValidationErrors(async () => await AppService.Create(createDto)) as TEntityDto;
+            var createdEntityInput = await CheckForValidationErrors(async () => 
+                await AppService.Create(createInput)
+            ) as TEntityDto;
 
             //Assert
             await UsingDbContextAsync(async context =>
             {
                 var savedEntity =
-                    await context.Set<TEntity>().FirstOrDefaultAsync(e => e.Id.CompareTo(createdEntityDto.Id) == 0);
+                    await context.Set<TEntity>().FirstOrDefaultAsync(e => e.Id.CompareTo(createdEntityInput.Id) == 0);
                 savedEntity.ShouldNotBeNull();
 
-                await CreateChecks(context, createDto);
+                await CreateChecks(context, createInput);
             });
         }
 
-        public virtual async Task CreateChecks(BoilerplateDbContext context, TCreateDto createDto)
+        public virtual async Task CreateChecks(BoilerplateDbContext context, TCreateDto createInput)
         {
         }
 
@@ -179,7 +180,7 @@ namespace StudioX.Boilerplate.Tests
             await Create(1);
 
             //
-            var updateDto = GetUpdateDto(keys[0]);
+            var updateDto = GetUpdateInput(keys[0]);
 
             //Act
             //Assuming TUpdateDto is TEntityDto, otherwise atribute mapping is required 
