@@ -1,16 +1,17 @@
-﻿@using StudioX.Boilerplate.Web.Startup
-@model StudioX.Application.Services.Dto.ListResultDto<StudioX.Boilerplate.MultiTenancy.Dto.TenantDto>
+@using StudioX.Boilerplate.Web.Startup
+@model StudioX.Boilerplate.Web.Models.Roles.RoleListViewModel
+
 @{
-    ViewBag.CurrentPageName = PageNames.Tenants; //The menu item will be active for this page.
+    ViewBag.CurrentPageName = PageNames.Roles;
 }
 @section scripts
 {
     <environment names="Development">
-        <script src="~/view-resources/Views/Tenants/Index.js" asp-append-version="true"></script>
+        <script src="~/view-resources/Views/Roles/Index.js" asp-append-version="true"></script>
     </environment>
 
     <environment names="Staging,Production">
-        <script src="~/view-resources/Views/Tenants/Index.min.js" asp-append-version="true"></script>
+        <script src="~/view-resources/Views/Roles/Index.min.js" asp-append-version="true"></script>
     </environment>
 }
 <div class="row clearfix">
@@ -18,7 +19,7 @@
         <div class="card">
             <div class="header">
                 <h2>
-                    @L("Tenants")
+                    @L("Roles")
                 </h2>
                 <ul class="header-dropdown m-r--5">
                     <li class="dropdown">
@@ -35,32 +36,31 @@
                 <table class="table">
                     <thead>
                     <tr>
-                        <th>@L("TenancyName")</th>
-                        <th>@L("Name")</th>
-                        <th>@L("IsActive")</th>
+                        <th>@L("RoleName")</th>
+                        <th>@L("DisplayName")</th>
+                        <th>@L("Actions")</th>
                     </tr>
                     </thead>
                     <tbody>
-                    @foreach (var tenant in Model.Items)
+                    @foreach (var role in Model.Roles)
                     {
                         <tr>
-                            <td>@tenant.TenancyName</td>
-                            <td>@tenant.Name</td>
-                            <td><i class="material-icons" style="color:@(tenant.IsActive ? "green":"red");">@(tenant.IsActive ? "check_box" : "indeterminate_check_box")</i></td>
+                            <td>@role.Name</td>
+                            <td>@role.DisplayName</td>
                             <td class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                                     <i class="material-icons">menu</i>
                                 </a>
                                 <ul class="dropdown-menu pull-right">
-                                    <li><a href="#" class="waves-effect waves-block edit-tenant" data-tenant-id="@tenant.Id" data-toggle="modal" data-target="#TenantEditModal"><i class="material-icons">edit</i>@L("Edit")</a></li>
-                                    <li><a href="#" class="waves-effect waves-block delete-tenant" data-tenant-id="@tenant.Id" data-tenancy-name="@tenant.TenancyName"><i class="material-icons">delete_sweep</i>@L("Delete")</a></li>
+                                    <li><a href="#" class="waves-effect waves-block edit-role" data-role-id="@role.Id" data-toggle="modal" data-target="#RoleEditModal"><i class="material-icons">edit</i>@L("Edit")</a></li>
+                                    <li><a href="#" class="waves-effect waves-block delete-role" data-role-id="@role.Id" data-role-name="@role.Name"><i class="material-icons">delete_sweep</i>@L("Delete")</a></li>
                                 </ul>
                             </td>
                         </tr>
                     }
                     </tbody>
                 </table>
-                <button type="button" class="btn btn-primary btn-circle waves-effect waves-circle waves-float pull-right" data-toggle="modal" data-target="#TenantCreateModal">
+                <button type="button" class="btn btn-primary btn-circle waves-effect waves-circle waves-float pull-right" data-toggle="modal" data-target="#RoleCreateModal">
                     <i class="material-icons">add</i>
                 </button>
             </div>
@@ -68,9 +68,9 @@
     </div>
 </div>
 
-@Html.Partial("_CreateTenantModal")
+@Html.Partial("_CreateRoleModal", @Model)
 
-<div class="modal fade" id="TenantEditModal" tabindex="-1" role="dialog" aria-labelledby="TenantEditModalLabel" data-backdrop="static">
+<div class="modal fade" id="RoleEditModal" tabindex="-1" role="dialog" aria-labelledby="RoleEditModalLabel" data-backdrop="static">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
 

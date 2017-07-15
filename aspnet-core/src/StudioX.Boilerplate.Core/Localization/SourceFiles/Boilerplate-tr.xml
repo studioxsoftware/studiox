@@ -29,6 +29,8 @@
     <text name="FirstName" value="İsim" />
     <text name="LastName" value="Soyisim" />
     <text name="EmailAddress" value="E-posta adresi" />
+    <text name="Edit">Düzenle</text>
+    <text name="Delete">Sil</text>
 
     <text name="Tenants" value="Müşteriler" />
     <text name="SavedSuccessfully" value="Başarıyla kaydedildi" />

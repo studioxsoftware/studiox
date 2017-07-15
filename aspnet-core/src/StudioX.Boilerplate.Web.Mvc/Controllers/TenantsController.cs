@@ -24,5 +24,11 @@ namespace StudioX.Boilerplate.Web.Controllers
             var output = await tenantAppService.GetAll(new PagedResultRequestDto { MaxResultCount = 20, SkipCount = 0 });
             return View(output);
         }
-    }
+
+        public async Task<ActionResult> EditTenantModal(int tenantId)
+         {
+             var tenantDto = await tenantAppService.Get(new EntityDto(tenantId));
+            return View("_EditTenantModal", tenantDto);
+         }
+}
 }

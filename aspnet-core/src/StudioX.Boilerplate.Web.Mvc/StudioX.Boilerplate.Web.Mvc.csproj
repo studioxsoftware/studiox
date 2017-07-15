@@ -40,7 +40,20 @@
     <Content Include="wwwroot\StudioX\Framework\styles\studiox.mixings.less" />
     <Content Include="wwwroot\StudioX\Framework\styles\studiox.mixings.min.css" />
     <Content Include="wwwroot\StudioX\Framework\styles\utils\ie10fix.css" />
+    <Content Include="wwwroot\view-resources\Views\Roles\Index.js">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\view-resources\Views\Roles\Index.min.js">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\view-resources\Views\Roles\_EditRoleModal.js">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\view-resources\Views\Roles\_EditRoleModal.min.js" />
     <Content Include="wwwroot\view-resources\Views\Shared\_Layout.js" />
+    <Content Include="wwwroot\view-resources\Views\Tenants\_EditTenantModal.js" />
+    <Content Include="wwwroot\view-resources\Views\Users\_EditUserModal.js" />
+    <Content Include="wwwroot\view-resources\Views\Users\_EditUserModal.min.js" />
   </ItemGroup>
 
   <ItemGroup>
@@ -96,6 +109,7 @@
 
   <ItemGroup>
     <Folder Include="App_Data\Logs\" />
+    <Folder Include="wwwroot\lib\" />
     <Folder Include="wwwroot\view-resources\Views\_Bundles\" />
     <Folder Include="wwwroot\view-resources\Views\_Bundles\" />
   </ItemGroup>

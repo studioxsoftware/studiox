@@ -37,6 +37,7 @@ namespace StudioX.Boilerplate.Roles
             : base(roleRepository)
         {
             this.roleManager = roleManager;
+            this.userManager = userManager;
 
             GetAllPermissionName = PermissionNames.System.Administration.Roles.MainMenu;
             GetPermissionName = PermissionNames.System.Administration.Roles.MainMenu;
@@ -91,8 +92,7 @@ namespace StudioX.Boilerplate.Roles
             var role = ObjectMapper.Map<Role>(input);
             role.SetNormalizedName();
 
-            var result = await roleManager.CreateAsync(role);
-            CheckErrors(result);
+            CheckErrors(await roleManager.CreateAsync(role));
 
             var grantedPermissions = PermissionManager
                 .GetAllPermissions()
