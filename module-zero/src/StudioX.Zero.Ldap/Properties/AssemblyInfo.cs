@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("StudioX.Zero.Ldap")]
 [assembly: AssemblyDescription("StudioX - Module Zero - Active Directory Integration")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Volosoft")]
+[assembly: AssemblyCompany("StudioX")]
 [assembly: AssemblyProduct("StudioX.Zero.Ldap")]
 [assembly: AssemblyCopyright("Copyright © 2017")]
 [assembly: AssemblyTrademark("")]
