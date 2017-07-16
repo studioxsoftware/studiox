@@ -2413,7 +2413,8 @@ export class PermissionDto {
     displayName: string; 
     parentName: string; 
     description: string; 
-    level: number;
+    level: number; 
+    id: number;
     constructor(data?: any) {
         if (data !== undefined) {
             this.name = data["name"] !== undefined ? data["name"] : null;
@@ -2421,6 +2422,7 @@ export class PermissionDto {
             this.parentName = data["parentName"] !== undefined ? data["parentName"] : null;
             this.description = data["description"] !== undefined ? data["description"] : null;
             this.level = data["level"] !== undefined ? data["level"] : null;
+            this.id = data["id"] !== undefined ? data["id"] : null;
         }
     }
 
@@ -2435,6 +2437,7 @@ export class PermissionDto {
         data["parentName"] = this.parentName !== undefined ? this.parentName : null;
         data["description"] = this.description !== undefined ? this.description : null;
         data["level"] = this.level !== undefined ? this.level : null;
+        data["id"] = this.id !== undefined ? this.id : null;
         return data; 
     }
 
