@@ -100,6 +100,7 @@ namespace StudioX.TestBase.SampleApplication.Tests.Messages
         [Fact]
         public async Task ShouldGetAllMessagesWithFilteringAsync()
         {
+            StudioXSession.UserId = 42;
             //Act
 
             var messages = await asyncMessageAppService.GetAll(new PagedAndSortedResultRequestDto());
