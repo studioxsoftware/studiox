@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -25,9 +26,9 @@ namespace StudioX.Authorization
             authorizationHelper.Authorize(new[] {authorizeAttribute});
         }
 
-        public static void Authorize(this IAuthorizationHelper authorizationHelper, MethodInfo methodInfo)
+        public static void Authorize(this IAuthorizationHelper authorizationHelper, MethodInfo methodInfo, Type type)
         {
-            AsyncHelper.RunSync(() => authorizationHelper.AuthorizeAsync(methodInfo));
+            AsyncHelper.RunSync(() => authorizationHelper.AuthorizeAsync(methodInfo, type));
         }
     }
 }

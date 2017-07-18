@@ -45,7 +45,10 @@ namespace StudioX.AspNetCore.Mvc.Authorization
             try
             {
                 //TODO: Avoid using try/catch, use conditional checking
-                await authorizationHelper.AuthorizeAsync(context.ActionDescriptor.GetMethodInfo());
+                await authorizationHelper.AuthorizeAsync(
+                        context.ActionDescriptor.GetMethodInfo(), 
+                        context.ActionDescriptor.GetMethodInfo().DeclaringType
+                    );
             }
             catch (StudioXAuthorizationException ex)
             {

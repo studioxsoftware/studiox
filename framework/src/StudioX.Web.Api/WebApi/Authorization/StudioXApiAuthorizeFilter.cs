@@ -66,7 +66,7 @@ namespace StudioX.WebApi.Authorization
 
             try
             {
-                await authorizationHelper.AuthorizeAsync(methodInfo);
+                await authorizationHelper.AuthorizeAsync(methodInfo, methodInfo.DeclaringType);
                 return await continuation();
             }
             catch (StudioXAuthorizationException ex)

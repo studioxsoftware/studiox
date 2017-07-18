@@ -17,7 +17,7 @@ namespace StudioX.Authorization
 
         public void Intercept(IInvocation invocation)
         {
-            authorizationHelper.Authorize(invocation.MethodInvocationTarget);
+            authorizationHelper.Authorize(invocation.MethodInvocationTarget, invocation.TargetType);
             invocation.Proceed();
         }
     }

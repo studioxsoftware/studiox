@@ -1,9 +1,9 @@
 ﻿using System.Reflection;
 using System.Threading.Tasks;
+using NSubstitute;
 using StudioX.Application.Features;
 using StudioX.Authorization;
 using StudioX.Configuration.Startup;
-using NSubstitute;
 using Xunit;
 
 namespace StudioX.Tests.Authorization
@@ -33,11 +33,13 @@ namespace StudioX.Tests.Authorization
         public async Task NotAuthorizedMethodsCanBeCalledAnonymously()
         {
             await authorizeHelper.AuthorizeAsync(
-                typeof(MyNonAuthorizedClass).GetTypeInfo().GetMethod(nameof(MyNonAuthorizedClass.TestNotAuthorized))
-                );
+                typeof(MyNonAuthorizedClass).GetTypeInfo().GetMethod(nameof(MyNonAuthorizedClass.TestNotAuthorized)),
+                typeof(MyNonAuthorizedClass)
+            );
 
             await authorizeHelper.AuthorizeAsync(
-                typeof(MyAuthorizedClass).GetTypeInfo().GetMethod(nameof(MyAuthorizedClass.TestNotAuthorized))
+                typeof(MyAuthorizedClass).GetTypeInfo().GetMethod(nameof(MyAuthorizedClass.TestNotAuthorized)),
+                typeof(MyAuthorizedClass)
             );
         }
 
@@ -47,14 +49,16 @@ namespace StudioX.Tests.Authorization
             await Assert.ThrowsAsync<StudioXAuthorizationException>(async () =>
             {
                 await authorizeHelper.AuthorizeAsync(
-                    typeof(MyNonAuthorizedClass).GetTypeInfo().GetMethod(nameof(MyNonAuthorizedClass.TestAuthorized))
+                    typeof(MyNonAuthorizedClass).GetTypeInfo().GetMethod(nameof(MyNonAuthorizedClass.TestAuthorized)),
+                    typeof(MyNonAuthorizedClass)
                 );
             });
 
             await Assert.ThrowsAsync<StudioXAuthorizationException>(async () =>
             {
                 await authorizeHelper.AuthorizeAsync(
-                    typeof(MyAuthorizedClass).GetTypeInfo().GetMethod(nameof(MyAuthorizedClass.TestAuthorized))
+                    typeof(MyAuthorizedClass).GetTypeInfo().GetMethod(nameof(MyAuthorizedClass.TestAuthorized)),
+                    typeof(MyAuthorizedClass)
                 );
             });
         }
@@ -63,13 +67,11 @@ namespace StudioX.Tests.Authorization
         {
             public void TestNotAuthorized()
             {
-
             }
 
             [StudioXAuthorize]
             public void TestAuthorized()
             {
-
             }
         }
 
@@ -79,12 +81,10 @@ namespace StudioX.Tests.Authorization
             [StudioXAllowAnonymous]
             public void TestNotAuthorized()
             {
-
             }
 
             public void TestAuthorized()
             {
-
             }
         }
     }

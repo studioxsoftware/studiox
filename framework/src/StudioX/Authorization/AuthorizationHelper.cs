@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -52,18 +53,15 @@ namespace StudioX.Authorization
             }
         }
 
-        public async Task AuthorizeAsync(MethodInfo methodInfo)
+        public async Task AuthorizeAsync(MethodInfo methodInfo, Type type)
         {
-            await CheckFeatures(methodInfo);
-            await CheckPermissions(methodInfo);
+            await CheckFeatures(methodInfo, type);
+            await CheckPermissions(methodInfo, type);
         }
 
-        private async Task CheckFeatures(MethodInfo methodInfo)
+        private async Task CheckFeatures(MethodInfo methodInfo, Type type)
         {
-            var featureAttributes =
-                ReflectionHelper.GetAttributesOfMemberAndDeclaringType<RequiresFeatureAttribute>(
-                    methodInfo
-                );
+            var featureAttributes = ReflectionHelper.GetAttributesOfMemberAndType<RequiresFeatureAttribute>(methodInfo, type);
 
             if (featureAttributes.Count <= 0)
             {
@@ -76,22 +74,23 @@ namespace StudioX.Authorization
             }
         }
 
-        private async Task CheckPermissions(MethodInfo methodInfo)
+        private async Task CheckPermissions(MethodInfo methodInfo, Type type)
         {
             if (!authConfiguration.IsEnabled)
             {
                 return;
             }
 
-            if (AllowAnonymous(methodInfo))
+            if (AllowAnonymous(methodInfo, type))
             {
                 return;
             }
 
             var authorizeAttributes =
-                ReflectionHelper.GetAttributesOfMemberAndDeclaringType(
-                    methodInfo
-                ).OfType<IStudioXAuthorizeAttribute>().ToArray();
+                ReflectionHelper
+                    .GetAttributesOfMemberAndType(methodInfo, type)
+                    .OfType<IStudioXAuthorizeAttribute>()
+                    .ToArray();
 
             if (!authorizeAttributes.Any())
             {
@@ -101,10 +100,12 @@ namespace StudioX.Authorization
             await AuthorizeAsync(authorizeAttributes);
         }
 
-        private static bool AllowAnonymous(MethodInfo methodInfo)
+        private static bool AllowAnonymous(MemberInfo methodInfo, Type type)
         {
-            return ReflectionHelper.GetAttributesOfMemberAndDeclaringType(methodInfo)
-                .OfType<IStudioXAllowAnonymousAttribute>().Any();
+            return ReflectionHelper
+                .GetAttributesOfMemberAndType(methodInfo, type)
+                .OfType<IStudioXAllowAnonymousAttribute>()
+                .Any();
         }
     }
 }

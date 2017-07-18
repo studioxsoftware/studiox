@@ -56,6 +56,8 @@ namespace StudioX.TestBase.SampleApplication.Tests.Messages
         [Fact]
         public void ShouldGetAllMessagesWithFiltering()
         {
+            StudioXSession.UserId = 42;
+
             //Act
 
             var messages = messageAppService.GetAll(new GetMessagesWithFilterInput { Text = "message-1" });

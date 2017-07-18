@@ -45,7 +45,7 @@ namespace StudioX.Web.Mvc.Authorization
 
             try
             {
-                authorizationHelper.Authorize(methodInfo);
+                authorizationHelper.Authorize(methodInfo, methodInfo.DeclaringType);
             }
             catch (StudioXAuthorizationException ex)
             {
