@@ -64,7 +64,8 @@ namespace StudioX.Boilerplate.Controllers
             {
                 AccessToken = accessToken,
                 EncryptedAccessToken = GetEncrpyedAccessToken(accessToken),
-                ExpireInSeconds = (int)configuration.Expiration.TotalSeconds
+                ExpireInSeconds = (int)configuration.Expiration.TotalSeconds,
+                UserId = loginResult.User.Id
             };
         }
 
