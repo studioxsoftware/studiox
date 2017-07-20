@@ -12,7 +12,7 @@
     studiox.ajax = function (userOptions) {
         userOptions = userOptions || {};
 
-        var options = $.extend({}, studiox.ajax.defaultOpts, userOptions);
+        var options = $.extend(true, {}, studiox.ajax.defaultOpts, userOptions);
         options.success = undefined;
         options.error = undefined;
 
@@ -39,7 +39,10 @@
         defaultOpts: {
             dataType: 'json',
             type: 'POST',
-            contentType: 'application/json'
+            contentType: 'application/json',
+            headers: {
+                 'X-Requested-With': 'XMLHttpRequest'
+            }
         },
 
         defaultError: {
