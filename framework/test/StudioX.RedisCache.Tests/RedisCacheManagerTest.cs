@@ -21,6 +21,7 @@ namespace StudioX.RedisCache.Tests
             LocalIocManager.Register<ICachingConfiguration, CachingConfiguration>();
             LocalIocManager.Register<IStudioXRedisCacheDatabaseProvider, StudioXRedisCacheDatabaseProvider>();
             LocalIocManager.Register<ICacheManager, StudioXRedisCacheManager>();
+            LocalIocManager.Register<IRedisCacheSerializer, DefaultRedisCacheSerializer>();
             LocalIocManager.IocContainer.Register(Component.For<IStudioXStartupConfiguration>().UsingFactoryMethod(() => Substitute.For<IStudioXStartupConfiguration>()));
 
             var defaultSlidingExpireTime = TimeSpan.FromHours(24);
