@@ -29,57 +29,57 @@ export class TenantsComponent extends PagedListingComponentBase<TenantDto> {
         return "div.main-content>>table";
     }
 
-	toggleActive(tenant: TenantDto): void {
-        let newStatus = (!tenant.isActive?'active':'in-active');
-		studiox.message.confirm(
-			"Change tenant '" + tenant.tenancyName + "' to " + newStatus,
-			(result:boolean) => {
-				if(result) {
-					this._tenantService.get(tenant.id)
-						.finally(()=>{})
-						.subscribe((result)=>{
-							result.isActive = !result.isActive
-							
-							// update
-							this._tenantService.update(result)
-									.finally(()=>{
-										this.refresh();
-									})
-									.subscribe((result)=>{
-                                        var statusFromServer =  (result.isActive ? 'active' : 'in-active')
-                                        studiox.message.success("Tenant '"+result.tenancyName+"' is now '" + statusFromServer + "'", "Tenant status updated" );
-                                    });
-						});
-				}
-			}
-		);
-	}
+    toggleActive(tenant: TenantDto): void {
+        let newStatus = (!tenant.isActive ? 'active' : 'in-active');
+        studiox.message.confirm(
+            "Change tenant '" + tenant.tenancyName + "' to " + newStatus,
+            (result: boolean) => {
+                if (result) {
+                    this._tenantService.get(tenant.id)
+                        .finally(() => { })
+                        .subscribe((result) => {
+                            result.isActive = !result.isActive
+
+                            // update
+                            this._tenantService.update(result)
+                                .finally(() => {
+                                    this.refresh();
+                                })
+                                .subscribe((result) => {
+                                    var statusFromServer = (result.isActive ? 'active' : 'in-active')
+                                    studiox.message.success("Tenant '" + result.tenancyName + "' is now '" + statusFromServer + "'", "Tenant status updated");
+                                });
+                        });
+                }
+            }
+        );
+    }
 
     list(request: PagedRequestDto, pageNumber: number, finishedCallback: Function): void {
         this._tenantService.getAll(request.skipCount, request.maxResultCount)
-            .finally(()=>{
+            .finally(() => {
                 finishedCallback();
             })
-            .subscribe((result)=>{
-				this.tenants = result.items;
-				this.showPaging(result, pageNumber);
+            .subscribe((result) => {
+                this.tenants = result.items;
+                this.showPaging(result, pageNumber);
             });
     }
 
     delete(tenant: TenantDto): void {
-		studiox.message.confirm(
-			"Delete tenant '"+ tenant.name +"'?",
-			(result:boolean) => {
-				if(result) {
-					this._tenantService.delete(tenant.id)
-						.finally(() => {
-							studiox.message.success("Deleted tenant: " + tenant.name );
-							this.refresh();
-						})
-						.subscribe(() => { });
-				}
-			}
-		);
+        studiox.message.confirm(
+            "Delete tenant '" + tenant.name + "'?",
+            (result: boolean) => {
+                if (result) {
+                    this._tenantService.delete(tenant.id)
+                        .finally(() => {
+                            studiox.message.success("Deleted tenant: " + tenant.name);
+                            this.refresh();
+                        })
+                        .subscribe(() => { });
+                }
+            }
+        );
     }
 
     // Show modals
@@ -87,7 +87,7 @@ export class TenantsComponent extends PagedListingComponentBase<TenantDto> {
         this.createTenantModal.show();
     }
 
-    editTenant(tenant:TenantDto): void{
+    editTenant(tenant: TenantDto): void {
         this.editTenantModal.show(tenant.id);
     }
 }

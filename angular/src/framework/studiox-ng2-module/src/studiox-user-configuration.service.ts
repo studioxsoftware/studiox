@@ -7,7 +7,7 @@ declare var jQuery: any;
 export class StudioXUserConfigurationService {
 
     constructor(private _http: Http) {
-        
+
     }
 
     initialize(): void {

@@ -34,8 +34,8 @@
                             <td>{{role.displayName}}</td>
                             <td>{{role.description}}</td>
                             <td align="center">
-                                <i class="material-icons" *ngIf="role.isActive" style="color:green;">check_box</i>
-                                <i class="material-icons" *ngIf="!role.isActive" style="color:red;">indeterminate_check_box</i>
+                                <i class="material-icons text-green" *ngIf="role.isActive">check_box</i>
+                                <i class="material-icons text-red" *ngIf="!role.isActive">indeterminate_check_box</i>
                             </td>
                             <td class="dropdown">
                                 <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">

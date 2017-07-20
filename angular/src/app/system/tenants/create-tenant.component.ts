@@ -7,8 +7,8 @@ import { AppConsts } from '@shared/AppConsts';
 import * as _ from "lodash";
 
 @Component({
-  selector: 'create-tenant-modal',
-  templateUrl: './create-tenant.component.html'
+    selector: 'create-tenant-modal',
+    templateUrl: './create-tenant.component.html'
 })
 export class CreateTenantComponent extends AppComponentBase {
 
@@ -31,7 +31,7 @@ export class CreateTenantComponent extends AppComponentBase {
     show(): void {
         this.active = true;
         this.modal.show();
-        this.tenant = new CreateTenantInput({isActive:true});
+        this.tenant = new CreateTenantInput({ isActive: true });
     }
 
     onShown(): void {

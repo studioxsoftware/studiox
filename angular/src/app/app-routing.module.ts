@@ -7,7 +7,7 @@ import { AboutComponent } from './pages/about/about.component';
 import { UsersComponent } from './system/users/users.component';
 import { TenantsComponent } from './system/tenants/tenants.component';
 import { RolesComponent } from "./system/roles/roles.component";
-import { TableDemoComponent } from '@app/demo/table/table-demo.component';
+import { TableDemoComponent } from '@app/demo/table/table.component';
 
 @NgModule({
     imports: [

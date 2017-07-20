@@ -38,26 +38,26 @@ import { RightSideBarComponent } from '@app/layout/right-sidebar.component';
 
 import { PaginationModule } from 'ngx-bootstrap';
 import { StudioXTableModule } from '@studiox-table/studiox-table-module';
-import { TableDemoComponent } from '@app/demo/table/table-demo.component';
+import { TableDemoComponent } from '@app/demo/table/table.component';
 
 @NgModule({
     declarations: [
         AppComponent,
         HomeComponent,
         AboutComponent,
-        
+
         UsersComponent,
         CreateUserComponent,
- 		EditUserComponent,
-        
+        EditUserComponent,
+
         TenantsComponent,
         CreateTenantComponent,
-        EditTenantComponent, 
+        EditTenantComponent,
 
-        RolesComponent,        
- 		CreateRoleComponent,
- 		EditRoleComponent,
-         
+        RolesComponent,
+        CreateRoleComponent,
+        EditRoleComponent,
+
         TopBarComponent,
         TopBarLanguageSwitchComponent,
         SideBarUserAreaComponent,
