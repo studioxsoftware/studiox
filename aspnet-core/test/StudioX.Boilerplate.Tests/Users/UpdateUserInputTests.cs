@@ -13,7 +13,7 @@ namespace StudioX.Boilerplate.Tests.Users
             return new UpdateUserInput
             {
                 Id = 1,
-                EmailAddress = "new.user@volosoft.com",
+                EmailAddress = "new.user@studioxsoftware.com",
                 IsActive = true,
                 FirstName = "New",
                 LastName = "User",

@@ -12,7 +12,7 @@ namespace StudioX.Boilerplate.Tests.Users
         {
             return new CreateUserInput
             {
-                EmailAddress = "new.user@volosoft.com",
+                EmailAddress = "new.user@studioxsoftware.com",
                 IsActive = true,
                 FirstName = "New",
                 LastName = "User",

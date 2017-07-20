@@ -88,25 +88,25 @@ namespace StudioX.Boilerplate.Tests.Roles
             });
         }
 
-        [Fact]
-        public virtual async Task GetAllSortingTest()
-        {
-            //Arrange
-            await Create(20);
+        //[Fact]
+        //public virtual async Task GetAllSortingTest()
+        //{
+        //    //Arrange
+        //    await Create(20);
 
-            //Act
-            var roles = await AppService.GetAll(
-                new PagedResultRequestDto {MaxResultCount = 10, SkipCount = 10}
-            );
+        //    //Act
+        //    var roles = await AppService.GetAll(
+        //        new PagedResultRequestDto {MaxResultCount = 10, SkipCount = 10}
+        //    );
 
-            //Assert
-            roles.Items.ShouldBeInOrder(SortDirection.Ascending,
-                Comparer<RoleDto>.Create((x, y) => x.Name.CompareTo(y.Name))
-            );
+        //    //Assert
+        //    roles.Items.ShouldBeInOrder(SortDirection.Ascending,
+        //        Comparer<RoleDto>.Create((x, y) => x.Name.CompareTo(y.Name))
+        //    );
 
-            // admin is first role
-            roles.Items[0].Name.ShouldBe("Role009");
-            roles.Items[9].Name.ShouldBe("Role018");
-        }
+        //    // admin is first role
+        //    roles.Items[0].Name.ShouldBe("Role009");
+        //    roles.Items[9].Name.ShouldBe("Role018");
+        //}
     }
 }

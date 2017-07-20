@@ -68,9 +68,8 @@ namespace StudioX.Boilerplate.MultiTenancy
             User tenantAdminUser = null;
             using (CurrentUnitOfWork.SetTenantId(tenantDto.Id))
             {
-                tenantAdminRole = await roleManager.GetRoleByNameAsync("Admin");
-                tenantAdminUser =
-                    userRepository.GetAllIncluding(x => x.Roles)
+                tenantAdminRole = await roleManager.GetRoleByNameAsync(StaticRoleNames.Tenants.Admin);
+                tenantAdminUser = userRepository.GetAllIncluding(x => x.Roles)
                         .Single(y => y.Roles.Any(z => z.RoleId == tenantAdminRole.Id));
             }
 
