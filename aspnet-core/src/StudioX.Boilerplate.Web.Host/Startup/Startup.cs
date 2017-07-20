@@ -107,6 +107,7 @@ namespace StudioX.Boilerplate.Web.Host.Startup
             // Enable middleware to serve swagger-ui assets (HTML, JS, CSS etc.)
             app.UseSwaggerUI(options =>
             {
+                options.InjectOnCompleteJavaScript("/swagger/ui/studiox.js");
                 options.InjectOnCompleteJavaScript("/swagger/ui/on-complete.js");
                 options.SwaggerEndpoint("/swagger/v1/swagger.json", "Boilerplate API V1");
                 options.DocExpansion("none");
