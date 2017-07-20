@@ -268,9 +268,16 @@ export class StudioXHttp extends Http {
             options.headers = new Headers();
         }
 
+        this.addXRequestedWithHeader(options);
         this.addAuthorizationHeaders(options);
         this.addAcceptLanguageHeader(options);
         this.addTenantIdHeader(options);
+    }
+
+    protected addXRequestedWithHeader(options: RequestOptionsArgs) {
+        if (options.headers) {
+            options.headers.append('X-Requested-With', 'XMLHttpRequest');
+        }
     }
 
     protected addAcceptLanguageHeader(options: RequestOptionsArgs) {
@@ -288,7 +295,7 @@ export class StudioXHttp extends Http {
     }
 
     protected addAuthorizationHeaders(options: RequestOptionsArgs): void {
-        let authorizationHeaders = options.headers ? options.headers.getAll('Authorization'): null;
+        let authorizationHeaders = options.headers ? options.headers.getAll('Authorization') : null;
         if (!authorizationHeaders) {
             authorizationHeaders = [];
         }
