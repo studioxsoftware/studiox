@@ -78,14 +78,23 @@ namespace StudioX.Web.Models
             {
                 var entityNotFoundException = exception as EntityNotFoundException;
 
+                if (entityNotFoundException.EntityType != null)
+                {
+                    return new ErrorInfo(
+                        string.Format(
+                            L("EntityNotFound"),
+                            entityNotFoundException.EntityType.Name,
+                            entityNotFoundException.Id
+                        )
+                    );
+                }
+
                 return new ErrorInfo(
-                    string.Format(
-                        L("EntityNotFound"),
-                        entityNotFoundException.EntityType.Name,
-                        entityNotFoundException.Id
-                    )
+                    entityNotFoundException.Message
                 );
             }
+
+
 
             if (exception is StudioX.Authorization.StudioXAuthorizationException)
             {
