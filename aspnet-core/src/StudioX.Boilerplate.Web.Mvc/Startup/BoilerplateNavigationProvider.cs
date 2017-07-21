@@ -70,11 +70,11 @@ namespace StudioX.Boilerplate.Web.Startup
                         )
                     ).AddItem(
                         new MenuItemDefinition(
-                            "StudioXBoilerplateZero",
-                            new FixedLocalizableString("StudioX Boilerplate Zero")
+                            "StudioXZero",
+                            new FixedLocalizableString("StudioX Zero")
                         ).AddItem(
                             new MenuItemDefinition(
-                                "StudioXBoilerplateZeroHome",
+                                "StudioXZeroHome",
                                 new FixedLocalizableString("Home"),
                                 url: ""
                             )

@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using StudioX.Modules;
+﻿using StudioX.Modules;
 using StudioX.Reflection.Extensions;
 using StudioX.Boilerplate.Configuration;
 using Microsoft.AspNetCore.Hosting;

@@ -83,7 +83,7 @@
     </PackageReference>
     <PackageReference Include="AspNet.Security.OpenIdConnect.Server" Version="1.0.0" />
     <PackageReference Include="PaulMiami.AspNetCore.Mvc.Recaptcha" Version="1.2.0" />
-    <PackageReference Include="Castle.LoggingFacility.MsLogging" Version="2.0.0" />
+    <PackageReference Include="Castle.LoggingFacility.MsLogging" Version="2.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="1.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Twitter" Version="1.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics" Version="1.1.2" />
