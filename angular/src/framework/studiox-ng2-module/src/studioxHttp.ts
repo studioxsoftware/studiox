@@ -194,11 +194,11 @@ export class StudioXHttpConfiguration {
         var ajaxResponse = this.getStudioXAjaxResponseOrNull(error);
         if (ajaxResponse != null) {
             this.handleStudioXResponse(error, ajaxResponse);
+            return Observable.throw(ajaxResponse.error);
         } else {
             this.handleNonStudioXErrorResponse(error);
+            return Observable.throw('HTTP error: ' + error.status + ', ' + error.statusText);
         }
-
-        return Observable.throw('HTTP error: ' + error.status + ', ' + error.statusText);
     }
 }
 
