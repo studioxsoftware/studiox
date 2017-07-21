@@ -6,7 +6,7 @@
     <TargetFramework>net46</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>StudioX.MongoDb</AssemblyName>
-    <PackageId>StudioX.MongoDB</PackageId>
+    <PackageId>StudioX.MongoDb</PackageId>
     <PackageTags>asp.net;asp.net mvc;boilerplate;application framework;web framework;framework;domain driven design;MongoDB;NoSQL</PackageTags>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
     <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
@@ -18,6 +18,10 @@
     <RootNamespace>StudioX</RootNamespace>
     <Version>1.1.3</Version>
   </PropertyGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="mongocsharpdriver" Version="2.4.4" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Update="bin\Release\net452\StudioX.MongoDB.pdb">
@@ -28,10 +32,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\StudioX\StudioX.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="mongocsharpdriver" Version="2.4.4" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">
