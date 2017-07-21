@@ -28,7 +28,6 @@
     <PackageReference Include="Microsoft.Extensions.Options" Version="1.1.2" />
     <PackageReference Include="Nito.AsyncEx.Context" Version="1.1.0" />
     <PackageReference Include="Nito.AsyncEx.Coordination" Version="1.0.2" />
-    <PackageReference Include="Fortress.Facilities.Logging" Version="0.5.274" />
     <PackageReference Include="Rebus" Version="4.0.0-b15" />
   </ItemGroup>
   <ItemGroup>
