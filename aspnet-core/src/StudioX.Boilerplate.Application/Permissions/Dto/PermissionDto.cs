@@ -12,7 +12,7 @@ namespace StudioX.Boilerplate.Permissions.Dto
 
         [AutoMapFrom(typeof(ILocalizableString))]
         public virtual string DisplayName { get; set; }
-        
+
         public virtual string ParentName { get; set; }
 
         [AutoMapFrom(typeof(ILocalizableString))]

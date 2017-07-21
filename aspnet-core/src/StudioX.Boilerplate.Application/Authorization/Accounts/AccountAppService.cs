@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
-using StudioX.Configuration;
-using StudioX.Zero.Configuration;
 using StudioX.Boilerplate.Authorization.Accounts.Dto;
 using StudioX.Boilerplate.Authorization.Users;
+using StudioX.Configuration;
+using StudioX.Zero.Configuration;
 
 namespace StudioX.Boilerplate.Authorization.Accounts
 {
@@ -43,7 +43,9 @@ namespace StudioX.Boilerplate.Authorization.Accounts
                 false
             );
 
-            var isEmailConfirmationRequiredForLogin = await SettingManager.GetSettingValueAsync<bool>(StudioXZeroSettingNames.UserManagement.IsEmailConfirmationRequiredForLogin);
+            var isEmailConfirmationRequiredForLogin =
+                await SettingManager.GetSettingValueAsync<bool>(
+                    StudioXZeroSettingNames.UserManagement.IsEmailConfirmationRequiredForLogin);
 
             return new RegisterOutput
             {

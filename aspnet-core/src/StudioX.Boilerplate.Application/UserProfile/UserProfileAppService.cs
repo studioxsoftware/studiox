@@ -1,13 +1,12 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
-using StudioX.Auditing;
 using StudioX.Authorization;
 using StudioX.AutoMapper;
 using StudioX.Boilerplate.Authorization.Users;
+using StudioX.Boilerplate.UserProfile.Dto;
 using StudioX.Collections.Extensions;
 using StudioX.Runtime.Session;
 using StudioX.UI;
-using StudioX.Boilerplate.UserProfile.Dto;
 
 namespace StudioX.Boilerplate.UserProfile
 {
@@ -15,6 +14,7 @@ namespace StudioX.Boilerplate.UserProfile
     public class UserProfileAppService : BoilerplateAppServiceBase, IUserProfileAppService
     {
         private readonly IPasswordHasher<User> passwordHasher;
+
         public UserProfileAppService(IPasswordHasher<User> passwordHasher)
         {
             this.passwordHasher = passwordHasher;
@@ -39,7 +39,9 @@ namespace StudioX.Boilerplate.UserProfile
             var verificationResult = passwordHasher.VerifyHashedPassword(user, hashedPassword, input.Password);
 
             if (verificationResult != PasswordVerificationResult.Success)
+            {
                 throw new UserFriendlyException("Current password must match old password!");
+            }
 
             var identityResult = await UserManager.ChangePasswordAsync(user, input.NewPassword);
             if (!identityResult.Succeeded)

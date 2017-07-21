@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Threading.Tasks;
-using StudioX.Application.Services;
-using StudioX.Boilerplate.MultiTenancy;
-using StudioX.Runtime.Session;
-using StudioX.IdentityFramework;
-using StudioX.Boilerplate.Authorization.Users;
 using Microsoft.AspNetCore.Identity;
+using StudioX.Application.Services;
+using StudioX.Boilerplate.Authorization.Users;
+using StudioX.Boilerplate.MultiTenancy;
+using StudioX.IdentityFramework;
+using StudioX.Runtime.Session;
 
 namespace StudioX.Boilerplate
 {
     /// <summary>
-    /// Derive your application services from this class.
+    ///     Derive your application services from this class.
     /// </summary>
     public abstract class BoilerplateAppServiceBase : ApplicationService
     {

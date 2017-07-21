@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using StudioX.Boilerplate.Settings.Dto;
 using StudioX.Configuration;
 using StudioX.Extensions;
-using StudioX.Boilerplate.Settings.Dto;
 using StudioX.Zero.Configuration;
 
 namespace StudioX.Boilerplate.Settings
@@ -109,7 +109,8 @@ namespace StudioX.Boilerplate.Settings
                 RequireUppercase = settingDefinitionManager.GetSettingDefinition(
                     StudioXZeroSettingNames.UserManagement.PasswordComplexity.RequireUppercase).DefaultValue.To<bool>(),
                 RequireNonAlphanumeric = settingDefinitionManager.GetSettingDefinition(
-                    StudioXZeroSettingNames.UserManagement.PasswordComplexity.RequireNonAlphanumeric).DefaultValue.To<bool>()
+                        StudioXZeroSettingNames.UserManagement.PasswordComplexity.RequireNonAlphanumeric)
+                    .DefaultValue.To<bool>()
             };
             return setting;
         }
@@ -119,7 +120,7 @@ namespace StudioX.Boilerplate.Settings
             await SettingManager.ChangeSettingForTenantAsync(tenantId,
                 StudioXZeroSettingNames.UserManagement.PasswordComplexity.RequiredLength,
                 input.PasswordComplexity.RequiredLength.ToString());
-       
+
 
             await SettingManager.ChangeSettingForTenantAsync(tenantId,
                 StudioXZeroSettingNames.UserManagement.PasswordComplexity.RequireDigit,

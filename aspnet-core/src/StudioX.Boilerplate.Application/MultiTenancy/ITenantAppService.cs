@@ -7,6 +7,5 @@ namespace StudioX.Boilerplate.MultiTenancy
     public interface ITenantAppService :
         IAsyncCrudAppService<TenantDto, int, PagedResultRequestDto, CreateTenantInput, UpdateTenantInput>
     {
-       
     }
 }

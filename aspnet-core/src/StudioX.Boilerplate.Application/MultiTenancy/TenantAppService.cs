@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
@@ -70,7 +69,7 @@ namespace StudioX.Boilerplate.MultiTenancy
             {
                 tenantAdminRole = await roleManager.GetRoleByNameAsync(StaticRoleNames.Tenants.Admin);
                 tenantAdminUser = userRepository.GetAllIncluding(x => x.Roles)
-                        .Single(y => y.Roles.Any(z => z.RoleId == tenantAdminRole.Id));
+                    .Single(y => y.Roles.Any(z => z.RoleId == tenantAdminRole.Id));
             }
 
             tenantDto.AdminEmailAddress = tenantAdminUser.EmailAddress;
@@ -105,7 +104,8 @@ namespace StudioX.Boilerplate.MultiTenancy
             using (CurrentUnitOfWork.SetTenantId(tenant.Id))
             {
                 // Check directly
-                var isGranted = await PermissionChecker.IsGrantedAsync(PermissionNames.System.Administration.Tenants.MainMenu);
+                var isGranted =
+                    await PermissionChecker.IsGrantedAsync(PermissionNames.System.Administration.Tenants.MainMenu);
 
                 //Create static roles for new tenant
                 CheckErrors(await roleManager.CreateStaticRoles(tenant.Id));
@@ -142,7 +142,10 @@ namespace StudioX.Boilerplate.MultiTenancy
             using (CurrentUnitOfWork.SetTenantId(tenant.Id))
             {
                 tenantAdminRole = await roleManager.GetRoleByNameAsync("Admin");
-                tenantAdminUser = userRepository.GetAll().FirstOrDefault(x => x.Roles.Any(y => y.RoleId == tenantAdminRole.Id));
+                tenantAdminUser = userRepository.GetAll()
+                    .FirstOrDefault(x => x.Roles
+                        .Any(y => y.RoleId == tenantAdminRole.Id)
+                    );
             }
 
             // Update the admin email address
@@ -151,7 +154,8 @@ namespace StudioX.Boilerplate.MultiTenancy
                 User existingUser = null;
                 using (CurrentUnitOfWork.SetTenantId(tenant.Id))
                 {
-                    existingUser = userRepository.GetAll().FirstOrDefault(x => x.EmailAddress == input.AdminEmailAddress);
+                    existingUser = userRepository.GetAll()
+                        .FirstOrDefault(x => x.EmailAddress == input.AdminEmailAddress);
                 }
 
                 if (existingUser != null)

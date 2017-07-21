@@ -5,13 +5,13 @@ using Microsoft.EntityFrameworkCore;
 using StudioX.Application.Services.Dto;
 using StudioX.Auditing;
 using StudioX.AutoMapper;
+using StudioX.Boilerplate.AuditLogs.Dto;
+using StudioX.Boilerplate.BaseModel;
+using StudioX.Boilerplate.Configuration;
 using StudioX.Configuration;
 using StudioX.Domain.Repositories;
 using StudioX.Extensions;
 using StudioX.Linq.Extensions;
-using StudioX.Boilerplate.AuditLogs.Dto;
-using StudioX.Boilerplate.BaseModel;
-using StudioX.Boilerplate.Configuration;
 
 namespace StudioX.Boilerplate.AuditLogs
 {
@@ -34,7 +34,7 @@ namespace StudioX.Boilerplate.AuditLogs
         public PagedResultDto<AuditLogListDto> PagedResult(GetAuditLogsInput input)
         {
             if (input.MaxResultCount <= 0)
-                input.MaxResultCount = SettingManager.GetSettingValue<int>(BoilerplateSettingProvider.AuditLogsDefaultPageSize);
+                input.MaxResultCount = SettingManager.GetSettingValue<int>(BoilerplateSettingProvider.DefaultPageSize);
 
             if (input.Sorting.IsNullOrEmpty())
                 input.Sorting = InputConstant.DefaultSorting;
@@ -94,12 +94,12 @@ namespace StudioX.Boilerplate.AuditLogs
 
         private IQueryable<AuditLogListDto> CreateFilteredQuery(GetAuditLogsInput input)
         {
-            var query = CreateFilteredQuery().Where(x => x.ExecutionTime >= input.StartDate 
-                            && x.ExecutionTime <= input.EndDate);
+            var query = CreateFilteredQuery().Where(x => x.ExecutionTime >= input.StartDate
+                                                         && x.ExecutionTime <= input.EndDate);
 
             if (input.ExecutionDurationFrom.HasValue && input.ExecutionDurationTo.HasValue)
                 query = query.Where(x => x.ExecutionDuration >= input.ExecutionDurationFrom
-                            && x.ExecutionDuration <= input.ExecutionDurationTo);
+                                         && x.ExecutionDuration <= input.ExecutionDurationTo);
 
             if (input.ExecutionDurationFrom.HasValue && !input.ExecutionDurationTo.HasValue)
                 query = query.Where(x => x.ExecutionDuration >= input.ExecutionDurationFrom);

@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using StudioX.Authorization;
-using StudioX.Runtime.Session;
 using StudioX.Boilerplate.Configuration.Dto;
+using StudioX.Runtime.Session;
 
 namespace StudioX.Boilerplate.Configuration
 {
@@ -10,7 +10,11 @@ namespace StudioX.Boilerplate.Configuration
     {
         public async Task ChangeUiTheme(ChangeUiThemeInput input)
         {
-            await SettingManager.ChangeSettingForUserAsync(StudioXSession.ToUserIdentifier(), AppSettingNames.UiTheme, input.Theme);
+            await SettingManager.ChangeSettingForUserAsync(
+                StudioXSession.ToUserIdentifier(),
+                AppSettingNames.UiTheme,
+                input.Theme
+            );
         }
     }
 }

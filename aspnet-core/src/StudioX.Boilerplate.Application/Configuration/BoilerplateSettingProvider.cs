@@ -7,17 +7,16 @@ namespace StudioX.Boilerplate.Configuration
     {
         public const string DefaultPageSize = "10";
 
-        public const string RolesDefaultPageSize = "RolesDefaultPageSize";
-        public const string UsersDefaultPageSize = "UsersDefaultPageSize";
-        public const string AuditLogsDefaultPageSize = "AuditLogsDefaultPageSize";
-
         public override IEnumerable<SettingDefinition> GetSettingDefinitions(SettingDefinitionProviderContext context)
         {
             return new[]
             {
-                new SettingDefinition(RolesDefaultPageSize, DefaultPageSize),
-                new SettingDefinition(UsersDefaultPageSize, DefaultPageSize),
-                new SettingDefinition(AuditLogsDefaultPageSize, DefaultPageSize)
+                new SettingDefinition(
+                    DefaultPageSize,
+                    DefaultPageSize,
+                    scopes: SettingScopes.All,
+                    isVisibleToClients: true
+                )
             };
         }
     }

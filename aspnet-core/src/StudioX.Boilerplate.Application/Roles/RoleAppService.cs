@@ -28,7 +28,7 @@ namespace StudioX.Boilerplate.Roles
 
     {
         private readonly RoleManager roleManager;
-        private UserManager userManager;
+        private readonly UserManager userManager;
         private TenantManager tenantManager;
 
         public RoleAppService(IRepository<Role> roleRepository,
@@ -123,7 +123,7 @@ namespace StudioX.Boilerplate.Roles
 
             await roleManager.SetGrantedPermissionsAsync(role, grantedPermissions);
 
-            // should reload entity fresh from db after changes
+            // Should reload entity fresh from db after changes
             return MapToEntityDto(role);
         }
 
@@ -135,7 +135,7 @@ namespace StudioX.Boilerplate.Roles
             var role = await roleManager.FindByIdAsync(input.Id.ToString());
             if (role.IsStatic)
             {
-                throw new UserFriendlyException(this.L("CannotDeleteAStaticRole"));
+                throw new UserFriendlyException(L("CannotDeleteAStaticRole"));
             }
 
             var users = await userManager.GetUsersInRoleAsync(role.NormalizedName);
