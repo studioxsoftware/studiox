@@ -617,6 +617,30 @@ namespace StudioX.Authorization.Users
             });
         }
 
+        public override async Task<IList<string>> GetValidTwoFactorProvidersAsync(TUser user)
+        {
+            var providers = new List<string>();
+
+            foreach (var provider in await base.GetValidTwoFactorProvidersAsync(user))
+            {
+                if (provider == "Email" &&
+                    !await IsTrueAsync(StudioXZeroSettingNames.UserManagement.TwoFactorLogin.IsEmailProviderEnabled, user.TenantId))
+                {
+                    continue;
+                }
+
+                if (provider == "Phone" &&
+                    !await IsTrueAsync(StudioXZeroSettingNames.UserManagement.TwoFactorLogin.IsSmsProviderEnabled, user.TenantId))
+                {
+                    continue;
+                }
+
+                providers.Add(provider);
+            }
+
+            return providers;
+        }
+
         private bool IsTrue(string settingName, int? tenantId)
         {
             return GetSettingValue<bool>(settingName, tenantId);
