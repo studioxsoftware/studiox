@@ -10,6 +10,8 @@ namespace StudioX.AspNetCore.Configuration
     {
         WrapResultAttribute DefaultWrapResultAttribute { get; }
 
+        CacheResultAttribute DefaultCacheResultAttribute { get; }
+
         UnitOfWorkAttribute DefaultUnitOfWorkAttribute { get; }
 
         List<Type> FormBodyBindingIgnoredTypes { get; }

@@ -56,4 +56,8 @@
     <Reference Include="System.Transactions" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="AspNetCore\Mvc\Results\Caching\" />
+  </ItemGroup>
+
 </Project>

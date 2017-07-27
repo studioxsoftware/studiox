@@ -21,12 +21,27 @@ namespace StudioX.AspNetCore.Mvc.Results
 
         public virtual void OnResultExecuting(ResultExecutingContext context)
         {
-            if (configuration.SetNoCacheForAjaxResponses && context.HttpContext.Request.IsAjaxRequest())
+            var methodInfo = context.ActionDescriptor.GetMethodInfo();
+
+            var cacheResultAttribute =
+            ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault(
+                methodInfo,
+                configuration.DefaultCacheResultAttribute
+            );
+
+            if (!cacheResultAttribute.NoCache)
+            {
+                SetCache(context,
+                    cacheResultAttribute.MustRevalidate,
+                    cacheResultAttribute.PrivateOnly,
+                    cacheResultAttribute.MaxAge);
+            }
+            else if (cacheResultAttribute.NoCache ||
+                (configuration.SetNoCacheForAjaxResponses && context.HttpContext.Request.IsAjaxRequest()))
             {
                 SetNoCache(context);
             }
 
-            var methodInfo = context.ActionDescriptor.GetMethodInfo();
             var wrapResultAttribute =
                 ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault(
                     methodInfo,
@@ -39,6 +54,18 @@ namespace StudioX.AspNetCore.Mvc.Results
             }
 
             actionResultWrapperFactory.CreateFor(context).Wrap(context);
+        }
+
+
+        private void SetCache(ResultExecutingContext context, bool mustRevalidate, bool privateOnly, int maxAge)
+        {
+            if (maxAge > 0)
+            {
+                context.HttpContext.Response.Headers["Cache-Control"] =
+                    (privateOnly ? "private, " : "public, ") +
+                    (mustRevalidate ? "must-revalidate, " : "") +
+                    ("max-age=" + maxAge);
+            }
         }
 
         public virtual void OnResultExecuted(ResultExecutedContext context)
