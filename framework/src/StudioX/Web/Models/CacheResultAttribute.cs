@@ -11,6 +11,7 @@ namespace StudioX.Web.Models
         public CacheResultAttribute()
         {
         }
+
         CacheResultAttribute(int maxAge, bool privateOnly = false, bool mustRevalidate = true)
             : this(maxAge)
         {

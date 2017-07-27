@@ -16,7 +16,7 @@
     <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <RootNamespace>StudioX.MailKit</RootNamespace>
-    <Version>1.1.3</Version>
+    <Version>1.2.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
