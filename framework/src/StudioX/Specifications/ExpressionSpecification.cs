@@ -4,8 +4,7 @@ using System.Linq.Expressions;
 namespace StudioX.Specifications
 {
     /// <summary>
-    ///     Represents the specification which is represented by the corresponding
-    ///     LINQ expression.
+    ///     Represents the specification which is represented by the corresponding LINQ expression.
     /// </summary>
     /// <typeparam name="T">The type of the object to which the specification is applied.</typeparam>
     public class ExpressionSpecification<T> : Specification<T>
