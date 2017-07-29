@@ -1,3 +1,4 @@
+using System.Reflection;
 using System.Threading.Tasks;
 using StudioX.Threading;
 using Castle.DynamicProxy;
@@ -24,7 +25,18 @@ namespace StudioX.Domain.Uow
         /// <param name="invocation">Method invocation arguments</param>
         public void Intercept(IInvocation invocation)
         {
-            var unitOfWorkAttr = unitOfWorkOptions.GetUnitOfWorkAttributeOrNull(invocation.GetConcreteMethodInvocationTarget());
+            MethodInfo method;
+            try
+            {
+                method = invocation.MethodInvocationTarget;
+            }
+            catch
+            {
+                method = invocation.GetConcreteMethod();
+            }
+
+
+            var unitOfWorkAttr = unitOfWorkOptions.GetUnitOfWorkAttributeOrNull(method);
             if (unitOfWorkAttr == null || unitOfWorkAttr.IsDisabled)
             {
                 //No need to a uow
