@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using StudioX.AspNetCore.Mvc.Results.Caching;
 using StudioX.Domain.Uow;
 using StudioX.Web.Models;
 
@@ -10,7 +11,7 @@ namespace StudioX.AspNetCore.Configuration
     {
         WrapResultAttribute DefaultWrapResultAttribute { get; }
 
-        CacheResultAttribute DefaultCacheResultAttribute { get; }
+        IClientCacheAttribute DefaultClientCacheAttribute { get; set; }
 
         UnitOfWorkAttribute DefaultUnitOfWorkAttribute { get; }
 

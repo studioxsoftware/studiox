@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using StudioX.AspNetCore.Mvc.Results.Caching;
 using StudioX.Domain.Uow;
 using StudioX.Web.Models;
 
@@ -10,7 +11,7 @@ namespace StudioX.AspNetCore.Configuration
     {
         public WrapResultAttribute DefaultWrapResultAttribute { get; }
 
-        public CacheResultAttribute DefaultCacheResultAttribute { get; }
+        public IClientCacheAttribute DefaultClientCacheAttribute { get; set; }
 
         public UnitOfWorkAttribute DefaultUnitOfWorkAttribute { get; }
 
@@ -27,7 +28,7 @@ namespace StudioX.AspNetCore.Configuration
         public StudioXAspNetCoreConfiguration()
         {
             DefaultWrapResultAttribute = new WrapResultAttribute();
-            DefaultCacheResultAttribute = new CacheResultAttribute();
+            DefaultClientCacheAttribute = new NoClientCacheAttribute(false);
             DefaultUnitOfWorkAttribute = new UnitOfWorkAttribute();
             ControllerAssemblySettings = new ControllerAssemblySettingList();
             FormBodyBindingIgnoredTypes = new List<Type>();
