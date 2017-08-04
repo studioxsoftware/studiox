@@ -18,16 +18,6 @@ namespace StudioX.Boilerplate.Roles.Dto
 
             CreateMap<CreateRoleInput, Role>().ForMember(x => x.Permissions, opt => opt.Ignore());
             CreateMap<UpdateRoleInput, Role>().ForMember(x => x.Permissions, opt => opt.Ignore());
-
-            IRepository<Role, int> repository = IocManager.Instance.Resolve<IRepository<Role, int>>();
-            // User and role
-            CreateMap<UserRole, string>().ConvertUsing((r) => {
-                //TODO: Fix, this seems hacky
-                Role role = repository.FirstOrDefault(r.RoleId);
-                return role.DisplayName;
-            });
-
-            IocManager.Instance.Release(repository);
         }
     }
 }
