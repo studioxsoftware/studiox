@@ -90,8 +90,8 @@
                                     @foreach (var role in Model.Roles)
                                     {
                                         <div class="col-sm-6">
-                                            <input type="checkbox" name="role" value="@role.NormalizedName" title="@role.Description"  class="form-control" id="role-@role.Id" />
-                                            <label for="role-@role.Id" title="@role.DisplayName">@role.Name</label>
+                                            <input type="checkbox" name="role" value="@role.NormalizedName" title="@role.Description" class="form-control" id="@string.Format("create-role-{0}", role.Id)"/>
+                                            <label for="@string.Format("create-role-{0}", role.Id)" title="@role.DisplayName">@role.Name</label>
                                         </div>
                                     }
                                 </div>
