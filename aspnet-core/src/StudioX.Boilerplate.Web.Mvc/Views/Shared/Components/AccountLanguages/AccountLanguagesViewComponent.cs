@@ -19,9 +19,7 @@ namespace StudioX.Boilerplate.Web.Views.Shared.Components.AccountLanguages
             var model = new LanguageSelectionViewModel
             {
                 CurrentLanguage = languageManager.CurrentLanguage,
-                Languages = languageManager.GetLanguages()
-                .Where(l => !l.IsDisabled)
-                .ToList(),
+                Languages = languageManager.GetLanguages().Where(l => !l.IsDisabled).ToList(),
                 CurrentUrl = Request.Path
             };
 

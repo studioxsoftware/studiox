@@ -1,5 +1,6 @@
 ﻿import { Component, OnInit, Injector } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
+import * as _ from 'lodash';
 
 @Component({
     selector: 'account-languages',
@@ -20,6 +21,7 @@ export class AccountLanguagesComponent extends AppComponentBase implements OnIni
     }
 
     ngOnInit() {
+        this.languages = _.filter(this.localization.languages, l => !l.isDisabled);
         this.languages = this.localization.languages;
         this.currentLanguage = this.localization.currentLanguage;
     }

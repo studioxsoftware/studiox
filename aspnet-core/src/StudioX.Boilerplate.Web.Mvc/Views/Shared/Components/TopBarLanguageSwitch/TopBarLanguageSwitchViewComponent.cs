@@ -1,4 +1,5 @@
-﻿using StudioX.Localization;
+﻿using System.Linq;
+using StudioX.Localization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace StudioX.Boilerplate.Web.Views.Shared.Components.TopBarLanguageSwitch
@@ -17,7 +18,7 @@ namespace StudioX.Boilerplate.Web.Views.Shared.Components.TopBarLanguageSwitch
             var model = new TopBarLanguageSwitchViewModel
             {
                 CurrentLanguage = languageManager.CurrentLanguage,
-                Languages = languageManager.GetLanguages()
+                Languages = languageManager.GetLanguages().Where(l => !l.IsDisabled).ToList()
             };
 
             return View(model);
