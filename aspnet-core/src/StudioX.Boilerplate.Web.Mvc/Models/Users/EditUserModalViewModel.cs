@@ -13,7 +13,7 @@ namespace StudioX.Boilerplate.Web.Models.Users
 
         public bool UserIsInRole(RoleDto role)
         {
-            return User.Roles != null && User.Roles.Any(r => r == role.Name);
+            return User.RoleNames != null && User.RoleNames.Any(r => r == role.NormalizedName);
         }
     }
 }

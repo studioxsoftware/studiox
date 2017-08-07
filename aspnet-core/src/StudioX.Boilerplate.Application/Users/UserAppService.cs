@@ -6,6 +6,7 @@ using StudioX.Application.Services;
 using StudioX.Application.Services.Dto;
 using StudioX.Authorization;
 using StudioX.Boilerplate.Authorization;
+using StudioX.Boilerplate.Authorization.Roles;
 using StudioX.Boilerplate.Authorization.Users;
 using StudioX.Boilerplate.Users.Dto;
 using StudioX.Collections.Extensions;
@@ -24,12 +25,15 @@ namespace StudioX.Boilerplate.Users
     {
         private readonly UserManager userManager;
         private readonly IPasswordHasher<User> passwordHasher;
+        private readonly RoleManager roleManager;
 
         public UserAppService(IRepository<User, long> userRepository,
             UserManager userManager,
+            RoleManager roleManager,
             IPasswordHasher<User> passwordHasher) : base(userRepository)
         {
             this.userManager = userManager;
+            this.roleManager = roleManager;
             this.passwordHasher = passwordHasher;
 
             GetAllPermissionName = PermissionNames.System.Administration.Users.MainMenu;
@@ -51,7 +55,15 @@ namespace StudioX.Boilerplate.Users
                 .FirstOrDefaultAsync();
         }
 
-        protected override User MapToEntity(CreateUserInput createInput)
+        protected override UserDto MapToEntityDto(User user)
+         {
+             var roles = roleManager.Roles.Where(r => user.Roles.Any(ur => ur.RoleId == r.Id)).Select(r => r.NormalizedName);
+             var userDto = base.MapToEntityDto(user);
+             userDto.RoleNames = roles.ToArray();
+             return userDto;
+         }
+
+    protected override User MapToEntity(CreateUserInput createInput)
         {
             var user = ObjectMapper.Map<User>(createInput);
             user.SetNormalizedNames();
@@ -100,7 +112,7 @@ namespace StudioX.Boilerplate.Users
             user.Password = passwordHasher.HashPassword(user, input.Password);
             user.IsEmailConfirmed = true;
             CheckErrors(await userManager.CreateAsync(user));
-            CheckErrors(await userManager.SetRoles(user, input.Roles));
+            CheckErrors(await userManager.SetRoles(user, input.RoleNames));
 
             CurrentUnitOfWork.SaveChanges();
 
@@ -117,7 +129,7 @@ namespace StudioX.Boilerplate.Users
             MapToEntity(input, user);
 
             CheckErrors(await userManager.UpdateAsync(user));
-            CheckErrors(await userManager.SetRoles(user, input.Roles));
+            CheckErrors(await userManager.SetRoles(user, input.RoleNames));
 
             // Get the user again after updating the roles
             return await Get(input);

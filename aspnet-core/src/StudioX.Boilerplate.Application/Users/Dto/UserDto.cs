@@ -36,6 +36,6 @@ namespace StudioX.Boilerplate.Users.Dto
 
         public DateTime CreationTime { get; set; }
 
-        public string[] Roles { get; set; }
+        public string[] RoleNames { get; set; }
     }
 }

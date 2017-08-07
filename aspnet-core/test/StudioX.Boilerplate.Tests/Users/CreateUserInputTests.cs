@@ -18,7 +18,7 @@ namespace StudioX.Boilerplate.Tests.Users
                 LastName = "User",
                 Password = "123qwe",
                 UserName = "New.User",
-                Roles = new[] {"Admin"}
+                RoleNames = new[] {"Admin"}
             };
         }
 

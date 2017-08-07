@@ -41,7 +41,7 @@ namespace StudioX.Boilerplate.Tests.Users
                 Password = "123qwe",
                 ConfirmPassword = "123qwe",
                 UserName = "New.User",
-                Roles = new[] {"Admin"}
+                RoleNames = new[] {"Admin"}
             };
         }
 
@@ -55,7 +55,7 @@ namespace StudioX.Boilerplate.Tests.Users
                 FirstName = "Updated",
                 LastName = "User",
                 UserName = "Updated.User",
-                Roles = new[] {"Admin"}
+                RoleNames = new[] {"Admin"}
             };
         }
 
@@ -87,7 +87,7 @@ namespace StudioX.Boilerplate.Tests.Users
         {
             //Arrange
             var createInput = GetCreateInput();
-            createInput.Roles = new[] {"NONEXISTANTROLE"};
+            createInput.RoleNames = new[] {"NONEXISTANTROLE"};
 
             //Act, Assert
             await AppService.Create(createInput).ShouldThrowAsync(typeof(StudioXException));
@@ -133,7 +133,7 @@ namespace StudioX.Boilerplate.Tests.Users
             await Create(1); //User Has Admin Permission
 
             var user = GetUpdateInput(keys[0]);
-            user.Roles = new List<string>().ToArray(); //Remove Admin Role
+            user.RoleNames = new List<string>().ToArray(); //Remove Admin Role
 
             // Act
             var userDto = await CheckForValidationErrors(
