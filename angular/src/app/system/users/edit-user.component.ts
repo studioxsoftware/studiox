@@ -31,9 +31,7 @@ export class EditUserComponent extends AppComponentBase {
     }
 
 	userInRole(role: RoleDto, user: UpdateUserInput): string {
-		console.log("UserInRole user:" + user.fullName + " role:" + role.displayName);
-
-		if(user.roles.indexOf(role.displayName)!= -1) {
+		if(user.roleNames.indexOf(role.normalizedName)!= -1) {
 			return "checked";
 		}
 		else {
@@ -81,7 +79,7 @@ export class EditUserComponent extends AppComponentBase {
             }
         });
 
-        this.user.roles = roles;
+        this.user.roleNames = roles;
         this.saving = true;
         this._userService.update(this.user)
             .finally(() => { this.saving = false; })

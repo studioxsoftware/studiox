@@ -35,8 +35,8 @@
         var xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function () {
             if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-                var responseJSON = JSON.parse(xhr.responseText);
-                var result = responseJSON.result;
+                var responseJson = JSON.parse(xhr.responseText);
+                var result = responseJson.result;
                 var expireDate = new Date(Date.now() + (result.expireInSeconds * 1000));
                 studiox.auth.setToken(result.accessToken, expireDate);
                 studiox.swagger.addAuthToken();
@@ -53,3 +53,8 @@
     }
 
 })();
+
+jQuery(document).ready(function () {
+    studiox.swagger.addAuthToken();
+    studiox.swagger.addCsrfToken();
+});

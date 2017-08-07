@@ -3372,7 +3372,7 @@ export class CreateUserInput {
     lastName: string; 
     emailAddress: string; 
     isActive: boolean; 
-    roles: string[]; 
+    roleNames: string[]; 
     password: string; 
     confirmPassword: string;
     constructor(data?: any) {
@@ -3382,10 +3382,10 @@ export class CreateUserInput {
             this.lastName = data["lastName"] !== undefined ? data["lastName"] : null;
             this.emailAddress = data["emailAddress"] !== undefined ? data["emailAddress"] : null;
             this.isActive = data["isActive"] !== undefined ? data["isActive"] : null;
-            if (data["roles"] && data["roles"].constructor === Array) {
-                this.roles = [];
-                for (let item of data["roles"])
-                    this.roles.push(item);
+            if (data["roleNames"] && data["roleNames"].constructor === Array) {
+                this.roleNames = [];
+                for (let item of data["roleNames"])
+                    this.roleNames.push(item);
             }
             this.password = data["password"] !== undefined ? data["password"] : null;
             this.confirmPassword = data["confirmPassword"] !== undefined ? data["confirmPassword"] : null;
@@ -3403,10 +3403,10 @@ export class CreateUserInput {
         data["lastName"] = this.lastName !== undefined ? this.lastName : null;
         data["emailAddress"] = this.emailAddress !== undefined ? this.emailAddress : null;
         data["isActive"] = this.isActive !== undefined ? this.isActive : null;
-        if (this.roles && this.roles.constructor === Array) {
-            data["roles"] = [];
-            for (let item of this.roles)
-                data["roles"].push(item);
+        if (this.roleNames && this.roleNames.constructor === Array) {
+            data["roleNames"] = [];
+            for (let item of this.roleNames)
+                data["roleNames"].push(item);
         }
         data["password"] = this.password !== undefined ? this.password : null;
         data["confirmPassword"] = this.confirmPassword !== undefined ? this.confirmPassword : null;
@@ -3432,7 +3432,7 @@ export class UserDto {
     fullName: string; 
     lastLoginTime: moment.Moment; 
     creationTime: moment.Moment; 
-    roles: string[]; 
+    roleNames: string[]; 
     id: number;
     constructor(data?: any) {
         if (data !== undefined) {
@@ -3444,10 +3444,10 @@ export class UserDto {
             this.fullName = data["fullName"] !== undefined ? data["fullName"] : null;
             this.lastLoginTime = data["lastLoginTime"] ? moment(data["lastLoginTime"].toString()) : null;
             this.creationTime = data["creationTime"] ? moment(data["creationTime"].toString()) : null;
-            if (data["roles"] && data["roles"].constructor === Array) {
-                this.roles = [];
-                for (let item of data["roles"])
-                    this.roles.push(item);
+            if (data["roleNames"] && data["roleNames"].constructor === Array) {
+                this.roleNames = [];
+                for (let item of data["roleNames"])
+                    this.roleNames.push(item);
             }
             this.id = data["id"] !== undefined ? data["id"] : null;
         }
@@ -3467,10 +3467,10 @@ export class UserDto {
         data["fullName"] = this.fullName !== undefined ? this.fullName : null;
         data["lastLoginTime"] = this.lastLoginTime ? this.lastLoginTime.toISOString() : null;
         data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : null;
-        if (this.roles && this.roles.constructor === Array) {
-            data["roles"] = [];
-            for (let item of this.roles)
-                data["roles"].push(item);
+        if (this.roleNames && this.roleNames.constructor === Array) {
+            data["roleNames"] = [];
+            for (let item of this.roleNames)
+                data["roleNames"].push(item);
         }
         data["id"] = this.id !== undefined ? this.id : null;
         return data; 
@@ -3495,7 +3495,7 @@ export class UpdateUserInput {
     fullName: string; 
     lastLoginTime: moment.Moment; 
     creationTime: moment.Moment; 
-    roles: string[]; 
+    roleNames: string[]; 
     id: number;
     constructor(data?: any) {
         if (data !== undefined) {
@@ -3507,10 +3507,10 @@ export class UpdateUserInput {
             this.fullName = data["fullName"] !== undefined ? data["fullName"] : null;
             this.lastLoginTime = data["lastLoginTime"] ? moment(data["lastLoginTime"].toString()) : null;
             this.creationTime = data["creationTime"] ? moment(data["creationTime"].toString()) : null;
-            if (data["roles"] && data["roles"].constructor === Array) {
-                this.roles = [];
-                for (let item of data["roles"])
-                    this.roles.push(item);
+            if (data["roleNames"] && data["roleNames"].constructor === Array) {
+                this.roleNames = [];
+                for (let item of data["roleNames"])
+                    this.roleNames.push(item);
             }
             this.id = data["id"] !== undefined ? data["id"] : null;
         }
@@ -3530,10 +3530,10 @@ export class UpdateUserInput {
         data["fullName"] = this.fullName !== undefined ? this.fullName : null;
         data["lastLoginTime"] = this.lastLoginTime ? this.lastLoginTime.toISOString() : null;
         data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : null;
-        if (this.roles && this.roles.constructor === Array) {
-            data["roles"] = [];
-            for (let item of this.roles)
-                data["roles"].push(item);
+        if (this.roleNames && this.roleNames.constructor === Array) {
+            data["roleNames"] = [];
+            for (let item of this.roleNames)
+                data["roleNames"].push(item);
         }
         data["id"] = this.id !== undefined ? this.id : null;
         return data; 
