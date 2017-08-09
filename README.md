@@ -15,9 +15,7 @@ See <a href="https://studioxsoftware.github.io/pages/documents/NLayerArchitectur
  
 User Interface is based on [BSB Admin theme](https://github.com/gurayyarar/AdminBSBMaterialDesign).
  
-## Startup Templates
-
-Create your solution based on free or premium startup templates. Either with an Angular Single-Page Application or AspNetMVC & jQuery architecture.
+## Sreenshots
 
 #### Swagger
 
