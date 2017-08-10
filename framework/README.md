@@ -2,8 +2,7 @@
 StudioX - Framework
 ===================
 
-What is StudioX Framework?
-------------
+### What is StudioX Framework?
 
 StudioX Framework is a starting point for new modern web applications using best practices and popular tools. It's aimed to be a __SOLID__ model, a general-purpose __application framework__ and a project __template__.
 
