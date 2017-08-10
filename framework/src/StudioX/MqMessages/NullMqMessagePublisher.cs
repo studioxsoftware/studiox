@@ -4,19 +4,17 @@ namespace StudioX.MqMessages
 {
     public class NullMqMessagePublisher : IMqMessagePublisher
     {
-        public static NullMqMessagePublisher Instance { get { return SingletonInstance; } }
+        public static NullMqMessagePublisher Instance { get; } = new NullMqMessagePublisher();
 
-        private static readonly NullMqMessagePublisher SingletonInstance = new NullMqMessagePublisher();
-        
         public Task PublishAsync(object mqMessages)
         {
-            //do nothing.
+            // Do nothing.
             return Task.FromResult(0);
         }
         
         public void Publish(object mqMessages)
         {
-            //do nothing.
+            // Do nothing.
         }
     }
 }
