@@ -8,7 +8,7 @@ namespace StudioX.Tests.Auditing
     public class AuditingHelperTests
     {
         [Fact]
-        public void IgnoredLongPropertiesLongShouldLongNotLongBeLongSerialized()
+        public void IgnoredPropertiesShouldNotBeSerialized()
         {
             var json = new JsonNetAuditSerializer(new AuditingConfiguration {IgnoredTypes = { typeof(Exception) }})
                 .Serialize(new AuditingHelperTestPersonDto
