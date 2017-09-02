@@ -24,6 +24,9 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Localization\Sources\StudioXXmlSource\*.xml;Timing\Timezone\Mapping\*.xml" Exclude="bin\**;obj\**;**\*.xproj;packages\**;@(EmbeddedResource)" />
+    <Compile Remove="MqMessages\**" />
+    <EmbeddedResource Remove="MqMessages\**" />
+    <None Remove="MqMessages\**" />
     <None Update="bin\Release\net46\StudioX.pdb">
       <PackagePath>lib/net46/</PackagePath>
       <Pack>true</Pack>
