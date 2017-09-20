@@ -17,32 +17,38 @@ namespace StudioX.WebApi.Controllers.ApiExplorer
 {
     public class StudioXApiExplorer : System.Web.Http.Description.ApiExplorer, IApiExplorer, ISingletonDependency
     {
-        private readonly Lazy<Collection<ApiDescription>> apiDescriptions;
-        private readonly IStudioXWebApiConfiguration studioXWebApiConfiguration;
-        private readonly DynamicApiControllerManager dynamicApiControllerManager;
+        private readonly Lazy<Collection<ApiDescription>> _apiDescriptions;
+        private readonly IStudioXWebApiConfiguration _studioXWebApiConfiguration;
+        private readonly DynamicApiControllerManager _dynamicApiControllerManager;
 
         public StudioXApiExplorer(
-            IStudioXWebApiConfiguration webApiConfiguration,
+            IStudioXWebApiConfiguration studioxWebApiConfiguration,
             DynamicApiControllerManager dynamicApiControllerManager
-            ) : base(webApiConfiguration.HttpConfiguration)
+            ) : base(studioxWebApiConfiguration.HttpConfiguration)
         {
-            apiDescriptions = new Lazy<Collection<ApiDescription>>(InitializeApiDescriptions);
-            studioXWebApiConfiguration = webApiConfiguration;
-            this.dynamicApiControllerManager = dynamicApiControllerManager;
+            _apiDescriptions = new Lazy<Collection<ApiDescription>>(InitializeApiDescriptions);
+            _studioXWebApiConfiguration = studioxWebApiConfiguration;
+            _dynamicApiControllerManager = dynamicApiControllerManager;
         }
 
-        public new Collection<ApiDescription> ApiDescriptions => apiDescriptions.Value;
+        public new Collection<ApiDescription> ApiDescriptions
+        {
+            get
+            {
+                return _apiDescriptions.Value;
+            }
+        }
 
         private Collection<ApiDescription> InitializeApiDescriptions()
         {
-            var initializeApiDescriptions = new Collection<ApiDescription>();
+            var apiDescriptions = new Collection<ApiDescription>();
 
             foreach (var item in base.ApiDescriptions)
             {
-                initializeApiDescriptions.Add(item);
+                apiDescriptions.Add(item);
             }
 
-            var dynamicApiControllerInfos = dynamicApiControllerManager.GetAll();
+            var dynamicApiControllerInfos = _dynamicApiControllerManager.GetAll();
             foreach (var dynamicApiControllerInfo in dynamicApiControllerInfos)
             {
                 if (IsApiExplorerDisabled(dynamicApiControllerInfo))
@@ -59,14 +65,14 @@ namespace StudioX.WebApi.Controllers.ApiExplorer
 
                     var apiDescription = new ApiDescription();
 
-                    var controllerDescriptor = new DynamicHttpControllerDescriptor(studioXWebApiConfiguration.HttpConfiguration, dynamicApiControllerInfo);
+                    var controllerDescriptor = new DynamicHttpControllerDescriptor(_studioXWebApiConfiguration.HttpConfiguration, dynamicApiControllerInfo);
                     controllerDescriptor.ControllerName = controllerDescriptor.ControllerName.Replace("/", "_");
-                    var actionDescriptor = new DynamicHttpActionDescriptor(studioXWebApiConfiguration, controllerDescriptor, dynamicApiActionInfo);
+                    var actionDescriptor = new DynamicHttpActionDescriptor(_studioXWebApiConfiguration, controllerDescriptor, dynamicApiActionInfo);
 
                     apiDescription.ActionDescriptor = actionDescriptor;
                     apiDescription.HttpMethod = actionDescriptor.SupportedHttpMethods[0];
 
-                    var actionValueBinder = studioXWebApiConfiguration.HttpConfiguration.Services.GetActionValueBinder();
+                    var actionValueBinder = _studioXWebApiConfiguration.HttpConfiguration.Services.GetActionValueBinder();
                     var actionBinding = actionValueBinder.GetBinding(actionDescriptor);
 
                     apiDescription.ParameterDescriptions.Clear();
@@ -79,11 +85,11 @@ namespace StudioX.WebApi.Controllers.ApiExplorer
 
                     apiDescription.RelativePath = "api/services/" + dynamicApiControllerInfo.ServiceName + "/" + dynamicApiActionInfo.ActionName;
 
-                    initializeApiDescriptions.Add(apiDescription);
+                    apiDescriptions.Add(apiDescription);
                 }
             }
 
-            return initializeApiDescriptions;
+            return apiDescriptions;
         }
 
         private static bool IsApiExplorerDisabled(DynamicApiControllerInfo dynamicApiControllerInfo)

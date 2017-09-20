@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Castle.Core.Logging;
 using StudioX.Collections.Extensions;
+using Castle.Core.Logging;
 
 namespace StudioX.Reflection
 {
@@ -11,13 +11,13 @@ namespace StudioX.Reflection
     {
         public ILogger Logger { get; set; }
 
-        private readonly IAssemblyFinder assemblyFinder;
-        private readonly object syncObj = new object();
-        private Type[] types;
+        private readonly IAssemblyFinder _assemblyFinder;
+        private readonly object _syncObj = new object();
+        private Type[] _types;
 
         public TypeFinder(IAssemblyFinder assemblyFinder)
         {
-            this.assemblyFinder = assemblyFinder;
+            _assemblyFinder = assemblyFinder;
             Logger = NullLogger.Instance;
         }
 
@@ -33,25 +33,25 @@ namespace StudioX.Reflection
 
         private Type[] GetAllTypes()
         {
-            if (types == null)
+            if (_types == null)
             {
-                lock (syncObj)
+                lock (_syncObj)
                 {
-                    if (types == null)
+                    if (_types == null)
                     {
-                        types = CreateTypeList().ToArray();
+                        _types = CreateTypeList().ToArray();
                     }
                 }
             }
 
-            return types;
+            return _types;
         }
 
         private List<Type> CreateTypeList()
         {
             var allTypes = new List<Type>();
 
-            var assemblies = assemblyFinder.GetAllAssemblies().Distinct();
+            var assemblies = _assemblyFinder.GetAllAssemblies().Distinct();
 
             foreach (var assembly in assemblies)
             {

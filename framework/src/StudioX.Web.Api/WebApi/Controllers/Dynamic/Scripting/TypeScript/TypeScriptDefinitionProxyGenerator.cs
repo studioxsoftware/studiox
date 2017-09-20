@@ -11,27 +11,27 @@ namespace StudioX.WebApi.Controllers.Dynamic.Scripting.TypeScript
 {
     internal class TypeScriptDefinitionProxyGenerator : ITransientDependency
     {
-        private DynamicApiControllerInfo controllerInfo;
-        private HashSet<Type> typesToBeDone = new HashSet<Type>();
-        private HashSet<Type> doneTypes = new HashSet<Type>();
-        private string servicePrefix = "";
+        private DynamicApiControllerInfo _controllerInfo;
+        private HashSet<Type> _typesToBeDone = new HashSet<Type>();
+        private HashSet<Type> _doneTypes = new HashSet<Type>();
+        private string _servicePrefix = "";
         public string Generate(DynamicApiControllerInfo controllerInfo, string servicePrefix)
         {
-            if (this.servicePrefix != servicePrefix)
+            if (_servicePrefix != servicePrefix)
             {
                 //if there is a change in servicePrefix, we need to generate the types again
-                this.servicePrefix = servicePrefix;
-                typesToBeDone = new HashSet<Type>();
-                doneTypes = new HashSet<Type>();
+                _servicePrefix = servicePrefix;
+                _typesToBeDone = new HashSet<Type>();
+                _doneTypes = new HashSet<Type>();
             }
-            this.controllerInfo = controllerInfo;
+            _controllerInfo = controllerInfo;
 
             var script = new StringBuilder();
 
-            script.AppendLine("     interface " + this.controllerInfo.ServiceName.Substring(this.controllerInfo.ServiceName.IndexOf('/') + 1));
+            script.AppendLine("     interface " + _controllerInfo.ServiceName.Substring(_controllerInfo.ServiceName.IndexOf('/') + 1));
             script.AppendLine("     {");
 
-            foreach (var methodInfo in this.controllerInfo.Actions.Values)
+            foreach (var methodInfo in _controllerInfo.Actions.Values)
             {
                 PrepareInputParameterTypes(methodInfo.Method);
                 
@@ -46,13 +46,13 @@ namespace StudioX.WebApi.Controllers.Dynamic.Scripting.TypeScript
             }
 
             script.AppendLine("     }");
-            while (typesToBeDone != null && typesToBeDone.Count > 0)
+            while (_typesToBeDone != null && _typesToBeDone.Count > 0)
             {
-                Type type = typesToBeDone.First();
+                Type type = _typesToBeDone.First();
 
                 script.AppendLine(GenerateTypeScript(type));
-                doneTypes.Add(type);
-                typesToBeDone.RemoveWhere(x => x == type);
+                _doneTypes.Add(type);
+                _typesToBeDone.RemoveWhere(x => x == type);
             }
             return script.ToString();
         }
@@ -61,7 +61,7 @@ namespace StudioX.WebApi.Controllers.Dynamic.Scripting.TypeScript
         {
             foreach (var type in newTypes)
                 if (this.CanAddToBeDone(type))
-                    typesToBeDone.Add(type);
+                    _typesToBeDone.Add(type);
         }
 
         protected string GetMethodInputParameter(MethodInfo methodInfo)
@@ -125,7 +125,7 @@ namespace StudioX.WebApi.Controllers.Dynamic.Scripting.TypeScript
         {
             if (type == typeof(Task))
                 return false;
-            if (typesToBeDone.Count(z => z.FullName == type.FullName) == 0 && !TypeScriptHelper.IsIgnorantType(type) && !TypeScriptHelper.IsBasicType(type) && doneTypes.Count(z => z.FullName == type.FullName) == 0)
+            if (_typesToBeDone.Count(z => z.FullName == type.FullName) == 0 && !TypeScriptHelper.IsIgnorantType(type) && !TypeScriptHelper.IsBasicType(type) && _doneTypes.Count(z => z.FullName == type.FullName) == 0)
                 return true;
             return false;
         }

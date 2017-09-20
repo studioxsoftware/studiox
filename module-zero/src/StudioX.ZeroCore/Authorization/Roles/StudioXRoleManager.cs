@@ -11,7 +11,6 @@ using StudioX.Runtime.Session;
 using StudioX.UI;
 using StudioX.Zero;
 using StudioX.Zero.Configuration;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 
@@ -25,7 +24,7 @@ namespace StudioX.Authorization.Roles
 
         public IStudioXSession StudioXSession { get; set; }
 
-        public IRoleManagementConfig RoleManagementConfig { get; private set; }
+        public IRoleManagementConfig RoleManagementConfig { get; }
 
         private IRolePermissionStore<TRole> RolePermissionStore
         {
@@ -40,11 +39,11 @@ namespace StudioX.Authorization.Roles
             }
         }
 
-        protected StudioXRoleStore<TRole, TUser> StudioXStore { get; private set; }
+        protected StudioXRoleStore<TRole, TUser> StudioXStore { get; }
 
-        private readonly IPermissionManager permissionManager;
-        private readonly ICacheManager cacheManager;
-        private readonly IUnitOfWorkManager unitOfWorkManager;
+        private readonly IPermissionManager _permissionManager;
+        private readonly ICacheManager _cacheManager;
+        private readonly IUnitOfWorkManager _unitOfWorkManager;
 
         public StudioXRoleManager(
             StudioXRoleStore<TRole, TUser> store,
@@ -52,7 +51,6 @@ namespace StudioX.Authorization.Roles
             ILookupNormalizer keyNormalizer,
             IdentityErrorDescriber errors,
             ILogger<StudioXRoleManager<TRole, TUser>> logger,
-            IHttpContextAccessor contextAccessor, 
             IPermissionManager permissionManager,
             ICacheManager cacheManager, 
             IUnitOfWorkManager unitOfWorkManager,
@@ -62,12 +60,11 @@ namespace StudioX.Authorization.Roles
                   roleValidators,
                   keyNormalizer,
                   errors,
-                  logger,
-                  contextAccessor)
+                  logger)
         {
-            this.permissionManager = permissionManager;
-            this.cacheManager = cacheManager;
-            this.unitOfWorkManager = unitOfWorkManager;
+            _permissionManager = permissionManager;
+            _cacheManager = cacheManager;
+            _unitOfWorkManager = unitOfWorkManager;
 
             RoleManagementConfig = roleManagementConfig;
             StudioXStore = store;
@@ -83,7 +80,7 @@ namespace StudioX.Authorization.Roles
         /// <returns>True, if the role has the permission</returns>
         public virtual async Task<bool> IsGrantedAsync(string roleName, string permissionName)
         {
-            return await IsGrantedAsync((await GetRoleByNameAsync(roleName)).Id, permissionManager.GetPermission(permissionName));
+            return await IsGrantedAsync((await GetRoleByNameAsync(roleName)).Id, _permissionManager.GetPermission(permissionName));
         }
 
         /// <summary>
@@ -94,7 +91,7 @@ namespace StudioX.Authorization.Roles
         /// <returns>True, if the role has the permission</returns>
         public virtual async Task<bool> IsGrantedAsync(int roleId, string permissionName)
         {
-            return await IsGrantedAsync(roleId, permissionManager.GetPermission(permissionName));
+            return await IsGrantedAsync(roleId, _permissionManager.GetPermission(permissionName));
         }
 
         /// <summary>
@@ -152,7 +149,7 @@ namespace StudioX.Authorization.Roles
         {
             var permissionList = new List<Permission>();
 
-            foreach (var permission in permissionManager.GetAllPermissions())
+            foreach (var permission in _permissionManager.GetAllPermissions())
             {
                 if (await IsGrantedAsync(role.Id, permission))
                 {
@@ -232,7 +229,7 @@ namespace StudioX.Authorization.Roles
         /// <param name="role">Role</param>
         public async Task ProhibitAllPermissionsAsync(TRole role)
         {
-            foreach (var permission in permissionManager.GetAllPermissions())
+            foreach (var permission in _permissionManager.GetAllPermissions())
             {
                 await ProhibitPermissionAsync(role, permission);
             }
@@ -333,7 +330,7 @@ namespace StudioX.Authorization.Roles
 
         public async Task GrantAllPermissionsAsync(TRole role)
         {
-            var permissions = permissionManager.GetAllPermissions(role.GetMultiTenancySide());
+            var permissions = _permissionManager.GetAllPermissions(role.GetMultiTenancySide());
             await SetGrantedPermissionsAsync(role, permissions);
         }
 
@@ -342,7 +339,7 @@ namespace StudioX.Authorization.Roles
         {
             var staticRoleDefinitions = RoleManagementConfig.StaticRoles.Where(sr => sr.Side == MultiTenancySides.Tenant);
 
-            using (unitOfWorkManager.Current.SetTenantId(tenantId))
+            using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {
                 foreach (var staticRoleDefinition in staticRoleDefinitions)
                 {
@@ -390,7 +387,7 @@ namespace StudioX.Authorization.Roles
         private async Task<RolePermissionCacheItem> GetRolePermissionCacheItemAsync(int roleId)
         {
             var cacheKey = roleId + "@" + (GetCurrentTenantId() ?? 0);
-            return await cacheManager.GetRolePermissionCache().GetAsync(cacheKey, async () =>
+            return await _cacheManager.GetRolePermissionCache().GetAsync(cacheKey, async () =>
             {
                 var newCacheItem = new RolePermissionCacheItem(roleId);
 
@@ -413,9 +410,9 @@ namespace StudioX.Authorization.Roles
 
         private int? GetCurrentTenantId()
         {
-            if (unitOfWorkManager.Current != null)
+            if (_unitOfWorkManager.Current != null)
             {
-                return unitOfWorkManager.Current.GetTenantId();
+                return _unitOfWorkManager.Current.GetTenantId();
             }
 
             return StudioXSession.TenantId;

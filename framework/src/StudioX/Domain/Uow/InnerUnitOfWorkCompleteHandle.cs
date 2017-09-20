@@ -14,30 +14,30 @@ namespace StudioX.Domain.Uow
     {
         public const string DidNotCallCompleteMethodExceptionMessage = "Did not call Complete method of a unit of work.";
 
-        private volatile bool isCompleteCalled;
-        private volatile bool isDisposed;
+        private volatile bool _isCompleteCalled;
+        private volatile bool _isDisposed;
 
         public void Complete()
         {
-            isCompleteCalled = true;
+            _isCompleteCalled = true;
         }
 
         public Task CompleteAsync()
         {
-            isCompleteCalled = true;
+            _isCompleteCalled = true;
             return Task.FromResult(0);
         }
 
         public void Dispose()
         {
-            if (isDisposed)
+            if (_isDisposed)
             {
                 return;
             }
 
-            isDisposed = true;
+            _isDisposed = true;
 
-            if (!isCompleteCalled)
+            if (!_isCompleteCalled)
             {
                 if (HasException())
                 {

@@ -13,22 +13,22 @@ namespace StudioX.BackgroundJobs
     /// </summary>
     public class BackgroundJobStore : IBackgroundJobStore, ITransientDependency
     {
-        private readonly IRepository<BackgroundJobInfo, long> backgroundJobRepository;
+        private readonly IRepository<BackgroundJobInfo, long> _backgroundJobRepository;
 
         public BackgroundJobStore(IRepository<BackgroundJobInfo, long> backgroundJobRepository)
         {
-            this.backgroundJobRepository = backgroundJobRepository;
+            _backgroundJobRepository = backgroundJobRepository;
         }
 
         public Task InsertAsync(BackgroundJobInfo jobInfo)
         {
-            return backgroundJobRepository.InsertAsync(jobInfo);
+            return _backgroundJobRepository.InsertAsync(jobInfo);
         }
 
         [UnitOfWork]
         public virtual Task<List<BackgroundJobInfo>> GetWaitingJobsAsync(int maxResultCount)
         {
-            var waitingJobs = backgroundJobRepository.GetAll()
+            var waitingJobs = _backgroundJobRepository.GetAll()
                 .Where(t => !t.IsAbandoned && t.NextTryTime <= Clock.Now)
                 .OrderByDescending(t => t.Priority)
                 .ThenBy(t => t.TryCount)
@@ -41,12 +41,12 @@ namespace StudioX.BackgroundJobs
 
         public Task DeleteAsync(BackgroundJobInfo jobInfo)
         {
-            return backgroundJobRepository.DeleteAsync(jobInfo);
+            return _backgroundJobRepository.DeleteAsync(jobInfo);
         }
 
         public Task UpdateAsync(BackgroundJobInfo jobInfo)
         {
-            return backgroundJobRepository.UpdateAsync(jobInfo);
+            return _backgroundJobRepository.UpdateAsync(jobInfo);
         }
     }
 }

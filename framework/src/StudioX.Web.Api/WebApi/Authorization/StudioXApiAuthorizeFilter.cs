@@ -25,10 +25,10 @@ namespace StudioX.WebApi.Authorization
     {
         public bool AllowMultiple => false;
 
-        private readonly IAuthorizationHelper authorizationHelper;
-        private readonly IStudioXWebApiConfiguration configuration;
-        private readonly ILocalizationManager localizationManager;
-        private readonly IEventBus eventBus;
+        private readonly IAuthorizationHelper _authorizationHelper;
+        private readonly IStudioXWebApiConfiguration _configuration;
+        private readonly ILocalizationManager _localizationManager;
+        private readonly IEventBus _eventBus;
 
         public StudioXApiAuthorizeFilter(
             IAuthorizationHelper authorizationHelper, 
@@ -36,10 +36,10 @@ namespace StudioX.WebApi.Authorization
             ILocalizationManager localizationManager,
             IEventBus eventBus)
         {
-            this.authorizationHelper = authorizationHelper;
-            this.configuration = configuration;
-            this.localizationManager = localizationManager;
-            this.eventBus = eventBus;
+            _authorizationHelper = authorizationHelper;
+            _configuration = configuration;
+            _localizationManager = localizationManager;
+            _eventBus = eventBus;
         }
 
         public virtual async Task<HttpResponseMessage> ExecuteAuthorizationFilterAsync(
@@ -66,13 +66,13 @@ namespace StudioX.WebApi.Authorization
 
             try
             {
-                await authorizationHelper.AuthorizeAsync(methodInfo, methodInfo.DeclaringType);
+                await _authorizationHelper.AuthorizeAsync(methodInfo, methodInfo.DeclaringType);
                 return await continuation();
             }
             catch (StudioXAuthorizationException ex)
             {
                 LogHelper.Logger.Warn(ex.ToString(), ex);
-                eventBus.Trigger(this, new StudioXHandledExceptionData(ex));
+                _eventBus.Trigger(this, new StudioXHandledExceptionData(ex));
                 return CreateUnAuthorizedResponse(actionContext);
             }
         }
@@ -83,7 +83,7 @@ namespace StudioX.WebApi.Authorization
 
             var wrapResultAttribute =
                 HttpActionDescriptorHelper.GetWrapResultAttributeOrNull(actionContext.ActionDescriptor) ??
-                configuration.DefaultWrapResultAttribute;
+                _configuration.DefaultWrapResultAttribute;
 
             if (!wrapResultAttribute.WrapOnError)
             {
@@ -97,7 +97,7 @@ namespace StudioX.WebApi.Authorization
                         GetUnAuthorizedErrorMessage(statusCode),
                         true
                     ),
-                    configuration.HttpConfiguration.Formatters.JsonFormatter
+                    _configuration.HttpConfiguration.Formatters.JsonFormatter
                 )
             };
         }
@@ -107,14 +107,14 @@ namespace StudioX.WebApi.Authorization
             if (statusCode == HttpStatusCode.Forbidden)
             {
                 return new ErrorInfo(
-                    localizationManager.GetString(StudioXWebConsts.LocalizaionSourceName, "DefaultError403"),
-                    localizationManager.GetString(StudioXWebConsts.LocalizaionSourceName, "DefaultErrorDetail403")
+                    _localizationManager.GetString(StudioXWebConsts.LocalizaionSourceName, "DefaultError403"),
+                    _localizationManager.GetString(StudioXWebConsts.LocalizaionSourceName, "DefaultErrorDetail403")
                 );
             }
 
             return new ErrorInfo(
-                localizationManager.GetString(StudioXWebConsts.LocalizaionSourceName, "DefaultError401"),
-                localizationManager.GetString(StudioXWebConsts.LocalizaionSourceName, "DefaultErrorDetail401")
+                _localizationManager.GetString(StudioXWebConsts.LocalizaionSourceName, "DefaultError401"),
+                _localizationManager.GetString(StudioXWebConsts.LocalizaionSourceName, "DefaultErrorDetail401")
             );
         }
 

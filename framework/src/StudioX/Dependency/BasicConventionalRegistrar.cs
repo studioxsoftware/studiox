@@ -5,8 +5,7 @@ using Castle.MicroKernel.Registration;
 namespace StudioX.Dependency
 {
     /// <summary>
-    ///     This class is used to register basic dependency implementations such as <see cref="ITransientDependency" /> and
-    ///     <see cref="ISingletonDependency" />.
+    /// This class is used to register basic dependency implementations such as <see cref="ITransientDependency"/> and <see cref="ISingletonDependency"/>.
     /// </summary>
     public class BasicConventionalRegistrar : IConventionalDependencyRegistrar
     {
@@ -21,7 +20,7 @@ namespace StudioX.Dependency
                     .WithService.Self()
                     .WithService.DefaultInterfaces()
                     .LifestyleTransient()
-            );
+                );
 
             //Singleton
             context.IocManager.IocContainer.Register(
@@ -32,7 +31,7 @@ namespace StudioX.Dependency
                     .WithService.Self()
                     .WithService.DefaultInterfaces()
                     .LifestyleSingleton()
-            );
+                );
 
             //Windsor Interceptors
             context.IocManager.IocContainer.Register(
@@ -42,7 +41,7 @@ namespace StudioX.Dependency
                     .If(type => !type.GetTypeInfo().IsGenericTypeDefinition)
                     .WithService.Self()
                     .LifestyleTransient()
-            );
+                );
         }
     }
 }

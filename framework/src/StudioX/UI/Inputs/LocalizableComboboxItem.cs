@@ -12,6 +12,7 @@ namespace StudioX.UI.Inputs
 
         public LocalizableComboboxItem()
         {
+            
         }
 
         public LocalizableComboboxItem(string value, ILocalizableString displayText)

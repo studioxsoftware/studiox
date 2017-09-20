@@ -13,23 +13,23 @@ namespace StudioX.Authorization.Users
         IEventHandler<EntityDeletedEventData<StudioXUserBase>>,
         ITransientDependency
     {
-        private readonly IRepository<UserRole, long> userRoleRepository;
-        private readonly IUnitOfWorkManager unitOfWorkManager;
+        private readonly IRepository<UserRole, long> _userRoleRepository;
+        private readonly IUnitOfWorkManager _unitOfWorkManager;
 
         public UserRoleRemover(
             IUnitOfWorkManager unitOfWorkManager, 
             IRepository<UserRole, long> userRoleRepository)
         {
-            this.unitOfWorkManager = unitOfWorkManager;
-            this.userRoleRepository = userRoleRepository;
+            _unitOfWorkManager = unitOfWorkManager;
+            _userRoleRepository = userRoleRepository;
         }
 
         [UnitOfWork]
         public virtual void HandleEvent(EntityDeletedEventData<StudioXUserBase> eventData)
         {
-            using (unitOfWorkManager.Current.SetTenantId(eventData.Entity.TenantId))
+            using (_unitOfWorkManager.Current.SetTenantId(eventData.Entity.TenantId))
             {
-                userRoleRepository.Delete(
+                _userRoleRepository.Delete(
                     ur => ur.UserId == eventData.Entity.Id
                 );
             }

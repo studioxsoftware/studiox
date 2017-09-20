@@ -3,7 +3,7 @@
   <Import Project="..\..\common.props" />
   
   <PropertyGroup>
-    <TargetFrameworks>net46;netstandard1.6</TargetFrameworks>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>StudioX.AspNetCore</AssemblyName>
     <PackageId>StudioX.AspNetCore</PackageId>
@@ -16,25 +16,17 @@
     <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <RootNamespace>StudioX</RootNamespace>
-    <Version>1.3.0</Version>
   </PropertyGroup>
   
   <ItemGroup>
     <Compile Remove="Localization\**" />
-    <Compile Remove="Wrapping\**" />
     <EmbeddedResource Remove="Localization\**" />
-    <EmbeddedResource Remove="Wrapping\**" />
     <None Remove="Localization\**" />
-    <None Remove="Wrapping\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="bin\Release\net46\StudioX.AspNetCore.pdb">
-      <PackagePath>lib/net46/</PackagePath>
-      <Pack>true</Pack>
-    </None>
-    <None Update="bin\Release\netstandard1.6\StudioX.AspNetCore.pdb">
-      <PackagePath>lib/netstandard1.6/</PackagePath>
+    <None Include="bin\Release\netstandard2.0\StudioX.AspNetCore.pdb">
+      <PackagePath>lib/netstandard2.0/</PackagePath>
       <Pack>true</Pack>
     </None>
   </ItemGroup>
@@ -44,20 +36,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="1.1.3" />
-    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="1.1.2" />
-    <PackageReference Include="Castle.LoggingFacility.MsLogging" Version="2.1.1" />
-    <PackageReference Include="Castle.Windsor.MsDependencyInjection" Version="2.1.1" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">
-    <Reference Include="System" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Transactions" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="AspNetCore\Mvc\Results\Caching\" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.0.0" />
+    <PackageReference Include="Castle.LoggingFacility.MsLogging" Version="3.0.0" />
+    <PackageReference Include="Castle.Windsor.MsDependencyInjection" Version="3.0.0" />
   </ItemGroup>
 
 </Project>

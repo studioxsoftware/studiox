@@ -3,7 +3,7 @@
   <Import Project="..\..\common.props" />
   
   <PropertyGroup>
-    <TargetFramework>net46</TargetFramework>
+    <TargetFramework>net461</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>StudioX.EntityFramework.GraphDiff</AssemblyName>
     <PackageId>StudioX.EntityFramework.GraphDiff</PackageId>
@@ -13,12 +13,11 @@
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <RootNamespace>StudioX.EntityFramework</RootNamespace>
-    <Version>1.3.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Update="bin\Release\net46\StudioX.EntityFramework.GraphDiff.pdb">
-      <PackagePath>lib/net46/</PackagePath>
+    <None Include="bin\Release\net461\StudioX.EntityFramework.GraphDiff.pdb">
+      <PackagePath>lib/net461/</PackagePath>
       <Pack>true</Pack>
     </None>
   </ItemGroup>
@@ -33,7 +32,7 @@
     <PackageReference Include="RefactorThis.GraphDiff" Version="2.0.1" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>

@@ -18,8 +18,8 @@ namespace StudioX.Web.SignalR
         /// </summary>
         public static List<Assembly> IgnoredAssemblies { get; private set; }
 
-        private readonly IContractResolver camelCaseContractResolver;
-        private readonly IContractResolver defaultContractSerializer;
+        private readonly IContractResolver _camelCaseContractResolver;
+        private readonly IContractResolver _defaultContractSerializer;
 
         static StudioXSignalRContractResolver()
         {
@@ -34,18 +34,18 @@ namespace StudioX.Web.SignalR
         /// </summary>
         public StudioXSignalRContractResolver()
         {
-            defaultContractSerializer = new DefaultContractResolver();
-            camelCaseContractResolver = new CamelCasePropertyNamesContractResolver();
+            _defaultContractSerializer = new DefaultContractResolver();
+            _camelCaseContractResolver = new CamelCasePropertyNamesContractResolver();
         }
 
         public JsonContract ResolveContract(Type type)
         {
             if (IgnoredAssemblies.Contains(type.Assembly))
             {
-                return defaultContractSerializer.ResolveContract(type);
+                return _defaultContractSerializer.ResolveContract(type);
             }
 
-            return camelCaseContractResolver.ResolveContract(type);
+            return _camelCaseContractResolver.ResolveContract(type);
         }
     }
 }

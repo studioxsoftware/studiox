@@ -7,16 +7,16 @@ namespace StudioX.AspNetCore.MultiTenancy
 {
     public class HttpCookieTenantResolveContributor : ITenantResolveContributor, ITransientDependency
     {
-        private readonly IHttpContextAccessor httpContextAccessor;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public HttpCookieTenantResolveContributor(IHttpContextAccessor httpContextAccessor)
         {
-            this.httpContextAccessor = httpContextAccessor;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public int? ResolveTenantId()
         {
-            var httpContext = httpContextAccessor.HttpContext;
+            var httpContext = _httpContextAccessor.HttpContext;
             if (httpContext == null)
             {
                 return null;

@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using System.Globalization;
 
 namespace StudioX.AspNetCore
 {
@@ -55,8 +56,8 @@ namespace StudioX.AspNetCore
 
         private static void InitializeStudioX(IApplicationBuilder app)
         {
-            var bootstrapper = app.ApplicationServices.GetRequiredService<StudioXBootstrapper>();
-            bootstrapper.Initialize();
+            var studioxBootstrapper = app.ApplicationServices.GetRequiredService<StudioXBootstrapper>();
+            studioxBootstrapper.Initialize();
         }
 
         public static void UseCastleLoggerFactory(this IApplicationBuilder app)
@@ -79,7 +80,7 @@ namespace StudioX.AspNetCore
             {
                 var supportedCultures = languageManager.Object
                     .GetLanguages()
-                    .Select(l => CultureInfoHelper.Get(l.Name))
+                    .Select(l => CultureInfo.GetCultureInfo(l.Name))
                     .ToArray();
 
                 var options = new RequestLocalizationOptions

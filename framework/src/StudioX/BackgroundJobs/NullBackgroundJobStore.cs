@@ -4,10 +4,9 @@ using System.Threading.Tasks;
 namespace StudioX.BackgroundJobs
 {
     /// <summary>
-    ///     Null pattern implementation of <see cref="IBackgroundJobStore" />.
-    ///     It's used if <see cref="IBackgroundJobStore" /> is not implemented by actual persistent store
-    ///     and job execution is not enabled (<see cref="IBackgroundJobConfiguration.IsJobExecutionEnabled" />) for the
-    ///     application.
+    /// Null pattern implementation of <see cref="IBackgroundJobStore"/>.
+    /// It's used if <see cref="IBackgroundJobStore"/> is not implemented by actual persistent store
+    /// and job execution is not enabled (<see cref="IBackgroundJobConfiguration.IsJobExecutionEnabled"/>) for the application.
     /// </summary>
     public class NullBackgroundJobStore : IBackgroundJobStore
     {

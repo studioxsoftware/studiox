@@ -8,11 +8,11 @@ namespace StudioX.Hangfire
 {
     public class StudioXHangfireAuthorizationFilter : IDashboardAuthorizationFilter
     {
-        private readonly string requiredPermissionName;
+        private readonly string _requiredPermissionName;
 
         public StudioXHangfireAuthorizationFilter(string requiredPermissionName = null)
         {
-            this.requiredPermissionName = requiredPermissionName;
+            _requiredPermissionName = requiredPermissionName;
         }
 
         public bool Authorize(DashboardContext context)
@@ -22,7 +22,7 @@ namespace StudioX.Hangfire
                 return false;
             }
 
-            if (!requiredPermissionName.IsNullOrEmpty() && !IsPermissionGranted(context, requiredPermissionName))
+            if (!_requiredPermissionName.IsNullOrEmpty() && !IsPermissionGranted(context, _requiredPermissionName))
             {
                 return false;
             }
@@ -32,8 +32,8 @@ namespace StudioX.Hangfire
 
         private static bool IsLoggedIn(DashboardContext context)
         {
-            var session = context.GetHttpContext().RequestServices.GetRequiredService<IStudioXSession>();
-            return session.UserId.HasValue;
+            var studioxSession = context.GetHttpContext().RequestServices.GetRequiredService<IStudioXSession>();
+            return studioxSession.UserId.HasValue;
         }
 
         private static bool IsPermissionGranted(DashboardContext context, string requiredPermissionName)

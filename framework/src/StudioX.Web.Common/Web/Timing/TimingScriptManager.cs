@@ -15,11 +15,11 @@ namespace StudioX.Web.Timing
     /// </summary>
     public class TimingScriptManager : ITimingScriptManager, ITransientDependency
     {
-        private readonly ISettingManager settingManager;
+        private readonly ISettingManager _settingManager;
 
         public TimingScriptManager(ISettingManager settingManager)
         {
-            this.settingManager = settingManager;
+            _settingManager = settingManager;
         }
 
         public async Task<string> GetScriptAsync()
@@ -43,7 +43,7 @@ namespace StudioX.Web.Timing
 
         private async Task<string> GetUsersTimezoneScriptsAsync()
         {
-            var timezoneId = await settingManager.GetSettingValueAsync(TimingSettingNames.TimeZone);
+            var timezoneId = await _settingManager.GetSettingValueAsync(TimingSettingNames.TimeZone);
             var timezone = TimeZoneInfo.FindSystemTimeZoneById(timezoneId);
 
             return " {" +

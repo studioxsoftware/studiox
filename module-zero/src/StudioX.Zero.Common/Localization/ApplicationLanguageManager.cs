@@ -9,6 +9,7 @@ using StudioX.Domain.Uow;
 using StudioX.Events.Bus.Entities;
 using StudioX.Events.Bus.Handlers;
 using StudioX.Runtime.Caching;
+using System.Globalization;
 
 namespace StudioX.Localization
 {
@@ -25,12 +26,12 @@ namespace StudioX.Localization
         /// </summary>
         public const string CacheName = "StudioXZeroLanguages";
 
-        private ITypedCache<int, Dictionary<string, ApplicationLanguage>> LanguageListCache => cacheManager.GetCache<int, Dictionary<string, ApplicationLanguage>>(CacheName);
+        private ITypedCache<int, Dictionary<string, ApplicationLanguage>> LanguageListCache => _cacheManager.GetCache<int, Dictionary<string, ApplicationLanguage>>(CacheName);
 
-        private readonly IRepository<ApplicationLanguage> languageRepository;
-        private readonly ICacheManager cacheManager;
-        private readonly IUnitOfWorkManager unitOfWorkManager;
-        private readonly ISettingManager settingManager;
+        private readonly IRepository<ApplicationLanguage> _languageRepository;
+        private readonly ICacheManager _cacheManager;
+        private readonly IUnitOfWorkManager _unitOfWorkManager;
+        private readonly ISettingManager _settingManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ApplicationLanguageManager"/> class.
@@ -41,10 +42,10 @@ namespace StudioX.Localization
             IUnitOfWorkManager unitOfWorkManager,
             ISettingManager settingManager)
         {
-            this.languageRepository = languageRepository;
-            this.cacheManager = cacheManager;
-            this.unitOfWorkManager = unitOfWorkManager;
-            this.settingManager = settingManager;
+            _languageRepository = languageRepository;
+            _cacheManager = cacheManager;
+            _unitOfWorkManager = unitOfWorkManager;
+            _settingManager = settingManager;
         }
 
         /// <summary>
@@ -68,10 +69,10 @@ namespace StudioX.Localization
                 throw new StudioXException("There is already a language with name = " + language.Name);
             }
 
-            using (unitOfWorkManager.Current.SetTenantId(language.TenantId))
+            using (_unitOfWorkManager.Current.SetTenantId(language.TenantId))
             {
-                await languageRepository.InsertAsync(language);
-                await unitOfWorkManager.Current.SaveChangesAsync();
+                await _languageRepository.InsertAsync(language);
+                await _unitOfWorkManager.Current.SaveChangesAsync();
             }
         }
 
@@ -94,10 +95,10 @@ namespace StudioX.Localization
                 throw new StudioXException("Can not delete a host language from tenant!");
             }
 
-            using (unitOfWorkManager.Current.SetTenantId(currentLanguage.TenantId))
+            using (_unitOfWorkManager.Current.SetTenantId(currentLanguage.TenantId))
             {
-                await languageRepository.DeleteAsync(currentLanguage.Id);
-                await unitOfWorkManager.Current.SaveChangesAsync();
+                await _languageRepository.DeleteAsync(currentLanguage.Id);
+                await _unitOfWorkManager.Current.SaveChangesAsync();
             }
         }
 
@@ -121,10 +122,10 @@ namespace StudioX.Localization
                 throw new StudioXException("Can not update a host language from tenant");
             }
 
-            using (unitOfWorkManager.Current.SetTenantId(language.TenantId))
+            using (_unitOfWorkManager.Current.SetTenantId(language.TenantId))
             {
-                await languageRepository.UpdateAsync(language);
-                await unitOfWorkManager.Current.SaveChangesAsync();
+                await _languageRepository.UpdateAsync(language);
+                await _unitOfWorkManager.Current.SaveChangesAsync();
             }
         }
 
@@ -135,8 +136,8 @@ namespace StudioX.Localization
         public virtual async Task<ApplicationLanguage> GetDefaultLanguageOrNullAsync(int? tenantId)
         {
             var defaultLanguageName = tenantId.HasValue
-                ? await settingManager.GetSettingValueForTenantAsync(LocalizationSettingNames.DefaultLanguage, tenantId.Value)
-                : await settingManager.GetSettingValueForApplicationAsync(LocalizationSettingNames.DefaultLanguage);
+                ? await _settingManager.GetSettingValueForTenantAsync(LocalizationSettingNames.DefaultLanguage, tenantId.Value)
+                : await _settingManager.GetSettingValueForApplicationAsync(LocalizationSettingNames.DefaultLanguage);
 
             return (await GetLanguagesAsync(tenantId)).FirstOrDefault(l => l.Name == defaultLanguageName);
         }
@@ -148,14 +149,14 @@ namespace StudioX.Localization
         /// <param name="languageName">Name of the language.</param>
         public virtual async Task SetDefaultLanguageAsync(int? tenantId, string languageName)
         {
-            var cultureInfo = CultureInfoHelper.Get(languageName);
+            var cultureInfo = CultureInfo.GetCultureInfo(languageName);
             if (tenantId.HasValue)
             {
-                await settingManager.ChangeSettingForTenantAsync(tenantId.Value, LocalizationSettingNames.DefaultLanguage, cultureInfo.Name);
+                await _settingManager.ChangeSettingForTenantAsync(tenantId.Value, LocalizationSettingNames.DefaultLanguage, cultureInfo.Name);
             }
             else
             {
-                await settingManager.ChangeSettingForApplicationAsync(LocalizationSettingNames.DefaultLanguage, cultureInfo.Name);
+                await _settingManager.ChangeSettingForApplicationAsync(LocalizationSettingNames.DefaultLanguage, cultureInfo.Name);
             }
         }
 
@@ -164,7 +165,7 @@ namespace StudioX.Localization
             LanguageListCache.Remove(eventData.Entity.TenantId ?? 0);
 
             //Also invalidate the language script cache
-            cacheManager.GetCache("StudioXLocalizationScripts").Clear();
+            _cacheManager.GetCache("StudioXLocalizationScripts").Clear();
         }
 
         protected virtual async Task<Dictionary<string, ApplicationLanguage>> GetLanguageDictionary(int? tenantId)
@@ -194,9 +195,9 @@ namespace StudioX.Localization
         [UnitOfWork]
         protected virtual async Task<Dictionary<string, ApplicationLanguage>> GetLanguagesFromDatabaseAsync(int? tenantId)
         {
-            using (unitOfWorkManager.Current.SetTenantId(tenantId))
+            using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {
-                return (await languageRepository.GetAllListAsync()).ToDictionary(l => l.Name);
+                return (await _languageRepository.GetAllListAsync()).ToDictionary(l => l.Name);
             }
         }
     }

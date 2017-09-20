@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Http.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Authentication;
 
 namespace StudioX.Authorization
 {
@@ -24,8 +25,9 @@ namespace StudioX.Authorization
         where TRole : StudioXRole<TUser>, new()
         where TUser : StudioXUser<TUser>
     {
-        private readonly IUnitOfWorkManager unitOfWorkManager;
-        private readonly ISettingManager settingManager;
+        private readonly IUnitOfWorkManager _unitOfWorkManager;
+        private readonly ISettingManager _settingManager;
+        private readonly AuthenticationOptions _authenticateOptions;
 
         public StudioXSignInManager(
             StudioXUserManager<TRole, TUser> userManager,
@@ -34,16 +36,18 @@ namespace StudioX.Authorization
             IOptions<IdentityOptions> optionsAccessor,
             ILogger<SignInManager<TUser>> logger,
             IUnitOfWorkManager unitOfWorkManager,
-            ISettingManager settingManager)
+            ISettingManager settingManager,
+            IAuthenticationSchemeProvider schemes)
             : base(
                 userManager,
                 contextAccessor,
                 claimsFactory,
                 optionsAccessor,
-                logger)
+                logger,
+                schemes)
         {
-            this.unitOfWorkManager = unitOfWorkManager;
-            this.settingManager = settingManager;
+            _unitOfWorkManager = unitOfWorkManager;
+            _settingManager = settingManager;
         }
 
         public virtual async Task<SignInResult> SignInOrTwoFactorAsync(StudioXLoginResult<TTenant, TUser> loginResult, bool isPersistent, bool? rememberBrowser = null, string loginProvider = null, bool bypassTwoFactor = false)
@@ -53,7 +57,7 @@ namespace StudioX.Authorization
                 throw new ArgumentException("loginResult.Result should be success in order to sign in!");
             }
 
-            using (unitOfWorkManager.Current.SetTenantId(loginResult.Tenant?.Id))
+            using (_unitOfWorkManager.Current.SetTenantId(loginResult.Tenant?.Id))
             {
                 await UserManager.As<StudioXUserManager<TRole, TUser>>().InitializeOptionsAsync(loginResult.Tenant?.Id);
 
@@ -65,8 +69,8 @@ namespace StudioX.Authorization
                         {
                             if (!await IsTwoFactorClientRememberedAsync(loginResult.User) || rememberBrowser == false)
                             {
-                                await Context.Authentication.SignInAsync(
-                                    Options.Cookies.TwoFactorUserIdCookieAuthenticationScheme,
+                                await Context.SignInAsync(
+                                    IdentityConstants.TwoFactorUserIdScheme,
                                     StoreTwoFactorInfo(loginResult.User, loginProvider)
                                 );
 
@@ -78,7 +82,7 @@ namespace StudioX.Authorization
 
                 if (loginProvider != null)
                 {
-                    await Context.Authentication.SignOutAsync(Options.Cookies.ExternalCookieAuthenticationScheme);
+                    await Context.SignOutAsync(IdentityConstants.ExternalScheme);
                 }
 
                 await SignInAsync(loginResult.User, isPersistent, loginProvider);
@@ -94,21 +98,21 @@ namespace StudioX.Authorization
 
         public virtual async Task SignInAsync(ClaimsIdentity identity, bool isPersistent)
         {
-            await Context.Authentication.SignInAsync(Options.Cookies.ApplicationCookieAuthenticationScheme,
+            await Context.SignInAsync(IdentityConstants.ApplicationScheme,
                 new ClaimsPrincipal(identity),
-                new AuthenticationProperties {IsPersistent = isPersistent}
+                new Microsoft.AspNetCore.Authentication.AuthenticationProperties { IsPersistent = isPersistent }
             );
         }
 
         [UnitOfWork]
-        public override Task SignInAsync(TUser user, AuthenticationProperties authenticationProperties, string authenticationMethod = null)
+        public override Task SignInAsync(TUser user, bool isPersistent, string authenticationMethod = null)
         {
-            return base.SignInAsync(user, authenticationProperties, authenticationMethod);
+            return base.SignInAsync(user, isPersistent, authenticationMethod);
         }
 
         protected virtual ClaimsPrincipal StoreTwoFactorInfo(TUser user, string loginProvider)
         {
-            var identity = new ClaimsIdentity(Options.Cookies.TwoFactorUserIdCookieAuthenticationScheme);
+            var identity = new ClaimsIdentity(IdentityConstants.TwoFactorUserIdScheme);
 
             identity.AddClaim(new Claim(ClaimTypes.Name, user.Id.ToString()));
 
@@ -127,28 +131,28 @@ namespace StudioX.Authorization
 
         public async Task<int?> GetVerifiedTenantIdAsync()
         {
-            var principal = await Context.Authentication.AuthenticateAsync(Options.Cookies.TwoFactorUserIdCookieAuthenticationScheme);
+            var result = await Context.AuthenticateAsync(IdentityConstants.TwoFactorUserIdScheme);
 
-            if (principal == null)
+            if (result?.Principal == null)
             {
                 return null;
             }
 
-            return StudioXZeroClaimsIdentityHelper.GetTenantId(principal);
+            return StudioXZeroClaimsIdentityHelper.GetTenantId(result.Principal);
         }
 
         public override async Task<bool> IsTwoFactorClientRememberedAsync(TUser user)
         {
-            var result = await Context.Authentication.AuthenticateAsync(Options.Cookies.TwoFactorRememberMeCookieAuthenticationScheme);
+            var result = await Context.AuthenticateAsync(IdentityConstants.TwoFactorRememberMeScheme);
 
-            return result != null &&
-                   result.FindFirstValue(ClaimTypes.Name) == user.Id.ToString() &&
-                   StudioXZeroClaimsIdentityHelper.GetTenantId(result) == user.TenantId;
+            return result?.Principal != null &&
+                   result.Principal.FindFirstValue(ClaimTypes.Name) == user.Id.ToString() &&
+                   StudioXZeroClaimsIdentityHelper.GetTenantId(result.Principal) == user.TenantId;
         }
 
         public override async Task RememberTwoFactorClientAsync(TUser user)
         {
-            var rememberBrowserIdentity = new ClaimsIdentity(Options.Cookies.TwoFactorRememberMeCookieAuthenticationScheme);
+            var rememberBrowserIdentity = new ClaimsIdentity(IdentityConstants.TwoFactorRememberMeScheme);
 
             rememberBrowserIdentity.AddClaim(new Claim(ClaimTypes.Name, user.Id.ToString()));
 
@@ -157,16 +161,16 @@ namespace StudioX.Authorization
                 rememberBrowserIdentity.AddClaim(new Claim(StudioXClaimTypes.TenantId, user.TenantId.Value.ToString()));
             }
 
-            await Context.Authentication.SignInAsync(Options.Cookies.TwoFactorRememberMeCookieAuthenticationScheme,
+            await Context.SignInAsync(IdentityConstants.TwoFactorRememberMeScheme,
                 new ClaimsPrincipal(rememberBrowserIdentity),
-                new AuthenticationProperties { IsPersistent = true });
+                new Microsoft.AspNetCore.Authentication.AuthenticationProperties { IsPersistent = true });
         }
 
         private bool IsTrue(string settingName, int? tenantId)
         {
             return tenantId == null
-                ? settingManager.GetSettingValueForApplication<bool>(settingName)
-                : settingManager.GetSettingValueForTenant<bool>(settingName, tenantId.Value);
+                ? _settingManager.GetSettingValueForApplication<bool>(settingName)
+                : _settingManager.GetSettingValueForTenant<bool>(settingName, tenantId.Value);
         }
     }
 }

@@ -3,22 +3,24 @@
   <Import Project="..\..\common.props" />
 
   <PropertyGroup>
-    <TargetFrameworks>net46;netstandard1.6</TargetFrameworks>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <RootNamespace>StudioX</RootNamespace>
     <AssemblyName>StudioX.ZeroCore.EntityFrameworkCore</AssemblyName>
     <PackageId>StudioX.ZeroCore.EntityFrameworkCore</PackageId>
     <PackageTags>asp.net;asp.net mvc;boilerplate;application framework;web framework;framework;domain driven design;multitenancy;user management;role management;identity;entity framework core</PackageTags>
-    <Version>1.1.3</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\framework\src\StudioX.EntityFrameworkCore\StudioX.EntityFrameworkCore.csproj" />
-    <ProjectReference Include="..\StudioX.ZeroCore\StudioX.ZeroCore.csproj" />
+    <None Include="bin\Release\netstandard2.0\StudioX.ZeroCore.EntityFrameworkCore.pdb">
+      <PackagePath>lib/netstandard2.0/</PackagePath>
+      <Pack>true</Pack>
+    </None>
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">
-    <Reference Include="System.Configuration" />
+  <ItemGroup>
+    <ProjectReference Include="..\StudioX.EntityFrameworkCore\StudioX.EntityFrameworkCore.csproj" />
+    <ProjectReference Include="..\StudioX.ZeroCore\StudioX.ZeroCore.csproj" />
   </ItemGroup>
 
 </Project>

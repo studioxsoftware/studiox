@@ -23,8 +23,8 @@ namespace StudioX.Notifications
         /// </summary>
         public object this[string key]
         {
-            get => Properties.GetOrDefault(key);
-            set => Properties[key] = value;
+            get { return Properties.GetOrDefault(key); }
+            set { Properties[key] = value; }
         }
 
         /// <summary>
@@ -32,7 +32,7 @@ namespace StudioX.Notifications
         /// </summary>
         public Dictionary<string, object> Properties
         {
-            get => properties;
+            get { return _properties; }
             set
             {
                 if (value == null)
@@ -43,21 +43,21 @@ namespace StudioX.Notifications
                 /* Not assign value, but add dictionary items. This is required for backward compability. */
                 foreach (var keyValue in value)
                 {
-                    if (!properties.ContainsKey(keyValue.Key))
+                    if (!_properties.ContainsKey(keyValue.Key))
                     {
-                        properties[keyValue.Key] = keyValue.Value;
+                        _properties[keyValue.Key] = keyValue.Value;
                     }
                 }
             }
         }
-        private readonly Dictionary<string, object> properties;
+        private readonly Dictionary<string, object> _properties;
 
         /// <summary>
         /// Createa a new NotificationData object.
         /// </summary>
         public NotificationData()
         {
-            properties = new Dictionary<string, object>();
+            _properties = new Dictionary<string, object>();
         }
 
         public override string ToString()

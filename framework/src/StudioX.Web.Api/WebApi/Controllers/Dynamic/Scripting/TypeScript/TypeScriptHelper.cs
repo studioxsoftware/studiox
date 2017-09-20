@@ -11,20 +11,20 @@ namespace StudioX.WebApi.Controllers.Dynamic.Scripting.TypeScript
     internal class TypeScriptHelper
     {
         
-        private static readonly string[] basicTypes =
+        private static readonly string[] _basicTypes =
         {
             "guid", "string", "bool",
             "datetime", "int16", "int32", "int64", "single", "double", "decimal", "boolean", "void","byte"
         };
 
-        private static readonly string[] typesToIgnore =
+        private static readonly string[] _typesToIgnore =
         {
             "exception", "aggregateexception","module","object"
         };
 
         public static bool IsBasicType(Type type)
         {
-            if (basicTypes.Contains(type.Name.ToLowerInvariant()))
+            if (_basicTypes.Contains(type.Name.ToLowerInvariant()))
                 return true;
             else
                 return false;
@@ -32,7 +32,7 @@ namespace StudioX.WebApi.Controllers.Dynamic.Scripting.TypeScript
 
         public static bool IsIgnorantType(Type type)
         {
-            if (typesToIgnore.Contains(type.Name.ToLowerInvariant()))
+            if (_typesToIgnore.Contains(type.Name.ToLowerInvariant()))
                 return true;
             else
                 return false;

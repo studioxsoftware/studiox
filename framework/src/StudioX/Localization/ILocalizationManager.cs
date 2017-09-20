@@ -4,19 +4,19 @@ using StudioX.Localization.Sources;
 namespace StudioX.Localization
 {
     /// <summary>
-    ///     This interface is used to manage localization system.
+    /// This interface is used to manage localization system.
     /// </summary>
     public interface ILocalizationManager
     {
         /// <summary>
-        ///     Gets a localization source with name.
+        /// Gets a localization source with name.
         /// </summary>
         /// <param name="name">Unique name of the localization source</param>
         /// <returns>The localization source</returns>
         ILocalizationSource GetSource(string name);
 
         /// <summary>
-        ///     Gets all registered localization sources.
+        /// Gets all registered localization sources.
         /// </summary>
         /// <returns>List of sources</returns>
         IReadOnlyList<ILocalizationSource> GetAllSources();

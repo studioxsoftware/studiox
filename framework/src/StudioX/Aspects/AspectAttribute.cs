@@ -61,7 +61,7 @@ namespace StudioX.Aspects
         }
     }
 
-    internal class TestAspects
+    internal class Test_Aspects
     {
         internal class MyAspectAttribute : AspectAttribute
         {
@@ -97,16 +97,16 @@ namespace StudioX.Aspects
 
         public class MyClient
         {
-            private readonly MyService service;
+            private readonly MyService _service;
 
             public MyClient(MyService service)
             {
-                this.service = service;
+                _service = service;
             }
 
             public void Test()
             {
-                service.DoIt();
+                _service.DoIt();
             }
         }
     }

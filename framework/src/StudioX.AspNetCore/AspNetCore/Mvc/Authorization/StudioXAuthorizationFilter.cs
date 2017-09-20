@@ -19,18 +19,18 @@ namespace StudioX.AspNetCore.Mvc.Authorization
     {
         public ILogger Logger { get; set; }
 
-        private readonly IAuthorizationHelper authorizationHelper;
-        private readonly IErrorInfoBuilder errorInfoBuilder;
-        private readonly IEventBus eventBus;
+        private readonly IAuthorizationHelper _authorizationHelper;
+        private readonly IErrorInfoBuilder _errorInfoBuilder;
+        private readonly IEventBus _eventBus;
 
         public StudioXAuthorizationFilter(
             IAuthorizationHelper authorizationHelper,
             IErrorInfoBuilder errorInfoBuilder,
             IEventBus eventBus)
         {
-            this.authorizationHelper = authorizationHelper;
-            this.errorInfoBuilder = errorInfoBuilder;
-            this.eventBus = eventBus;
+            _authorizationHelper = authorizationHelper;
+            _errorInfoBuilder = errorInfoBuilder;
+            _eventBus = eventBus;
             Logger = NullLogger.Instance;
         }
 
@@ -42,23 +42,28 @@ namespace StudioX.AspNetCore.Mvc.Authorization
                 return;
             }
 
+            if (!context.ActionDescriptor.IsControllerAction())
+            {
+                return;
+            }
+
+            //TODO: Avoid using try/catch, use conditional checking
             try
             {
-                //TODO: Avoid using try/catch, use conditional checking
-                await authorizationHelper.AuthorizeAsync(
-                        context.ActionDescriptor.GetMethodInfo(), 
-                        context.ActionDescriptor.GetMethodInfo().DeclaringType
-                    );
+                await _authorizationHelper.AuthorizeAsync(
+                    context.ActionDescriptor.GetMethodInfo(),
+                    context.ActionDescriptor.GetMethodInfo().DeclaringType
+                );
             }
             catch (StudioXAuthorizationException ex)
             {
                 Logger.Warn(ex.ToString(), ex);
 
-                eventBus.Trigger(this, new StudioXHandledExceptionData(ex));
+                _eventBus.Trigger(this, new StudioXHandledExceptionData(ex));
 
                 if (ActionResultHelper.IsObjectResult(context.ActionDescriptor.GetMethodInfo().ReturnType))
                 {
-                    context.Result = new ObjectResult(new AjaxResponse(errorInfoBuilder.BuildForException(ex), true))
+                    context.Result = new ObjectResult(new AjaxResponse(_errorInfoBuilder.BuildForException(ex), true))
                     {
                         StatusCode = context.HttpContext.User.Identity.IsAuthenticated
                             ? (int) System.Net.HttpStatusCode.Forbidden
@@ -74,11 +79,11 @@ namespace StudioX.AspNetCore.Mvc.Authorization
             {
                 Logger.Error(ex.ToString(), ex);
 
-                eventBus.Trigger(this, new StudioXHandledExceptionData(ex));
+                _eventBus.Trigger(this, new StudioXHandledExceptionData(ex));
 
                 if (ActionResultHelper.IsObjectResult(context.ActionDescriptor.GetMethodInfo().ReturnType))
                 {
-                    context.Result = new ObjectResult(new AjaxResponse(errorInfoBuilder.BuildForException(ex)))
+                    context.Result = new ObjectResult(new AjaxResponse(_errorInfoBuilder.BuildForException(ex)))
                     {
                         StatusCode = (int) System.Net.HttpStatusCode.InternalServerError
                     };

@@ -1,28 +1,28 @@
 using System;
 using System.Linq;
 using System.Reflection;
-using Castle.Core;
-using Castle.MicroKernel;
 using StudioX.Application.Features;
 using StudioX.Dependency;
+using Castle.Core;
+using Castle.MicroKernel;
 
 namespace StudioX.Authorization
 {
     /// <summary>
-    ///     This class is used to register interceptors on the Application Layer.
+    /// This class is used to register interceptors on the Application Layer.
     /// </summary>
     internal static class AuthorizationInterceptorRegistrar
     {
         public static void Initialize(IIocManager iocManager)
         {
-            iocManager.IocContainer.Kernel.ComponentRegistered += Kernel_ComponentRegistered;
+            iocManager.IocContainer.Kernel.ComponentRegistered += Kernel_ComponentRegistered;            
         }
 
         private static void Kernel_ComponentRegistered(string key, IHandler handler)
         {
             if (ShouldIntercept(handler.ComponentModel.Implementation))
             {
-                handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(AuthorizationInterceptor)));
+                handler.ComponentModel.Interceptors.Add(new InterceptorReference(typeof(AuthorizationInterceptor))); 
             }
         }
 

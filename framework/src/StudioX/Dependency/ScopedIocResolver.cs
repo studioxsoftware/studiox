@@ -6,13 +6,13 @@ namespace StudioX.Dependency
 {
     public class ScopedIocResolver : IScopedIocResolver
     {
-        private readonly IIocResolver iocResolver;
-        private readonly List<object> resolvedObjects;
+        private readonly IIocResolver _iocResolver;
+        private readonly List<object> _resolvedObjects;
 
         public ScopedIocResolver(IIocResolver iocResolver)
         {
-            this.iocResolver = iocResolver;
-            resolvedObjects = new List<object>();
+            _iocResolver = iocResolver;
+            _resolvedObjects = new List<object>();
         }
 
         public T Resolve<T>()
@@ -22,12 +22,12 @@ namespace StudioX.Dependency
 
         public T Resolve<T>(Type type)
         {
-            return (T) Resolve(type);
+            return (T)Resolve(type);
         }
 
         public T Resolve<T>(object argumentsAsAnonymousType)
         {
-            return (T) Resolve(typeof(T), argumentsAsAnonymousType);
+            return (T)Resolve(typeof(T), argumentsAsAnonymousType);
         }
 
         public object Resolve(Type type)
@@ -38,10 +38,10 @@ namespace StudioX.Dependency
         public object Resolve(Type type, object argumentsAsAnonymousType)
         {
             var resolvedObject = argumentsAsAnonymousType != null
-                ? iocResolver.Resolve(type, argumentsAsAnonymousType)
-                : iocResolver.Resolve(type);
+                ? _iocResolver.Resolve(type, argumentsAsAnonymousType)
+                : _iocResolver.Resolve(type);
 
-            resolvedObjects.Add(resolvedObject);
+            _resolvedObjects.Add(resolvedObject);
             return resolvedObject;
         }
 
@@ -63,22 +63,22 @@ namespace StudioX.Dependency
         public object[] ResolveAll(Type type, object argumentsAsAnonymousType)
         {
             var resolvedObjects = argumentsAsAnonymousType != null
-                ? iocResolver.ResolveAll(type, argumentsAsAnonymousType)
-                : iocResolver.ResolveAll(type);
+                ? _iocResolver.ResolveAll(type, argumentsAsAnonymousType)
+                : _iocResolver.ResolveAll(type);
 
-            this.resolvedObjects.AddRange(resolvedObjects);
+            _resolvedObjects.AddRange(resolvedObjects);
             return resolvedObjects;
         }
 
         public void Release(object obj)
         {
-            resolvedObjects.Remove(obj);
-            iocResolver.Release(obj);
+            _resolvedObjects.Remove(obj);
+            _iocResolver.Release(obj);
         }
 
         public bool IsRegistered(Type type)
         {
-            return iocResolver.IsRegistered(type);
+            return _iocResolver.IsRegistered(type);
         }
 
         public bool IsRegistered<T>()
@@ -88,7 +88,7 @@ namespace StudioX.Dependency
 
         public void Dispose()
         {
-            resolvedObjects.ForEach(iocResolver.Release);
+            _resolvedObjects.ForEach(_iocResolver.Release);
         }
     }
 }

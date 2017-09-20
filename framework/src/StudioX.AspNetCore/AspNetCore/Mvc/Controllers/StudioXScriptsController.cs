@@ -23,14 +23,14 @@ namespace StudioX.AspNetCore.Mvc.Controllers
     /// </summary>
     public class StudioXScriptsController : StudioXController
     {
-        private readonly IMultiTenancyScriptManager multiTenancyScriptManager;
-        private readonly ISettingScriptManager settingScriptManager;
-        private readonly INavigationScriptManager navigationScriptManager;
-        private readonly ILocalizationScriptManager localizationScriptManager;
-        private readonly IAuthorizationScriptManager authorizationScriptManager;
-        private readonly IFeaturesScriptManager featuresScriptManager;
-        private readonly ISessionScriptManager sessionScriptManager;
-        private readonly ITimingScriptManager timingScriptManager;
+        private readonly IMultiTenancyScriptManager _multiTenancyScriptManager;
+        private readonly ISettingScriptManager _settingScriptManager;
+        private readonly INavigationScriptManager _navigationScriptManager;
+        private readonly ILocalizationScriptManager _localizationScriptManager;
+        private readonly IAuthorizationScriptManager _authorizationScriptManager;
+        private readonly IFeaturesScriptManager _featuresScriptManager;
+        private readonly ISessionScriptManager _sessionScriptManager;
+        private readonly ITimingScriptManager _timingScriptManager;
 
         /// <summary>
         /// Constructor.
@@ -45,14 +45,14 @@ namespace StudioX.AspNetCore.Mvc.Controllers
             ISessionScriptManager sessionScriptManager, 
             ITimingScriptManager timingScriptManager)
         {
-            this.multiTenancyScriptManager = multiTenancyScriptManager;
-            this.settingScriptManager = settingScriptManager;
-            this.navigationScriptManager = navigationScriptManager;
-            this.localizationScriptManager = localizationScriptManager;
-            this.authorizationScriptManager = authorizationScriptManager;
-            this.featuresScriptManager = featuresScriptManager;
-            this.sessionScriptManager = sessionScriptManager;
-            this.timingScriptManager = timingScriptManager;
+            _multiTenancyScriptManager = multiTenancyScriptManager;
+            _settingScriptManager = settingScriptManager;
+            _navigationScriptManager = navigationScriptManager;
+            _localizationScriptManager = localizationScriptManager;
+            _authorizationScriptManager = authorizationScriptManager;
+            _featuresScriptManager = featuresScriptManager;
+            _sessionScriptManager = sessionScriptManager;
+            _timingScriptManager = timingScriptManager;
         }
 
         /// <summary>
@@ -63,34 +63,34 @@ namespace StudioX.AspNetCore.Mvc.Controllers
         {
             if (!culture.IsNullOrEmpty())
             {
-                CultureInfo.CurrentCulture = CultureInfoHelper.Get(culture);
-                CultureInfo.CurrentUICulture = CultureInfoHelper.Get(culture);
+                CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo(culture);
+                CultureInfo.CurrentUICulture = CultureInfo.GetCultureInfo(culture);
             }
 
             var sb = new StringBuilder();
 
-            sb.AppendLine(multiTenancyScriptManager.GetScript());
+            sb.AppendLine(_multiTenancyScriptManager.GetScript());
             sb.AppendLine();
 
-            sb.AppendLine(sessionScriptManager.GetScript());
+            sb.AppendLine(_sessionScriptManager.GetScript());
             sb.AppendLine();
 
-            sb.AppendLine(localizationScriptManager.GetScript());
+            sb.AppendLine(_localizationScriptManager.GetScript());
             sb.AppendLine();
 
-            sb.AppendLine(await featuresScriptManager.GetScriptAsync());
+            sb.AppendLine(await _featuresScriptManager.GetScriptAsync());
             sb.AppendLine();
 
-            sb.AppendLine(await authorizationScriptManager.GetScriptAsync());
+            sb.AppendLine(await _authorizationScriptManager.GetScriptAsync());
             sb.AppendLine();
 
-            sb.AppendLine(await navigationScriptManager.GetScriptAsync());
+            sb.AppendLine(await _navigationScriptManager.GetScriptAsync());
             sb.AppendLine();
 
-            sb.AppendLine(await settingScriptManager.GetScriptAsync());
+            sb.AppendLine(await _settingScriptManager.GetScriptAsync());
             sb.AppendLine();
 
-            sb.AppendLine(await timingScriptManager.GetScriptAsync());
+            sb.AppendLine(await _timingScriptManager.GetScriptAsync());
             sb.AppendLine();
 
             sb.AppendLine(GetTriggerScript());

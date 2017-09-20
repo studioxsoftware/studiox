@@ -9,7 +9,7 @@ namespace StudioX.Timing.Timezone
     /// </summary>
     public class TimeZoneConverter : ITimeZoneConverter, ITransientDependency
     {
-        private readonly ISettingManager settingManager;
+        private readonly ISettingManager _settingManager;
 
         /// <summary>
         /// Constructor
@@ -17,7 +17,7 @@ namespace StudioX.Timing.Timezone
         /// <param name="settingManager"></param>
         public TimeZoneConverter(ISettingManager settingManager)
         {
-            this.settingManager = settingManager;
+            _settingManager = settingManager;
         }
 
         /// <inheritdoc/>
@@ -33,7 +33,7 @@ namespace StudioX.Timing.Timezone
                 return date;
             }
 
-            var usersTimezone = settingManager.GetSettingValueForUser(TimingSettingNames.TimeZone, tenantId, userId);
+            var usersTimezone = _settingManager.GetSettingValueForUser(TimingSettingNames.TimeZone, tenantId, userId);
             if(string.IsNullOrEmpty(usersTimezone))
             {
                 return date;
@@ -55,7 +55,7 @@ namespace StudioX.Timing.Timezone
                 return date;
             }
 
-            var tenantsTimezone = settingManager.GetSettingValueForTenant(TimingSettingNames.TimeZone, tenantId);
+            var tenantsTimezone = _settingManager.GetSettingValueForTenant(TimingSettingNames.TimeZone, tenantId);
             if (string.IsNullOrEmpty(tenantsTimezone))
             {
                 return date;
@@ -77,7 +77,7 @@ namespace StudioX.Timing.Timezone
                 return date;
             }
 
-            var applicationsTimezone = settingManager.GetSettingValueForApplication(TimingSettingNames.TimeZone);
+            var applicationsTimezone = _settingManager.GetSettingValueForApplication(TimingSettingNames.TimeZone);
             if (string.IsNullOrEmpty(applicationsTimezone))
             {
                 return date;

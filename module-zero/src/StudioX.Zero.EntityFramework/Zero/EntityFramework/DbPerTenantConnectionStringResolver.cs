@@ -17,8 +17,8 @@ namespace StudioX.Zero.EntityFramework
         /// </summary>
         public IStudioXSession StudioXSession { get; set; }
 
-        private readonly ICurrentUnitOfWorkProvider currentUnitOfWorkProvider;
-        private readonly ITenantCache tenantCache;
+        private readonly ICurrentUnitOfWorkProvider _currentUnitOfWorkProvider;
+        private readonly ITenantCache _tenantCache;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DbPerTenantConnectionStringResolver"/> class.
@@ -30,8 +30,8 @@ namespace StudioX.Zero.EntityFramework
             : base(
                   configuration)
         {
-            this.currentUnitOfWorkProvider = currentUnitOfWorkProvider;
-            this.tenantCache = tenantCache;
+            _currentUnitOfWorkProvider = currentUnitOfWorkProvider;
+            _tenantCache = tenantCache;
 
             StudioXSession = NullStudioXSession.Instance;
         }
@@ -54,7 +54,7 @@ namespace StudioX.Zero.EntityFramework
                 return base.GetNameOrConnectionString(args);
             }
 
-            var tenantCacheItem = tenantCache.Get(args.TenantId.Value);
+            var tenantCacheItem = _tenantCache.Get(args.TenantId.Value);
             if (tenantCacheItem.ConnectionString.IsNullOrEmpty())
             {
                 //Tenant has not dedicated database
@@ -66,8 +66,8 @@ namespace StudioX.Zero.EntityFramework
 
         protected virtual int? GetCurrentTenantId()
         {
-            return currentUnitOfWorkProvider.Current != null
-                ? currentUnitOfWorkProvider.Current.GetTenantId()
+            return _currentUnitOfWorkProvider.Current != null
+                ? _currentUnitOfWorkProvider.Current.GetTenantId()
                 : StudioXSession.TenantId;
         }
     }

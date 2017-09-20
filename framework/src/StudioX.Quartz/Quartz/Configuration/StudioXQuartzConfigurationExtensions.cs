@@ -1,6 +1,6 @@
 ﻿using StudioX.Configuration.Startup;
 
-namespace StudioX.Quartz.Configuration
+namespace StudioX.Quartz.Quartz.Configuration
 {
     public static class StudioXQuartzConfigurationExtensions
     {

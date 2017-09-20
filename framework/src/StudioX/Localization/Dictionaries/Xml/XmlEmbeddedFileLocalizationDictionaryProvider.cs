@@ -3,41 +3,39 @@
 namespace StudioX.Localization.Dictionaries.Xml
 {
     /// <summary>
-    ///     Provides localization dictionaries from XML files embedded into an <see cref="Assembly" />.
+    /// Provides localization dictionaries from XML files embedded into an <see cref="Assembly"/>.
     /// </summary>
     public class XmlEmbeddedFileLocalizationDictionaryProvider : LocalizationDictionaryProviderBase
     {
-        private readonly Assembly assembly;
-        private readonly string rootNamespace;
-
+        private readonly Assembly _assembly;
+        private readonly string _rootNamespace;
+        
         /// <summary>
-        ///     Creates a new <see cref="XmlEmbeddedFileLocalizationDictionaryProvider" /> object.
+        /// Creates a new <see cref="XmlEmbeddedFileLocalizationDictionaryProvider"/> object.
         /// </summary>
         /// <param name="assembly">Assembly that contains embedded xml files</param>
         /// <param name="rootNamespace">Namespace of the embedded xml dictionary files</param>
         public XmlEmbeddedFileLocalizationDictionaryProvider(Assembly assembly, string rootNamespace)
         {
-            this.assembly = assembly;
-            this.rootNamespace = rootNamespace;
+            _assembly = assembly;
+            _rootNamespace = rootNamespace;
         }
 
         public override void Initialize(string sourceName)
         {
-            var resourceNames = assembly.GetManifestResourceNames();
+            var resourceNames = _assembly.GetManifestResourceNames();
             foreach (var resourceName in resourceNames)
             {
-                if (resourceName.StartsWith(rootNamespace))
+                if (resourceName.StartsWith(_rootNamespace))
                 {
-                    using (var stream = assembly.GetManifestResourceStream(resourceName))
+                    using (var stream = _assembly.GetManifestResourceStream(resourceName))
                     {
                         var xmlString = Utf8Helper.ReadStringFromStream(stream);
 
                         var dictionary = CreateXmlLocalizationDictionary(xmlString);
                         if (Dictionaries.ContainsKey(dictionary.CultureInfo.Name))
                         {
-                            throw new StudioXInitializationException(sourceName +
-                                                                     " source contains more than one dictionary for the culture: " +
-                                                                     dictionary.CultureInfo.Name);
+                            throw new StudioXInitializationException(sourceName + " source contains more than one dictionary for the culture: " + dictionary.CultureInfo.Name);
                         }
 
                         Dictionaries[dictionary.CultureInfo.Name] = dictionary;
@@ -46,8 +44,7 @@ namespace StudioX.Localization.Dictionaries.Xml
                         {
                             if (DefaultDictionary != null)
                             {
-                                throw new StudioXInitializationException(
-                                    "Only one default localization dictionary can be for source: " + sourceName);
+                                throw new StudioXInitializationException("Only one default localization dictionary can be for source: " + sourceName);
                             }
 
                             DefaultDictionary = dictionary;

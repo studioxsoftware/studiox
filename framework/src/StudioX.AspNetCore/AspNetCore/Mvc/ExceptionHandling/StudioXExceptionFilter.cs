@@ -23,13 +23,13 @@ namespace StudioX.AspNetCore.Mvc.ExceptionHandling
 
         public IEventBus EventBus { get; set; }
 
-        private readonly IErrorInfoBuilder errorInfoBuilder;
-        private readonly IStudioXAspNetCoreConfiguration configuration;
+        private readonly IErrorInfoBuilder _errorInfoBuilder;
+        private readonly IStudioXAspNetCoreConfiguration _configuration;
 
         public StudioXExceptionFilter(IErrorInfoBuilder errorInfoBuilder, IStudioXAspNetCoreConfiguration configuration)
         {
-            this.errorInfoBuilder = errorInfoBuilder;
-            this.configuration = configuration;
+            _errorInfoBuilder = errorInfoBuilder;
+            _configuration = configuration;
 
             Logger = NullLogger.Instance;
             EventBus = NullEventBus.Instance;
@@ -37,10 +37,15 @@ namespace StudioX.AspNetCore.Mvc.ExceptionHandling
 
         public void OnException(ExceptionContext context)
         {
+            if (!context.ActionDescriptor.IsControllerAction())
+            {
+                return;
+            }
+
             var wrapResultAttribute =
                 ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault(
                     context.ActionDescriptor.GetMethodInfo(),
-                    configuration.DefaultWrapResultAttribute
+                    _configuration.DefaultWrapResultAttribute
                 );
 
             if (wrapResultAttribute.LogError)
@@ -65,7 +70,7 @@ namespace StudioX.AspNetCore.Mvc.ExceptionHandling
 
             context.Result = new ObjectResult(
                 new AjaxResponse(
-                    errorInfoBuilder.BuildForException(context.Exception),
+                    _errorInfoBuilder.BuildForException(context.Exception),
                     context.Exception is StudioXAuthorizationException
                 )
             );

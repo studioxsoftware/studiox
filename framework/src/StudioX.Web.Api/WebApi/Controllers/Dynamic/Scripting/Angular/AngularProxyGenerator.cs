@@ -4,11 +4,11 @@ namespace StudioX.WebApi.Controllers.Dynamic.Scripting.Angular
 {
     internal class AngularProxyGenerator : IScriptProxyGenerator
     {
-        private readonly DynamicApiControllerInfo controllerInfo;
+        private readonly DynamicApiControllerInfo _controllerInfo;
 
         public AngularProxyGenerator(DynamicApiControllerInfo controllerInfo)
         {
-            this.controllerInfo = controllerInfo;
+            _controllerInfo = controllerInfo;
         }
 
         public string Generate()
@@ -23,13 +23,13 @@ namespace StudioX.WebApi.Controllers.Dynamic.Scripting.Angular
             script.AppendLine("    ");
             script.AppendLine("    var studioxModule = angular.module('studiox');");
             script.AppendLine("    ");
-            script.AppendLine("    studioxModule.factory('studiox.services." + controllerInfo.ServiceName.Replace("/", ".") + "', [");
+            script.AppendLine("    studioxModule.factory('studiox.services." + _controllerInfo.ServiceName.Replace("/", ".") + "', [");
             script.AppendLine("        '$http', function ($http) {");
             script.AppendLine("            return new function () {");
 
-            foreach (var methodInfo in controllerInfo.Actions.Values)
+            foreach (var methodInfo in _controllerInfo.Actions.Values)
             {
-                var actionWriter = new AngularActionScriptWriter(controllerInfo, methodInfo);
+                var actionWriter = new AngularActionScriptWriter(_controllerInfo, methodInfo);
                 actionWriter.WriteTo(script);
             }
 

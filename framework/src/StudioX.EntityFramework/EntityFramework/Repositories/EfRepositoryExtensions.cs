@@ -17,12 +17,10 @@ namespace StudioX.EntityFramework.Repositories
                 return repositoryWithDbContext.GetDbContext();
             }
 
-            throw new ArgumentException("Given repository does not implement IRepositoryWithDbContext",
-                nameof(repository));
+            throw new ArgumentException("Given repository does not implement IRepositoryWithDbContext", nameof(repository));
         }
 
-        public static void DetachFromDbContext<TEntity, TPrimaryKey>(this IRepository<TEntity, TPrimaryKey> repository,
-            TEntity entity)
+        public static void DetachFromDbContext<TEntity, TPrimaryKey>(this IRepository<TEntity, TPrimaryKey> repository, TEntity entity)
             where TEntity : class, IEntity<TPrimaryKey>
         {
             repository.GetDbContext().Entry(entity).State = EntityState.Detached;

@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using StudioX.Collections.Extensions;
 using StudioX.Extensions;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace StudioX.Localization.Dictionaries.Json
 {
@@ -69,7 +69,7 @@ namespace StudioX.Localization.Dictionaries.Json
                 throw new StudioXException("Culture is empty in language json file.");
             }
 
-            var dictionary = new JsonLocalizationDictionary(CultureInfoHelper.Get(cultureCode));
+            var dictionary = new JsonLocalizationDictionary(CultureInfo.GetCultureInfo(cultureCode));
             var dublicateNames = new List<string>();
             foreach (var item in jsonFile.Texts)
             {

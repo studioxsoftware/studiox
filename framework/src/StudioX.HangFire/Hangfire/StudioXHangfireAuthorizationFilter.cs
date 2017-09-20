@@ -10,11 +10,11 @@ namespace StudioX.Hangfire
     {
         public IIocResolver IocResolver { get; set; }
 
-        private readonly string requiredPermissionName;
+        private readonly string _requiredPermissionName;
 
         public StudioXHangfireAuthorizationFilter(string requiredPermissionName = null)
         {
-            this.requiredPermissionName = requiredPermissionName;
+            _requiredPermissionName = requiredPermissionName;
 
             IocResolver = IocManager.Instance;
         }
@@ -26,7 +26,7 @@ namespace StudioX.Hangfire
                 return false;
             }
 
-            if (!requiredPermissionName.IsNullOrEmpty() && !IsPermissionGranted(requiredPermissionName))
+            if (!_requiredPermissionName.IsNullOrEmpty() && !IsPermissionGranted(_requiredPermissionName))
             {
                 return false;
             }
@@ -36,9 +36,9 @@ namespace StudioX.Hangfire
 
         private bool IsLoggedIn()
         {
-            using (var session = IocResolver.ResolveAsDisposable<IStudioXSession>())
+            using (var studioxSession = IocResolver.ResolveAsDisposable<IStudioXSession>())
             {
-                return session.Object.UserId.HasValue;
+                return studioxSession.Object.UserId.HasValue;
             }
         }
 

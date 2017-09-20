@@ -5,26 +5,26 @@ namespace StudioX.Dapper.Filters.Action
 {
     public class DapperActionFilterExecuter : IDapperActionFilterExecuter, ITransientDependency
     {
-        private readonly IIocResolver iocResolver;
+        private readonly IIocResolver _iocResolver;
 
         public DapperActionFilterExecuter(IIocResolver iocResolver)
         {
-            this.iocResolver = iocResolver;
+            _iocResolver = iocResolver;
         }
 
         public void ExecuteCreationAuditFilter<TEntity, TPrimaryKey>(TEntity entity) where TEntity : class, IEntity<TPrimaryKey>
         {
-            iocResolver.Resolve<CreationAuditDapperActionFilter>().ExecuteFilter<TEntity, TPrimaryKey>(entity);
+            _iocResolver.Resolve<CreationAuditDapperActionFilter>().ExecuteFilter<TEntity, TPrimaryKey>(entity);
         }
 
         public void ExecuteModificationAuditFilter<TEntity, TPrimaryKey>(TEntity entity) where TEntity : class, IEntity<TPrimaryKey>
         {
-            iocResolver.Resolve<ModificationAuditDapperActionFilter>().ExecuteFilter<TEntity, TPrimaryKey>(entity);
+            _iocResolver.Resolve<ModificationAuditDapperActionFilter>().ExecuteFilter<TEntity, TPrimaryKey>(entity);
         }
 
         public void ExecuteDeletionAuditFilter<TEntity, TPrimaryKey>(TEntity entity) where TEntity : class, IEntity<TPrimaryKey>
         {
-            iocResolver.Resolve<DeletionAuditDapperActionFilter>().ExecuteFilter<TEntity, TPrimaryKey>(entity);
+            _iocResolver.Resolve<DeletionAuditDapperActionFilter>().ExecuteFilter<TEntity, TPrimaryKey>(entity);
         }
     }
 }

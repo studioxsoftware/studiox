@@ -10,23 +10,23 @@ namespace StudioX.Authorization.Roles
         IEventHandler<EntityDeletedEventData<StudioXRoleBase>>,
         ITransientDependency
     {
-        private readonly ICacheManager cacheManager;
+        private readonly ICacheManager _cacheManager;
 
         public StudioXRolePermissionCacheItemInvalidator(ICacheManager cacheManager)
         {
-            this.cacheManager = cacheManager;
+            _cacheManager = cacheManager;
         }
 
         public void HandleEvent(EntityChangedEventData<RolePermissionSetting> eventData)
         {
             var cacheKey = eventData.Entity.RoleId + "@" + (eventData.Entity.TenantId ?? 0);
-            cacheManager.GetRolePermissionCache().Remove(cacheKey);
+            _cacheManager.GetRolePermissionCache().Remove(cacheKey);
         }
 
         public void HandleEvent(EntityDeletedEventData<StudioXRoleBase> eventData)
         {
             var cacheKey = eventData.Entity.Id + "@" + (eventData.Entity.TenantId ?? 0);
-            cacheManager.GetRolePermissionCache().Remove(cacheKey);
+            _cacheManager.GetRolePermissionCache().Remove(cacheKey);
         }
     }
 }

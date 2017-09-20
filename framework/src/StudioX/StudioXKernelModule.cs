@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq.Expressions;
 using System.Reflection;
-using Castle.MicroKernel.Registration;
 using StudioX.Application.Features;
 using StudioX.Application.Navigation;
 using StudioX.Application.Services;
@@ -26,15 +25,17 @@ using StudioX.Reflection.Extensions;
 using StudioX.Runtime;
 using StudioX.Runtime.Caching;
 using StudioX.Runtime.Remoting;
+using StudioX.Runtime.Validation.Interception;
 using StudioX.Threading;
 using StudioX.Threading.BackgroundWorkers;
 using StudioX.Timing;
+using Castle.MicroKernel.Registration;
 
 namespace StudioX
 {
     /// <summary>
-    ///     Kernel (core) module of the StudioX system.
-    ///     No need to depend on this, it's automatically the first module always.
+    /// Kernel (core) module of the StudioX system.
+    /// No need to depend on this, it's automatically the first module always.
     /// </summary>
     public sealed class StudioXKernelModule : StudioXModule
     {
@@ -43,8 +44,7 @@ namespace StudioX
             IocManager.AddConventionalRegistrar(new BasicConventionalRegistrar());
 
             IocManager.Register<IScopedIocResolver, ScopedIocResolver>(DependencyLifeStyle.Transient);
-            IocManager.Register(typeof(IAmbientScopeProvider<>), typeof(DataContextAmbientScopeProvider<>),
-                DependencyLifeStyle.Transient);
+            IocManager.Register(typeof(IAmbientScopeProvider<>), typeof(DataContextAmbientScopeProvider<>), DependencyLifeStyle.Transient);
 
             AddAuditingSelectors();
             AddLocalizationSources();
@@ -56,7 +56,7 @@ namespace StudioX
 
         public override void Initialize()
         {
-            foreach (var replaceAction in ((StudioXStartupConfiguration) Configuration).ServiceReplaceActions.Values)
+            foreach (var replaceAction in ((StudioXStartupConfiguration)Configuration).ServiceReplaceActions.Values)
             {
                 replaceAction();
             }
@@ -134,14 +134,20 @@ namespace StudioX
 
         private void ConfigureCaches()
         {
-            Configuration.Caching.Configure(StudioXCacheNames.ApplicationSettings,
-                cache => { cache.DefaultSlidingExpireTime = TimeSpan.FromHours(8); });
+            Configuration.Caching.Configure(StudioXCacheNames.ApplicationSettings, cache =>
+            {
+                cache.DefaultSlidingExpireTime = TimeSpan.FromHours(8);
+            });
 
-            Configuration.Caching.Configure(StudioXCacheNames.TenantSettings,
-                cache => { cache.DefaultSlidingExpireTime = TimeSpan.FromMinutes(60); });
+            Configuration.Caching.Configure(StudioXCacheNames.TenantSettings, cache =>
+            {
+                cache.DefaultSlidingExpireTime = TimeSpan.FromMinutes(60);
+            });
 
-            Configuration.Caching.Configure(StudioXCacheNames.UserSettings,
-                cache => { cache.DefaultSlidingExpireTime = TimeSpan.FromMinutes(20); });
+            Configuration.Caching.Configure(StudioXCacheNames.UserSettings, cache =>
+            {
+                cache.DefaultSlidingExpireTime = TimeSpan.FromMinutes(20);
+            });
         }
 
         private void AddIgnoredTypes()
@@ -158,7 +164,7 @@ namespace StudioX
                 Configuration.Validation.IgnoredTypes.AddIfNotContains(ignoredType);
             }
 
-            var validationIgnoredTypes = new[] {typeof(Type)};
+            var validationIgnoredTypes = new[] { typeof(Type) };
             foreach (var ignoredType in validationIgnoredTypes)
             {
                 Configuration.Validation.IgnoredTypes.AddIfNotContains(ignoredType);

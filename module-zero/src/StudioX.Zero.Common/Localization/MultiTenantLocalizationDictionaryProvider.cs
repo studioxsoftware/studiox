@@ -13,51 +13,57 @@ namespace StudioX.Localization
     /// </summary>
     public class MultiTenantLocalizationDictionaryProvider : ILocalizationDictionaryProvider
     {
-        public ILocalizationDictionary DefaultDictionary => GetDefaultDictionary();
+        public ILocalizationDictionary DefaultDictionary
+        {
+            get { return GetDefaultDictionary(); }
+        }
 
-        public IDictionary<string, ILocalizationDictionary> Dictionaries => GetDictionaries();
+        public IDictionary<string, ILocalizationDictionary> Dictionaries
+        {
+            get { return GetDictionaries(); }
+        }
 
-        private readonly ConcurrentDictionary<string, ILocalizationDictionary> dictionaries;
+        private readonly ConcurrentDictionary<string, ILocalizationDictionary> _dictionaries;
 
-        private string sourceName;
+        private string _sourceName;
 
-        private readonly ILocalizationDictionaryProvider internalProvider;
+        private readonly ILocalizationDictionaryProvider _internalProvider;
 
-        private readonly IIocManager iocManager;
-        private ILanguageManager languageManager;
+        private readonly IIocManager _iocManager;
+        private ILanguageManager _languageManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MultiTenantLocalizationDictionaryProvider"/> class.
         /// </summary>
         public MultiTenantLocalizationDictionaryProvider(ILocalizationDictionaryProvider internalProvider, IIocManager iocManager)
         {
-            this.internalProvider = internalProvider;
-            this.iocManager = iocManager;
-            dictionaries = new ConcurrentDictionary<string, ILocalizationDictionary>();
+            _internalProvider = internalProvider;
+            _iocManager = iocManager;
+            _dictionaries = new ConcurrentDictionary<string, ILocalizationDictionary>();
         }
 
         public void Initialize(string sourceName)
         {
-            this.sourceName = sourceName;
-            languageManager = iocManager.Resolve<ILanguageManager>();
-            internalProvider.Initialize(this.sourceName);
+            _sourceName = sourceName;
+            _languageManager = _iocManager.Resolve<ILanguageManager>();
+            _internalProvider.Initialize(_sourceName);
         }
 
         protected virtual IDictionary<string, ILocalizationDictionary> GetDictionaries()
         {
-            var languages = languageManager.GetLanguages();
+            var languages = _languageManager.GetLanguages();
 
             foreach (var language in languages)
             {
-                dictionaries.GetOrAdd(language.Name, s => CreateLocalizationDictionary(language));
+                _dictionaries.GetOrAdd(language.Name, s => CreateLocalizationDictionary(language));
             }
 
-            return dictionaries;
+            return _dictionaries;
         }
 
         protected virtual ILocalizationDictionary GetDefaultDictionary()
         {
-            var languages = languageManager.GetLanguages();
+            var languages = _languageManager.GetLanguages();
             if (!languages.Any())
             {
                 throw new StudioXException("No language defined!");
@@ -69,18 +75,18 @@ namespace StudioX.Localization
                 throw new StudioXException("Default language is not defined!");
             }
 
-            return dictionaries.GetOrAdd(defaultLanguage.Name, s => CreateLocalizationDictionary(defaultLanguage));
+            return _dictionaries.GetOrAdd(defaultLanguage.Name, s => CreateLocalizationDictionary(defaultLanguage));
         }
 
         protected virtual IMultiTenantLocalizationDictionary CreateLocalizationDictionary(LanguageInfo language)
         {
             var internalDictionary =
-                internalProvider.Dictionaries.GetOrDefault(language.Name) ??
-                new EmptyDictionary(CultureInfoHelper.Get(language.Name));
+                _internalProvider.Dictionaries.GetOrDefault(language.Name) ??
+                new EmptyDictionary(CultureInfo.GetCultureInfo(language.Name));
 
-            var dictionary =  iocManager.Resolve<IMultiTenantLocalizationDictionary>(new
+            var dictionary =  _iocManager.Resolve<IMultiTenantLocalizationDictionary>(new
             {
-                sourceName = sourceName,
+                sourceName = _sourceName,
                 internalDictionary = internalDictionary
             });
 
@@ -91,9 +97,9 @@ namespace StudioX.Localization
         {
             //Add
             ILocalizationDictionary existingDictionary;
-            if (!internalProvider.Dictionaries.TryGetValue(dictionary.CultureInfo.Name, out existingDictionary))
+            if (!_internalProvider.Dictionaries.TryGetValue(dictionary.CultureInfo.Name, out existingDictionary))
             {
-                internalProvider.Dictionaries[dictionary.CultureInfo.Name] = dictionary;
+                _internalProvider.Dictionaries[dictionary.CultureInfo.Name] = dictionary;
                 return;
             }
 

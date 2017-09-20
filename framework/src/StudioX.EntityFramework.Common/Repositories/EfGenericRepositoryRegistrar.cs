@@ -13,11 +13,11 @@ namespace StudioX.EntityFramework.Repositories
     {
         public ILogger Logger { get; set; }
 
-        private readonly IDbContextEntityFinder dbContextEntityFinder;
+        private readonly IDbContextEntityFinder _dbContextEntityFinder;
 
         public EfGenericRepositoryRegistrar(IDbContextEntityFinder dbContextEntityFinder)
         {
-            this.dbContextEntityFinder = dbContextEntityFinder;
+            _dbContextEntityFinder = dbContextEntityFinder;
             Logger = NullLogger.Instance;
         }
 
@@ -58,7 +58,7 @@ namespace StudioX.EntityFramework.Repositories
             Type repositoryImplementation,
             Type repositoryImplementationWithPrimaryKey)
         {
-            foreach (var entityTypeInfo in dbContextEntityFinder.GetEntityTypeInfos(dbContextType))
+            foreach (var entityTypeInfo in _dbContextEntityFinder.GetEntityTypeInfos(dbContextType))
             {
                 var primaryKeyType = EntityHelper.GetPrimaryKeyType(entityTypeInfo.EntityType);
                 if (primaryKeyType == typeof(int))

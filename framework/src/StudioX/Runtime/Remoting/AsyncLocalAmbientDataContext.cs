@@ -1,5 +1,4 @@
-﻿#if !NET46
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Threading;
 using StudioX.Dependency;
 
@@ -22,4 +21,3 @@ namespace StudioX.Runtime.Remoting
         }
     }
 }
-#endif

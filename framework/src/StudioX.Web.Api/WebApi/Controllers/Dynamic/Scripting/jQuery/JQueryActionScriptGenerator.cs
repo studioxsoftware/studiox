@@ -7,26 +7,26 @@ namespace StudioX.WebApi.Controllers.Dynamic.Scripting.jQuery
 {
     internal class JQueryActionScriptGenerator
     {
-        private readonly DynamicApiControllerInfo controllerInfo;
-        private readonly DynamicApiActionInfo actionInfo;
+        private readonly DynamicApiControllerInfo _controllerInfo;
+        private readonly DynamicApiActionInfo _actionInfo;
 
         private const string JsMethodTemplate =
-            @"    serviceNamespace{jsMethodName} = function({jsMethodParameterList}) {
-                    return studiox.ajax($.extend({
-            {ajaxCallParameters}
-                    }, ajaxParams));
-                };";
+@"    serviceNamespace{jsMethodName} = function({jsMethodParameterList}) {
+        return studiox.ajax($.extend({
+{ajaxCallParameters}
+        }, ajaxParams));
+    };";
 
         public JQueryActionScriptGenerator(DynamicApiControllerInfo controllerInfo, DynamicApiActionInfo actionInfo)
         {
-            this.controllerInfo = controllerInfo;
-            this.actionInfo = actionInfo;
+            _controllerInfo = controllerInfo;
+            _actionInfo = actionInfo;
         }
 
         public virtual string GenerateMethod()
         {
-            var jsMethodName = actionInfo.ActionName.ToCamelCase();
-            var jsMethodParameterList = ActionScriptingHelper.GenerateJsMethodParameterList(actionInfo.Method, "ajaxParams");
+            var jsMethodName = _actionInfo.ActionName.ToCamelCase();
+            var jsMethodParameterList = ActionScriptingHelper.GenerateJsMethodParameterList(_actionInfo.Method, "ajaxParams");
 
             var jsMethod = JsMethodTemplate
                 .Replace("{jsMethodName}", ProxyScriptingJsFuncHelper.WrapWithBracketsOrWithDotPrefix(jsMethodName))
@@ -40,16 +40,16 @@ namespace StudioX.WebApi.Controllers.Dynamic.Scripting.jQuery
         {
             var script = new StringBuilder();
             
-            script.AppendLine("            url: studiox.appPath + '" + ActionScriptingHelper.GenerateUrlWithParameters(controllerInfo, actionInfo) + "',");
-            script.AppendLine("            type: '" + actionInfo.Verb.ToString().ToUpperInvariant() + "',");
+            script.AppendLine("            url: studiox.appPath + '" + ActionScriptingHelper.GenerateUrlWithParameters(_controllerInfo, _actionInfo) + "',");
+            script.AppendLine("            type: '" + _actionInfo.Verb.ToString().ToUpperInvariant() + "',");
 
-            if (actionInfo.Verb == HttpVerb.Get)
+            if (_actionInfo.Verb == HttpVerb.Get)
             {
-                script.Append("            data: " + ActionScriptingHelper.GenerateBody(actionInfo));
+                script.Append("            data: " + ActionScriptingHelper.GenerateBody(_actionInfo));
             }
             else
             {
-                script.Append("            data: JSON.stringify(" + ActionScriptingHelper.GenerateBody(actionInfo) + ")");                
+                script.Append("            data: JSON.stringify(" + ActionScriptingHelper.GenerateBody(_actionInfo) + ")");                
             }
             
             return script.ToString();

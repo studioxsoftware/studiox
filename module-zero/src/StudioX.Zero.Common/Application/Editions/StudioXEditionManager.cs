@@ -11,7 +11,7 @@ namespace StudioX.Application.Editions
 {
     public class StudioXEditionManager : IDomainService
     {
-        private readonly IStudioXZeroFeatureValueStore featureValueStore;
+        private readonly IStudioXZeroFeatureValueStore _featureValueStore;
 
         public IQueryable<Edition> Editions => EditionRepository.GetAll();
 
@@ -25,18 +25,18 @@ namespace StudioX.Application.Editions
             IRepository<Edition> editionRepository,
             IStudioXZeroFeatureValueStore featureValueStore)
         {
-            this.featureValueStore = featureValueStore;
+            _featureValueStore = featureValueStore;
             EditionRepository = editionRepository;
         }
 
         public virtual Task<string> GetFeatureValueOrNullAsync(int editionId, string featureName)
         {
-            return featureValueStore.GetEditionValueOrNullAsync(editionId, featureName);
+            return _featureValueStore.GetEditionValueOrNullAsync(editionId, featureName);
         }
 
         public virtual Task SetFeatureValueAsync(int editionId, string featureName, string value)
         {
-            return featureValueStore.SetEditionFeatureValueAsync(editionId, featureName, value);
+            return _featureValueStore.SetEditionFeatureValueAsync(editionId, featureName, value);
         }
 
         public virtual async Task<IReadOnlyList<NameValue>> GetFeatureValuesAsync(int editionId)

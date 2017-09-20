@@ -13,14 +13,14 @@ namespace StudioX.Notifications
         /// </summary>
         public string Message
         {
-            get => message ?? (this[nameof(Message)] as string);
+            get { return _message ?? (this[nameof(Message)] as string); }
             set
             {
                 this[nameof(Message)] = value;
-                message = value;
+                _message = value;
             }
         }
-        private string message;
+        private string _message;
 
         /// <summary>
         /// Needed for serialization.

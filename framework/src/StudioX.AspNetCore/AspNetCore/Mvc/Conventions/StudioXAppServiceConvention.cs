@@ -20,14 +20,17 @@ namespace StudioX.AspNetCore.Mvc.Conventions
 {
     public class StudioXAppServiceConvention : IApplicationModelConvention
     {
-        private readonly Lazy<StudioXAspNetCoreConfiguration> configuration;
+        private readonly Lazy<StudioXAspNetCoreConfiguration> _configuration;
 
         public StudioXAppServiceConvention(IServiceCollection services)
         {
-            configuration = new Lazy<StudioXAspNetCoreConfiguration>(() => services
-                .GetSingletonService<StudioXBootstrapper>()
-                .IocManager
-                .Resolve<StudioXAspNetCoreConfiguration>(), true);
+            _configuration = new Lazy<StudioXAspNetCoreConfiguration>(() =>
+            {
+                return services
+                    .GetSingletonService<StudioXBootstrapper>()
+                    .IocManager
+                    .Resolve<StudioXAspNetCoreConfiguration>();
+            }, true);
         }
 
         public void Apply(ApplicationModel application)
@@ -102,7 +105,7 @@ namespace StudioX.AspNetCore.Mvc.Conventions
 
         private bool CanUseFormBodyBinding(ActionModel action, ParameterModel parameter)
         {
-            if (configuration.Value.FormBodyBindingIgnoredTypes.Any(t => t.IsAssignableFrom(parameter.ParameterInfo.ParameterType)))
+            if (_configuration.Value.FormBodyBindingIgnoredTypes.Any(t => t.IsAssignableFrom(parameter.ParameterInfo.ParameterType)))
             {
                 return false;
             }
@@ -208,7 +211,7 @@ namespace StudioX.AspNetCore.Mvc.Conventions
 
         private void AddStudioXServiceSelector(string moduleName, string controllerName, ActionModel action, [CanBeNull] StudioXControllerAssemblySetting configuration)
         {
-            var serviceSelectorModel = new SelectorModel
+            var studioxServiceSelectorModel = new SelectorModel
             {
                 AttributeRouteModel = CreateStudioXServiceAttributeRouteModel(moduleName, controllerName, action)
             };
@@ -217,9 +220,9 @@ namespace StudioX.AspNetCore.Mvc.Conventions
                            ? ProxyScriptingHelper.GetConventionalVerbForMethodName(action.ActionName)
                            : ProxyScriptingHelper.DefaultHttpVerb;
 
-            serviceSelectorModel.ActionConstraints.Add(new HttpMethodActionConstraint(new[] { verb }));
+            studioxServiceSelectorModel.ActionConstraints.Add(new HttpMethodActionConstraint(new[] { verb }));
 
-            action.Selectors.Add(serviceSelectorModel);
+            action.Selectors.Add(studioxServiceSelectorModel);
         }
 
         private static void NormalizeSelectorRoutes(string moduleName, string controllerName, ActionModel action)
@@ -246,7 +249,7 @@ namespace StudioX.AspNetCore.Mvc.Conventions
         [CanBeNull]
         private StudioXControllerAssemblySetting GetControllerSettingOrNull(Type controllerType)
         {
-            return configuration.Value.ControllerAssemblySettings.GetSettingOrNull(controllerType);
+            return _configuration.Value.ControllerAssemblySettings.GetSettingOrNull(controllerType);
         }
 
         private static AttributeRouteModel CreateStudioXServiceAttributeRouteModel(string moduleName, string controllerName, ActionModel action)

@@ -14,17 +14,17 @@ namespace StudioX.WebApi.Controllers.Dynamic.Builders
     /// <typeparam name="T">Type of the proxied object</typeparam>
     internal class BatchApiControllerBuilder<T> : IBatchApiControllerBuilder<T>
     {
-        private readonly string servicePrefix;
-        private readonly Assembly assembly;
-        private IFilter[] filters;
-        private Func<Type, string> serviceNameSelector;
-        private Func<Type, bool> typePredicate;
-        private bool conventionalVerbs;
-        private Action<IApiControllerActionBuilder<T>> forMethodsAction;
-        private bool? isApiExplorerEnabled;
-        private readonly IIocResolver iocResolver;
-        private readonly IDynamicApiControllerBuilder dynamicApiControllerBuilder;
-        private bool? isProxyScriptingEnabled;
+        private readonly string _servicePrefix;
+        private readonly Assembly _assembly;
+        private IFilter[] _filters;
+        private Func<Type, string> _serviceNameSelector;
+        private Func<Type, bool> _typePredicate;
+        private bool _conventionalVerbs;
+        private Action<IApiControllerActionBuilder<T>> _forMethodsAction;
+        private bool? _isApiExplorerEnabled;
+        private readonly IIocResolver _iocResolver;
+        private readonly IDynamicApiControllerBuilder _dynamicApiControllerBuilder;
+        private bool? _isProxyScriptingEnabled;
 
         public BatchApiControllerBuilder(
             IIocResolver iocResolver,
@@ -32,51 +32,51 @@ namespace StudioX.WebApi.Controllers.Dynamic.Builders
             Assembly assembly, 
             string servicePrefix)
         {
-            this.iocResolver = iocResolver;
-            this.dynamicApiControllerBuilder = dynamicApiControllerBuilder;
-            this.assembly = assembly;
-            this.servicePrefix = servicePrefix;
+            _iocResolver = iocResolver;
+            _dynamicApiControllerBuilder = dynamicApiControllerBuilder;
+            _assembly = assembly;
+            _servicePrefix = servicePrefix;
         }
 
         public IBatchApiControllerBuilder<T> Where(Func<Type, bool> predicate)
         {
-            typePredicate = predicate;
+            _typePredicate = predicate;
             return this;
         }
 
         public IBatchApiControllerBuilder<T> WithFilters(params IFilter[] filters)
         {
-            this.filters = filters;
+            _filters = filters;
             return this;
         }
 
         public IBatchApiControllerBuilder<T> WithApiExplorer(bool isEnabled)
         {
-            isApiExplorerEnabled = isEnabled;
+            _isApiExplorerEnabled = isEnabled;
             return this;
         }
 
         public IBatchApiControllerBuilder<T> WithProxyScripts(bool isEnabled)
         {
-            isProxyScriptingEnabled = isEnabled;
+            _isProxyScriptingEnabled = isEnabled;
             return this;
         }
 
         public IBatchApiControllerBuilder<T> WithServiceName(Func<Type, string> serviceNameSelector)
         {
-            this.serviceNameSelector = serviceNameSelector;
+            _serviceNameSelector = serviceNameSelector;
             return this;
         }
 
         public IBatchApiControllerBuilder<T> ForMethods(Action<IApiControllerActionBuilder> action)
         {
-            forMethodsAction = action;
+            _forMethodsAction = action;
             return this;
         }
 
         public IBatchApiControllerBuilder<T> WithConventionalVerbs()
         {
-            conventionalVerbs = true;
+            _conventionalVerbs = true;
             return this;
         }
 
@@ -84,70 +84,70 @@ namespace StudioX.WebApi.Controllers.Dynamic.Builders
         {
             var types =
                 from
-                    type in assembly.GetTypes()
+                    type in _assembly.GetTypes()
                 where
                     (type.IsPublic || type.IsNestedPublic) && 
                     type.IsInterface && 
                     typeof(T).IsAssignableFrom(type) &&
-                    iocResolver.IsRegistered(type) &&
+                    _iocResolver.IsRegistered(type) &&
                     !RemoteServiceAttribute.IsExplicitlyDisabledFor(type)
                 select
                     type;
 
-            if (typePredicate != null)
+            if (_typePredicate != null)
             {
-                types = types.Where(t => typePredicate(t));
+                types = types.Where(t => _typePredicate(t));
             }
 
             foreach (var type in types)
             {
-                var serviceName = serviceNameSelector != null
-                    ? serviceNameSelector(type)
+                var serviceName = _serviceNameSelector != null
+                    ? _serviceNameSelector(type)
                     : GetConventionalServiceName(type);
 
-                if (!string.IsNullOrWhiteSpace(servicePrefix))
+                if (!string.IsNullOrWhiteSpace(_servicePrefix))
                 {
-                    serviceName = servicePrefix + "/" + serviceName;
+                    serviceName = _servicePrefix + "/" + serviceName;
                 }
 
                 var builder = typeof(IDynamicApiControllerBuilder)
                     .GetMethod("For", BindingFlags.Public | BindingFlags.Instance)
                     .MakeGenericMethod(type)
-                    .Invoke(dynamicApiControllerBuilder, new object[] { serviceName });
+                    .Invoke(_dynamicApiControllerBuilder, new object[] { serviceName });
 
-                if (filters != null)
+                if (_filters != null)
                 {
                     builder.GetType()
                         .GetMethod("WithFilters", BindingFlags.Public | BindingFlags.Instance)
-                        .Invoke(builder, new object[] { filters });
+                        .Invoke(builder, new object[] { _filters });
                 }
 
-                if (isApiExplorerEnabled != null)
+                if (_isApiExplorerEnabled != null)
                 {
                     builder.GetType()
                         .GetMethod("WithApiExplorer", BindingFlags.Public | BindingFlags.Instance)
-                        .Invoke(builder, new object[] { isApiExplorerEnabled });
+                        .Invoke(builder, new object[] { _isApiExplorerEnabled });
                 }
 
-                if (isProxyScriptingEnabled != null)
+                if (_isProxyScriptingEnabled != null)
                 {
                     builder.GetType()
                         .GetMethod("WithProxyScripts", BindingFlags.Public | BindingFlags.Instance)
-                        .Invoke(builder, new object[] { isProxyScriptingEnabled.Value });
+                        .Invoke(builder, new object[] { _isProxyScriptingEnabled.Value });
                 }
 
-                if (conventionalVerbs)
+                if (_conventionalVerbs)
                 {
                     builder.GetType()
                        .GetMethod("WithConventionalVerbs", BindingFlags.Public | BindingFlags.Instance)
                        .Invoke(builder, new object[0]);
                 }
 
-                if (forMethodsAction != null)
+                if (_forMethodsAction != null)
                 {
                     builder.GetType()
                         .GetMethod("ForMethods", BindingFlags.Public | BindingFlags.Instance)
-                        .Invoke(builder, new object[] { forMethodsAction });
+                        .Invoke(builder, new object[] { _forMethodsAction });
                 }
 
                 builder.GetType()

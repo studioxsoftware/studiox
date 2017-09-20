@@ -3,7 +3,7 @@
   <Import Project="..\..\common.props" />
 
   <PropertyGroup>
-    <TargetFrameworks>net46;netstandard1.6</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>StudioX.Zero.Common</AssemblyName>
     <PackageId>StudioX.Zero.Common</PackageId>
@@ -12,40 +12,21 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <RootNamespace>StudioX</RootNamespace>
-    <Version>1.1.3</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Zero\Localization\Source\StudioXZero-de.xml" />
-    <EmbeddedResource Include="Zero\Localization\Source\StudioXZero-fa.xml" />
-    <EmbeddedResource Include="Zero\Localization\Source\StudioXZero-fr.xml" />
-    <EmbeddedResource Include="Zero\Localization\Source\StudioXZero-it.xml" />
-    <EmbeddedResource Include="Zero\Localization\Source\StudioXZero-lt.xml" />
-    <EmbeddedResource Include="Zero\Localization\Source\StudioXZero-lv.xml" />
-    <EmbeddedResource Include="Zero\Localization\Source\StudioXZero-pt-BR.xml" />
-    <EmbeddedResource Include="Zero\Localization\Source\StudioXZero-ru.xml" />
-    <EmbeddedResource Include="Zero\Localization\Source\StudioXZero-tr.xml" />
-    <EmbeddedResource Include="Zero\Localization\Source\StudioXZero-zh-CN.xml" />
-    <EmbeddedResource Include="Zero\Localization\Source\StudioXZero.xml" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">
-    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <EmbeddedResource Include="Zero\Localization\Source\*.xml" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\framework\src\StudioX\StudioX.csproj" />
+    <None Include="bin\Release\netstandard2.0\StudioX.Zero.Common.pdb">
+      <PackagePath>lib/netstandard2.0/</PackagePath>
+      <Pack>true</Pack>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="bin\Release\net46\StudioX.Zero.Common.pdb">
-      <PackagePath>lib/net46/</PackagePath>
-      <Pack>true</Pack>
-    </None>
-    <None Update="bin\Release\netstandard1.6\StudioX.Zero.Common.pdb">
-      <PackagePath>lib/netstandard1.6/</PackagePath>
-      <Pack>true</Pack>
-    </None>
+    <ProjectReference Include="..\StudioX\StudioX.csproj" />
   </ItemGroup>
 
 </Project>

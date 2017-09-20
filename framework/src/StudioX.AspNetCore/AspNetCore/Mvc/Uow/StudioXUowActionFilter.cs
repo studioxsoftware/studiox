@@ -9,25 +9,31 @@ namespace StudioX.AspNetCore.Mvc.Uow
 {
     public class StudioXUowActionFilter : IAsyncActionFilter, ITransientDependency
     {
-        private readonly IUnitOfWorkManager unitOfWorkManager;
-        private readonly IStudioXAspNetCoreConfiguration aspnetCoreConfiguration;
-        private readonly IUnitOfWorkDefaultOptions unitOfWorkDefaultOptions;
+        private readonly IUnitOfWorkManager _unitOfWorkManager;
+        private readonly IStudioXAspNetCoreConfiguration _aspnetCoreConfiguration;
+        private readonly IUnitOfWorkDefaultOptions _unitOfWorkDefaultOptions;
 
         public StudioXUowActionFilter(
             IUnitOfWorkManager unitOfWorkManager,
             IStudioXAspNetCoreConfiguration aspnetCoreConfiguration,
             IUnitOfWorkDefaultOptions unitOfWorkDefaultOptions)
         {
-            this.unitOfWorkManager = unitOfWorkManager;
-            this.aspnetCoreConfiguration = aspnetCoreConfiguration;
-            this.unitOfWorkDefaultOptions = unitOfWorkDefaultOptions;
+            _unitOfWorkManager = unitOfWorkManager;
+            _aspnetCoreConfiguration = aspnetCoreConfiguration;
+            _unitOfWorkDefaultOptions = unitOfWorkDefaultOptions;
         }
 
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-            var unitOfWorkAttr = unitOfWorkDefaultOptions
+            if (!context.ActionDescriptor.IsControllerAction())
+            {
+                await next();
+                return;
+            }
+
+            var unitOfWorkAttr = _unitOfWorkDefaultOptions
                 .GetUnitOfWorkAttributeOrNull(context.ActionDescriptor.GetMethodInfo()) ??
-                aspnetCoreConfiguration.DefaultUnitOfWorkAttribute;
+                _aspnetCoreConfiguration.DefaultUnitOfWorkAttribute;
 
             if (unitOfWorkAttr.IsDisabled)
             {
@@ -35,7 +41,7 @@ namespace StudioX.AspNetCore.Mvc.Uow
                 return;
             }
 
-            using (var uow = unitOfWorkManager.Begin(unitOfWorkAttr.CreateOptions()))
+            using (var uow = _unitOfWorkManager.Begin(unitOfWorkAttr.CreateOptions()))
             {
                 var result = await next();
                 if (result.Exception == null || result.ExceptionHandled)

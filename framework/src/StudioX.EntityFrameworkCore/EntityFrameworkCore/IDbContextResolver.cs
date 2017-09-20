@@ -1,5 +1,5 @@
-using System.Data.Common;
 using Microsoft.EntityFrameworkCore;
+using System.Data.Common;
 
 namespace StudioX.EntityFrameworkCore
 {
@@ -7,5 +7,5 @@ namespace StudioX.EntityFrameworkCore
     {
         TDbContext Resolve<TDbContext>(string connectionString, DbConnection existingConnection)
             where TDbContext : DbContext;
-    }
+  }
 }

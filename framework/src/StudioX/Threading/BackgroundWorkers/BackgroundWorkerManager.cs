@@ -9,42 +9,42 @@ namespace StudioX.Threading.BackgroundWorkers
     /// </summary>
     public class BackgroundWorkerManager : RunnableBase, IBackgroundWorkerManager, ISingletonDependency, IDisposable
     {
-        private readonly IIocResolver iocResolver;
-        private readonly List<IBackgroundWorker> backgroundJobs;
+        private readonly IIocResolver _iocResolver;
+        private readonly List<IBackgroundWorker> _backgroundJobs;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BackgroundWorkerManager"/> class.
         /// </summary>
         public BackgroundWorkerManager(IIocResolver iocResolver)
         {
-            this.iocResolver = iocResolver;
-            backgroundJobs = new List<IBackgroundWorker>();
+            _iocResolver = iocResolver;
+            _backgroundJobs = new List<IBackgroundWorker>();
         }
 
         public override void Start()
         {
             base.Start();
 
-            backgroundJobs.ForEach(job => job.Start());
+            _backgroundJobs.ForEach(job => job.Start());
         }
 
         public override void Stop()
         {
-            backgroundJobs.ForEach(job => job.Stop());
+            _backgroundJobs.ForEach(job => job.Stop());
 
             base.Stop();
         }
 
         public override void WaitToStop()
         {
-            backgroundJobs.ForEach(job => job.WaitToStop());
+            _backgroundJobs.ForEach(job => job.WaitToStop());
 
             base.WaitToStop();
         }
 
         public void Add(IBackgroundWorker worker)
         {
-            backgroundJobs.Add(worker);
+            _backgroundJobs.Add(worker);
 
             if (IsRunning)
             {
@@ -52,19 +52,19 @@ namespace StudioX.Threading.BackgroundWorkers
             }
         }
 
-        private bool isDisposed;
+        private bool _isDisposed;
 
         public void Dispose()
         {
-            if (isDisposed)
+            if (_isDisposed)
             {
                 return;
             }
 
-            isDisposed = true;
+            _isDisposed = true;
 
-            backgroundJobs.ForEach(iocResolver.Release);
-            backgroundJobs.Clear();
+            _backgroundJobs.ForEach(_iocResolver.Release);
+            _backgroundJobs.Clear();
         }
     }
 }

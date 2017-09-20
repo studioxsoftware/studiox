@@ -15,27 +15,27 @@ namespace StudioX.Web.Mvc.Resources.Embedded.Handlers
             ".config"
         };
 
-        private readonly string rootPath;
-        private readonly RouteData routeData;
+        private readonly string _rootPath;
+        private readonly RouteData _routeData;
 
         public EmbeddedResourceHttpHandler(string rootPath, RouteData routeData)
         {
-            this.rootPath = rootPath;
-            this.routeData = routeData;
+            _rootPath = rootPath;
+            _routeData = routeData;
         }
 
         public void ProcessRequest(HttpContext context)
         {
             context.Response.Clear();
 
-            var fileName = routeData.Values["pathInfo"] as string;
+            var fileName = _routeData.Values["pathInfo"] as string;
             if (fileName == null)
             {
                 context.Response.StatusCode = 404;
                 return;
             }
 
-            var resource = WebResourceHelper.GetEmbeddedResource(rootPath.EnsureEndsWith('/') + fileName);
+            var resource = WebResourceHelper.GetEmbeddedResource(_rootPath.EnsureEndsWith('/') + fileName);
             if (resource == null)
             {
                 context.Response.StatusCode = 404;

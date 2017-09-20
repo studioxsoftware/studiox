@@ -13,18 +13,18 @@ namespace StudioX.Zero.EntityFrameworkCore
     public abstract class StudioXZeroDbMigrator<TDbContext> : IStudioXZeroDbMigrator, ITransientDependency
         where TDbContext : DbContext
     {
-        private readonly IUnitOfWorkManager unitOfWorkManager;
-        private readonly IDbPerTenantConnectionStringResolver connectionStringResolver;
-        private readonly IDbContextResolver dbContextResolver;
+        private readonly IUnitOfWorkManager _unitOfWorkManager;
+        private readonly IDbPerTenantConnectionStringResolver _connectionStringResolver;
+        private readonly IDbContextResolver _dbContextResolver;
 
         protected StudioXZeroDbMigrator(
             IUnitOfWorkManager unitOfWorkManager,
             IDbPerTenantConnectionStringResolver connectionStringResolver,
             IDbContextResolver dbContextResolver)
         {
-            this.unitOfWorkManager = unitOfWorkManager;
-            this.connectionStringResolver = connectionStringResolver;
-            this.dbContextResolver = dbContextResolver;
+            _unitOfWorkManager = unitOfWorkManager;
+            _connectionStringResolver = connectionStringResolver;
+            _dbContextResolver = dbContextResolver;
         }
         
         public virtual void CreateOrMigrateForHost()
@@ -57,24 +57,22 @@ namespace StudioX.Zero.EntityFrameworkCore
             var args = new DbPerTenantConnectionStringResolveArgs(
                 tenant == null ? (int?) null : (int?) tenant.Id,
                 tenant == null ? MultiTenancySides.Host : MultiTenancySides.Tenant
-            )
-            {
-                ["DbContextType"] = typeof(TDbContext),
-                ["DbContextConcreteType"] = typeof(TDbContext)
-            };
-
-
-            var nameOrConnectionString = ConnectionStringHelper.GetConnectionString(
-                connectionStringResolver.GetNameOrConnectionString(args)
             );
 
-            using (var uow = unitOfWorkManager.Begin(TransactionScopeOption.Suppress))
+            args["DbContextType"] = typeof(TDbContext);
+            args["DbContextConcreteType"] = typeof(TDbContext);
+
+            var nameOrConnectionString = ConnectionStringHelper.GetConnectionString(
+                _connectionStringResolver.GetNameOrConnectionString(args)
+            );
+
+            using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.Suppress))
             {
-                using (var dbContext = dbContextResolver.Resolve<TDbContext>(nameOrConnectionString, null))
+                using (var dbContext = _dbContextResolver.Resolve<TDbContext>(nameOrConnectionString, null))
                 {
                     dbContext.Database.Migrate();
                     seedAction?.Invoke(dbContext);
-                    unitOfWorkManager.Current.SaveChanges();
+                    _unitOfWorkManager.Current.SaveChanges();
                     uow.Complete();
                 }
             }

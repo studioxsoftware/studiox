@@ -12,35 +12,32 @@ namespace StudioX.Application.Navigation
 {
     internal class UserNavigationManager : IUserNavigationManager, ITransientDependency
     {
-        public IPermissionChecker PermissionChecker { get; set; }
-
         public IStudioXSession StudioXSession { get; set; }
 
-        private readonly INavigationManager navigationManager;
-        private readonly ILocalizationContext localizationContext;
-        private readonly IIocResolver iocResolver;
+        private readonly INavigationManager _navigationManager;
+        private readonly ILocalizationContext _localizationContext;
+        private readonly IIocResolver _iocResolver;
 
         public UserNavigationManager(
             INavigationManager navigationManager,
             ILocalizationContext localizationContext,
             IIocResolver iocResolver)
         {
-            this.navigationManager = navigationManager;
-            this.localizationContext = localizationContext;
-            this.iocResolver = iocResolver;
-            PermissionChecker = NullPermissionChecker.Instance;
+            _navigationManager = navigationManager;
+            _localizationContext = localizationContext;
+            _iocResolver = iocResolver;
             StudioXSession = NullStudioXSession.Instance;
         }
 
         public async Task<UserMenu> GetMenuAsync(string menuName, UserIdentifier user)
         {
-            var menuDefinition = navigationManager.Menus.GetOrDefault(menuName);
+            var menuDefinition = _navigationManager.Menus.GetOrDefault(menuName);
             if (menuDefinition == null)
             {
                 throw new StudioXException("There is no menu with given name: " + menuName);
             }
 
-            var userMenu = new UserMenu(menuDefinition, localizationContext);
+            var userMenu = new UserMenu(menuDefinition, _localizationContext);
             await FillUserMenuItems(user, menuDefinition.Items, userMenu.Items);
             return userMenu;
         }
@@ -49,7 +46,7 @@ namespace StudioX.Application.Navigation
         {
             var userMenus = new List<UserMenu>();
 
-            foreach (var menu in navigationManager.Menus.Values)
+            foreach (var menu in _navigationManager.Menus.Values)
             {
                 userMenus.Add(await GetMenuAsync(menu.Name, user));
             }
@@ -57,21 +54,20 @@ namespace StudioX.Application.Navigation
             return userMenus;
         }
 
-        private async Task<int> FillUserMenuItems(UserIdentifier user, IList<MenuItemDefinition> menuItemDefinitions,
-            IList<UserMenuItem> userMenuItems)
+        private async Task<int> FillUserMenuItems(UserIdentifier user, IList<MenuItemDefinition> menuItemDefinitions, IList<UserMenuItem> userMenuItems)
         {
             //TODO: Can be optimized by re-using FeatureDependencyContext.
 
             var addedMenuItemCount = 0;
 
-            using (var scope = iocResolver.CreateScope())
+            using (var scope = _iocResolver.CreateScope())
             {
                 var permissionDependencyContext = scope.Resolve<PermissionDependencyContext>();
                 permissionDependencyContext.User = user;
 
                 var featureDependencyContext = scope.Resolve<FeatureDependencyContext>();
                 featureDependencyContext.TenantId = user == null ? null : user.TenantId;
-
+                
                 foreach (var menuItemDefinition in menuItemDefinitions)
                 {
                     if (menuItemDefinition.RequiresAuthentication && user == null)
@@ -101,7 +97,7 @@ namespace StudioX.Application.Navigation
                         continue;
                     }
 
-                    var userMenuItem = new UserMenuItem(menuItemDefinition, localizationContext);
+                    var userMenuItem = new UserMenuItem(menuItemDefinition, _localizationContext);
                     if (menuItemDefinition.IsLeaf || (await FillUserMenuItems(user, menuItemDefinition.Items, userMenuItem.Items)) > 0)
                     {
                         userMenuItems.Add(userMenuItem);

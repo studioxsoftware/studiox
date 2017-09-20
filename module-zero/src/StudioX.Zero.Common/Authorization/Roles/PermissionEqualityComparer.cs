@@ -7,8 +7,8 @@ namespace StudioX.Authorization.Roles
     /// </summary>
     internal class PermissionEqualityComparer : IEqualityComparer<Permission>
     {
-        public static PermissionEqualityComparer Instance => instance;
-        private static PermissionEqualityComparer instance = new PermissionEqualityComparer();
+        public static PermissionEqualityComparer Instance { get { return _instance; } }
+        private static PermissionEqualityComparer _instance = new PermissionEqualityComparer();
 
         public bool Equals(Permission x, Permission y)
         {

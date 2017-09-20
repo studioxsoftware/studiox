@@ -3,30 +3,31 @@ using System.Collections.Immutable;
 using System.Data.Entity;
 using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
+using System.Linq;
 using System.Threading.Tasks;
-using Castle.Core.Internal;
 using StudioX.Dependency;
 using StudioX.Domain.Uow;
 using StudioX.EntityFramework.Utils;
 using StudioX.Extensions;
 using StudioX.MultiTenancy;
+using Castle.Core.Internal;
 
 namespace StudioX.EntityFramework.Uow
 {
     /// <summary>
-    ///     Implements Unit of work for Entity Framework.
+    /// Implements Unit of work for Entity Framework.
     /// </summary>
     public class EfUnitOfWork : UnitOfWorkBase, ITransientDependency
     {
         protected IDictionary<string, DbContext> ActiveDbContexts { get; }
         protected IIocResolver IocResolver { get; }
 
-        private readonly IDbContextResolver dbContextResolver;
-        private readonly IDbContextTypeMatcher dbContextTypeMatcher;
-        private readonly IEfTransactionStrategy transactionStrategy;
+        private readonly IDbContextResolver _dbContextResolver;
+        private readonly IDbContextTypeMatcher _dbContextTypeMatcher;
+        private readonly IEfTransactionStrategy _transactionStrategy;
 
         /// <summary>
-        ///     Creates a new <see cref="EfUnitOfWork" />.
+        /// Creates a new <see cref="EfUnitOfWork"/>.
         /// </summary>
         public EfUnitOfWork(
             IIocResolver iocResolver,
@@ -37,14 +38,14 @@ namespace StudioX.EntityFramework.Uow
             IDbContextTypeMatcher dbContextTypeMatcher,
             IEfTransactionStrategy transactionStrategy)
             : base(
-                connectionStringResolver,
-                defaultOptions,
-                filterExecuter)
+                  connectionStringResolver,
+                  defaultOptions,
+                  filterExecuter)
         {
             IocResolver = iocResolver;
-            this.dbContextResolver = dbContextResolver;
-            this.dbContextTypeMatcher = dbContextTypeMatcher;
-            this.transactionStrategy = transactionStrategy;
+            _dbContextResolver = dbContextResolver;
+            _dbContextTypeMatcher = dbContextTypeMatcher;
+            _transactionStrategy = transactionStrategy;
 
             ActiveDbContexts = new Dictionary<string, DbContext>();
         }
@@ -53,7 +54,7 @@ namespace StudioX.EntityFramework.Uow
         {
             if (Options.IsTransactional == true)
             {
-                transactionStrategy.InitOptions(Options);
+                _transactionStrategy.InitOptions(Options);
             }
         }
 
@@ -84,7 +85,7 @@ namespace StudioX.EntityFramework.Uow
 
             if (Options.IsTransactional == true)
             {
-                transactionStrategy.Commit();
+                _transactionStrategy.Commit();
             }
         }
 
@@ -94,14 +95,14 @@ namespace StudioX.EntityFramework.Uow
 
             if (Options.IsTransactional == true)
             {
-                transactionStrategy.Commit();
+                _transactionStrategy.Commit();
             }
         }
-
+        
         public virtual TDbContext GetOrCreateDbContext<TDbContext>(MultiTenancySides? multiTenancySide = null)
             where TDbContext : DbContext
         {
-            var concreteDbContextType = dbContextTypeMatcher.GetConcreteType(typeof(TDbContext));
+            var concreteDbContextType = _dbContextTypeMatcher.GetConcreteType(typeof(TDbContext));
 
             var connectionStringResolveArgs = new ConnectionStringResolveArgs(multiTenancySide);
             connectionStringResolveArgs["DbContextType"] = typeof(TDbContext);
@@ -115,11 +116,11 @@ namespace StudioX.EntityFramework.Uow
             {
                 if (Options.IsTransactional == true)
                 {
-                    dbContext = transactionStrategy.CreateDbContext<TDbContext>(connectionString, dbContextResolver);
+                    dbContext = _transactionStrategy.CreateDbContext<TDbContext>(connectionString, _dbContextResolver);
                 }
                 else
                 {
-                    dbContext = dbContextResolver.Resolve<TDbContext>(connectionString);
+                    dbContext = _dbContextResolver.Resolve<TDbContext>(connectionString);
                 }
 
                 if (Options.Timeout.HasValue && !dbContext.Database.CommandTimeout.HasValue)
@@ -127,22 +128,24 @@ namespace StudioX.EntityFramework.Uow
                     dbContext.Database.CommandTimeout = Options.Timeout.Value.TotalSeconds.To<int>();
                 }
 
-                ((IObjectContextAdapter) dbContext).ObjectContext.ObjectMaterialized +=
-                    (sender, args) => { ObjectContext_ObjectMaterialized(dbContext, args); };
+                ((IObjectContextAdapter)dbContext).ObjectContext.ObjectMaterialized += (sender, args) =>
+                {
+                    ObjectContext_ObjectMaterialized(dbContext, args);
+                };
 
                 FilterExecuter.As<IEfUnitOfWorkFilterExecuter>().ApplyCurrentFilters(this, dbContext);
-
+                
                 ActiveDbContexts[dbContextKey] = dbContext;
             }
 
-            return (TDbContext) dbContext;
+            return (TDbContext)dbContext;
         }
 
         protected override void DisposeUow()
         {
             if (Options.IsTransactional == true)
             {
-                transactionStrategy.Dispose(IocResolver);
+                _transactionStrategy.Dispose(IocResolver);
             }
             else
             {

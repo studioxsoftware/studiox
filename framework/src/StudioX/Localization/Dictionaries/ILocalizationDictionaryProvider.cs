@@ -3,8 +3,8 @@
 namespace StudioX.Localization.Dictionaries
 {
     /// <summary>
-    ///     Used to get localization dictionaries (<see cref="ILocalizationDictionary" />)
-    ///     for a <see cref="IDictionaryBasedLocalizationSource" />.
+    /// Used to get localization dictionaries (<see cref="ILocalizationDictionary"/>)
+    /// for a <see cref="IDictionaryBasedLocalizationSource"/>.
     /// </summary>
     public interface ILocalizationDictionaryProvider
     {
@@ -13,7 +13,7 @@ namespace StudioX.Localization.Dictionaries
         IDictionary<string, ILocalizationDictionary> Dictionaries { get; }
 
         void Initialize(string sourceName);
-
+        
         void Extend(ILocalizationDictionary dictionary);
     }
 }

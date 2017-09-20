@@ -2,10 +2,6 @@
 using System.IO;
 using System.Linq;
 using System.Reflection;
-#if !NET46
-using System.Runtime.Loader;
-
-#endif
 
 namespace StudioX.Reflection
 {
@@ -18,11 +14,7 @@ namespace StudioX.Reflection
                 .Where(s => s.EndsWith(".dll") || s.EndsWith(".exe"));
 
             return assemblyFiles.Select(
-#if NET46
-                Assembly.LoadFile
-#else
-                AssemblyLoadContext.Default.LoadFromAssemblyPath
-#endif
+                Assembly.LoadFile //TODO: Use AssemblyLoadContext.Default.LoadFromAssemblyPath instead?
             ).ToList();
         }
     }

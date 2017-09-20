@@ -2,16 +2,13 @@
 using StudioX.Net.Mail;
 using MimeKit;
 using SmtpClient = MailKit.Net.Smtp.SmtpClient;
-
-#if NET46
 using System.Net.Mail;
-#endif
 
 namespace StudioX.MailKit
 {
     public class MailKitEmailSender : EmailSenderBase
     {
-        private readonly IMailKitSmtpBuilder smtpBuilder;
+        private readonly IMailKitSmtpBuilder _smtpBuilder;
 
         public MailKitEmailSender(
             IEmailSenderConfiguration smtpEmailSenderConfiguration,
@@ -19,7 +16,7 @@ namespace StudioX.MailKit
             : base(
                   smtpEmailSenderConfiguration)
         {
-            this.smtpBuilder = smtpBuilder;
+            _smtpBuilder = smtpBuilder;
         }
 
         public override async Task SendAsync(string from, string to, string subject, string body, bool isBodyHtml = true)
@@ -42,7 +39,6 @@ namespace StudioX.MailKit
             }
         }
 
-#if NET46
         protected override async Task SendEmailAsync(MailMessage mail)
         {
             using (var client = BuildSmtpClient())
@@ -62,11 +58,10 @@ namespace StudioX.MailKit
                 client.Disconnect(true);
             }
         }
-#endif
 
         protected virtual SmtpClient BuildSmtpClient()
         {
-            return smtpBuilder.Build();
+            return _smtpBuilder.Build();
         }
 
         private static MimeMessage BuildMimeMessage(string from, string to, string subject, string body, bool isBodyHtml = true)

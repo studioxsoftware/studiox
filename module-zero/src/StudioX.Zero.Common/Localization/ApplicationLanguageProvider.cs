@@ -15,14 +15,14 @@ namespace StudioX.Localization
         /// </summary>
         public IStudioXSession StudioXSession { get; set; }
 
-        private readonly IApplicationLanguageManager applicationLanguageManager;
+        private readonly IApplicationLanguageManager _applicationLanguageManager;
 
         /// <summary>
         /// Constructor.
         /// </summary>
         public ApplicationLanguageProvider(IApplicationLanguageManager applicationLanguageManager)
         {
-            this.applicationLanguageManager = applicationLanguageManager;
+            _applicationLanguageManager = applicationLanguageManager;
 
             StudioXSession = NullStudioXSession.Instance;
         }
@@ -32,7 +32,7 @@ namespace StudioX.Localization
         /// </summary>
         public IReadOnlyList<LanguageInfo> GetLanguages()
         {
-            var languageInfos = AsyncHelper.RunSync(() => applicationLanguageManager.GetLanguagesAsync(StudioXSession.TenantId))
+            var languageInfos = AsyncHelper.RunSync(() => _applicationLanguageManager.GetLanguagesAsync(StudioXSession.TenantId))
                     .OrderBy(l => l.DisplayName)
                     .Select(l => l.ToLanguageInfo())
                     .ToList();
@@ -49,7 +49,7 @@ namespace StudioX.Localization
                 return;
             }
 
-            var defaultLanguage = AsyncHelper.RunSync(() => applicationLanguageManager.GetDefaultLanguageOrNullAsync(StudioXSession.TenantId));
+            var defaultLanguage = AsyncHelper.RunSync(() => _applicationLanguageManager.GetDefaultLanguageOrNullAsync(StudioXSession.TenantId));
             if (defaultLanguage == null)
             {
                 languageInfos[0].IsDefault = true;

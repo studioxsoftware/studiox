@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Reflection;
-using Castle.MicroKernel.Registration;
 using StudioX.Collections.Extensions;
 using StudioX.Dependency;
 using StudioX.EntityFramework;
@@ -12,20 +11,21 @@ using StudioX.Modules;
 using StudioX.Orm;
 using StudioX.Reflection;
 using StudioX.Reflection.Extensions;
+using Castle.MicroKernel.Registration;
 
 namespace StudioX.EntityFrameworkCore
 {
     /// <summary>
-    ///     This module is used to implement "Data Access Layer" in EntityFramework.
+    /// This module is used to implement "Data Access Layer" in EntityFramework.
     /// </summary>
     [DependsOn(typeof(StudioXEntityFrameworkCommonModule))]
     public class StudioXEntityFrameworkCoreModule : StudioXModule
     {
-        private readonly ITypeFinder typeFinder;
+        private readonly ITypeFinder _typeFinder;
 
         public StudioXEntityFrameworkCoreModule(ITypeFinder typeFinder)
         {
-            this.typeFinder = typeFinder;
+            _typeFinder = typeFinder;
         }
 
         public override void PreInitialize()
@@ -41,7 +41,7 @@ namespace StudioX.EntityFrameworkCore
                 Component.For(typeof(IDbContextProvider<>))
                     .ImplementedBy(typeof(UnitOfWorkDbContextProvider<>))
                     .LifestyleTransient()
-            );
+                );
 
             RegisterGenericRepositoriesAndMatchDbContexes();
         }
@@ -49,7 +49,7 @@ namespace StudioX.EntityFrameworkCore
         private void RegisterGenericRepositoriesAndMatchDbContexes()
         {
             var dbContextTypes =
-                typeFinder.Find(type =>
+                _typeFinder.Find(type =>
                 {
                     var typeInfo = type.GetTypeInfo();
                     return typeInfo.IsPublic &&
@@ -64,19 +64,18 @@ namespace StudioX.EntityFrameworkCore
                 return;
             }
 
-            using (var scope = IocManager.CreateScope())
+            using (IScopedIocResolver scope = IocManager.CreateScope())
             {
                 foreach (var dbContextType in dbContextTypes)
                 {
                     Logger.Debug("Registering DbContext: " + dbContextType.AssemblyQualifiedName);
-                    scope.Resolve<IEfGenericRepositoryRegistrar>()
-                        .RegisterForDbContext(dbContextType, IocManager, EfCoreAutoRepositoryTypes.Default);
+
+                    scope.Resolve<IEfGenericRepositoryRegistrar>().RegisterForDbContext(dbContextType, IocManager, EfCoreAutoRepositoryTypes.Default);
 
                     IocManager.IocContainer.Register(
                         Component.For<ISecondaryOrmRegistrar>()
                             .Named(Guid.NewGuid().ToString("N"))
-                            .Instance(new EfCoreBasedSecondaryOrmRegistrar(dbContextType,
-                                scope.Resolve<IDbContextEntityFinder>()))
+                            .Instance(new EfCoreBasedSecondaryOrmRegistrar(dbContextType, scope.Resolve<IDbContextEntityFinder>()))
                             .LifestyleTransient()
                     );
                 }

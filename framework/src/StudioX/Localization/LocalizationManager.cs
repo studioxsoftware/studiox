@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using Castle.Core.Logging;
 using StudioX.Configuration.Startup;
 using StudioX.Dependency;
 using StudioX.Localization.Dictionaries;
 using StudioX.Localization.Sources;
+using Castle.Core.Logging;
 
 namespace StudioX.Localization
 {
@@ -14,24 +14,24 @@ namespace StudioX.Localization
     {
         public ILogger Logger { get; set; }
 
-        private readonly ILanguageManager languageManager;
-        private readonly ILocalizationConfiguration configuration;
-        private readonly IIocResolver iocResolver;
-        private readonly IDictionary<string, ILocalizationSource> sources;
+        private readonly ILanguageManager _languageManager;
+        private readonly ILocalizationConfiguration _configuration;
+        private readonly IIocResolver _iocResolver;
+        private readonly IDictionary<string, ILocalizationSource> _sources;
 
         /// <summary>
-        ///     Constructor.
+        /// Constructor.
         /// </summary>
         public LocalizationManager(
             ILanguageManager languageManager,
-            ILocalizationConfiguration configuration,
+            ILocalizationConfiguration configuration, 
             IIocResolver iocResolver)
         {
             Logger = NullLogger.Instance;
-            this.languageManager = languageManager;
-            this.configuration = configuration;
-            this.iocResolver = iocResolver;
-            sources = new Dictionary<string, ILocalizationSource>();
+            _languageManager = languageManager;
+            _configuration = configuration;
+            _iocResolver = iocResolver;
+            _sources = new Dictionary<string, ILocalizationSource>();
         }
 
         public void Initialize()
@@ -41,29 +41,28 @@ namespace StudioX.Localization
 
         private void InitializeSources()
         {
-            if (!configuration.IsEnabled)
+            if (!_configuration.IsEnabled)
             {
                 Logger.Debug("Localization disabled.");
                 return;
             }
 
-            Logger.Debug(string.Format("Initializing {0} localization sources.", configuration.Sources.Count));
-            foreach (var source in configuration.Sources)
+            Logger.Debug(string.Format("Initializing {0} localization sources.", _configuration.Sources.Count));
+            foreach (var source in _configuration.Sources)
             {
-                if (sources.ContainsKey(source.Name))
+                if (_sources.ContainsKey(source.Name))
                 {
-                    throw new StudioXException("There are more than one source with name: " + source.Name +
-                                               "! Source name must be unique!");
+                    throw new StudioXException("There are more than one source with name: " + source.Name + "! Source name must be unique!");
                 }
 
-                sources[source.Name] = source;
-                source.Initialize(configuration, iocResolver);
+                _sources[source.Name] = source;
+                source.Initialize(_configuration, _iocResolver);
 
                 //Extending dictionaries
                 if (source is IDictionaryBasedLocalizationSource)
                 {
                     var dictionaryBasedSource = source as IDictionaryBasedLocalizationSource;
-                    var extensions = configuration.Sources.Extensions.Where(e => e.SourceName == source.Name).ToList();
+                    var extensions = _configuration.Sources.Extensions.Where(e => e.SourceName == source.Name).ToList();
                     foreach (var extension in extensions)
                     {
                         extension.DictionaryProvider.Initialize(source.Name);
@@ -79,13 +78,13 @@ namespace StudioX.Localization
         }
 
         /// <summary>
-        ///     Gets a localization source with name.
+        /// Gets a localization source with name.
         /// </summary>
         /// <param name="name">Unique name of the localization source</param>
         /// <returns>The localization source</returns>
         public ILocalizationSource GetSource(string name)
         {
-            if (!configuration.IsEnabled)
+            if (!_configuration.IsEnabled)
             {
                 return NullLocalizationSource.Instance;
             }
@@ -96,7 +95,7 @@ namespace StudioX.Localization
             }
 
             ILocalizationSource source;
-            if (!sources.TryGetValue(name, out source))
+            if (!_sources.TryGetValue(name, out source))
             {
                 throw new StudioXException("Can not find a source with name: " + name);
             }
@@ -105,12 +104,12 @@ namespace StudioX.Localization
         }
 
         /// <summary>
-        ///     Gets all registered localization sources.
+        /// Gets all registered localization sources.
         /// </summary>
         /// <returns>List of sources</returns>
         public IReadOnlyList<ILocalizationSource> GetAllSources()
         {
-            return sources.Values.ToImmutableList();
+            return _sources.Values.ToImmutableList();
         }
     }
 }

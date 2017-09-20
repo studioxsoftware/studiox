@@ -11,17 +11,17 @@ namespace StudioX.Web.Navigation
     {
         public IStudioXSession StudioXSession { get; set; }
 
-        private readonly IUserNavigationManager userNavigationManager;
+        private readonly IUserNavigationManager _userNavigationManager;
 
         public NavigationScriptManager(IUserNavigationManager userNavigationManager)
         {
-            this.userNavigationManager = userNavigationManager;
+            _userNavigationManager = userNavigationManager;
             StudioXSession = NullStudioXSession.Instance;
         }
 
         public async Task<string> GetScriptAsync()
         {
-            var userMenus = await userNavigationManager.GetMenusAsync(StudioXSession.ToUserIdentifier());
+            var userMenus = await _userNavigationManager.GetMenusAsync(StudioXSession.ToUserIdentifier());
 
             var sb = new StringBuilder();
             sb.AppendLine("(function() {");

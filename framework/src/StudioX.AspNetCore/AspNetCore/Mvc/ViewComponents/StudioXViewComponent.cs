@@ -47,15 +47,15 @@ namespace StudioX.AspNetCore.Mvc.ViewComponents
                     throw new StudioXException("Must set LocalizationSourceName before, in order to get LocalizationSource");
                 }
 
-                if (localizationSource == null || localizationSource.Name != LocalizationSourceName)
+                if (_localizationSource == null || _localizationSource.Name != LocalizationSourceName)
                 {
-                    localizationSource = LocalizationManager.GetSource(LocalizationSourceName);
+                    _localizationSource = LocalizationManager.GetSource(LocalizationSourceName);
                 }
 
-                return localizationSource;
+                return _localizationSource;
             }
         }
-        private ILocalizationSource localizationSource;
+        private ILocalizationSource _localizationSource;
 
         /// <summary>
         /// Reference to the logger to write logs.

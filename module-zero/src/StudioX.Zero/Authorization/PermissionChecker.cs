@@ -17,7 +17,7 @@ namespace StudioX.Authorization
         where TRole : StudioXRole<TUser>, new()
         where TUser : StudioXUser<TUser>
     {
-        private readonly StudioXUserManager<TRole, TUser> userManager;
+        private readonly StudioXUserManager<TRole, TUser> _userManager;
 
         public IIocManager IocManager { get; set; }
 
@@ -32,7 +32,7 @@ namespace StudioX.Authorization
         /// </summary>
         protected PermissionChecker(StudioXUserManager<TRole, TUser> userManager)
         {
-            this.userManager = userManager;
+            _userManager = userManager;
 
             Logger = NullLogger.Instance;
             StudioXSession = NullStudioXSession.Instance;
@@ -40,25 +40,25 @@ namespace StudioX.Authorization
 
         public virtual async Task<bool> IsGrantedAsync(string permissionName)
         {
-            return StudioXSession.UserId.HasValue && await userManager.IsGrantedAsync(StudioXSession.UserId.Value, permissionName);
+            return StudioXSession.UserId.HasValue && await _userManager.IsGrantedAsync(StudioXSession.UserId.Value, permissionName);
         }
 
         public virtual async Task<bool> IsGrantedAsync(long userId, string permissionName)
         {
-            return await userManager.IsGrantedAsync(userId, permissionName);
+            return await _userManager.IsGrantedAsync(userId, permissionName);
         }
 
         [UnitOfWork]
         public virtual async Task<bool> IsGrantedAsync(UserIdentifier user, string permissionName)
         {
-            if (CurrentUnitOfWorkProvider?.Current == null)
+            if (CurrentUnitOfWorkProvider == null || CurrentUnitOfWorkProvider.Current == null)
             {
                 return await IsGrantedAsync(user.UserId, permissionName);
             }
 
             using (CurrentUnitOfWorkProvider.Current.SetTenantId(user.TenantId))
             {
-                return await userManager.IsGrantedAsync(user.UserId, permissionName);
+                return await _userManager.IsGrantedAsync(user.UserId, permissionName);
             }
         }
     }

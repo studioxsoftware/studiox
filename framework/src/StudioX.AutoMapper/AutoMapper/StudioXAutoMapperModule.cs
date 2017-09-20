@@ -1,33 +1,32 @@
 ﻿using System;
-using System.Reflection;
-using AutoMapper;
-using Castle.MicroKernel.Registration;
-using StudioX.Configuration.Startup;
 using StudioX.Localization;
 using StudioX.Modules;
+using System.Reflection;
+using StudioX.Configuration.Startup;
 using StudioX.Reflection;
-using IObjectMapper = StudioX.ObjectMapping.IObjectMapper;
+using AutoMapper;
+using Castle.MicroKernel.Registration;
 
 namespace StudioX.AutoMapper
 {
     [DependsOn(typeof(StudioXKernelModule))]
     public class StudioXAutoMapperModule : StudioXModule
     {
-        private readonly ITypeFinder typeFinder;
+        private readonly ITypeFinder _typeFinder;
 
-        private static volatile bool createdMappingsBefore;
+        private static volatile bool _createdMappingsBefore;
         private static readonly object SyncObj = new object();
-
+        
         public StudioXAutoMapperModule(ITypeFinder typeFinder)
         {
-            this.typeFinder = typeFinder;
+            _typeFinder = typeFinder;
         }
 
         public override void PreInitialize()
         {
             IocManager.Register<IStudioXAutoMapperConfiguration, StudioXAutoMapperConfiguration>();
 
-            Configuration.ReplaceService<IObjectMapper, AutoMapperObjectMapper>();
+            Configuration.ReplaceService<ObjectMapping.IObjectMapper, AutoMapperObjectMapper>();
 
             Configuration.Modules.StudioXAutoMapper().Configurators.Add(CreateCoreMappings);
         }
@@ -53,10 +52,10 @@ namespace StudioX.AutoMapper
                 if (Configuration.Modules.StudioXAutoMapper().UseStaticMapper)
                 {
                     //We should prevent duplicate mapping in an application, since Mapper is static.
-                    if (!createdMappingsBefore)
+                    if (!_createdMappingsBefore)
                     {
                         Mapper.Initialize(configurer);
-                        createdMappingsBefore = true;
+                        _createdMappingsBefore = true;
                     }
 
                     IocManager.IocContainer.Register(
@@ -75,7 +74,7 @@ namespace StudioX.AutoMapper
 
         private void FindAndAutoMapTypes(IMapperConfigurationExpression configuration)
         {
-            var types = typeFinder.Find(type =>
+            var types = _typeFinder.Find(type =>
                 {
                     var typeInfo = type.GetTypeInfo();
                     return typeInfo.IsDefined(typeof(AutoMapAttribute)) ||
@@ -98,8 +97,7 @@ namespace StudioX.AutoMapper
             var localizationContext = IocManager.Resolve<ILocalizationContext>();
 
             configuration.CreateMap<ILocalizableString, string>().ConvertUsing(ls => ls?.Localize(localizationContext));
-            configuration.CreateMap<LocalizableString, string>()
-                .ConvertUsing(ls => ls == null ? null : localizationContext.LocalizationManager.GetString(ls));
+            configuration.CreateMap<LocalizableString, string>().ConvertUsing(ls => ls == null ? null : localizationContext.LocalizationManager.GetString(ls));
         }
     }
 }

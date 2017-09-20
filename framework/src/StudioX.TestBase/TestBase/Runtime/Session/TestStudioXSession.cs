@@ -13,46 +13,46 @@ namespace StudioX.TestBase.Runtime.Session
         {
             get
             {
-                if (sessionOverrideScopeProvider.GetValue(StudioXSessionBase.SessionOverrideContextKey) != null)
+                if (_sessionOverrideScopeProvider.GetValue(StudioXSessionBase.SessionOverrideContextKey) != null)
                 {
-                    return sessionOverrideScopeProvider.GetValue(StudioXSessionBase.SessionOverrideContextKey).UserId;
+                    return _sessionOverrideScopeProvider.GetValue(StudioXSessionBase.SessionOverrideContextKey).UserId;
                 }
 
-                return userId;
+                return _userId;
             }
-            set => userId = value;
+            set { _userId = value; }
         }
 
         public virtual int? TenantId
         {
             get
             {
-                if (!multiTenancy.IsEnabled)
+                if (!_multiTenancy.IsEnabled)
                 {
                     return 1;
                 }
 
-                if (sessionOverrideScopeProvider.GetValue(StudioXSessionBase.SessionOverrideContextKey) != null)
+                if (_sessionOverrideScopeProvider.GetValue(StudioXSessionBase.SessionOverrideContextKey) != null)
                 {
-                    return sessionOverrideScopeProvider.GetValue(StudioXSessionBase.SessionOverrideContextKey).TenantId;
+                    return _sessionOverrideScopeProvider.GetValue(StudioXSessionBase.SessionOverrideContextKey).TenantId;
                 }
 
-                var resolvedValue = tenantResolver.ResolveTenantId();
+                var resolvedValue = _tenantResolver.ResolveTenantId();
                 if (resolvedValue != null)
                 {
                     return resolvedValue;
                 }
 
-                return tenantId;
+                return _tenantId;
             }
             set
             {
-                if (!multiTenancy.IsEnabled && value != 1 && value != null)
+                if (!_multiTenancy.IsEnabled && value != 1 && value != null)
                 {
                     throw new StudioXException("Can not set TenantId since multi-tenancy is not enabled. Use IMultiTenancyConfig.IsEnabled to enable it.");
                 }
 
-                tenantId = value;
+                _tenantId = value;
             }
         }
 
@@ -62,32 +62,32 @@ namespace StudioX.TestBase.Runtime.Session
         
         public virtual int? ImpersonatorTenantId { get; set; }
 
-        private readonly IMultiTenancyConfig multiTenancy;
-        private readonly IAmbientScopeProvider<SessionOverride> sessionOverrideScopeProvider;
-        private readonly ITenantResolver tenantResolver;
-        private int? tenantId;
-        private long? userId;
+        private readonly IMultiTenancyConfig _multiTenancy;
+        private readonly IAmbientScopeProvider<SessionOverride> _sessionOverrideScopeProvider;
+        private readonly ITenantResolver _tenantResolver;
+        private int? _tenantId;
+        private long? _userId;
 
         public TestStudioXSession(
             IMultiTenancyConfig multiTenancy, 
             IAmbientScopeProvider<SessionOverride> sessionOverrideScopeProvider,
             ITenantResolver tenantResolver)
         {
-            this.multiTenancy = multiTenancy;
-            this.sessionOverrideScopeProvider = sessionOverrideScopeProvider;
-            this.tenantResolver = tenantResolver;
+            _multiTenancy = multiTenancy;
+            _sessionOverrideScopeProvider = sessionOverrideScopeProvider;
+            _tenantResolver = tenantResolver;
         }
 
         protected virtual MultiTenancySides GetCurrentMultiTenancySide()
         {
-            return multiTenancy.IsEnabled && !TenantId.HasValue
+            return _multiTenancy.IsEnabled && !TenantId.HasValue
                 ? MultiTenancySides.Host
                 : MultiTenancySides.Tenant;
         }
 
         public virtual IDisposable Use(int? tenantId, long? userId)
         {
-            return sessionOverrideScopeProvider.BeginScope(StudioXSessionBase.SessionOverrideContextKey, new SessionOverride(tenantId, userId));
+            return _sessionOverrideScopeProvider.BeginScope(StudioXSessionBase.SessionOverrideContextKey, new SessionOverride(tenantId, userId));
         }
     }
 }

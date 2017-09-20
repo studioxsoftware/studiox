@@ -52,10 +52,10 @@ namespace StudioX.AspNetCore
 
             ConfigureAspNetCore(services, options.IocManager);
 
-            var bootstrapper = AddStudioXBootstrapper<TStartupModule>(services, options.IocManager);
-            bootstrapper.PlugInSources.AddRange(options.PlugInSources);
+            var studioxBootstrapper = AddStudioXBootstrapper<TStartupModule>(services, options.IocManager);
+            studioxBootstrapper.PlugInSources.AddRange(options.PlugInSources);
             
-            return WindsorRegistrationHelper.CreateServiceProvider(bootstrapper.IocManager.IocContainer, services);
+            return WindsorRegistrationHelper.CreateServiceProvider(studioxBootstrapper.IocManager.IocContainer, services);
         }
 
         private static void ConfigureAspNetCore(IServiceCollection services, IIocResolver iocResolver)
@@ -106,9 +106,9 @@ namespace StudioX.AspNetCore
         private static StudioXBootstrapper AddStudioXBootstrapper<TStartupModule>(IServiceCollection services, IIocManager iocManager)
             where TStartupModule : StudioXModule
         {
-            var bootstrapper = StudioXBootstrapper.Create<TStartupModule>(iocManager);
-            services.AddSingleton(bootstrapper);
-            return bootstrapper;
+            var studioxBootstrapper = StudioXBootstrapper.Create<TStartupModule>(iocManager);
+            services.AddSingleton(studioxBootstrapper);
+            return studioxBootstrapper;
         }
     }
 }

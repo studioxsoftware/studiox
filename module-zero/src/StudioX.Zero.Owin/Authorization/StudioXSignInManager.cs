@@ -21,8 +21,8 @@ namespace StudioX.Authorization
         where TRole : StudioXRole<TUser>, new()
         where TUser : StudioXUser<TUser>
     {
-        private readonly ISettingManager settingManager;
-        private readonly IUnitOfWorkManager unitOfWorkManager;
+        private readonly ISettingManager _settingManager;
+        private readonly IUnitOfWorkManager _unitOfWorkManager;
 
         protected StudioXSignInManager(
             StudioXUserManager<TRole, TUser> userManager,
@@ -33,8 +33,8 @@ namespace StudioX.Authorization
                   userManager,
                   authenticationManager)
         {
-            this.settingManager = settingManager;
-            this.unitOfWorkManager = unitOfWorkManager;
+            _settingManager = settingManager;
+            _unitOfWorkManager = unitOfWorkManager;
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace StudioX.Authorization
                 throw new ArgumentException("loginResult.Result should be success in order to sign in!");
             }
 
-            using (unitOfWorkManager.Current.SetTenantId(loginResult.Tenant?.Id))
+            using (_unitOfWorkManager.Current.SetTenantId(loginResult.Tenant?.Id))
             {
                 if (IsTrue(StudioXZeroSettingNames.UserManagement.TwoFactorLogin.IsEnabled, loginResult.Tenant?.Id))
                 {
@@ -100,7 +100,7 @@ namespace StudioX.Authorization
                 throw new ArgumentException("loginResult.Result should be success in order to sign in!");
             }
 
-            using (unitOfWorkManager.Current.SetTenantId(loginResult.Tenant?.Id))
+            using (_unitOfWorkManager.Current.SetTenantId(loginResult.Tenant?.Id))
             {
                 AuthenticationManager.SignOut(
                     DefaultAuthenticationTypes.ExternalCookie,
@@ -149,8 +149,8 @@ namespace StudioX.Authorization
         private bool IsTrue(string settingName, int? tenantId)
         {
             return tenantId == null
-                ? settingManager.GetSettingValueForApplication<bool>(settingName)
-                : settingManager.GetSettingValueForTenant<bool>(settingName, tenantId.Value);
+                ? _settingManager.GetSettingValueForApplication<bool>(settingName)
+                : _settingManager.GetSettingValueForTenant<bool>(settingName, tenantId.Value);
         }
     }
 }

@@ -12,11 +12,11 @@ namespace StudioX.WebApi.Controllers.Dynamic.Selectors
     /// </summary>
     public class StudioXApiControllerActionSelector : ApiControllerActionSelector
     {
-        private readonly IStudioXWebApiConfiguration configuration;
+        private readonly IStudioXWebApiConfiguration _configuration;
 
         public StudioXApiControllerActionSelector(IStudioXWebApiConfiguration configuration)
         {
-            this.configuration = configuration;
+            _configuration = configuration;
         }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace StudioX.WebApi.Controllers.Dynamic.Selectors
             }
 
             //Return the single action by the current http verb
-            return new DynamicHttpActionDescriptor(configuration, controllerContext.ControllerDescriptor, actionsByVerb[0]);
+            return new DynamicHttpActionDescriptor(_configuration, controllerContext.ControllerDescriptor, actionsByVerb[0]);
         }
 
         private HttpActionDescriptor GetActionDescriptorByActionName(HttpControllerContext controllerContext, DynamicApiControllerInfo controllerInfo, string actionName)
@@ -113,7 +113,7 @@ namespace StudioX.WebApi.Controllers.Dynamic.Selectors
                 );
             }
 
-            return new DynamicHttpActionDescriptor(configuration, controllerContext.ControllerDescriptor, actionInfo);
+            return new DynamicHttpActionDescriptor(_configuration, controllerContext.ControllerDescriptor, actionInfo);
         }
 
         private HttpActionDescriptor GetDefaultActionDescriptor(HttpControllerContext controllerContext)

@@ -15,9 +15,9 @@ namespace Microsoft.Extensions.DependencyInjection
             where TTenantManager : class
         {
             var type = typeof(TTenantManager);
-            var managerType = typeof(StudioXTenantManager<,>).MakeGenericType(builder.TenantType, builder.UserType);
-            builder.Services.AddTransient(type, provider => provider.GetService(managerType));
-            builder.Services.AddTransient(managerType, type);
+            var studioxManagerType = typeof(StudioXTenantManager<,>).MakeGenericType(builder.TenantType, builder.UserType);
+            builder.Services.AddScoped(type, provider => provider.GetRequiredService(studioxManagerType));
+            builder.Services.AddScoped(studioxManagerType, type);
             return builder;
         }
 
@@ -25,18 +25,18 @@ namespace Microsoft.Extensions.DependencyInjection
             where TEditionManager : class
         {
             var type = typeof(TEditionManager);
-            var managerType = typeof(StudioXEditionManager);
-            builder.Services.AddTransient(type, provider => provider.GetService(managerType));
-            builder.Services.AddTransient(managerType, type);
+            var studioxManagerType = typeof(StudioXEditionManager);
+            builder.Services.AddScoped(type, provider => provider.GetRequiredService(studioxManagerType));
+            builder.Services.AddScoped(studioxManagerType, type);
             return builder;
         }
 
         public static StudioXIdentityBuilder AddStudioXRoleManager<TRoleManager>(this StudioXIdentityBuilder builder)
             where TRoleManager : class
         {
-            var genericType = typeof(StudioXRoleManager<,>).MakeGenericType(builder.RoleType, builder.UserType);
+            var studioxManagerType = typeof(StudioXRoleManager<,>).MakeGenericType(builder.RoleType, builder.UserType);
             var managerType = typeof(RoleManager<>).MakeGenericType(builder.RoleType);
-            builder.Services.AddScoped(genericType, services => services.GetRequiredService(managerType));
+            builder.Services.AddScoped(studioxManagerType, services => services.GetRequiredService(managerType));
             builder.AddRoleManager<TRoleManager>();
             return builder;
         }
@@ -44,9 +44,9 @@ namespace Microsoft.Extensions.DependencyInjection
         public static StudioXIdentityBuilder AddStudioXUserManager<TUserManager>(this StudioXIdentityBuilder builder)
             where TUserManager : class
         {
-            var genericType = typeof(StudioXUserManager<,>).MakeGenericType(builder.RoleType, builder.UserType);
+            var studioxManagerType = typeof(StudioXUserManager<,>).MakeGenericType(builder.RoleType, builder.UserType);
             var managerType = typeof(UserManager<>).MakeGenericType(builder.UserType);
-            builder.Services.AddScoped(genericType, services => services.GetRequiredService(managerType));
+            builder.Services.AddScoped(studioxManagerType, services => services.GetRequiredService(managerType));
             builder.AddUserManager<TUserManager>();
             return builder;
         }
@@ -54,9 +54,9 @@ namespace Microsoft.Extensions.DependencyInjection
         public static StudioXIdentityBuilder AddStudioXSignInManager<TSignInManager>(this StudioXIdentityBuilder builder)
             where TSignInManager : class
         {
-            var genericType = typeof(StudioXSignInManager<,,>).MakeGenericType(builder.TenantType, builder.RoleType, builder.UserType);
+            var studioxManagerType = typeof(StudioXSignInManager<,,>).MakeGenericType(builder.TenantType, builder.RoleType, builder.UserType);
             var managerType = typeof(SignInManager<>).MakeGenericType(builder.UserType);
-            builder.Services.AddScoped(genericType, services => services.GetRequiredService(managerType));
+            builder.Services.AddScoped(studioxManagerType, services => services.GetRequiredService(managerType));
             builder.AddSignInManager<TSignInManager>();
             return builder;
         }
@@ -65,9 +65,9 @@ namespace Microsoft.Extensions.DependencyInjection
             where TLogInManager : class
         {
             var type = typeof(TLogInManager);
-            var managerType = typeof(StudioXLogInManager<,,>).MakeGenericType(builder.TenantType, builder.RoleType, builder.UserType);
-            builder.Services.AddScoped(type, provider => provider.GetService(managerType));
-            builder.Services.AddScoped(managerType, type);
+            var studioxManagerType = typeof(StudioXLogInManager<,,>).MakeGenericType(builder.TenantType, builder.RoleType, builder.UserType);
+            builder.Services.AddScoped(type, provider => provider.GetService(studioxManagerType));
+            builder.Services.AddScoped(studioxManagerType, type);
             return builder;
         }
 
@@ -108,10 +108,10 @@ namespace Microsoft.Extensions.DependencyInjection
             where TUserStore : class
         {
             var type = typeof(TUserStore);
-            var genericType = typeof(StudioXUserStore<,>).MakeGenericType(builder.RoleType, builder.UserType);
+            var studioxStoreType = typeof(StudioXUserStore<,>).MakeGenericType(builder.RoleType, builder.UserType);
             var storeType = typeof(IUserStore<>).MakeGenericType(builder.UserType);
             builder.Services.AddScoped(type);
-            builder.Services.AddScoped(genericType, services => services.GetRequiredService(type));
+            builder.Services.AddScoped(studioxStoreType, services => services.GetRequiredService(type));
             builder.Services.AddScoped(storeType, services => services.GetRequiredService(type));
             return builder;
         }
@@ -120,10 +120,10 @@ namespace Microsoft.Extensions.DependencyInjection
             where TRoleStore : class
         {
             var type = typeof(TRoleStore);
-            var genericType = typeof(StudioXRoleStore<,>).MakeGenericType(builder.RoleType, builder.UserType);
+            var studioxStoreType = typeof(StudioXRoleStore<,>).MakeGenericType(builder.RoleType, builder.UserType);
             var storeType = typeof(IRoleStore<>).MakeGenericType(builder.RoleType);
             builder.Services.AddScoped(type);
-            builder.Services.AddScoped(genericType, services => services.GetRequiredService(type));
+            builder.Services.AddScoped(studioxStoreType, services => services.GetRequiredService(type));
             builder.Services.AddScoped(storeType, services => services.GetRequiredService(type));
             return builder;
         }

@@ -2,50 +2,49 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Castle.Core.Internal;
 using StudioX.Configuration;
 using StudioX.Domain.Services;
 using StudioX.Domain.Uow;
 using StudioX.Extensions;
+using Castle.Core.Internal;
 
 namespace StudioX.Notifications
 {
     /// <summary>
-    ///     Used to distribute notifications to users.
+    /// Used to distribute notifications to users.
     /// </summary>
     public class NotificationDistributer : DomainService, INotificationDistributer
     {
         public IRealTimeNotifier RealTimeNotifier { get; set; }
 
-        private readonly INotificationDefinitionManager notificationDefinitionManager;
-        private readonly INotificationStore notificationStore;
-        private readonly IUnitOfWorkManager unitOfWorkManager;
-        private readonly IGuidGenerator guidGenerator;
+        private readonly INotificationDefinitionManager _notificationDefinitionManager;
+        private readonly INotificationStore _notificationStore;
+        private readonly IUnitOfWorkManager _unitOfWorkManager;
+        private readonly IGuidGenerator _guidGenerator;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="NotificationDistributionJob" /> class.
+        /// Initializes a new instance of the <see cref="NotificationDistributionJob"/> class.
         /// </summary>
         public NotificationDistributer(
             INotificationDefinitionManager notificationDefinitionManager,
             INotificationStore notificationStore,
-            IUnitOfWorkManager unitOfWorkManager,
+            IUnitOfWorkManager unitOfWorkManager, 
             IGuidGenerator guidGenerator)
         {
-            this.notificationDefinitionManager = notificationDefinitionManager;
-            this.notificationStore = notificationStore;
-            this.unitOfWorkManager = unitOfWorkManager;
-            this.guidGenerator = guidGenerator;
+            _notificationDefinitionManager = notificationDefinitionManager;
+            _notificationStore = notificationStore;
+            _unitOfWorkManager = unitOfWorkManager;
+            _guidGenerator = guidGenerator;
 
             RealTimeNotifier = NullRealTimeNotifier.Instance;
         }
 
         public async Task DistributeAsync(Guid notificationId)
         {
-            var notificationInfo = await notificationStore.GetNotificationOrNullAsync(notificationId);
+            var notificationInfo = await _notificationStore.GetNotificationOrNullAsync(notificationId);
             if (notificationInfo == null)
             {
-                Logger.Warn("NotificationDistributionJob can not continue since could not found notification by id: " +
-                            notificationId);
+                Logger.Warn("NotificationDistributionJob can not continue since could not found notification by id: " + notificationId);
                 return;
             }
 
@@ -53,7 +52,7 @@ namespace StudioX.Notifications
 
             var userNotifications = await SaveUserNotifications(users, notificationInfo);
 
-            await notificationStore.DeleteNotificationAsync(notificationInfo);
+            await _notificationStore.DeleteNotificationAsync(notificationInfo);
 
             try
             {
@@ -77,10 +76,7 @@ namespace StudioX.Notifications
                     .UserIds
                     .Split(",")
                     .Select(uidAsStr => UserIdentifier.Parse(uidAsStr))
-                    .Where(
-                        uid =>
-                            SettingManager.GetSettingValueForUser<bool>(NotificationSettingNames.ReceiveNotifications,
-                                uid.TenantId, uid.UserId))
+                    .Where(uid => SettingManager.GetSettingValueForUser<bool>(NotificationSettingNames.ReceiveNotifications, uid.TenantId, uid.UserId))
                     .ToList();
             }
             else
@@ -92,24 +88,24 @@ namespace StudioX.Notifications
                 List<NotificationSubscriptionInfo> subscriptions;
 
                 if (tenantIds.IsNullOrEmpty() ||
-                    tenantIds.Length == 1 && tenantIds[0] == NotificationInfo.AllTenantIds.To<int>())
+                    (tenantIds.Length == 1 && tenantIds[0] == NotificationInfo.AllTenantIds.To<int>()))
                 {
                     //Get all subscribed users of all tenants
-                    subscriptions = await notificationStore.GetSubscriptionsAsync(
+                    subscriptions = await _notificationStore.GetSubscriptionsAsync(
                         notificationInfo.NotificationName,
                         notificationInfo.EntityTypeName,
                         notificationInfo.EntityId
-                    );
+                        );
                 }
                 else
                 {
                     //Get all subscribed users of specified tenant(s)
-                    subscriptions = await notificationStore.GetSubscriptionsAsync(
+                    subscriptions = await _notificationStore.GetSubscriptionsAsync(
                         tenantIds,
                         notificationInfo.NotificationName,
                         notificationInfo.EntityTypeName,
                         notificationInfo.EntityId
-                    );
+                        );
                 }
 
                 //Remove invalid subscriptions
@@ -120,11 +116,8 @@ namespace StudioX.Notifications
                 {
                     using (CurrentUnitOfWork.SetTenantId(subscription.TenantId))
                     {
-                        if (
-                            !await notificationDefinitionManager.IsAvailableAsync(notificationInfo.NotificationName,
-                                new UserIdentifier(subscription.TenantId, subscription.UserId)) ||
-                            !SettingManager.GetSettingValueForUser<bool>(NotificationSettingNames.ReceiveNotifications,
-                                subscription.TenantId, subscription.UserId))
+                        if (!await _notificationDefinitionManager.IsAvailableAsync(notificationInfo.NotificationName, new UserIdentifier(subscription.TenantId, subscription.UserId)) ||
+                            !SettingManager.GetSettingValueForUser<bool>(NotificationSettingNames.ReceiveNotifications, subscription.TenantId, subscription.UserId))
                         {
                             invalidSubscriptions[subscription.Id] = subscription;
                         }
@@ -164,38 +157,36 @@ namespace StudioX.Notifications
             return notificationInfo
                 .TenantIds
                 .Split(",")
-                .Select(tenantIdAsStr => tenantIdAsStr == "null" ? (int?) null : (int?) tenantIdAsStr.To<int>())
+                .Select(tenantIdAsStr => tenantIdAsStr == "null" ? (int?)null : (int?)tenantIdAsStr.To<int>())
                 .ToArray();
         }
 
         [UnitOfWork]
-        protected virtual async Task<List<UserNotification>> SaveUserNotifications(UserIdentifier[] users,
-            NotificationInfo notificationInfo)
+        protected virtual async Task<List<UserNotification>> SaveUserNotifications(UserIdentifier[] users, NotificationInfo notificationInfo)
         {
             var userNotifications = new List<UserNotification>();
 
             var tenantGroups = users.GroupBy(user => user.TenantId);
             foreach (var tenantGroup in tenantGroups)
             {
-                using (unitOfWorkManager.Current.SetTenantId(tenantGroup.Key))
+                using (_unitOfWorkManager.Current.SetTenantId(tenantGroup.Key))
                 {
-                    var tenantNotificationInfo = new TenantNotificationInfo(guidGenerator.Create(), tenantGroup.Key,
-                        notificationInfo);
-                    await notificationStore.InsertTenantNotificationAsync(tenantNotificationInfo);
-                    await unitOfWorkManager.Current.SaveChangesAsync(); //To get tenantNotification.Id.
+                    var tenantNotificationInfo = new TenantNotificationInfo(_guidGenerator.Create(), tenantGroup.Key, notificationInfo);
+                    await _notificationStore.InsertTenantNotificationAsync(tenantNotificationInfo);
+                    await _unitOfWorkManager.Current.SaveChangesAsync(); //To get tenantNotification.Id.
 
                     var tenantNotification = tenantNotificationInfo.ToTenantNotification();
 
                     foreach (var user in tenantGroup)
                     {
-                        var userNotification = new UserNotificationInfo(guidGenerator.Create())
+                        var userNotification = new UserNotificationInfo(_guidGenerator.Create())
                         {
                             TenantId = tenantGroup.Key,
                             UserId = user.UserId,
                             TenantNotificationId = tenantNotificationInfo.Id
                         };
 
-                        await notificationStore.InsertUserNotificationAsync(userNotification);
+                        await _notificationStore.InsertUserNotificationAsync(userNotification);
                         userNotifications.Add(userNotification.ToUserNotification(tenantNotification));
                     }
 

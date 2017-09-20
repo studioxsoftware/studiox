@@ -2,6 +2,7 @@
 using StudioX.Application.Services;
 using StudioX.Aspects;
 using StudioX.AspNetCore.Configuration;
+using StudioX.AspNetCore.Mvc.Extensions;
 using StudioX.Dependency;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -9,18 +10,18 @@ namespace StudioX.AspNetCore.Mvc.Validation
 {
     public class StudioXValidationActionFilter : IAsyncActionFilter, ITransientDependency
     {
-        private readonly IIocResolver iocResolver;
-        private readonly IStudioXAspNetCoreConfiguration configuration;
+        private readonly IIocResolver _iocResolver;
+        private readonly IStudioXAspNetCoreConfiguration _configuration;
 
         public StudioXValidationActionFilter(IIocResolver iocResolver, IStudioXAspNetCoreConfiguration configuration)
         {
-            this.iocResolver = iocResolver;
-            this.configuration = configuration;
+            _iocResolver = iocResolver;
+            _configuration = configuration;
         }
 
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-            if (!configuration.IsValidationEnabledForControllers)
+            if (!_configuration.IsValidationEnabledForControllers || !context.ActionDescriptor.IsControllerAction())
             {
                 await next();
                 return;
@@ -28,7 +29,7 @@ namespace StudioX.AspNetCore.Mvc.Validation
 
             using (StudioXCrossCuttingConcerns.Applying(context.Controller, StudioXCrossCuttingConcerns.Validation))
             {
-                using (var validator = iocResolver.ResolveAsDisposable<MvcActionInvocationValidator>())
+                using (var validator = _iocResolver.ResolveAsDisposable<MvcActionInvocationValidator>())
                 {
                     validator.Object.Initialize(context);
                     validator.Object.Validate();

@@ -7,17 +7,17 @@ using StudioX.Domain.Uow;
 namespace StudioX.Events.Bus.Entities
 {
     /// <summary>
-    ///     Used to trigger entity change events.
+    /// Used to trigger entity change events.
     /// </summary>
     public class EntityChangeEventHelper : ITransientDependency, IEntityChangeEventHelper
     {
         public IEventBus EventBus { get; set; }
 
-        private readonly IUnitOfWorkManager unitOfWorkManager;
+        private readonly IUnitOfWorkManager _unitOfWorkManager;
 
         public EntityChangeEventHelper(IUnitOfWorkManager unitOfWorkManager)
         {
-            this.unitOfWorkManager = unitOfWorkManager;
+            _unitOfWorkManager = unitOfWorkManager;
             EventBus = NullEventBus.Instance;
         }
 
@@ -25,24 +25,24 @@ namespace StudioX.Events.Bus.Entities
         {
             TriggerEventsInternal(changeReport);
 
-            if (changeReport.IsEmpty() || unitOfWorkManager.Current == null)
+            if (changeReport.IsEmpty() || _unitOfWorkManager.Current == null)
             {
                 return;
             }
 
-            unitOfWorkManager.Current.SaveChanges();
+            _unitOfWorkManager.Current.SaveChanges();
         }
 
         public Task TriggerEventsAsync(EntityChangeReport changeReport)
         {
             TriggerEventsInternal(changeReport);
 
-            if (changeReport.IsEmpty() || unitOfWorkManager.Current == null)
+            if (changeReport.IsEmpty() || _unitOfWorkManager.Current == null)
             {
                 return Task.FromResult(0);
             }
 
-            return unitOfWorkManager.Current.SaveChangesAsync();
+            return _unitOfWorkManager.Current.SaveChangesAsync();
         }
 
         public virtual void TriggerEntityCreatingEvent(object entity)
@@ -113,20 +113,18 @@ namespace StudioX.Events.Bus.Entities
             }
         }
 
-        protected virtual void TriggerEventWithEntity(Type genericEventType, object entity,
-            bool triggerInCurrentUnitOfWork)
+        protected virtual void TriggerEventWithEntity(Type genericEventType, object entity, bool triggerInCurrentUnitOfWork)
         {
             var entityType = entity.GetType();
             var eventType = genericEventType.MakeGenericType(entityType);
 
-            if (triggerInCurrentUnitOfWork || unitOfWorkManager.Current == null)
+            if (triggerInCurrentUnitOfWork || _unitOfWorkManager.Current == null)
             {
-                EventBus.Trigger(eventType, (IEventData) Activator.CreateInstance(eventType, entity));
+                EventBus.Trigger(eventType, (IEventData)Activator.CreateInstance(eventType, new[] { entity }));
                 return;
             }
 
-            unitOfWorkManager.Current.Completed +=
-                (sender, args) => EventBus.Trigger(eventType, (IEventData) Activator.CreateInstance(eventType, entity));
+            _unitOfWorkManager.Current.Completed += (sender, args) => EventBus.Trigger(eventType, (IEventData)Activator.CreateInstance(eventType, new[] { entity }));
         }
     }
 }

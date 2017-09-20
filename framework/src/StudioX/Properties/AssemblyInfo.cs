@@ -7,12 +7,12 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 using StudioX;
 
-[assembly: AssemblyTitle("StudioX")]
-[assembly: AssemblyDescription("StudioX")]
+[assembly: AssemblyTitle("StudioX Software")]
+[assembly: AssemblyDescription("StudioX Software")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("StudioX")]
 [assembly: AssemblyProduct("StudioX")]
-[assembly: AssemblyCopyright("Copyright © 2017")]
+[assembly: AssemblyCopyright("Copyright © 2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -25,7 +25,6 @@ using StudioX;
 [assembly: InternalsVisibleTo("StudioX.Web")]
 [assembly: InternalsVisibleTo("StudioX.Web.Api")]
 [assembly: InternalsVisibleTo("StudioX.Web.Mvc")]
-[assembly: InternalsVisibleTo("StudioX.Web.Resources")]
 [assembly: InternalsVisibleTo("StudioX.Specifications")]
 [assembly: InternalsVisibleTo("StudioX.Dapper")]
 

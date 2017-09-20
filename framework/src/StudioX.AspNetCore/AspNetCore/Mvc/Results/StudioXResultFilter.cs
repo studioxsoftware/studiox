@@ -9,24 +9,36 @@ namespace StudioX.AspNetCore.Mvc.Results
 {
     public class StudioXResultFilter : IResultFilter, ITransientDependency
     {
-        private readonly IStudioXAspNetCoreConfiguration configuration;
-        private readonly IStudioXActionResultWrapperFactory actionResultWrapperFactory;
+        private readonly IStudioXAspNetCoreConfiguration _configuration;
+        private readonly IStudioXActionResultWrapperFactory _actionResultWrapperFactory;
 
-        public StudioXResultFilter(IStudioXAspNetCoreConfiguration configuration,
-            IStudioXActionResultWrapperFactory actionResultWrapperFactory)
+        public StudioXResultFilter(IStudioXAspNetCoreConfiguration configuration, 
+            IStudioXActionResultWrapperFactory actionResultWrapper)
         {
-            this.configuration = configuration;
-            this.actionResultWrapperFactory = actionResultWrapperFactory;
+            _configuration = configuration;
+            _actionResultWrapperFactory = actionResultWrapper;
         }
 
         public virtual void OnResultExecuting(ResultExecutingContext context)
         {
+            if (!context.ActionDescriptor.IsControllerAction())
+            {
+                return;
+            }
+
             var methodInfo = context.ActionDescriptor.GetMethodInfo();
 
+            //var clientCacheAttribute = ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault(
+            //    methodInfo,
+            //    _configuration.DefaultClientCacheAttribute
+            //);
+
+            //clientCacheAttribute?.Apply(context);
+            
             var wrapResultAttribute =
                 ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault(
                     methodInfo,
-                    configuration.DefaultWrapResultAttribute
+                    _configuration.DefaultWrapResultAttribute
                 );
 
             if (!wrapResultAttribute.WrapOnSuccess)
@@ -34,7 +46,7 @@ namespace StudioX.AspNetCore.Mvc.Results
                 return;
             }
 
-            actionResultWrapperFactory.CreateFor(context).Wrap(context);
+            _actionResultWrapperFactory.CreateFor(context).Wrap(context);
         }
 
         public virtual void OnResultExecuted(ResultExecutedContext context)

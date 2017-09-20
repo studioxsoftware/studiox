@@ -6,7 +6,7 @@ namespace StudioX
     public static class StudioXConsts
     {
         /// <summary>
-        ///     Localization source name of StudioX framework.
+        ///     Localization source name of StudioX Software framework.
         /// </summary>
         public const string LocalizationSourceName = "StudioX";
 
@@ -15,6 +15,7 @@ namespace StudioX
             public const string Dapper = "Dapper";
             public const string EntityFramework = "EntityFramework";
             public const string EntityFrameworkCore = "EntityFrameworkCore";
+            public const string NHibernate = "NHibernate";
         }
     }
 }

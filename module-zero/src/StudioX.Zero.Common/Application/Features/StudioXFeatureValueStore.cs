@@ -24,12 +24,12 @@ namespace StudioX.Application.Features
         where TTenant : StudioXTenant<TUser>
         where TUser : StudioXUserBase
     {
-        private readonly ICacheManager cacheManager;
-        private readonly IRepository<TenantFeatureSetting, long> tenantFeatureRepository;
-        private readonly IRepository<TTenant> tenantRepository;
-        private readonly IRepository<EditionFeatureSetting, long> editionFeatureRepository;
-        private readonly IFeatureManager featureManager;
-        private readonly IUnitOfWorkManager unitOfWorkManager;
+        private readonly ICacheManager _cacheManager;
+        private readonly IRepository<TenantFeatureSetting, long> _tenantFeatureRepository;
+        private readonly IRepository<TTenant> _tenantRepository;
+        private readonly IRepository<EditionFeatureSetting, long> _editionFeatureRepository;
+        private readonly IFeatureManager _featureManager;
+        private readonly IUnitOfWorkManager _unitOfWorkManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StudioXFeatureValueStore{TTenant, TUser}"/> class.
@@ -42,12 +42,12 @@ namespace StudioX.Application.Features
             IFeatureManager featureManager,
             IUnitOfWorkManager unitOfWorkManager)
         {
-            this.cacheManager = cacheManager;
-            this.tenantFeatureRepository = tenantFeatureRepository;
-            this.tenantRepository = tenantRepository;
-            this.editionFeatureRepository = editionFeatureRepository;
-            this.featureManager = featureManager;
-            this.unitOfWorkManager = unitOfWorkManager;
+            _cacheManager = cacheManager;
+            _tenantFeatureRepository = tenantFeatureRepository;
+            _tenantRepository = tenantRepository;
+            _editionFeatureRepository = editionFeatureRepository;
+            _featureManager = featureManager;
+            _unitOfWorkManager = unitOfWorkManager;
         }
 
         /// <inheritdoc/>
@@ -91,14 +91,14 @@ namespace StudioX.Application.Features
                 return;
             }
 
-            var currentFeature = await editionFeatureRepository.FirstOrDefaultAsync(f => f.EditionId == editionId && f.Name == featureName);
+            var currentFeature = await _editionFeatureRepository.FirstOrDefaultAsync(f => f.EditionId == editionId && f.Name == featureName);
 
-            var feature = featureManager.GetOrNull(featureName);
+            var feature = _featureManager.GetOrNull(featureName);
             if (feature == null || feature.DefaultValue == value)
             {
                 if (currentFeature != null)
                 {
-                    await editionFeatureRepository.DeleteAsync(currentFeature);
+                    await _editionFeatureRepository.DeleteAsync(currentFeature);
                 }
 
                 return;
@@ -106,7 +106,7 @@ namespace StudioX.Application.Features
 
             if (currentFeature == null)
             {
-                await editionFeatureRepository.InsertAsync(new EditionFeatureSetting(editionId, featureName, value));
+                await _editionFeatureRepository.InsertAsync(new EditionFeatureSetting(editionId, featureName, value));
             }
             else
             {
@@ -116,14 +116,14 @@ namespace StudioX.Application.Features
 
         protected virtual async Task<TenantFeatureCacheItem> GetTenantFeatureCacheItemAsync(int tenantId)
         {
-            return await cacheManager.GetTenantFeatureCache().GetAsync(tenantId, async () =>
+            return await _cacheManager.GetTenantFeatureCache().GetAsync(tenantId, async () =>
             {
                 TTenant tenant;
-                using (var uow = unitOfWorkManager.Begin())
+                using (var uow = _unitOfWorkManager.Begin())
                 {
-                    using (unitOfWorkManager.Current.SetTenantId(null))
+                    using (_unitOfWorkManager.Current.SetTenantId(null))
                     {
-                        tenant = await tenantRepository.GetAsync(tenantId);
+                        tenant = await _tenantRepository.GetAsync(tenantId);
 
                         await uow.CompleteAsync();
                     }
@@ -131,11 +131,11 @@ namespace StudioX.Application.Features
 
                 var newCacheItem = new TenantFeatureCacheItem { EditionId = tenant.EditionId };
 
-                using (var uow = unitOfWorkManager.Begin())
+                using (var uow = _unitOfWorkManager.Begin())
                 {
-                    using (unitOfWorkManager.Current.SetTenantId(tenantId))
+                    using (_unitOfWorkManager.Current.SetTenantId(tenantId))
                     {
-                        var featureSettings = await tenantFeatureRepository.GetAllListAsync();
+                        var featureSettings = await _tenantFeatureRepository.GetAllListAsync();
                         foreach (var featureSetting in featureSettings)
                         {
                             newCacheItem.FeatureValues[featureSetting.Name] = featureSetting.Value;
@@ -151,7 +151,7 @@ namespace StudioX.Application.Features
 
         protected virtual async Task<EditionfeatureCacheItem> GetEditionFeatureCacheItemAsync(int editionId)
         {
-            return await cacheManager
+            return await _cacheManager
                 .GetEditionFeatureCache()
                 .GetAsync(
                     editionId,
@@ -163,7 +163,7 @@ namespace StudioX.Application.Features
         {
             var newCacheItem = new EditionfeatureCacheItem();
 
-            var featureSettings = await editionFeatureRepository.GetAllListAsync(f => f.EditionId == editionId);
+            var featureSettings = await _editionFeatureRepository.GetAllListAsync(f => f.EditionId == editionId);
             foreach (var featureSetting in featureSettings)
             {
                 newCacheItem.FeatureValues[featureSetting.Name] = featureSetting.Value;
@@ -174,7 +174,7 @@ namespace StudioX.Application.Features
 
         public virtual void HandleEvent(EntityChangedEventData<EditionFeatureSetting> eventData)
         {
-            cacheManager.GetEditionFeatureCache().Remove(eventData.Entity.EditionId);
+            _cacheManager.GetEditionFeatureCache().Remove(eventData.Entity.EditionId);
         }
 
         public virtual void HandleEvent(EntityChangedEventData<Edition> eventData)
@@ -184,7 +184,7 @@ namespace StudioX.Application.Features
                 return;
             }
 
-            cacheManager.GetEditionFeatureCache().Remove(eventData.Entity.Id);
+            _cacheManager.GetEditionFeatureCache().Remove(eventData.Entity.Id);
         }
     }
 }

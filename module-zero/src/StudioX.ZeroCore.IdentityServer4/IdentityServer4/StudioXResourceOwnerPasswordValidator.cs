@@ -6,6 +6,7 @@ using StudioX.Runtime.Security;
 using IdentityModel;
 using IdentityServer4.AspNetIdentity;
 using IdentityServer4.Models;
+using IdentityServer4.Services;
 using IdentityServer4.Validation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
@@ -24,9 +25,13 @@ namespace StudioX.IdentityServer4
         public StudioXResourceOwnerPasswordValidator(
             UserManager<TUser> userManager,
             SignInManager<TUser> signInManager,
-            ILogger<ResourceOwnerPasswordValidator<TUser>> logger
-        )
-            : base(userManager, signInManager, logger)
+            IEventService eventService,
+            ILogger<ResourceOwnerPasswordValidator<TUser>> logger)
+            : base(
+                  userManager, 
+                  signInManager,
+                  eventService,
+                  logger)
         {
             UserManager = userManager;
             SignInManager = signInManager;

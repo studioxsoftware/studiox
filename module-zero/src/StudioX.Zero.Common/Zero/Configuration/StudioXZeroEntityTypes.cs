@@ -10,7 +10,7 @@ namespace StudioX.Zero.Configuration
     {
         public Type User
         {
-            get => user;
+            get { return _user; }
             set
             {
                 if (value == null)
@@ -23,14 +23,14 @@ namespace StudioX.Zero.Configuration
                     throw new StudioXException(value.AssemblyQualifiedName + " should be derived from " + typeof(StudioXUserBase).AssemblyQualifiedName);
                 }
 
-                user = value;
+                _user = value;
             }
         }
-        private Type user;
+        private Type _user;
 
         public Type Role
         {
-            get => role;
+            get { return _role; }
             set
             {
                 if (value == null)
@@ -43,14 +43,14 @@ namespace StudioX.Zero.Configuration
                     throw new StudioXException(value.AssemblyQualifiedName + " should be derived from " + typeof(StudioXRoleBase).AssemblyQualifiedName);
                 }
 
-                role = value;
+                _role = value;
             }
         }
-        private Type role;
+        private Type _role;
 
         public Type Tenant
         {
-            get => tenant;
+            get { return _tenant; }
             set
             {
                 if (value == null)
@@ -63,9 +63,9 @@ namespace StudioX.Zero.Configuration
                     throw new StudioXException(value.AssemblyQualifiedName + " should be derived from " + typeof(StudioXTenantBase).AssemblyQualifiedName);
                 }
 
-                tenant = value;
+                _tenant = value;
             }
         }
-        private Type tenant;
+        private Type _tenant;
     }
 }

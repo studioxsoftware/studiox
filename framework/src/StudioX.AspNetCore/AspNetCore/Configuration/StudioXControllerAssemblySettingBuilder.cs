@@ -5,22 +5,22 @@ namespace StudioX.AspNetCore.Configuration
 {
     public class StudioXControllerAssemblySettingBuilder : IStudioXControllerAssemblySettingBuilder
     {
-        private readonly StudioXControllerAssemblySetting setting;
+        private readonly StudioXControllerAssemblySetting _setting;
 
         public StudioXControllerAssemblySettingBuilder(StudioXControllerAssemblySetting setting)
         {
-            this.setting = setting;
+            _setting = setting;
         }
 
         public StudioXControllerAssemblySettingBuilder Where(Func<Type, bool> predicate)
         {
-            setting.TypePredicate = predicate;
+            _setting.TypePredicate = predicate;
             return this;
         }
 
         public StudioXControllerAssemblySettingBuilder ConfigureControllerModel(Action<ControllerModel> configurer)
         {
-            setting.ControllerModelConfigurer = configurer;
+            _setting.ControllerModelConfigurer = configurer;
             return this;
         }
     }

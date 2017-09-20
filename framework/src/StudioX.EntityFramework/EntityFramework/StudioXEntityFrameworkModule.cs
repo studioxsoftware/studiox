@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Data.Entity.Infrastructure.Interception;
 using System.Reflection;
-using Castle.MicroKernel.Registration;
 using StudioX.Collections.Extensions;
 using StudioX.Configuration.Startup;
 using StudioX.Dependency;
@@ -13,22 +12,24 @@ using StudioX.Modules;
 using StudioX.Orm;
 using StudioX.Reflection;
 
+using Castle.MicroKernel.Registration;
+
 namespace StudioX.EntityFramework
 {
     /// <summary>
-    ///     This module is used to implement "Data Access Layer" in EntityFramework.
+    /// This module is used to implement "Data Access Layer" in EntityFramework.
     /// </summary>
     [DependsOn(typeof(StudioXEntityFrameworkCommonModule))]
     public class StudioXEntityFrameworkModule : StudioXModule
     {
-        private static WithNoLockInterceptor withNoLockInterceptor;
+        private static WithNoLockInterceptor _withNoLockInterceptor;
         private static readonly object WithNoLockInterceptorSyncObj = new object();
 
-        private readonly ITypeFinder typeFinder;
+        private readonly ITypeFinder _typeFinder;
 
         public StudioXEntityFrameworkModule(ITypeFinder typeFinder)
         {
-            this.typeFinder = typeFinder;
+            _typeFinder = typeFinder;
         }
 
         public override void PreInitialize()
@@ -37,9 +38,9 @@ namespace StudioX.EntityFramework
             {
                 IocManager.IocContainer.Register(
                     Component
-                        .For<IUnitOfWorkFilterExecuter, IEfUnitOfWorkFilterExecuter>()
-                        .ImplementedBy<EfDynamicFiltersUnitOfWorkFilterExecuter>()
-                        .LifestyleTransient()
+                    .For<IUnitOfWorkFilterExecuter, IEfUnitOfWorkFilterExecuter>()
+                    .ImplementedBy<EfDynamicFiltersUnitOfWorkFilterExecuter>()
+                    .LifestyleTransient()
                 );
             });
         }
@@ -48,8 +49,7 @@ namespace StudioX.EntityFramework
         {
             if (!Configuration.UnitOfWork.IsTransactionScopeAvailable)
             {
-                IocManager.RegisterIfNot<IEfTransactionStrategy, DbContextEfTransactionStrategy>(
-                    DependencyLifeStyle.Transient);
+                IocManager.RegisterIfNot<IEfTransactionStrategy, DbContextEfTransactionStrategy>(DependencyLifeStyle.Transient);
             }
 
             IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
@@ -58,7 +58,7 @@ namespace StudioX.EntityFramework
                 Component.For(typeof(IDbContextProvider<>))
                     .ImplementedBy(typeof(UnitOfWorkDbContextProvider<>))
                     .LifestyleTransient()
-            );
+                );
 
             RegisterGenericRepositoriesAndMatchDbContexes();
             RegisterWithNoLockInterceptor();
@@ -68,25 +68,25 @@ namespace StudioX.EntityFramework
         {
             lock (WithNoLockInterceptorSyncObj)
             {
-                if (withNoLockInterceptor != null)
+                if (_withNoLockInterceptor != null)
                 {
                     return;
                 }
 
-                withNoLockInterceptor = IocManager.Resolve<WithNoLockInterceptor>();
-                DbInterception.Add(withNoLockInterceptor);
+                _withNoLockInterceptor = IocManager.Resolve<WithNoLockInterceptor>();
+                DbInterception.Add(_withNoLockInterceptor);
             }
         }
 
         private void RegisterGenericRepositoriesAndMatchDbContexes()
         {
             var dbContextTypes =
-                typeFinder.Find(type =>
+                _typeFinder.Find(type =>
                     type.IsPublic &&
                     !type.IsAbstract &&
                     type.IsClass &&
                     typeof(StudioXDbContext).IsAssignableFrom(type)
-                );
+                    );
 
             if (dbContextTypes.IsNullOrEmpty())
             {
@@ -106,12 +106,11 @@ namespace StudioX.EntityFramework
                     IocManager.IocContainer.Register(
                         Component.For<ISecondaryOrmRegistrar>()
                             .Named(Guid.NewGuid().ToString("N"))
-                            .Instance(new EfBasedSecondaryOrmRegistrar(dbContextType,
-                                scope.Resolve<IDbContextEntityFinder>()))
+                            .Instance(new EfBasedSecondaryOrmRegistrar(dbContextType, scope.Resolve<IDbContextEntityFinder>()))
                             .LifestyleTransient()
                     );
                 }
-
+                
                 scope.Resolve<IDbContextTypeMatcher>().Populate(dbContextTypes);
             }
         }

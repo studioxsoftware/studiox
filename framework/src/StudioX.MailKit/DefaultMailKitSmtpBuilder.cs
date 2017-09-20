@@ -7,11 +7,11 @@ namespace StudioX.MailKit
 {
     public class DefaultMailKitSmtpBuilder : IMailKitSmtpBuilder, ITransientDependency
     {
-        private readonly ISmtpEmailSenderConfiguration smtpEmailSenderConfiguration;
+        private readonly ISmtpEmailSenderConfiguration _smtpEmailSenderConfiguration;
 
         public DefaultMailKitSmtpBuilder(ISmtpEmailSenderConfiguration smtpEmailSenderConfiguration)
         {
-            this.smtpEmailSenderConfiguration = smtpEmailSenderConfiguration;
+            _smtpEmailSenderConfiguration = smtpEmailSenderConfiguration;
         }
 
         public virtual SmtpClient Build()
@@ -33,17 +33,17 @@ namespace StudioX.MailKit
         protected virtual void ConfigureClient(SmtpClient client)
         {
             client.Connect(
-                smtpEmailSenderConfiguration.Host,
-                smtpEmailSenderConfiguration.Port,
-                smtpEmailSenderConfiguration.EnableSsl
+                _smtpEmailSenderConfiguration.Host,
+                _smtpEmailSenderConfiguration.Port,
+                _smtpEmailSenderConfiguration.EnableSsl
             );
 
-            var userName = smtpEmailSenderConfiguration.UserName;
+            var userName = _smtpEmailSenderConfiguration.UserName;
             if (!userName.IsNullOrEmpty())
             {
                 client.Authenticate(
-                    smtpEmailSenderConfiguration.UserName, 
-                    smtpEmailSenderConfiguration.Password
+                    _smtpEmailSenderConfiguration.UserName, 
+                    _smtpEmailSenderConfiguration.Password
                 );
             }
         }

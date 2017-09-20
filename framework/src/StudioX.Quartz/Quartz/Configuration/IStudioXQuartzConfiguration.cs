@@ -1,6 +1,6 @@
 ﻿using Quartz;
 
-namespace StudioX.Quartz.Configuration
+namespace StudioX.Quartz.Quartz.Configuration
 {
     public interface IStudioXQuartzConfiguration
     {

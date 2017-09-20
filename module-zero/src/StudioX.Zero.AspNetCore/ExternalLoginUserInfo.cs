@@ -5,16 +5,16 @@ namespace StudioX.Zero.AspNetCore
 {
     public class ExternalLoginUserInfo
     {
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
+        public string Name { get; set; }
+        public string Surname { get; set; }
         public string EmailAddress { get; set; }
 
         public UserLoginInfo LoginInfo { get; set; }
 
         public bool HasAllNonEmpty()
         {
-            return !FirstName.IsNullOrEmpty() &&
-                   !LastName.IsNullOrEmpty() &&
+            return !Name.IsNullOrEmpty() &&
+                   !Surname.IsNullOrEmpty() &&
                    !EmailAddress.IsNullOrEmpty();
         }
     }

@@ -3,21 +3,20 @@
 namespace StudioX.Authorization
 {
     /// <summary>
-    ///     This class is used to intercept methods to make authorization if the method defined
-    ///     <see cref="StudioXAuthorizeAttribute" />.
+    /// This class is used to intercept methods to make authorization if the method defined <see cref="StudioXAuthorizeAttribute"/>.
     /// </summary>
     public class AuthorizationInterceptor : IInterceptor
     {
-        private readonly IAuthorizationHelper authorizationHelper;
+        private readonly IAuthorizationHelper _authorizationHelper;
 
         public AuthorizationInterceptor(IAuthorizationHelper authorizationHelper)
         {
-            this.authorizationHelper = authorizationHelper;
+            _authorizationHelper = authorizationHelper;
         }
 
         public void Intercept(IInvocation invocation)
         {
-            authorizationHelper.Authorize(invocation.MethodInvocationTarget, invocation.TargetType);
+            _authorizationHelper.Authorize(invocation.MethodInvocationTarget, invocation.TargetType);
             invocation.Proceed();
         }
     }

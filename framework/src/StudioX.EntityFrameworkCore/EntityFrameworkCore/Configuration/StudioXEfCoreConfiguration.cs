@@ -1,23 +1,23 @@
 ﻿using System;
+using StudioX.Dependency;
 using Castle.MicroKernel.Registration;
 using Microsoft.EntityFrameworkCore;
-using StudioX.Dependency;
 
 namespace StudioX.EntityFrameworkCore.Configuration
 {
     public class StudioXEfCoreConfiguration : IStudioXEfCoreConfiguration
     {
-        private readonly IIocManager iocManager;
+        private readonly IIocManager _iocManager;
 
         public StudioXEfCoreConfiguration(IIocManager iocManager)
         {
-            this.iocManager = iocManager;
+            _iocManager = iocManager;
         }
 
-        public void AddDbContext<TDbContext>(Action<StudioXDbContextConfiguration<TDbContext>> action)
+        public void AddDbContext<TDbContext>(Action<StudioXDbContextConfiguration<TDbContext>> action) 
             where TDbContext : DbContext
         {
-            iocManager.IocContainer.Register(
+            _iocManager.IocContainer.Register(
                 Component.For<IStudioXDbContextConfigurer<TDbContext>>().Instance(
                     new StudioXDbContextConfigurerAction<TDbContext>(action)
                 ).IsDefault()

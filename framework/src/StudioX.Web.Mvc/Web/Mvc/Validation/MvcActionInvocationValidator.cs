@@ -13,7 +13,7 @@ namespace StudioX.Web.Mvc.Validation
     {
         protected ActionExecutingContext ActionContext { get; private set; }
 
-        private bool isValidatedBefore;
+        private bool _isValidatedBefore;
 
         public MvcActionInvocationValidator(IValidationConfiguration configuration, IIocResolver iocResolver) 
             : base(configuration, iocResolver)
@@ -40,12 +40,12 @@ namespace StudioX.Web.Mvc.Validation
 
         protected virtual void SetDataAnnotationAttributeErrors()
         {
-            if (isValidatedBefore)
+            if (_isValidatedBefore)
             {
                 return;
             }
 
-            isValidatedBefore = true;
+            _isValidatedBefore = true;
 
             var modelState = ActionContext.Controller.As<Controller>().ModelState;
             if (modelState.IsValid)

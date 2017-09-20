@@ -8,7 +8,7 @@ using Castle.MicroKernel.Registration;
 namespace StudioX.Zero.EntityFramework
 {
     /// <summary>
-    /// Entity framework integration module for ASP.NET Boilerplate Zero.
+    /// Entity framework integration module for StudioX Software Zero.
     /// </summary>
     [DependsOn(typeof(StudioXZeroCoreModule), typeof(StudioXEntityFrameworkModule))]
     public class StudioXZeroEntityFrameworkModule : StudioXModule

@@ -14,10 +14,10 @@ namespace StudioX.WebApi.Controllers.Dynamic.Selectors
         /// <summary>
         /// The Dynamic Controller Action filters.
         /// </summary>
-        private readonly DynamicApiControllerInfo controllerInfo;
+        private readonly DynamicApiControllerInfo _controllerInfo;
 
-        private readonly object[] attributes;
-        private readonly object[] declaredOnlyAttributes;
+        private readonly object[] _attributes;
+        private readonly object[] _declaredOnlyAttributes;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DynamicHttpControllerDescriptor"/> class. Add the argument for action filters to the controller.
@@ -27,10 +27,10 @@ namespace StudioX.WebApi.Controllers.Dynamic.Selectors
         public DynamicHttpControllerDescriptor(HttpConfiguration configuration, DynamicApiControllerInfo controllerInfo)
             : base(configuration, controllerInfo.ServiceName, controllerInfo.ApiControllerType)
         {
-            this.controllerInfo = controllerInfo;
+            _controllerInfo = controllerInfo;
 
-            attributes = controllerInfo.ServiceInterfaceType.GetCustomAttributes(true);
-            declaredOnlyAttributes = controllerInfo.ServiceInterfaceType.GetCustomAttributes(false);
+            _attributes = controllerInfo.ServiceInterfaceType.GetCustomAttributes(true);
+            _declaredOnlyAttributes = controllerInfo.ServiceInterfaceType.GetCustomAttributes(false);
         }
 
         /// <summary>
@@ -39,14 +39,14 @@ namespace StudioX.WebApi.Controllers.Dynamic.Selectors
         /// <returns> The Collection of filters.</returns>
         public override Collection<IFilter> GetFilters()
         {
-            if (controllerInfo.Filters.IsNullOrEmpty())
+            if (_controllerInfo.Filters.IsNullOrEmpty())
             {
                 return base.GetFilters();
             }
 
             var actionFilters = new Collection<IFilter>();
 
-            foreach (var filter in controllerInfo.Filters)
+            foreach (var filter in _controllerInfo.Filters)
             {
                 actionFilters.Add(filter);
             }
@@ -61,7 +61,7 @@ namespace StudioX.WebApi.Controllers.Dynamic.Selectors
 
         public override Collection<T> GetCustomAttributes<T>(bool inherit)
         {
-            var attributes = inherit ? this.attributes : declaredOnlyAttributes;
+            var attributes = inherit ? _attributes : _declaredOnlyAttributes;
             return new Collection<T>(DynamicApiDescriptorHelper.FilterType<T>(attributes));
         }
     }

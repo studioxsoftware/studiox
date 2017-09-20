@@ -13,18 +13,18 @@ namespace StudioX.Zero.EntityFramework
         where TDbContext : DbContext
         where TConfiguration : DbMigrationsConfiguration<TDbContext>, IMultiTenantSeed, new()
     {
-        private readonly IUnitOfWorkManager unitOfWorkManager;
-        private readonly IDbPerTenantConnectionStringResolver connectionStringResolver;
-        private readonly IIocResolver iocResolver;
+        private readonly IUnitOfWorkManager _unitOfWorkManager;
+        private readonly IDbPerTenantConnectionStringResolver _connectionStringResolver;
+        private readonly IIocResolver _iocResolver;
 
         protected StudioXZeroDbMigrator(
             IUnitOfWorkManager unitOfWorkManager, 
             IDbPerTenantConnectionStringResolver connectionStringResolver,
             IIocResolver iocResolver)
         {
-            this.unitOfWorkManager = unitOfWorkManager;
-            this.connectionStringResolver = connectionStringResolver;
-            this.iocResolver = iocResolver;
+            _unitOfWorkManager = unitOfWorkManager;
+            _connectionStringResolver = connectionStringResolver;
+            _iocResolver = iocResolver;
         }
 
         public virtual void CreateOrMigrateForHost()
@@ -53,12 +53,12 @@ namespace StudioX.Zero.EntityFramework
             args["DbContextConcreteType"] = typeof(TDbContext);
 
             var nameOrConnectionString = ConnectionStringHelper.GetConnectionString(
-                connectionStringResolver.GetNameOrConnectionString(args)
+                _connectionStringResolver.GetNameOrConnectionString(args)
             );
 
-            using (var uow = unitOfWorkManager.Begin(TransactionScopeOption.Suppress))
+            using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.Suppress))
             {
-                using (var dbContext = iocResolver.ResolveAsDisposable<TDbContext>(new {nameOrConnectionString = nameOrConnectionString}))
+                using (var dbContext = _iocResolver.ResolveAsDisposable<TDbContext>(new {nameOrConnectionString = nameOrConnectionString}))
                 {
                     var dbInitializer = new MigrateDatabaseToLatestVersion<TDbContext, TConfiguration>(
                         true,
@@ -69,7 +69,7 @@ namespace StudioX.Zero.EntityFramework
 
                     dbInitializer.InitializeDatabase(dbContext.Object);
 
-                    unitOfWorkManager.Current.SaveChanges();
+                    _unitOfWorkManager.Current.SaveChanges();
                     uow.Complete();
                 }
             }

@@ -1,22 +1,19 @@
 using System.Text;
 using System.Threading.Tasks;
 using StudioX.Extensions;
-
-#if NET46
 using System.Net.Mail;
-#endif
 
 namespace StudioX.Net.Mail
 {
     /// <summary>
-    ///     This class can be used as base to implement <see cref="IEmailSender" />.
+    /// This class can be used as base to implement <see cref="IEmailSender"/>.
     /// </summary>
     public abstract class EmailSenderBase : IEmailSender
     {
         public IEmailSenderConfiguration Configuration { get; }
 
         /// <summary>
-        ///     Constructor.
+        /// Constructor.
         /// </summary>
         /// <param name="configuration">Configuration</param>
         protected EmailSenderBase(IEmailSenderConfiguration configuration)
@@ -34,7 +31,6 @@ namespace StudioX.Net.Mail
             Send(Configuration.DefaultFromAddress, to, subject, body, isBodyHtml);
         }
 
-#if NET46
         public virtual async Task SendAsync(string from, string to, string subject, string body, bool isBodyHtml = true)
         {
             await SendAsync(new MailMessage(from, to, subject, body) { IsBodyHtml = isBodyHtml });
@@ -109,10 +105,5 @@ namespace StudioX.Net.Mail
                 mail.BodyEncoding = Encoding.UTF8;
             }
         }
-#else
-        public abstract Task SendAsync(string from, string to, string subject, string body, bool isBodyHtml = true);
-
-        public abstract void Send(string from, string to, string subject, string body, bool isBodyHtml = true);
-#endif
     }
 }

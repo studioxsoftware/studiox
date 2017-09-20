@@ -11,7 +11,7 @@ namespace StudioX.IdentityServer4
     public class StudioXProfileService<TUser> : ProfileService<TUser> 
         where TUser : StudioXUser<TUser>
     {
-        private readonly IUnitOfWorkManager unitOfWorkManager;
+        private readonly IUnitOfWorkManager _unitOfWorkManager;
 
         public StudioXProfileService(
             UserManager<TUser> userManager,
@@ -19,14 +19,14 @@ namespace StudioX.IdentityServer4
             IUnitOfWorkManager unitOfWorkManager
         ) : base(userManager, claimsFactory)
         {
-            this.unitOfWorkManager = unitOfWorkManager;
+            _unitOfWorkManager = unitOfWorkManager;
         }
 
         [UnitOfWork]
         public override async Task GetProfileDataAsync(ProfileDataRequestContext context)
         {
             var tenantId = context.Subject.Identity.GetTenantId();
-            using (unitOfWorkManager.Current.SetTenantId(tenantId))
+            using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {
                 await base.GetProfileDataAsync(context);
             }
@@ -36,7 +36,7 @@ namespace StudioX.IdentityServer4
         public override async Task IsActiveAsync(IsActiveContext context)
         {
             var tenantId = context.Subject.Identity.GetTenantId();
-            using (unitOfWorkManager.Current.SetTenantId(tenantId))
+            using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {
                 await base.IsActiveAsync(context);
             }

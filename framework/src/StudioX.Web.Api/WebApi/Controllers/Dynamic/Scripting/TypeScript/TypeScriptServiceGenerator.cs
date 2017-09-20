@@ -7,16 +7,16 @@ namespace StudioX.WebApi.Controllers.Dynamic.Scripting.TypeScript
 {
     public class TypeScriptServiceGenerator : ITransientDependency
     {
-        private readonly DynamicApiControllerManager dynamicApiControllerManager;
+        private readonly DynamicApiControllerManager _dynamicApiControllerManager;
 
         public TypeScriptServiceGenerator(DynamicApiControllerManager dynamicApiControllerManager)
         {
-            this.dynamicApiControllerManager = dynamicApiControllerManager;
+            _dynamicApiControllerManager = dynamicApiControllerManager;
         }
 
         public string GetScript()
         {
-            var dynamicControllers = dynamicApiControllerManager.GetAll();
+            var dynamicControllers = _dynamicApiControllerManager.GetAll();
 
             StringBuilder script = new StringBuilder();
             if (dynamicControllers == null || dynamicControllers.Count == 0)

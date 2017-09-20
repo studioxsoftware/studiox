@@ -7,18 +7,18 @@ namespace StudioX.Web.Mvc.Validation
 {
     public class StudioXMvcValidationFilter : IActionFilter, ITransientDependency
     {
-        private readonly IIocResolver iocResolver;
-        private readonly IStudioXMvcConfiguration configuration;
+        private readonly IIocResolver _iocResolver;
+        private readonly IStudioXMvcConfiguration _configuration;
 
         public StudioXMvcValidationFilter(IIocResolver iocResolver, IStudioXMvcConfiguration configuration)
         {
-            this.iocResolver = iocResolver;
-            this.configuration = configuration;
+            _iocResolver = iocResolver;
+            _configuration = configuration;
         }
 
         public void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            if (!configuration.IsValidationEnabledForControllers)
+            if (!_configuration.IsValidationEnabledForControllers)
             {
                 return;
             }
@@ -29,7 +29,7 @@ namespace StudioX.Web.Mvc.Validation
                 return;
             }
 
-            using (var validator = iocResolver.ResolveAsDisposable<MvcActionInvocationValidator>())
+            using (var validator = _iocResolver.ResolveAsDisposable<MvcActionInvocationValidator>())
             {
                 validator.Object.Initialize(filterContext, methodInfo);
                 validator.Object.Validate();

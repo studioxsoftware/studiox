@@ -2,17 +2,29 @@
 {
     internal class StudioXZeroConfig : IStudioXZeroConfig
     {
-        public IRoleManagementConfig RoleManagement => roleManagementConfig;
-        private readonly IRoleManagementConfig roleManagementConfig;
+        public IRoleManagementConfig RoleManagement
+        {
+            get { return _roleManagementConfig; }
+        }
+        private readonly IRoleManagementConfig _roleManagementConfig;
 
-        public IUserManagementConfig UserManagement => userManagementConfig;
-        private readonly IUserManagementConfig userManagementConfig;
+        public IUserManagementConfig UserManagement
+        {
+            get { return _userManagementConfig; }
+        }
+        private readonly IUserManagementConfig _userManagementConfig;
 
-        public ILanguageManagementConfig LanguageManagement => languageManagement;
-        private readonly ILanguageManagementConfig languageManagement;
+        public ILanguageManagementConfig LanguageManagement
+        {
+            get { return _languageManagement; }
+        }
+        private readonly ILanguageManagementConfig _languageManagement;
 
-        public IStudioXZeroEntityTypes EntityTypes => entityTypes;
-        private readonly IStudioXZeroEntityTypes entityTypes;
+        public IStudioXZeroEntityTypes EntityTypes
+        {
+            get { return _entityTypes; }
+        }
+        private readonly IStudioXZeroEntityTypes _entityTypes;
 
 
         public StudioXZeroConfig(
@@ -21,10 +33,10 @@
             ILanguageManagementConfig languageManagement,
             IStudioXZeroEntityTypes entityTypes)
         {
-            this.entityTypes = entityTypes;
-            this.roleManagementConfig = roleManagementConfig;
-            this.userManagementConfig = userManagementConfig;
-            this.languageManagement = languageManagement;
+            _entityTypes = entityTypes;
+            _roleManagementConfig = roleManagementConfig;
+            _userManagementConfig = userManagementConfig;
+            _languageManagement = languageManagement;
         }
     }
 }

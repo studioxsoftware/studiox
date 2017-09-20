@@ -26,6 +26,6 @@
         /// <summary>
         /// A special signature for AJAX responses. It's used in the client to detect if this is a response wrapped by StudioX.
         /// </summary>
-        public bool __studiox { get; } = true;
+        public bool __studioX { get; } = true;
     }
 }

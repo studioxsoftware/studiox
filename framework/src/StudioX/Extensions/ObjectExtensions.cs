@@ -1,17 +1,17 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
+using System.ComponentModel;
 
 namespace StudioX.Extensions
 {
     /// <summary>
-    ///     Extension methods for all objects.
+    /// Extension methods for all objects.
     /// </summary>
     public static class ObjectExtensions
     {
         /// <summary>
-        ///     Used to simplify and beautify casting an object to a type.
+        /// Used to simplify and beautify casting an object to a type. 
         /// </summary>
         /// <typeparam name="T">Type to be casted</typeparam>
         /// <param name="obj">Object to cast</param>
@@ -19,11 +19,11 @@ namespace StudioX.Extensions
         public static T As<T>(this object obj)
             where T : class
         {
-            return (T) obj;
+            return (T)obj;
         }
 
         /// <summary>
-        ///     Converts given object to a value type using <see cref="Convert.ChangeType(object, TypeCode)" /> method.
+        /// Converts given object to a value type using <see cref="Convert.ChangeType(object,System.TypeCode)"/> method.
         /// </summary>
         /// <param name="obj">Object to be converted</param>
         /// <typeparam name="T">Type of the target object</typeparam>
@@ -33,13 +33,14 @@ namespace StudioX.Extensions
         {
             if (typeof(T) == typeof(Guid))
             {
-                return (T) TypeDescriptor.GetConverter(typeof(T)).ConvertFromInvariantString(obj.ToString());
+                return (T)TypeDescriptor.GetConverter(typeof(T)).ConvertFromInvariantString(obj.ToString());
             }
-            return (T) Convert.ChangeType(obj, typeof(T), CultureInfo.InvariantCulture);
+
+            return (T)Convert.ChangeType(obj, typeof(T), CultureInfo.InvariantCulture);
         }
 
         /// <summary>
-        ///     Check if an item is in a list.
+        /// Check if an item is in a list.
         /// </summary>
         /// <param name="item">Item to check</param>
         /// <param name="list">List of items</param>

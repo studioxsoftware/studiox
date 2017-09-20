@@ -13,11 +13,11 @@ namespace StudioX.Web.Mvc.Controllers.Localization
 {
     public class StudioXLocalizationController : StudioXController
     {
-        private readonly IStudioXWebLocalizationConfiguration webLocalizationConfiguration;
+        private readonly IStudioXWebLocalizationConfiguration _webLocalizationConfiguration;
 
         public StudioXLocalizationController(IStudioXWebLocalizationConfiguration webLocalizationConfiguration)
         {
-            this.webLocalizationConfiguration = webLocalizationConfiguration;
+            _webLocalizationConfiguration = webLocalizationConfiguration;
         }
 
         [DisableAuditing]
@@ -29,7 +29,7 @@ namespace StudioX.Web.Mvc.Controllers.Localization
             }
 
             Response.Cookies.Add(
-                new HttpCookie(webLocalizationConfiguration.CookieName, cultureName)
+                new HttpCookie(_webLocalizationConfiguration.CookieName, cultureName)
                 {
                     Expires = Clock.Now.AddYears(2),
                     Path = Request.ApplicationPath

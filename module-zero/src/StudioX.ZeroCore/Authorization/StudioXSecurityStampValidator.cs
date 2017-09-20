@@ -3,8 +3,8 @@ using StudioX.Authorization.Roles;
 using StudioX.Authorization.Users;
 using StudioX.Domain.Uow;
 using StudioX.MultiTenancy;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 
@@ -16,11 +16,13 @@ namespace StudioX.Authorization
         where TUser : StudioXUser<TUser>
     {
         public StudioXSecurityStampValidator(
-            IOptions<IdentityOptions> options,
-            StudioXSignInManager<TTenant, TRole, TUser> signInManager)
+            IOptions<SecurityStampValidatorOptions> options,
+            StudioXSignInManager<TTenant, TRole, TUser> signInManager,
+            ISystemClock systemClock)
             : base(
-                  options, 
-                  signInManager)
+                options, 
+                signInManager,
+                systemClock)
         {
         }
 

@@ -20,9 +20,9 @@ namespace StudioX.Authorization.Roles
         where TRole : StudioXRole<TUser>
         where TUser : StudioXUser<TUser>
     {
-        private readonly IRepository<TRole> roleRepository;
-        private readonly IRepository<UserRole, long> userRoleRepository;
-        private readonly IRepository<RolePermissionSetting, long> rolePermissionSettingRepository;
+        private readonly IRepository<TRole> _roleRepository;
+        private readonly IRepository<UserRole, long> _userRoleRepository;
+        private readonly IRepository<RolePermissionSetting, long> _rolePermissionSettingRepository;
 
         /// <summary>
         /// Constructor.
@@ -32,44 +32,47 @@ namespace StudioX.Authorization.Roles
             IRepository<UserRole, long> userRoleRepository,
             IRepository<RolePermissionSetting, long> rolePermissionSettingRepository)
         {
-            this.roleRepository = roleRepository;
-            this.userRoleRepository = userRoleRepository;
-            this.rolePermissionSettingRepository = rolePermissionSettingRepository;
+            _roleRepository = roleRepository;
+            _userRoleRepository = userRoleRepository;
+            _rolePermissionSettingRepository = rolePermissionSettingRepository;
         }
 
-        public virtual IQueryable<TRole> Roles => roleRepository.GetAll();
+        public virtual IQueryable<TRole> Roles
+        {
+            get { return _roleRepository.GetAll(); }
+        }
 
         public virtual async Task CreateAsync(TRole role)
         {
-            await roleRepository.InsertAsync(role);
+            await _roleRepository.InsertAsync(role);
         }
 
         public virtual async Task UpdateAsync(TRole role)
         {
-            await roleRepository.UpdateAsync(role);
+            await _roleRepository.UpdateAsync(role);
         }
 
         public virtual async Task DeleteAsync(TRole role)
         {
-            await userRoleRepository.DeleteAsync(ur => ur.RoleId == role.Id);
-            await roleRepository.DeleteAsync(role);
+            await _userRoleRepository.DeleteAsync(ur => ur.RoleId == role.Id);
+            await _roleRepository.DeleteAsync(role);
         }
 
         public virtual async Task<TRole> FindByIdAsync(int roleId)
         {
-            return await roleRepository.FirstOrDefaultAsync(roleId);
+            return await _roleRepository.FirstOrDefaultAsync(roleId);
         }
 
         public virtual async Task<TRole> FindByNameAsync(string roleName)
         {
-            return await roleRepository.FirstOrDefaultAsync(
+            return await _roleRepository.FirstOrDefaultAsync(
                 role => role.Name == roleName
                 );
         }
 
         public virtual async Task<TRole> FindByDisplayNameAsync(string displayName)
         {
-            return await roleRepository.FirstOrDefaultAsync(
+            return await _roleRepository.FirstOrDefaultAsync(
                 role => role.DisplayName == displayName
                 );
         }
@@ -82,7 +85,7 @@ namespace StudioX.Authorization.Roles
                 return;
             }
 
-            await rolePermissionSettingRepository.InsertAsync(
+            await _rolePermissionSettingRepository.InsertAsync(
                 new RolePermissionSetting
                 {
                     TenantId = role.TenantId,
@@ -95,7 +98,7 @@ namespace StudioX.Authorization.Roles
         /// <inheritdoc/>
         public virtual async Task RemovePermissionAsync(TRole role, PermissionGrantInfo permissionGrant)
         {
-            await rolePermissionSettingRepository.DeleteAsync(
+            await _rolePermissionSettingRepository.DeleteAsync(
                 permissionSetting => permissionSetting.RoleId == role.Id &&
                                      permissionSetting.Name == permissionGrant.Name &&
                                      permissionSetting.IsGranted == permissionGrant.IsGranted
@@ -110,7 +113,7 @@ namespace StudioX.Authorization.Roles
 
         public async Task<IList<PermissionGrantInfo>> GetPermissionsAsync(int roleId)
         {
-            return (await rolePermissionSettingRepository.GetAllListAsync(p => p.RoleId == roleId))
+            return (await _rolePermissionSettingRepository.GetAllListAsync(p => p.RoleId == roleId))
                 .Select(p => new PermissionGrantInfo(p.Name, p.IsGranted))
                 .ToList();
         }
@@ -118,7 +121,7 @@ namespace StudioX.Authorization.Roles
         /// <inheritdoc/>
         public virtual async Task<bool> HasPermissionAsync(int roleId, PermissionGrantInfo permissionGrant)
         {
-            return await rolePermissionSettingRepository.FirstOrDefaultAsync(
+            return await _rolePermissionSettingRepository.FirstOrDefaultAsync(
                 p => p.RoleId == roleId &&
                      p.Name == permissionGrant.Name &&
                      p.IsGranted == permissionGrant.IsGranted
@@ -128,7 +131,7 @@ namespace StudioX.Authorization.Roles
         /// <inheritdoc/>
         public virtual async Task RemoveAllPermissionSettingsAsync(TRole role)
         {
-            await rolePermissionSettingRepository.DeleteAsync(s => s.RoleId == role.Id);
+            await _rolePermissionSettingRepository.DeleteAsync(s => s.RoleId == role.Id);
         }
 
         public virtual void Dispose()

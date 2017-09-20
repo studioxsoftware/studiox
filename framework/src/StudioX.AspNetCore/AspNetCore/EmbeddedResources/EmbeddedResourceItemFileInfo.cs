@@ -9,26 +9,26 @@ namespace StudioX.AspNetCore.EmbeddedResources
     {
         public bool Exists => true;
 
-        public long Length => resourceItem.Content.Length;
+        public long Length => _resourceItem.Content.Length;
 
         public string PhysicalPath => null;
 
-        public string Name => resourceItem.FileName;
+        public string Name => _resourceItem.FileName;
 
-        public DateTimeOffset LastModified => resourceItem.LastModifiedUtc;
+        public DateTimeOffset LastModified => _resourceItem.LastModifiedUtc;
 
         public bool IsDirectory => false;
         
-        private readonly EmbeddedResourceItem resourceItem;
+        private readonly EmbeddedResourceItem _resourceItem;
 
         public EmbeddedResourceItemFileInfo(EmbeddedResourceItem resourceItem)
         {
-            this.resourceItem = resourceItem;
+            _resourceItem = resourceItem;
         }
 
         public Stream CreateReadStream()
         {
-            return new MemoryStream(resourceItem.Content);
+            return new MemoryStream(_resourceItem.Content);
         }
     }
 }

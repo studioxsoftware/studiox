@@ -1,35 +1,34 @@
 ﻿using System.IO;
+using StudioX.Localization.Sources;
 
 namespace StudioX.Localization.Dictionaries.Xml
 {
     /// <summary>
-    ///     Provides localization dictionaries from XML files in a directory.
+    /// Provides localization dictionaries from XML files in a directory.
     /// </summary>
     public class XmlFileLocalizationDictionaryProvider : LocalizationDictionaryProviderBase
     {
-        private readonly string directoryPath;
+        private readonly string _directoryPath;
 
         /// <summary>
-        ///     Creates a new <see cref="XmlFileLocalizationDictionaryProvider" />.
+        /// Creates a new <see cref="XmlFileLocalizationDictionaryProvider"/>.
         /// </summary>
         /// <param name="directoryPath">Path of the dictionary that contains all related XML files</param>
         public XmlFileLocalizationDictionaryProvider(string directoryPath)
         {
-            this.directoryPath = directoryPath;
+            _directoryPath = directoryPath;
         }
 
         public override void Initialize(string sourceName)
         {
-            var fileNames = Directory.GetFiles(directoryPath, "*.xml", SearchOption.TopDirectoryOnly);
+            var fileNames = Directory.GetFiles(_directoryPath, "*.xml", SearchOption.TopDirectoryOnly);
 
             foreach (var fileName in fileNames)
             {
                 var dictionary = CreateXmlLocalizationDictionary(fileName);
                 if (Dictionaries.ContainsKey(dictionary.CultureInfo.Name))
                 {
-                    throw new StudioXInitializationException(sourceName +
-                                                             " source contains more than one dictionary for the culture: " +
-                                                             dictionary.CultureInfo.Name);
+                    throw new StudioXInitializationException(sourceName + " source contains more than one dictionary for the culture: " + dictionary.CultureInfo.Name);
                 }
 
                 Dictionaries[dictionary.CultureInfo.Name] = dictionary;
@@ -38,8 +37,7 @@ namespace StudioX.Localization.Dictionaries.Xml
                 {
                     if (DefaultDictionary != null)
                     {
-                        throw new StudioXInitializationException(
-                            "Only one default localization dictionary can be for source: " + sourceName);
+                        throw new StudioXInitializationException("Only one default localization dictionary can be for source: " + sourceName);                        
                     }
 
                     DefaultDictionary = dictionary;

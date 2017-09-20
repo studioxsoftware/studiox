@@ -14,15 +14,18 @@ namespace StudioX.Notifications
         /// </summary>
         public LocalizableString Message
         {
-            get => message ?? (this[nameof(Message)] as LocalizableString);
+            get
+            {
+                return _message ?? (this[nameof(Message)] as LocalizableString);
+            }
             set
             {
                 this[nameof(Message)] = value;
-                message = value;
+                _message = value;
             }
         }
 
-        private LocalizableString message;
+        private LocalizableString _message;
 
         /// <summary>
         /// Needed for serialization.

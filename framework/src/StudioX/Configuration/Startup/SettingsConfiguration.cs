@@ -4,7 +4,7 @@ namespace StudioX.Configuration.Startup
 {
     internal class SettingsConfiguration : ISettingsConfiguration
     {
-        public ITypeList<SettingProvider> Providers { get; }
+        public ITypeList<SettingProvider> Providers { get; private set; }
 
         public SettingsConfiguration()
         {

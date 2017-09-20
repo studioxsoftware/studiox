@@ -33,9 +33,11 @@ namespace StudioX.Domain.Uow
         public UnitOfWorkOptions Options { get; private set; }
 
         /// <inheritdoc/>
-        public IReadOnlyList<DataFilterConfiguration> Filters => filters.ToImmutableList();
-
-        private readonly List<DataFilterConfiguration> filters;
+        public IReadOnlyList<DataFilterConfiguration> Filters
+        {
+            get { return _filters.ToImmutableList(); }
+        }
+        private readonly List<DataFilterConfiguration> _filters;
 
         /// <summary>
         /// Gets default UOW options.
@@ -62,24 +64,24 @@ namespace StudioX.Domain.Uow
         /// <summary>
         /// Is <see cref="Begin"/> method called before?
         /// </summary>
-        private bool isBeginCalledBefore;
+        private bool _isBeginCalledBefore;
 
         /// <summary>
         /// Is <see cref="Complete"/> method called before?
         /// </summary>
-        private bool isCompleteCalledBefore;
+        private bool _isCompleteCalledBefore;
 
         /// <summary>
         /// Is this unit of work successfully completed.
         /// </summary>
-        private bool succeed;
+        private bool _succeed;
 
         /// <summary>
         /// A reference to the exception if this unit of work failed.
         /// </summary>
-        private Exception exception;
+        private Exception _exception;
 
-        private int? tenantId;
+        private int? _tenantId;
 
         /// <summary>
         /// Constructor.
@@ -94,7 +96,7 @@ namespace StudioX.Domain.Uow
             ConnectionStringResolver = connectionStringResolver;
 
             Id = Guid.NewGuid().ToString("N");
-            filters = defaultOptions.Filters.ToList();
+            _filters = defaultOptions.Filters.ToList();
 
             StudioXSession = NullStudioXSession.Instance;
         }
@@ -130,10 +132,10 @@ namespace StudioX.Domain.Uow
             foreach (var filterName in filterNames)
             {
                 var filterIndex = GetFilterIndex(filterName);
-                if (filters[filterIndex].IsEnabled)
+                if (_filters[filterIndex].IsEnabled)
                 {
                     disabledFilters.Add(filterName);
-                    filters[filterIndex] = new DataFilterConfiguration(filters[filterIndex], false);
+                    _filters[filterIndex] = new DataFilterConfiguration(_filters[filterIndex], false);
                 }
             }
 
@@ -152,10 +154,10 @@ namespace StudioX.Domain.Uow
             foreach (var filterName in filterNames)
             {
                 var filterIndex = GetFilterIndex(filterName);
-                if (!filters[filterIndex].IsEnabled)
+                if (!_filters[filterIndex].IsEnabled)
                 {
                     enabledFilters.Add(filterName);
-                    filters[filterIndex] = new DataFilterConfiguration(filters[filterIndex], true);
+                    _filters[filterIndex] = new DataFilterConfiguration(_filters[filterIndex], true);
                 }
             }
 
@@ -175,7 +177,7 @@ namespace StudioX.Domain.Uow
         {
             var filterIndex = GetFilterIndex(filterName);
 
-            var newfilter = new DataFilterConfiguration(filters[filterIndex]);
+            var newfilter = new DataFilterConfiguration(_filters[filterIndex]);
 
             //Store old value
             object oldValue = null;
@@ -187,7 +189,7 @@ namespace StudioX.Domain.Uow
 
             newfilter.FilterParameters[parameterName] = value;
 
-            filters[filterIndex] = newfilter;
+            _filters[filterIndex] = newfilter;
 
             ApplyFilterParameterValue(filterName, parameterName, value);
 
@@ -208,8 +210,8 @@ namespace StudioX.Domain.Uow
 
         public virtual IDisposable SetTenantId(int? tenantId, bool switchMustHaveTenantEnableDisable)
         {
-            var oldTenantId = this.tenantId;
-            this.tenantId = tenantId;
+            var oldTenantId = _tenantId;
+            _tenantId = tenantId;
 
 
             IDisposable mustHaveTenantEnableChange;
@@ -232,13 +234,13 @@ namespace StudioX.Domain.Uow
                 mayHaveTenantChange.Dispose();
                 mustHaveTenantChange.Dispose();
                 mustHaveTenantEnableChange.Dispose();
-                this.tenantId = oldTenantId;
+                _tenantId = oldTenantId;
             });
         }
 
         public int? GetTenantId()
         {
-            return tenantId;
+            return _tenantId;
         }
 
         /// <inheritdoc/>
@@ -248,12 +250,12 @@ namespace StudioX.Domain.Uow
             try
             {
                 CompleteUow();
-                succeed = true;
+                _succeed = true;
                 OnCompleted();
             }
             catch (Exception ex)
             {
-                exception = ex;
+                _exception = ex;
                 throw;
             }
         }
@@ -265,12 +267,12 @@ namespace StudioX.Domain.Uow
             try
             {
                 await CompleteUowAsync();
-                succeed = true;
+                _succeed = true;
                 OnCompleted();
             }
             catch (Exception ex)
             {
-                exception = ex;
+                _exception = ex;
                 throw;
             }
         }
@@ -278,16 +280,16 @@ namespace StudioX.Domain.Uow
         /// <inheritdoc/>
         public void Dispose()
         {
-            if (!isBeginCalledBefore || IsDisposed)
+            if (!_isBeginCalledBefore || IsDisposed)
             {
                 return;
             }
 
             IsDisposed = true;
 
-            if (!succeed)
+            if (!_succeed)
             {
-                OnFailed(exception);
+                OnFailed(_exception);
             }
 
             DisposeUow();
@@ -364,32 +366,32 @@ namespace StudioX.Domain.Uow
 
         private void PreventMultipleBegin()
         {
-            if (isBeginCalledBefore)
+            if (_isBeginCalledBefore)
             {
                 throw new StudioXException("This unit of work has started before. Can not call Start method more than once.");
             }
 
-            isBeginCalledBefore = true;
+            _isBeginCalledBefore = true;
         }
 
         private void PreventMultipleComplete()
         {
-            if (isCompleteCalledBefore)
+            if (_isCompleteCalledBefore)
             {
                 throw new StudioXException("Complete is called before!");
             }
 
-            isCompleteCalledBefore = true;
+            _isCompleteCalledBefore = true;
         }
 
         private void SetFilters(List<DataFilterConfiguration> filterOverrides)
         {
-            for (var i = 0; i < filters.Count; i++)
+            for (var i = 0; i < _filters.Count; i++)
             {
-                var filterOverride = filterOverrides.FirstOrDefault(f => f.FilterName == filters[i].FilterName);
+                var filterOverride = filterOverrides.FirstOrDefault(f => f.FilterName == _filters[i].FilterName);
                 if (filterOverride != null)
                 {
-                    filters[i] = filterOverride;
+                    _filters[i] = filterOverride;
                 }
             }
 
@@ -406,23 +408,23 @@ namespace StudioX.Domain.Uow
                 return;
             }
 
-            var index = filters.FindIndex(f => f.FilterName == filterName);
+            var index = _filters.FindIndex(f => f.FilterName == filterName);
             if (index < 0)
             {
                 return;
             }
 
-            if (filters[index].IsEnabled == isEnabled)
+            if (_filters[index].IsEnabled == isEnabled)
             {
                 return;
             }
 
-            filters[index] = new DataFilterConfiguration(filterName, isEnabled);
+            _filters[index] = new DataFilterConfiguration(filterName, isEnabled);
         }
 
         private DataFilterConfiguration GetFilter(string filterName)
         {
-            var filter = filters.FirstOrDefault(f => f.FilterName == filterName);
+            var filter = _filters.FirstOrDefault(f => f.FilterName == filterName);
             if (filter == null)
             {
                 throw new StudioXException("Unknown filter name: " + filterName + ". Be sure this filter is registered before.");
@@ -433,7 +435,7 @@ namespace StudioX.Domain.Uow
 
         private int GetFilterIndex(string filterName)
         {
-            var filterIndex = filters.FindIndex(f => f.FilterName == filterName);
+            var filterIndex = _filters.FindIndex(f => f.FilterName == filterName);
             if (filterIndex < 0)
             {
                 throw new StudioXException("Unknown filter name: " + filterName + ". Be sure this filter is registered before.");

@@ -11,11 +11,11 @@ namespace StudioX.WebApi.Controllers.Dynamic
     /// </summary>
     public class DynamicApiControllerManager : ISingletonDependency
     {
-        private readonly IDictionary<string, DynamicApiControllerInfo> dynamicApiControllers;
+        private readonly IDictionary<string, DynamicApiControllerInfo> _dynamicApiControllers;
 
         public DynamicApiControllerManager()
         {
-            dynamicApiControllers = new Dictionary<string, DynamicApiControllerInfo>(StringComparer.InvariantCultureIgnoreCase);
+            _dynamicApiControllers = new Dictionary<string, DynamicApiControllerInfo>(StringComparer.InvariantCultureIgnoreCase);
         }
 
         /// <summary>
@@ -24,7 +24,7 @@ namespace StudioX.WebApi.Controllers.Dynamic
         /// <param name="controllerInfo">Controller info</param>
         public void Register(DynamicApiControllerInfo controllerInfo)
         {
-            dynamicApiControllers[controllerInfo.ServiceName] = controllerInfo;
+            _dynamicApiControllers[controllerInfo.ServiceName] = controllerInfo;
         }
 
         /// <summary>
@@ -34,12 +34,12 @@ namespace StudioX.WebApi.Controllers.Dynamic
         /// <returns>Controller info</returns>
         public DynamicApiControllerInfo FindOrNull(string controllerName)
         {
-            return dynamicApiControllers.GetOrDefault(controllerName);
+            return _dynamicApiControllers.GetOrDefault(controllerName);
         }
 
         public IReadOnlyList<DynamicApiControllerInfo> GetAll()
         {
-            return dynamicApiControllers.Values.ToImmutableList();
+            return _dynamicApiControllers.Values.ToImmutableList();
         }
     }
 }

@@ -3,12 +3,12 @@
 namespace StudioX.Extensions
 {
     /// <summary>
-    ///     Extension methods for <see cref="IDateTimeRange" />.
+    /// Extension methods for <see cref="IDateTimeRange"/>.
     /// </summary>
     public static class DateTimeRangeExtensions
     {
         /// <summary>
-        ///     Sets date range to given target.
+        /// Sets date range to given target.
         /// </summary>
         /// <param name="source"></param>
         /// <param name="target"></param>
@@ -19,7 +19,7 @@ namespace StudioX.Extensions
         }
 
         /// <summary>
-        ///     Sets date range from given source.
+        /// Sets date range from given source.
         /// </summary>
         public static void SetFrom(this IDateTimeRange target, IDateTimeRange source)
         {

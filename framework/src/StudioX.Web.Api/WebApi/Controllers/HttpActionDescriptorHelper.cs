@@ -30,9 +30,13 @@ namespace StudioX.WebApi.Controllers
 
             //Get for the controller
             wrapAttr = actionDescriptor.ControllerDescriptor.GetCustomAttributes<WrapResultAttribute>(true).FirstOrDefault();
-            return wrapAttr;
+            if (wrapAttr != null)
+            {
+                return wrapAttr;
+            }
 
             //Not found
+            return null;
         }
     }
 }

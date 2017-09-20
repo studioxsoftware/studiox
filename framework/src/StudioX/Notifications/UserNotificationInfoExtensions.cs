@@ -1,15 +1,14 @@
 ﻿namespace StudioX.Notifications
 {
     /// <summary>
-    ///     Extension methods for <see cref="UserNotificationInfo" />.
+    /// Extension methods for <see cref="UserNotificationInfo"/>.
     /// </summary>
     public static class UserNotificationInfoExtensions
     {
         /// <summary>
-        ///     Converts <see cref="UserNotificationInfo" /> to <see cref="UserNotification" />.
+        /// Converts <see cref="UserNotificationInfo"/> to <see cref="UserNotification"/>.
         /// </summary>
-        public static UserNotification ToUserNotification(this UserNotificationInfo userNotificationInfo,
-            TenantNotification tenantNotification)
+        public static UserNotification ToUserNotification(this UserNotificationInfo userNotificationInfo, TenantNotification tenantNotification)
         {
             return new UserNotification
             {

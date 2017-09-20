@@ -18,12 +18,12 @@ namespace StudioX.Web.Configuration
 
         public StudioXWebCommonModuleConfiguration(
             IApiProxyScriptingConfiguration apiProxyScripting, 
-            IStudioXAntiForgeryConfiguration antiForgery,
+            IStudioXAntiForgeryConfiguration studioxAntiForgery,
             IWebEmbeddedResourcesConfiguration embeddedResources, 
             IWebMultiTenancyConfiguration multiTenancy)
         {
             ApiProxyScripting = apiProxyScripting;
-            AntiForgery = antiForgery;
+            AntiForgery = studioxAntiForgery;
             EmbeddedResources = embeddedResources;
             MultiTenancy = multiTenancy;
         }

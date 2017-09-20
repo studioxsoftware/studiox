@@ -20,58 +20,30 @@ namespace StudioX.Web
         /// </summary>
         public static StudioXBootstrapper StudioXBootstrapper { get; } = StudioXBootstrapper.Create<TStartupModule>();
 
-        /// <summary>
-        /// This method is called by ASP.NET system on web application's startup.
-        /// </summary>
         protected virtual void Application_Start(object sender, EventArgs e)
         {
             ThreadCultureSanitizer.Sanitize();
             StudioXBootstrapper.Initialize();
         }
 
-        /// <summary>
-        /// This method is called by ASP.NET system on web application shutdown.
-        /// </summary>
         protected virtual void Application_End(object sender, EventArgs e)
         {
             StudioXBootstrapper.Dispose();
         }
 
-        /// <summary>
-        /// This method is called by ASP.NET system when a session starts.
-        /// </summary>
         protected virtual void Session_Start(object sender, EventArgs e)
         {
 
         }
 
-        /// <summary>
-        /// This method is called by ASP.NET system when a session ends.
-        /// </summary>
         protected virtual void Session_End(object sender, EventArgs e)
         {
 
         }
 
-        /// <summary>
-        /// This method is called by ASP.NET system when a request starts.
-        /// </summary>
         protected virtual void Application_BeginRequest(object sender, EventArgs e)
         {
-            SetCurrentCulture();
-        }
-
-        protected virtual void SetCurrentCulture()
-        {
-            StudioXBootstrapper.IocManager.Using<ICurrentCultureSetter>(cultureSetter => cultureSetter.SetCurrentCulture(Context));
-        }
-
-        /// <summary>
-        /// This method is called by ASP.NET system when a request ends.
-        /// </summary>
-        protected virtual void Application_EndRequest(object sender, EventArgs e)
-        {
-
+            
         }
 
         protected virtual void Application_AuthenticateRequest(object sender, EventArgs e)
@@ -79,9 +51,24 @@ namespace StudioX.Web
 
         }
 
+        protected virtual void Application_PostAuthenticateRequest(object sender, EventArgs e)
+        {
+            SetCurrentCulture();
+        }
+
+        protected virtual void Application_EndRequest(object sender, EventArgs e)
+        {
+
+        }
+
         protected virtual void Application_Error(object sender, EventArgs e)
         {
 
+        }
+
+        protected virtual void SetCurrentCulture()
+        {
+            StudioXBootstrapper.IocManager.Using<ICurrentCultureSetter>(cultureSetter => cultureSetter.SetCurrentCulture(Context));
         }
     }
 }

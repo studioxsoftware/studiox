@@ -38,9 +38,9 @@ namespace StudioX.Authorization
         protected IIocResolver IocResolver { get; }
         protected StudioXRoleManager<TRole, TUser> RoleManager { get; }
 
-        private readonly IPasswordHasher<TUser> passwordHasher;
+        private readonly IPasswordHasher<TUser> _passwordHasher;
 
-        private readonly StudioXUserClaimsPrincipalFactory<TUser, TRole> claimsPrincipalFactory;
+        private readonly StudioXUserClaimsPrincipalFactory<TUser, TRole> _claimsPrincipalFactory;
 
         public StudioXLogInManager(
             StudioXUserManager<TRole, TUser> userManager,
@@ -55,8 +55,8 @@ namespace StudioX.Authorization
             StudioXRoleManager<TRole, TUser> roleManager,
             StudioXUserClaimsPrincipalFactory<TUser, TRole> claimsPrincipalFactory)
         {
-            this.passwordHasher = passwordHasher;
-            this.claimsPrincipalFactory = claimsPrincipalFactory;
+            _passwordHasher = passwordHasher;
+            _claimsPrincipalFactory = claimsPrincipalFactory;
             MultiTenancyConfig = multiTenancyConfig;
             TenantRepository = tenantRepository;
             UnitOfWorkManager = unitOfWorkManager;
@@ -225,7 +225,7 @@ namespace StudioX.Authorization
 
             await UnitOfWorkManager.Current.SaveChangesAsync();
 
-            var principal = await claimsPrincipalFactory.CreateAsync(user);
+            var principal = await _claimsPrincipalFactory.CreateAsync(user);
 
             return new StudioXLoginResult<TTenant, TUser>(
                 tenant,
@@ -308,7 +308,7 @@ namespace StudioX.Authorization
 
                                 user.TenantId = tenantId;
                                 user.AuthenticationSource = source.Object.Name;
-                                user.Password = passwordHasher.HashPassword(user, Guid.NewGuid().ToString("N").Left(16)); //Setting a random password since it will not be used
+                                user.Password = _passwordHasher.HashPassword(user, Guid.NewGuid().ToString("N").Left(16)); //Setting a random password since it will not be used
 
                                 if (user.Roles == null)
                                 {

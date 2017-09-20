@@ -5,22 +5,22 @@ using StudioX.MultiTenancy;
 namespace StudioX.EntityFramework.Uow
 {
     /// <summary>
-    ///     Implements <see cref="IDbContextProvider{TDbContext}" /> that gets DbContext from
-    ///     active unit of work.
+    /// Implements <see cref="IDbContextProvider{TDbContext}"/> that gets DbContext from
+    /// active unit of work.
     /// </summary>
     /// <typeparam name="TDbContext">Type of the DbContext</typeparam>
-    public class UnitOfWorkDbContextProvider<TDbContext> : IDbContextProvider<TDbContext>
+    public class UnitOfWorkDbContextProvider<TDbContext> : IDbContextProvider<TDbContext> 
         where TDbContext : DbContext
     {
-        private readonly ICurrentUnitOfWorkProvider currentUnitOfWorkProvider;
+       private readonly ICurrentUnitOfWorkProvider _currentUnitOfWorkProvider;
 
         /// <summary>
-        ///     Creates a new <see cref="UnitOfWorkDbContextProvider{TDbContext}" />.
+        /// Creates a new <see cref="UnitOfWorkDbContextProvider{TDbContext}"/>.
         /// </summary>
         /// <param name="currentUnitOfWorkProvider"></param>
         public UnitOfWorkDbContextProvider(ICurrentUnitOfWorkProvider currentUnitOfWorkProvider)
         {
-            this.currentUnitOfWorkProvider = currentUnitOfWorkProvider;
+            _currentUnitOfWorkProvider = currentUnitOfWorkProvider;
         }
 
         public TDbContext GetDbContext()
@@ -30,7 +30,7 @@ namespace StudioX.EntityFramework.Uow
 
         public TDbContext GetDbContext(MultiTenancySides? multiTenancySide)
         {
-            return currentUnitOfWorkProvider.Current.GetDbContext<TDbContext>(multiTenancySide);
+            return _currentUnitOfWorkProvider.Current.GetDbContext<TDbContext>(multiTenancySide);
         }
     }
 }

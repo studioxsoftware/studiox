@@ -4,7 +4,7 @@ namespace StudioX.MemoryDb.Repositories
 {
     public class MemoryPrimaryKeyGenerator<TPrimaryKey>
     {
-        private object lastPk;
+        private object _lastPk;
 
         public MemoryPrimaryKeyGenerator()
         {
@@ -23,23 +23,23 @@ namespace StudioX.MemoryDb.Repositories
         {
             if (typeof(TPrimaryKey) == typeof(int))
             {
-                lastPk = 0;
+                _lastPk = 0;
             }
             else if (typeof(TPrimaryKey) == typeof(long))
             {
-                lastPk = 0L;
+                _lastPk = 0L;
             }
             else if (typeof(TPrimaryKey) == typeof(short))
             {
-                lastPk = (short)0;
+                _lastPk = (short)0;
             }
             else if (typeof(TPrimaryKey) == typeof(byte))
             {
-                lastPk = (byte)0;
+                _lastPk = (byte)0;
             }
             else if (typeof(TPrimaryKey) == typeof(Guid))
             {
-                lastPk = null;
+                _lastPk = null;
             }
             else
             {
@@ -51,30 +51,30 @@ namespace StudioX.MemoryDb.Repositories
         {
             if (typeof(TPrimaryKey) == typeof(int))
             {
-                lastPk = ((int)lastPk) + 1;
+                _lastPk = ((int)_lastPk) + 1;
             }
             else if (typeof(TPrimaryKey) == typeof(long))
             {
-                lastPk = ((long)lastPk) + 1L;
+                _lastPk = ((long)_lastPk) + 1L;
             }
             else if (typeof(TPrimaryKey) == typeof(short))
             {
-                lastPk = (short)(((short)lastPk) + 1);
+                _lastPk = (short)(((short)_lastPk) + 1);
             }
             else if (typeof(TPrimaryKey) == typeof(byte))
             {
-                lastPk = (byte)(((byte)lastPk) + 1);
+                _lastPk = (byte)(((byte)_lastPk) + 1);
             }
             else if (typeof(TPrimaryKey) == typeof(Guid))
             {
-                lastPk = Guid.NewGuid();
+                _lastPk = Guid.NewGuid();
             }
             else
             {
                 throw new StudioXException("Unsupported primary key type: " + typeof(TPrimaryKey));
             }
 
-            return (TPrimaryKey)lastPk;
+            return (TPrimaryKey)_lastPk;
         }
     }
 }

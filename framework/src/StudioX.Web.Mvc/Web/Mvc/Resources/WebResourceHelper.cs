@@ -30,7 +30,7 @@ namespace StudioX.Web.Mvc.Resources
                 new EmbeddedResourceSet(rootPath, assembly, resourceNamespace)
             );
 
-            /* @Long Huynh: Default values are a workaround. If it's not set, @Url.Action in views can not run
+            /* @hikalkan: Default values are a workaround. If it's not set, @Url.Action in views can not run
              * properly and use this route accidently.
              * We should find a better way of serving embedded resources in the future, but this works as I tested.
              */

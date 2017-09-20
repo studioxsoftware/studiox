@@ -19,21 +19,21 @@ namespace StudioX.Auditing
         public IStudioXSession StudioXSession { get; set; }
         public IAuditingStore AuditingStore { get; set; }
 
-        private readonly IAuditInfoProvider auditInfoProvider;
-        private readonly IAuditingConfiguration configuration;
-        private readonly IUnitOfWorkManager unitOfWorkManager;
-        private readonly IAuditSerializer auditSerializer;
+        private readonly IAuditInfoProvider _auditInfoProvider;
+        private readonly IAuditingConfiguration _configuration;
+        private readonly IUnitOfWorkManager _unitOfWorkManager;
+        private readonly IAuditSerializer _auditSerializer;
 
         public AuditingHelper(
-            IAuditInfoProvider auditInfoProvider, 
-            IAuditingConfiguration configuration, 
+            IAuditInfoProvider auditInfoProvider,
+            IAuditingConfiguration configuration,
             IUnitOfWorkManager unitOfWorkManager,
             IAuditSerializer auditSerializer)
         {
-            this.auditInfoProvider = auditInfoProvider;
-            this.configuration = configuration;
-            this.unitOfWorkManager = unitOfWorkManager;
-            this.auditSerializer = auditSerializer;
+            _auditInfoProvider = auditInfoProvider;
+            _configuration = configuration;
+            _unitOfWorkManager = unitOfWorkManager;
+            _auditSerializer = auditSerializer;
 
             StudioXSession = NullStudioXSession.Instance;
             Logger = NullLogger.Instance;
@@ -42,12 +42,12 @@ namespace StudioX.Auditing
 
         public bool ShouldSaveAudit(MethodInfo methodInfo, bool defaultValue = false)
         {
-            if (!configuration.IsEnabled)
+            if (!_configuration.IsEnabled)
             {
                 return false;
             }
 
-            if (!configuration.IsEnabledForAnonymousUsers && (StudioXSession?.UserId == null))
+            if (!_configuration.IsEnabledForAnonymousUsers && (StudioXSession?.UserId == null))
             {
                 return false;
             }
@@ -85,7 +85,7 @@ namespace StudioX.Auditing
                     return false;
                 }
 
-                if (configuration.Selectors.Any(selector => selector.Predicate(classType)))
+                if (_configuration.Selectors.Any(selector => selector.Predicate(classType)))
                 {
                     return true;
                 }
@@ -94,12 +94,12 @@ namespace StudioX.Auditing
             return defaultValue;
         }
 
-        public AuditInfo CreateAuditInfo(MethodInfo method, object[] arguments)
+        public AuditInfo CreateAuditInfo(Type type, MethodInfo method, object[] arguments)
         {
-            return CreateAuditInfo(method, CreateArgumentsDictionary(method, arguments));
+            return CreateAuditInfo(type, method, CreateArgumentsDictionary(method, arguments));
         }
 
-        public AuditInfo CreateAuditInfo(MethodInfo method, IDictionary<string, object> arguments)
+        public AuditInfo CreateAuditInfo(Type type, MethodInfo method, IDictionary<string, object> arguments)
         {
             var auditInfo = new AuditInfo
             {
@@ -107,8 +107,8 @@ namespace StudioX.Auditing
                 UserId = StudioXSession.UserId,
                 ImpersonatorUserId = StudioXSession.ImpersonatorUserId,
                 ImpersonatorTenantId = StudioXSession.ImpersonatorTenantId,
-                ServiceName = method.DeclaringType != null
-                    ? method.DeclaringType.FullName
+                ServiceName = type != null
+                    ? type.FullName
                     : "",
                 MethodName = method.Name,
                 Parameters = ConvertArgumentsToJson(arguments),
@@ -117,7 +117,7 @@ namespace StudioX.Auditing
 
             try
             {
-                auditInfoProvider.Fill(auditInfo);
+                _auditInfoProvider.Fill(auditInfo);
             }
             catch (Exception ex)
             {
@@ -129,7 +129,7 @@ namespace StudioX.Auditing
 
         public void Save(AuditInfo auditInfo)
         {
-            using (var uow = unitOfWorkManager.Begin(TransactionScopeOption.Suppress))
+            using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.Suppress))
             {
                 AuditingStore.Save(auditInfo);
                 uow.Complete();
@@ -138,7 +138,7 @@ namespace StudioX.Auditing
 
         public async Task SaveAsync(AuditInfo auditInfo)
         {
-            using (var uow = unitOfWorkManager.Begin(TransactionScopeOption.Suppress))
+            using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.Suppress))
             {
                 await AuditingStore.SaveAsync(auditInfo);
                 await uow.CompleteAsync();
@@ -158,7 +158,7 @@ namespace StudioX.Auditing
 
                 foreach (var argument in arguments)
                 {
-                    if (argument.Value != null && configuration.IgnoredTypes.Any(t => t.IsInstanceOfType(argument.Value)))
+                    if (argument.Value != null && _configuration.IgnoredTypes.Any(t => t.IsInstanceOfType(argument.Value)))
                     {
                         dictionary[argument.Key] = null;
                     }
@@ -168,7 +168,7 @@ namespace StudioX.Auditing
                     }
                 }
 
-                return auditSerializer.Serialize(dictionary);
+                return _auditSerializer.Serialize(dictionary);
             }
             catch (Exception ex)
             {

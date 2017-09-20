@@ -15,8 +15,8 @@ namespace StudioX.Authorization.Users
         IEventHandler<EntityUpdatedEventData<StudioXUserBase>>,
         ITransientDependency
     {
-        private readonly IRepository<UserAccount, long> userAccountRepository;
-        private readonly IUnitOfWorkManager unitOfWorkManager;
+        private readonly IRepository<UserAccount, long> _userAccountRepository;
+        private readonly IUnitOfWorkManager _unitOfWorkManager;
 
         /// <summary>
         /// Constructor
@@ -25,8 +25,8 @@ namespace StudioX.Authorization.Users
             IRepository<UserAccount, long> userAccountRepository,
             IUnitOfWorkManager unitOfWorkManager)
         {
-            this.userAccountRepository = userAccountRepository;
-            this.unitOfWorkManager = unitOfWorkManager;
+            _userAccountRepository = userAccountRepository;
+            _unitOfWorkManager = unitOfWorkManager;
         }
 
         /// <summary>
@@ -35,9 +35,9 @@ namespace StudioX.Authorization.Users
         [UnitOfWork]
         public virtual void HandleEvent(EntityCreatedEventData<StudioXUserBase> eventData)
         {
-            using (unitOfWorkManager.Current.SetTenantId(null))
+            using (_unitOfWorkManager.Current.SetTenantId(null))
             {
-                userAccountRepository.Insert(new UserAccount
+                _userAccountRepository.Insert(new UserAccount
                 {
                     TenantId = eventData.Entity.TenantId,
                     UserName = eventData.Entity.UserName,
@@ -55,14 +55,14 @@ namespace StudioX.Authorization.Users
         [UnitOfWork]
         public virtual void HandleEvent(EntityDeletedEventData<StudioXUserBase> eventData)
         {
-            using (unitOfWorkManager.Current.SetTenantId(null))
+            using (_unitOfWorkManager.Current.SetTenantId(null))
             {
                 var userAccount =
-                    userAccountRepository.FirstOrDefault(
+                    _userAccountRepository.FirstOrDefault(
                         ua => ua.TenantId == eventData.Entity.TenantId && ua.UserId == eventData.Entity.Id);
                 if (userAccount != null)
                 {
-                    userAccountRepository.Delete(userAccount);
+                    _userAccountRepository.Delete(userAccount);
                 }
             }
         }
@@ -74,15 +74,15 @@ namespace StudioX.Authorization.Users
         [UnitOfWork]
         public virtual void HandleEvent(EntityUpdatedEventData<StudioXUserBase> eventData)
         {
-            using (unitOfWorkManager.Current.SetTenantId(null))
+            using (_unitOfWorkManager.Current.SetTenantId(null))
             {
-                var userAccount = userAccountRepository.FirstOrDefault(ua => ua.TenantId == eventData.Entity.TenantId && ua.UserId == eventData.Entity.Id);
+                var userAccount = _userAccountRepository.FirstOrDefault(ua => ua.TenantId == eventData.Entity.TenantId && ua.UserId == eventData.Entity.Id);
                 if (userAccount != null)
                 {
                     userAccount.UserName = eventData.Entity.UserName;
                     userAccount.EmailAddress = eventData.Entity.EmailAddress;
                     userAccount.LastLoginTime = eventData.Entity.LastLoginTime;
-                    userAccountRepository.Update(userAccount);
+                    _userAccountRepository.Update(userAccount);
                 }
             }
         }

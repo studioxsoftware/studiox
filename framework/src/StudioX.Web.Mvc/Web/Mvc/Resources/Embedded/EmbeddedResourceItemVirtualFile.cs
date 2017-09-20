@@ -6,17 +6,17 @@ namespace StudioX.Web.Mvc.Resources.Embedded
 {
     public class EmbeddedResourceItemVirtualFile : VirtualFile
     {
-        private readonly EmbeddedResourceItem resource;
+        private readonly EmbeddedResourceItem _resource;
 
         public EmbeddedResourceItemVirtualFile(string virtualPath, EmbeddedResourceItem resource)
             : base(virtualPath)
         {
-            this.resource = resource;
+            _resource = resource;
         }
 
         public override Stream Open()
         {
-            return new MemoryStream(resource.Content);
+            return new MemoryStream(_resource.Content);
         }
     }
 }

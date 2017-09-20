@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using StudioX.Localization.Dictionaries.Xml;
+using StudioX.Localization.Sources;
 
 namespace StudioX.Localization.Dictionaries.Json
 {
@@ -8,7 +9,7 @@ namespace StudioX.Localization.Dictionaries.Json
     /// </summary>
     public class JsonFileLocalizationDictionaryProvider : LocalizationDictionaryProviderBase
     {
-        private readonly string directoryPath;
+        private readonly string _directoryPath;
 
         /// <summary>
         ///     Creates a new <see cref="JsonFileLocalizationDictionaryProvider" />.
@@ -16,21 +17,19 @@ namespace StudioX.Localization.Dictionaries.Json
         /// <param name="directoryPath">Path of the dictionary that contains all related XML files</param>
         public JsonFileLocalizationDictionaryProvider(string directoryPath)
         {
-            this.directoryPath = directoryPath;
+            _directoryPath = directoryPath;
         }
-
+        
         public override void Initialize(string sourceName)
         {
-            var fileNames = Directory.GetFiles(directoryPath, "*.json", SearchOption.TopDirectoryOnly);
+            var fileNames = Directory.GetFiles(_directoryPath, "*.json", SearchOption.TopDirectoryOnly);
 
             foreach (var fileName in fileNames)
             {
                 var dictionary = CreateJsonLocalizationDictionary(fileName);
                 if (Dictionaries.ContainsKey(dictionary.CultureInfo.Name))
                 {
-                    throw new StudioXInitializationException(sourceName +
-                                                             " source contains more than one dictionary for the culture: " +
-                                                             dictionary.CultureInfo.Name);
+                    throw new StudioXInitializationException(sourceName + " source contains more than one dictionary for the culture: " + dictionary.CultureInfo.Name);
                 }
 
                 Dictionaries[dictionary.CultureInfo.Name] = dictionary;
@@ -39,8 +38,7 @@ namespace StudioX.Localization.Dictionaries.Json
                 {
                     if (DefaultDictionary != null)
                     {
-                        throw new StudioXInitializationException(
-                            "Only one default localization dictionary can be for source: " + sourceName);
+                        throw new StudioXInitializationException("Only one default localization dictionary can be for source: " + sourceName);
                     }
 
                     DefaultDictionary = dictionary;

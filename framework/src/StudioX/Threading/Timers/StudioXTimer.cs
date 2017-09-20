@@ -29,25 +29,25 @@ namespace StudioX.Threading.Timers
         /// <summary>
         /// This timer is used to perfom the task at spesified intervals.
         /// </summary>
-        private readonly Timer taskTimer;
+        private readonly Timer _taskTimer;
 
         /// <summary>
         /// Indicates that whether timer is running or stopped.
         /// </summary>
-        private volatile bool running;
+        private volatile bool _running;
 
         /// <summary>
-        /// Indicates that whether performing the task or taskTimer is in sleep mode.
+        /// Indicates that whether performing the task or _taskTimer is in sleep mode.
         /// This field is used to wait executing tasks when stopping Timer.
         /// </summary>
-        private volatile bool performingTasks;
+        private volatile bool _performingTasks;
 
         /// <summary>
         /// Creates a new Timer.
         /// </summary>
         public StudioXTimer()
         {
-            taskTimer = new Timer(TimerCallBack, null, Timeout.Infinite, Timeout.Infinite);
+            _taskTimer = new Timer(TimerCallBack, null, Timeout.Infinite, Timeout.Infinite);
         }
 
         /// <summary>
@@ -74,8 +74,8 @@ namespace StudioX.Threading.Timers
 
             base.Start();
 
-            running = true;
-            taskTimer.Change(RunOnStart ? 0 : Period, Timeout.Infinite);
+            _running = true;
+            _taskTimer.Change(RunOnStart ? 0 : Period, Timeout.Infinite);
         }
 
         /// <summary>
@@ -83,10 +83,10 @@ namespace StudioX.Threading.Timers
         /// </summary>
         public override void Stop()
         {
-            lock (taskTimer)
+            lock (_taskTimer)
             {
-                running = false;
-                taskTimer.Change(Timeout.Infinite, Timeout.Infinite);
+                _running = false;
+                _taskTimer.Change(Timeout.Infinite, Timeout.Infinite);
             }
 
             base.Stop();
@@ -97,11 +97,11 @@ namespace StudioX.Threading.Timers
         /// </summary>
         public override void WaitToStop()
         {
-            lock (taskTimer)
+            lock (_taskTimer)
             {
-                while (performingTasks)
+                while (_performingTasks)
                 {
-                    Monitor.Wait(taskTimer);
+                    Monitor.Wait(_taskTimer);
                 }
             }
 
@@ -109,20 +109,20 @@ namespace StudioX.Threading.Timers
         }
 
         /// <summary>
-        /// This method is called by taskTimer.
+        /// This method is called by _taskTimer.
         /// </summary>
         /// <param name="state">Not used argument</param>
         private void TimerCallBack(object state)
         {
-            lock (taskTimer)
+            lock (_taskTimer)
             {
-                if (!running || performingTasks)
+                if (!_running || _performingTasks)
                 {
                     return;
                 }
 
-                taskTimer.Change(Timeout.Infinite, Timeout.Infinite);
-                performingTasks = true;
+                _taskTimer.Change(Timeout.Infinite, Timeout.Infinite);
+                _performingTasks = true;
             }
 
             try
@@ -138,15 +138,15 @@ namespace StudioX.Threading.Timers
             }
             finally
             {
-                lock (taskTimer)
+                lock (_taskTimer)
                 {
-                    performingTasks = false;
-                    if (running)
+                    _performingTasks = false;
+                    if (_running)
                     {
-                        taskTimer.Change(Period, Timeout.Infinite);
+                        _taskTimer.Change(Period, Timeout.Infinite);
                     }
 
-                    Monitor.Pulse(taskTimer);
+                    Monitor.Pulse(_taskTimer);
                 }
             }
         }

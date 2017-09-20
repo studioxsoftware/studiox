@@ -25,12 +25,12 @@ namespace StudioX.Zero.AspNetCore
     {
         public StudioXUserManager<TRole, TUser> UserManager { get; set; }
 
-        public AuthenticationManager AuthenticationManager => contextAccessor.HttpContext.Authentication;
+        public AuthenticationManager AuthenticationManager => _contextAccessor.HttpContext.Authentication;
 
-        private readonly IHttpContextAccessor contextAccessor;
-        private readonly ISettingManager settingManager;
-        private readonly IUnitOfWorkManager unitOfWorkManager;
-        private readonly IStudioXZeroAspNetCoreConfiguration configuration;
+        private readonly IHttpContextAccessor _contextAccessor;
+        private readonly ISettingManager _settingManager;
+        private readonly IUnitOfWorkManager _unitOfWorkManager;
+        private readonly IStudioXZeroAspNetCoreConfiguration _configuration;
 
         protected StudioXSignInManager(
             StudioXUserManager<TRole, TUser> userManager,
@@ -40,10 +40,10 @@ namespace StudioX.Zero.AspNetCore
             IStudioXZeroAspNetCoreConfiguration configuration)
         {
             UserManager = userManager;
-            this.contextAccessor = contextAccessor;
-            this.settingManager = settingManager;
-            this.unitOfWorkManager = unitOfWorkManager;
-            this.configuration = configuration;
+            _contextAccessor = contextAccessor;
+            _settingManager = settingManager;
+            _unitOfWorkManager = unitOfWorkManager;
+            _configuration = configuration;
         }
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace StudioX.Zero.AspNetCore
                 throw new ArgumentException("loginResult.Result should be success in order to sign in!");
             }
 
-            using (unitOfWorkManager.Current.SetTenantId(loginResult.Tenant?.Id))
+            using (_unitOfWorkManager.Current.SetTenantId(loginResult.Tenant?.Id))
             {
                 if (IsTrue(StudioXZeroSettingNames.UserManagement.TwoFactorLogin.IsEnabled, loginResult.Tenant?.Id))
                 {
@@ -77,7 +77,7 @@ namespace StudioX.Zero.AspNetCore
                             if (!await TwoFactorBrowserRememberedAsync(loginResult.User.Id.ToString(), loginResult.User.TenantId) ||
                                 rememberBrowser == false)
                             {
-                                var claimsIdentity = new ClaimsIdentity(configuration.TwoFactorAuthenticationScheme);
+                                var claimsIdentity = new ClaimsIdentity(_configuration.TwoFactorAuthenticationScheme);
 
                                 claimsIdentity.AddClaim(new Claim(ClaimTypes.NameIdentifier, loginResult.User.Id.ToString()));
 
@@ -87,10 +87,10 @@ namespace StudioX.Zero.AspNetCore
                                 }
 
                                 await AuthenticationManager.SignInAsync(
-                                    configuration.TwoFactorAuthenticationScheme,
+                                    _configuration.TwoFactorAuthenticationScheme,
                                     CreateIdentityForTwoFactor(
                                         loginResult.User,
-                                        configuration.TwoFactorAuthenticationScheme
+                                        _configuration.TwoFactorAuthenticationScheme
                                     )
                                 );
 
@@ -116,7 +116,7 @@ namespace StudioX.Zero.AspNetCore
                 throw new ArgumentException("loginResult.Result should be success in order to sign in!");
             }
 
-            using (unitOfWorkManager.Current.SetTenantId(loginResult.Tenant?.Id))
+            using (_unitOfWorkManager.Current.SetTenantId(loginResult.Tenant?.Id))
             {
                 await SignOutAllAsync();
 
@@ -129,10 +129,10 @@ namespace StudioX.Zero.AspNetCore
                 {
                     await SignOutAllAndSignInAsync(loginResult.Identity, isPersistent);
                     await AuthenticationManager.SignInAsync(
-                        configuration.TwoFactorRememberBrowserAuthenticationScheme,
+                        _configuration.TwoFactorRememberBrowserAuthenticationScheme,
                         CreateIdentityForTwoFactor(
                             loginResult.User,
-                            configuration.TwoFactorRememberBrowserAuthenticationScheme
+                            _configuration.TwoFactorRememberBrowserAuthenticationScheme
                         )
                     );
                 }
@@ -159,9 +159,9 @@ namespace StudioX.Zero.AspNetCore
 
         public virtual async Task SignInAsync(TUser user, bool isPersistent, bool? rememberBrowser = null)
         {
-            using (unitOfWorkManager.Current.SetTenantId(user.TenantId))
+            using (_unitOfWorkManager.Current.SetTenantId(user.TenantId))
             {
-                var userIdentity = await UserManager.CreateIdentityAsync(user, configuration.AuthenticationScheme);
+                var userIdentity = await UserManager.CreateIdentityAsync(user, _configuration.AuthenticationScheme);
 
                 await SignOutAllAsync();
 
@@ -174,10 +174,10 @@ namespace StudioX.Zero.AspNetCore
                 {
                     await SignOutAllAndSignInAsync(userIdentity, isPersistent);
                     await AuthenticationManager.SignInAsync(
-                        configuration.TwoFactorRememberBrowserAuthenticationScheme,
+                        _configuration.TwoFactorRememberBrowserAuthenticationScheme,
                         CreateIdentityForTwoFactor(
                             user,
-                            configuration.TwoFactorRememberBrowserAuthenticationScheme
+                            _configuration.TwoFactorRememberBrowserAuthenticationScheme
                         )
                     );
                 }
@@ -233,19 +233,19 @@ namespace StudioX.Zero.AspNetCore
 
         public async Task<long> GetVerifiedUserIdAsync()
         {
-            var authenticateResult = await AuthenticationManager.AuthenticateAsync(configuration.TwoFactorAuthenticationScheme);
+            var authenticateResult = await AuthenticationManager.AuthenticateAsync(_configuration.TwoFactorAuthenticationScheme);
             return Convert.ToInt64(IdentityExtensions.GetUserId(authenticateResult.Identity) ?? "0");
         }
 
         public virtual async Task<int?> GetVerifiedTenantIdAsync()
         {
-            var authenticateResult = await AuthenticationManager.AuthenticateAsync(configuration.TwoFactorAuthenticationScheme);
+            var authenticateResult = await AuthenticationManager.AuthenticateAsync(_configuration.TwoFactorAuthenticationScheme);
             return StudioXZeroClaimsIdentityHelper.GetTenantId(authenticateResult?.Identity);
         }
 
         public async Task<bool> TwoFactorBrowserRememberedAsync(string userId, int? tenantId)
         {
-            var result = await AuthenticationManager.AuthenticateAsync(configuration.TwoFactorRememberBrowserAuthenticationScheme);
+            var result = await AuthenticationManager.AuthenticateAsync(_configuration.TwoFactorRememberBrowserAuthenticationScheme);
             if (result?.Identity == null)
             {
                 return false;
@@ -272,21 +272,21 @@ namespace StudioX.Zero.AspNetCore
         private bool IsTrue(string settingName, int? tenantId)
         {
             return tenantId == null
-                ? settingManager.GetSettingValueForApplication<bool>(settingName)
-                : settingManager.GetSettingValueForTenant<bool>(settingName, tenantId.Value);
+                ? _settingManager.GetSettingValueForApplication<bool>(settingName)
+                : _settingManager.GetSettingValueForTenant<bool>(settingName, tenantId.Value);
         }
 
         public async Task SignOutAllAsync()
         {
-            await AuthenticationManager.SignOutAsync(configuration.AuthenticationScheme);
-            await AuthenticationManager.SignOutAsync(configuration.TwoFactorAuthenticationScheme);
+            await AuthenticationManager.SignOutAsync(_configuration.AuthenticationScheme);
+            await AuthenticationManager.SignOutAsync(_configuration.TwoFactorAuthenticationScheme);
         }
 
         public async Task SignOutAllAndSignInAsync(ClaimsIdentity identity, bool rememberMe = false)
         {
             await SignOutAllAsync();
             await AuthenticationManager.SignInAsync(
-                configuration.AuthenticationScheme,
+                _configuration.AuthenticationScheme,
                 new ClaimsPrincipal(identity),
                 new AuthenticationProperties
                 {
@@ -316,32 +316,32 @@ namespace StudioX.Zero.AspNetCore
             var givennameClaim = claims.FirstOrDefault(c => c.Type == ClaimTypes.GivenName);
             if (givennameClaim != null && !givennameClaim.Value.IsNullOrEmpty())
             {
-                userInfo.FirstName = givennameClaim.Value;
+                userInfo.Name = givennameClaim.Value;
             }
 
-            var lastNameClaim = claims.FirstOrDefault(c => c.Type == ClaimTypes.Surname);
-            if (lastNameClaim != null && !lastNameClaim.Value.IsNullOrEmpty())
+            var surnameClaim = claims.FirstOrDefault(c => c.Type == ClaimTypes.Surname);
+            if (surnameClaim != null && !surnameClaim.Value.IsNullOrEmpty())
             {
-                userInfo.LastName = lastNameClaim.Value;
+                userInfo.Surname = surnameClaim.Value;
             }
 
-            if (userInfo.FirstName == null || userInfo.LastName == null)
+            if (userInfo.Name == null || userInfo.Surname == null)
             {
                 var nameClaim = claims.FirstOrDefault(c => c.Type == ClaimTypes.Name);
                 if (nameClaim != null)
                 {
-                    var fullName = nameClaim.Value;
-                    if (!fullName.IsNullOrEmpty())
+                    var nameSurName = nameClaim.Value;
+                    if (!nameSurName.IsNullOrEmpty())
                     {
-                        var lastSpaceIndex = fullName.LastIndexOf(' ');
-                        if (lastSpaceIndex < 1 || lastSpaceIndex > (fullName.Length - 2))
+                        var lastSpaceIndex = nameSurName.LastIndexOf(' ');
+                        if (lastSpaceIndex < 1 || lastSpaceIndex > (nameSurName.Length - 2))
                         {
-                            userInfo.FirstName = userInfo.LastName = fullName;
+                            userInfo.Name = userInfo.Surname = nameSurName;
                         }
                         else
                         {
-                            userInfo.FirstName = fullName.Substring(0, lastSpaceIndex);
-                            userInfo.LastName = fullName.Substring(lastSpaceIndex);
+                            userInfo.Name = nameSurName.Substring(0, lastSpaceIndex);
+                            userInfo.Surname = nameSurName.Substring(lastSpaceIndex);
                         }
                     }
                 }

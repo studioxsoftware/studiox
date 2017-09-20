@@ -15,11 +15,11 @@ namespace StudioX.WebApi.Controllers.Dynamic.Scripting
     [DisableStudioXAntiForgeryTokenValidation]
     public class StudioXServiceProxiesController : StudioXApiController
     {
-        private readonly ScriptProxyManager scriptProxyManager;
+        private readonly ScriptProxyManager _scriptProxyManager;
 
         public StudioXServiceProxiesController(ScriptProxyManager scriptProxyManager)
         {
-            this.scriptProxyManager = scriptProxyManager;
+            _scriptProxyManager = scriptProxyManager;
         }
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace StudioX.WebApi.Controllers.Dynamic.Scripting
         /// <param name="type">Script type</param>
         public HttpResponseMessage Get(string name, ProxyScriptType type = ProxyScriptType.JQuery)
         {
-            var script = scriptProxyManager.GetScript(name, type);
+            var script = _scriptProxyManager.GetScript(name, type);
             var response = Request.CreateResponse(System.Net.HttpStatusCode.OK, script, new PlainTextFormatter());
             response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/x-javascript");
             return response;
@@ -41,7 +41,7 @@ namespace StudioX.WebApi.Controllers.Dynamic.Scripting
         /// <param name="type">Script type</param>
         public HttpResponseMessage GetAll(ProxyScriptType type = ProxyScriptType.JQuery)
         {
-            var script = scriptProxyManager.GetAllScript(type);
+            var script = _scriptProxyManager.GetAllScript(type);
             var response = Request.CreateResponse(System.Net.HttpStatusCode.OK, script, new PlainTextFormatter());
             response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/x-javascript");
             return response;

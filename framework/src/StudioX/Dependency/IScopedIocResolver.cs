@@ -8,7 +8,5 @@ namespace StudioX.Dependency
     ///     manner released by IocResolver.
     ///     In <see cref="IDisposable.Dispose" /> method, <see cref="IIocResolver.Release" /> is called to dispose the object.
     /// </summary>
-    public interface IScopedIocResolver : IIocResolver, IDisposable
-    {
-    }
+    public interface IScopedIocResolver : IIocResolver, IDisposable { }
 }

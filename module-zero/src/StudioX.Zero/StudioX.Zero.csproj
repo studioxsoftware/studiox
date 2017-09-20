@@ -3,7 +3,7 @@
   <Import Project="..\..\common.props" />
 
   <PropertyGroup>
-    <TargetFramework>net46</TargetFramework>
+    <TargetFramework>net461</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>StudioX.Zero</AssemblyName>
     <PackageId>StudioX.Zero</PackageId>
@@ -15,26 +15,15 @@
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
     <RootNamespace>StudioX</RootNamespace>
-    <Version>1.1.3</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Zero\Localization\SourceExt\StudioXZero-de.xml" />
-    <EmbeddedResource Include="Zero\Localization\SourceExt\StudioXZero-fa.xml" />
-    <EmbeddedResource Include="Zero\Localization\SourceExt\StudioXZero-fr.xml" />
-    <EmbeddedResource Include="Zero\Localization\SourceExt\StudioXZero-it.xml" />
-    <EmbeddedResource Include="Zero\Localization\SourceExt\StudioXZero-lt.xml" />
-    <EmbeddedResource Include="Zero\Localization\SourceExt\StudioXZero-lv.xml" />
-    <EmbeddedResource Include="Zero\Localization\SourceExt\StudioXZero-pt-BR.xml" />
-    <EmbeddedResource Include="Zero\Localization\SourceExt\StudioXZero-ru.xml" />
-    <EmbeddedResource Include="Zero\Localization\SourceExt\StudioXZero-tr.xml" />
-    <EmbeddedResource Include="Zero\Localization\SourceExt\StudioXZero-zh-CN.xml" />
-    <EmbeddedResource Include="Zero\Localization\SourceExt\StudioXZero.xml" />
+    <EmbeddedResource Include="Zero\Localization\SourceExt\*.xml" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="bin\Release\net46\StudioX.Zero.pdb">
-      <PackagePath>lib/net46/</PackagePath>
+    <None Include="bin\Release\net461\StudioX.Zero.pdb">
+      <PackagePath>lib/net461/</PackagePath>
       <Pack>true</Pack>
     </None>
   </ItemGroup>
@@ -43,16 +32,13 @@
     <PackageReference Include="Microsoft.AspNet.Identity.Core" Version="2.2.1" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">
-    <Reference Include="System" />
-    <Reference Include="Microsoft.CSharp" />
-  </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\StudioX.Zero.Common\StudioX.Zero.Common.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Transactions" />
   </ItemGroup>

@@ -17,7 +17,7 @@ namespace StudioX.Authorization
         where TRole : StudioXRole<TUser>, new()
         where TUser : StudioXUser<TUser>
     {
-        private readonly StudioXUserManager<TRole, TUser> userManager;
+        private readonly StudioXUserManager<TRole, TUser> _userManager;
 
         public IIocManager IocManager { get; set; }
 
@@ -32,7 +32,7 @@ namespace StudioX.Authorization
         /// </summary>
         public PermissionChecker(StudioXUserManager<TRole, TUser> userManager)
         {
-            this.userManager = userManager;
+            _userManager = userManager;
 
             Logger = NullLogger.Instance;
             StudioXSession = NullStudioXSession.Instance;
@@ -45,7 +45,7 @@ namespace StudioX.Authorization
 
         public virtual async Task<bool> IsGrantedAsync(long userId, string permissionName)
         {
-            return await userManager.IsGrantedAsync(userId, permissionName);
+            return await _userManager.IsGrantedAsync(userId, permissionName);
         }
 
         [UnitOfWork]

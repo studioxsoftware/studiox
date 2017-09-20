@@ -9,17 +9,17 @@ namespace StudioX.MemoryDb.Repositories
     public class MemoryRepository<TEntity, TPrimaryKey> : StudioXRepositoryBase<TEntity, TPrimaryKey>
         where TEntity : class, IEntity<TPrimaryKey>
     {
-        public virtual MemoryDatabase Database => databaseProvider.Database;
+        public virtual MemoryDatabase Database { get { return _databaseProvider.Database; } }
 
-        public virtual List<TEntity> Table => Database.Set<TEntity>();
+        public virtual List<TEntity> Table { get { return Database.Set<TEntity>(); } }
 
-        private readonly IMemoryDatabaseProvider databaseProvider;
-        private readonly MemoryPrimaryKeyGenerator<TPrimaryKey> primaryKeyGenerator;
+        private readonly IMemoryDatabaseProvider _databaseProvider;
+        private readonly MemoryPrimaryKeyGenerator<TPrimaryKey> _primaryKeyGenerator;
 
         public MemoryRepository(IMemoryDatabaseProvider databaseProvider)
         {
-            this.databaseProvider = databaseProvider;
-            primaryKeyGenerator = new MemoryPrimaryKeyGenerator<TPrimaryKey>();
+            _databaseProvider = databaseProvider;
+            _primaryKeyGenerator = new MemoryPrimaryKeyGenerator<TPrimaryKey>();
         }
 
         public override IQueryable<TEntity> GetAll()
@@ -31,7 +31,7 @@ namespace StudioX.MemoryDb.Repositories
         {
             if (entity.IsTransient())
             {
-                entity.Id = primaryKeyGenerator.GetNext();
+                entity.Id = _primaryKeyGenerator.GetNext();
             }
 
             Table.Add(entity);

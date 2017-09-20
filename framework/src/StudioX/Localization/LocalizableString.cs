@@ -4,26 +4,27 @@ using System.Globalization;
 namespace StudioX.Localization
 {
     /// <summary>
-    ///     Represents a string that can be localized.
+    /// Represents a string that can be localized.
     /// </summary>
     [Serializable]
     public class LocalizableString : ILocalizableString
     {
         /// <summary>
-        ///     Unique name of the localization source.
+        /// Unique name of the localization source.
         /// </summary>
-        public virtual string SourceName { get; }
+        public virtual string SourceName { get; private set; }
 
         /// <summary>
-        ///     Unique Name of the string to be localized.
+        /// Unique Name of the string to be localized.
         /// </summary>
-        public virtual string Name { get; }
+        public virtual string Name { get; private set; }
 
         /// <summary>
-        ///     Needed for serialization.
+        /// Needed for serialization.
         /// </summary>
         private LocalizableString()
         {
+            
         }
 
         /// <param name="name">Unique Name of the string to be localized</param>

@@ -1,8 +1,8 @@
 using System;
-using Microsoft.EntityFrameworkCore;
+using StudioX.Reflection;
 using StudioX.Domain.Entities;
 using StudioX.Domain.Repositories;
-using StudioX.Reflection;
+using Microsoft.EntityFrameworkCore;
 
 namespace StudioX.EntityFrameworkCore.Repositories
 {
@@ -17,12 +17,10 @@ namespace StudioX.EntityFrameworkCore.Repositories
                 return repositoryWithDbContext.GetDbContext();
             }
 
-            throw new ArgumentException("Given repository does not implement IRepositoryWithDbContext",
-                nameof(repository));
+            throw new ArgumentException("Given repository does not implement IRepositoryWithDbContext", nameof(repository));
         }
 
-        public static void DetachFromDbContext<TEntity, TPrimaryKey>(this IRepository<TEntity, TPrimaryKey> repository,
-            TEntity entity)
+        public static void DetachFromDbContext<TEntity, TPrimaryKey>(this IRepository<TEntity, TPrimaryKey> repository, TEntity entity)
             where TEntity : class, IEntity<TPrimaryKey>
         {
             repository.GetDbContext().Entry(entity).State = EntityState.Detached;

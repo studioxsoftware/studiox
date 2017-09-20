@@ -1,5 +1,5 @@
-using Microsoft.EntityFrameworkCore;
 using StudioX.MultiTenancy;
+using Microsoft.EntityFrameworkCore;
 
 namespace StudioX.EntityFrameworkCore
 {

@@ -1,23 +1,22 @@
 ﻿using System;
 using System.Linq;
-using Castle.Core.Logging;
 using StudioX.Collections.Extensions;
 using StudioX.Dependency;
 using StudioX.Runtime.Validation;
+using Castle.Core.Logging;
 
 namespace StudioX.Logging
 {
     /// <summary>
-    ///     This class can be used to write logs from somewhere where it's a hard to get a reference to the
-    ///     <see cref="ILogger" />.
-    ///     Normally, use <see cref="ILogger" /> with property injection wherever it's possible.
+    /// This class can be used to write logs from somewhere where it's a hard to get a reference to the <see cref="ILogger"/>.
+    /// Normally, use <see cref="ILogger"/> with property injection wherever it's possible.
     /// </summary>
     public static class LogHelper
     {
         /// <summary>
-        ///     A reference to the logger.
+        /// A reference to the logger.
         /// </summary>
-        public static ILogger Logger { get; }
+        public static ILogger Logger { get; private set; }
 
         static LogHelper()
         {
@@ -63,8 +62,7 @@ namespace StudioX.Logging
                 return;
             }
 
-            logger.Log(validationException.Severity,
-                "There are " + validationException.ValidationErrors.Count + " validation errors:");
+            logger.Log(validationException.Severity, "There are " + validationException.ValidationErrors.Count + " validation errors:");
             foreach (var validationResult in validationException.ValidationErrors)
             {
                 var memberNames = "";

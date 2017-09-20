@@ -14,14 +14,8 @@ namespace StudioX.WebApi.Controllers.Dynamic.Binders
         public bool BindModel(HttpActionContext actionContext, ModelBindingContext bindingContext)
         {
             var value = bindingContext.ValueProvider.GetValue(bindingContext.ModelName);
-            DateTime? date = null;
-            try
-            {
-                date = value?.ConvertTo(typeof(DateTime?), CultureInfo.CurrentCulture) as DateTime?;
-            }
-            catch { }
-
-            if (date.HasValue)
+            var date = value?.ConvertTo(typeof(DateTime?), CultureInfo.CurrentCulture) as DateTime?;
+            if (date != null)
             {
                 bindingContext.Model = Clock.Normalize(date.Value);
             }

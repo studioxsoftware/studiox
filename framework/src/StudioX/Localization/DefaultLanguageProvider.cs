@@ -7,16 +7,16 @@ namespace StudioX.Localization
 {
     public class DefaultLanguageProvider : ILanguageProvider, ITransientDependency
     {
-        private readonly ILocalizationConfiguration configuration;
+        private readonly ILocalizationConfiguration _configuration;
 
         public DefaultLanguageProvider(ILocalizationConfiguration configuration)
         {
-            this.configuration = configuration;
+            _configuration = configuration;
         }
 
         public IReadOnlyList<LanguageInfo> GetLanguages()
         {
-            return configuration.Languages.ToImmutableList();
+            return _configuration.Languages.ToImmutableList();
         }
     }
 }

@@ -7,16 +7,16 @@ namespace StudioX.IdentityFramework
 {
     public class IdentityEmailMessageService : IIdentityMessageService, ITransientDependency
     {
-        private readonly IEmailSender emailSender;
+        private readonly IEmailSender _emailSender;
 
         public IdentityEmailMessageService(IEmailSender emailSender)
         {
-            this.emailSender = emailSender;
+            _emailSender = emailSender;
         }
 
         public virtual Task SendAsync(IdentityMessage message)
         {
-            return emailSender.SendAsync(message.Destination, message.Subject, message.Body);
+            return _emailSender.SendAsync(message.Destination, message.Subject, message.Body);
         }
     }
 }

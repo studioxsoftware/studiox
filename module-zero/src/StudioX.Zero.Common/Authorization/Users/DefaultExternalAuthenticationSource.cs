@@ -26,8 +26,8 @@ namespace StudioX.Authorization.Users
                 new TUser
                 {
                     UserName = userNameOrEmailAddress,
-                    FirstName = userNameOrEmailAddress,
-                    LastName = userNameOrEmailAddress,
+                    Name = userNameOrEmailAddress,
+                    Surname = userNameOrEmailAddress,
                     EmailAddress = userNameOrEmailAddress,
                     IsEmailConfirmed = true,
                     IsActive = true

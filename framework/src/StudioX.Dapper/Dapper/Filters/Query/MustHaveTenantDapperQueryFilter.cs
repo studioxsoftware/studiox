@@ -14,18 +14,18 @@ namespace StudioX.Dapper.Filters.Query
 {
     public class MustHaveTenantDapperQueryFilter : IDapperQueryFilter
     {
-        private readonly ICurrentUnitOfWorkProvider currentUnitOfWorkProvider;
+        private readonly ICurrentUnitOfWorkProvider _currentUnitOfWorkProvider;
 
         public MustHaveTenantDapperQueryFilter(ICurrentUnitOfWorkProvider currentUnitOfWorkProvider)
         {
-            this.currentUnitOfWorkProvider = currentUnitOfWorkProvider;
+            _currentUnitOfWorkProvider = currentUnitOfWorkProvider;
         }
 
         private int TenantId
         {
             get
             {
-                DataFilterConfiguration filter = currentUnitOfWorkProvider.Current.Filters.FirstOrDefault(x => x.FilterName == FilterName);
+                DataFilterConfiguration filter = _currentUnitOfWorkProvider.Current.Filters.FirstOrDefault(x => x.FilterName == FilterName);
                 if (filter.FilterParameters.ContainsKey(StudioXDataFilters.Parameters.TenantId))
                 {
                     return (int)filter.FilterParameters[StudioXDataFilters.Parameters.TenantId];
@@ -37,7 +37,7 @@ namespace StudioX.Dapper.Filters.Query
 
         public string FilterName { get; } = StudioXDataFilters.MustHaveTenant;
 
-        public bool IsEnabled => currentUnitOfWorkProvider.Current.IsFilterEnabled(FilterName);
+        public bool IsEnabled => _currentUnitOfWorkProvider.Current.IsFilterEnabled(FilterName);
 
         public IFieldPredicate ExecuteFilter<TEntity, TPrimaryKey>() where TEntity : class, IEntity<TPrimaryKey>
         {

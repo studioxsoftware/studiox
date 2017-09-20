@@ -24,21 +24,24 @@ namespace StudioX.Zero.Ldap.Authentication
         /// </summary>
         public const string SourceName = "LDAP";
 
-        public override string Name => SourceName;
+        public override string Name
+        {
+            get { return SourceName; }
+        }
 
-        private readonly ILdapSettings settings;
-        private readonly IStudioXZeroLdapModuleConfig ldapModuleConfig;
+        private readonly ILdapSettings _settings;
+        private readonly IStudioXZeroLdapModuleConfig _ldapModuleConfig;
 
         protected LdapAuthenticationSource(ILdapSettings settings, IStudioXZeroLdapModuleConfig ldapModuleConfig)
         {
-            this.settings = settings;
-            this.ldapModuleConfig = ldapModuleConfig;
+            _settings = settings;
+            _ldapModuleConfig = ldapModuleConfig;
         }
 
         /// <inheritdoc/>
         public override async Task<bool> TryAuthenticateAsync(string userNameOrEmailAddress, string plainPassword, TTenant tenant)
         {
-            if (!ldapModuleConfig.IsEnabled || !(await settings.GetIsEnabled(GetIdOrNull(tenant))))
+            if (!_ldapModuleConfig.IsEnabled || !(await _settings.GetIsEnabled(GetIdOrNull(tenant))))
             {
                 return false;
             }
@@ -101,8 +104,8 @@ namespace StudioX.Zero.Ldap.Authentication
         protected virtual void UpdateUserFromPrincipal(TUser user, UserPrincipal userPrincipal)
         {
             user.UserName = userPrincipal.SamAccountName;
-            user.FirstName = userPrincipal.GivenName;
-            user.LastName = userPrincipal.Surname;
+            user.Name = userPrincipal.GivenName;
+            user.Surname = userPrincipal.Surname;
             user.EmailAddress = userPrincipal.EmailAddress;
 
             if (userPrincipal.Enabled.HasValue)
@@ -116,23 +119,23 @@ namespace StudioX.Zero.Ldap.Authentication
             var tenantId = GetIdOrNull(tenant);
             
             return new PrincipalContext(
-                await settings.GetContextType(tenantId),
-                ConvertToNullIfEmpty(await settings.GetDomain(tenantId)),
-                ConvertToNullIfEmpty(await settings.GetContainer(tenantId)),
-                ConvertToNullIfEmpty(await settings.GetUserName(tenantId)),
-                ConvertToNullIfEmpty(await settings.GetPassword(tenantId))
+                await _settings.GetContextType(tenantId),
+                ConvertToNullIfEmpty(await _settings.GetDomain(tenantId)),
+                ConvertToNullIfEmpty(await _settings.GetContainer(tenantId)),
+                ConvertToNullIfEmpty(await _settings.GetUserName(tenantId)),
+                ConvertToNullIfEmpty(await _settings.GetPassword(tenantId))
                 );
         }
 
         private async Task CheckIsEnabled(TTenant tenant)
         {
-            if (!ldapModuleConfig.IsEnabled)
+            if (!_ldapModuleConfig.IsEnabled)
             {
                 throw new StudioXException("Ldap Authentication module is disabled globally!");                
             }
 
             var tenantId = GetIdOrNull(tenant);
-            if (!await settings.GetIsEnabled(tenantId))
+            if (!await _settings.GetIsEnabled(tenantId))
             {
                 throw new StudioXException("Ldap Authentication is disabled for given tenant (id:" + tenantId + ")! You can enable it by setting '" + LdapSettingNames.IsEnabled + "' to true");
             }

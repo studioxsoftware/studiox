@@ -11,33 +11,33 @@ using StudioX.Runtime.Session;
 namespace StudioX.Authorization
 {
     /// <summary>
-    ///     Permission manager.
+    /// Permission manager.
     /// </summary>
     internal class PermissionManager : PermissionDefinitionContextBase, IPermissionManager, ISingletonDependency
     {
         public IStudioXSession StudioXSession { get; set; }
 
-        private readonly IIocManager iocManager;
-        private readonly IAuthorizationConfiguration authorizationConfiguration;
+        private readonly IIocManager _iocManager;
+        private readonly IAuthorizationConfiguration _authorizationConfiguration;
 
         /// <summary>
-        ///     Constructor.
+        /// Constructor.
         /// </summary>
         public PermissionManager(
             IIocManager iocManager,
             IAuthorizationConfiguration authorizationConfiguration)
         {
-            this.iocManager = iocManager;
-            this.authorizationConfiguration = authorizationConfiguration;
+            _iocManager = iocManager;
+            _authorizationConfiguration = authorizationConfiguration;
 
             StudioXSession = NullStudioXSession.Instance;
         }
 
         public void Initialize()
         {
-            foreach (var providerType in authorizationConfiguration.Providers)
+            foreach (var providerType in _authorizationConfiguration.Providers)
             {
-                using (var provider = iocManager.ResolveAsDisposable<AuthorizationProvider>(providerType))
+                using (var provider = _iocManager.ResolveAsDisposable<AuthorizationProvider>(providerType))
                 {
                     provider.Object.SetPermissions(this);
                 }
@@ -59,7 +59,7 @@ namespace StudioX.Authorization
 
         public IReadOnlyList<Permission> GetAllPermissions(bool tenancyFilter = true)
         {
-            using (var featureDependencyContext = iocManager.ResolveAsDisposable<FeatureDependencyContext>())
+            using (var featureDependencyContext = _iocManager.ResolveAsDisposable<FeatureDependencyContext>())
             {
                 var featureDependencyContextObject = featureDependencyContext.Object;
                 return Permissions.Values
@@ -74,7 +74,7 @@ namespace StudioX.Authorization
 
         public IReadOnlyList<Permission> GetAllPermissions(MultiTenancySides multiTenancySides)
         {
-            using (var featureDependencyContext = iocManager.ResolveAsDisposable<FeatureDependencyContext>())
+            using (var featureDependencyContext = _iocManager.ResolveAsDisposable<FeatureDependencyContext>())
             {
                 var featureDependencyContextObject = featureDependencyContext.Object;
                 return Permissions.Values
@@ -82,8 +82,8 @@ namespace StudioX.Authorization
                     .Where(p =>
                         p.FeatureDependency == null ||
                         StudioXSession.MultiTenancySide == MultiTenancySides.Host ||
-                        p.MultiTenancySides.HasFlag(MultiTenancySides.Host) &&
-                        multiTenancySides.HasFlag(MultiTenancySides.Host) ||
+                        (p.MultiTenancySides.HasFlag(MultiTenancySides.Host) &&
+                         multiTenancySides.HasFlag(MultiTenancySides.Host)) ||
                         p.FeatureDependency.IsSatisfied(featureDependencyContextObject)
                     ).ToImmutableList();
             }

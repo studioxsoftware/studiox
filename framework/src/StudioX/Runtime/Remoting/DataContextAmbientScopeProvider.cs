@@ -12,13 +12,13 @@ namespace StudioX.Runtime.Remoting
 
         private static readonly ConcurrentDictionary<string, ScopeItem> ScopeDictionary = new ConcurrentDictionary<string, ScopeItem>();
 
-        private readonly IAmbientDataContext dataContext;
+        private readonly IAmbientDataContext _dataContext;
 
         public DataContextAmbientScopeProvider([NotNull] IAmbientDataContext dataContext)
         {
             Check.NotNull(dataContext, nameof(dataContext));
 
-            this.dataContext = dataContext;
+            _dataContext = dataContext;
 
             Logger = NullLogger.Instance;
         }
@@ -43,7 +43,7 @@ namespace StudioX.Runtime.Remoting
                 throw new StudioXException("Can not add item! ScopeDictionary.TryAdd returns false!");
             }
 
-            dataContext.SetData(contextKey, item.Id);
+            _dataContext.SetData(contextKey, item.Id);
 
             return new DisposeAction(() =>
             {
@@ -51,17 +51,17 @@ namespace StudioX.Runtime.Remoting
 
                 if (item.Outer == null)
                 {
-                    dataContext.SetData(contextKey, null);
+                    _dataContext.SetData(contextKey, null);
                     return;
                 }
 
-                dataContext.SetData(contextKey, item.Outer.Id);
+                _dataContext.SetData(contextKey, item.Outer.Id);
             });
         }
 
         private ScopeItem GetCurrentItem(string contextKey)
         {
-            var objKey = dataContext.GetData(contextKey) as string;
+            var objKey = _dataContext.GetData(contextKey) as string;
             return objKey != null ? ScopeDictionary.GetOrDefault(objKey) : null;
         }
 

@@ -84,15 +84,15 @@ namespace StudioX.WebApi.Controllers
                     throw new StudioXException("Must set LocalizationSourceName before, in order to get LocalizationSource");
                 }
 
-                if (localizationSource == null || localizationSource.Name != LocalizationSourceName)
+                if (_localizationSource == null || _localizationSource.Name != LocalizationSourceName)
                 {
-                    localizationSource = LocalizationManager.GetSource(LocalizationSourceName);
+                    _localizationSource = LocalizationManager.GetSource(LocalizationSourceName);
                 }
 
-                return localizationSource;
+                return _localizationSource;
             }
         }
-        private ILocalizationSource localizationSource;
+        private ILocalizationSource _localizationSource;
 
         /// <summary>
         /// Reference to the logger to write logs.
@@ -106,21 +106,21 @@ namespace StudioX.WebApi.Controllers
         {
             get
             {
-                if (unitOfWorkManager == null)
+                if (_unitOfWorkManager == null)
                 {
                     throw new StudioXException("Must set UnitOfWorkManager before use it.");
                 }
 
-                return unitOfWorkManager;
+                return _unitOfWorkManager;
             }
-            set => unitOfWorkManager = value;
+            set { _unitOfWorkManager = value; }
         }
-        private IUnitOfWorkManager unitOfWorkManager;
+        private IUnitOfWorkManager _unitOfWorkManager;
 
         /// <summary>
         /// Gets current unit of work.
         /// </summary>
-        protected IActiveUnitOfWork CurrentUnitOfWork => UnitOfWorkManager.Current;
+        protected IActiveUnitOfWork CurrentUnitOfWork { get { return UnitOfWorkManager.Current; } }
 
         /// <summary>
         /// Constructor.

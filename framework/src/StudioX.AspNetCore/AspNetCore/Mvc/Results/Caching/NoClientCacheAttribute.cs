@@ -1,5 +1,5 @@
+﻿using StudioX.AspNetCore.Mvc.Extensions;
 using Microsoft.AspNetCore.Mvc.Filters;
-using StudioX.AspNetCore.Mvc.Extensions;
 
 namespace StudioX.AspNetCore.Mvc.Results.Caching
 {
@@ -13,7 +13,7 @@ namespace StudioX.AspNetCore.Mvc.Results.Caching
         public NoClientCacheAttribute()
             : this(false)
         {
-
+            
         }
 
         public NoClientCacheAttribute(bool includeNonAjaxRequests)
@@ -23,7 +23,7 @@ namespace StudioX.AspNetCore.Mvc.Results.Caching
 
         public virtual void Apply(ResultExecutingContext context)
         {
-            if (context.HttpContext.Request.IsAjaxRequest())
+            if (IncludeNonAjaxRequests || context.HttpContext.Request.IsAjaxRequest())
             {
                 context.HttpContext.Response.Headers["Cache-Control"] = "no-cache, no-store, must-revalidate, max-age=0";
                 context.HttpContext.Response.Headers["Pragma"] = "no-cache";

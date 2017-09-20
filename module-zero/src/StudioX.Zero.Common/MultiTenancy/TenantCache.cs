@@ -12,18 +12,18 @@ namespace StudioX.MultiTenancy
         where TTenant : StudioXTenant<TUser>
         where TUser : StudioXUserBase
     {
-        private readonly ICacheManager cacheManager;
-        private readonly IRepository<TTenant> tenantRepository;
-        private readonly IUnitOfWorkManager unitOfWorkManager;
+        private readonly ICacheManager _cacheManager;
+        private readonly IRepository<TTenant> _tenantRepository;
+        private readonly IUnitOfWorkManager _unitOfWorkManager;
 
         public TenantCache(
             ICacheManager cacheManager,
             IRepository<TTenant> tenantRepository,
             IUnitOfWorkManager unitOfWorkManager)
         {
-            this.cacheManager = cacheManager;
-            this.tenantRepository = tenantRepository;
-            this.unitOfWorkManager = unitOfWorkManager;
+            _cacheManager = cacheManager;
+            _tenantRepository = tenantRepository;
+            _unitOfWorkManager = unitOfWorkManager;
         }
 
         public virtual TenantCacheItem Get(int tenantId)
@@ -52,7 +52,7 @@ namespace StudioX.MultiTenancy
 
         public virtual TenantCacheItem GetOrNull(string tenancyName)
         {
-            var tenantId = cacheManager
+            var tenantId = _cacheManager
                 .GetTenantByNameCache()
                 .Get(
                     tenancyName.ToLowerInvariant(),
@@ -69,14 +69,19 @@ namespace StudioX.MultiTenancy
 
         public TenantCacheItem GetOrNull(int tenantId)
         {
-            return cacheManager
+            return _cacheManager
                 .GetTenantCache()
                 .Get(
                     tenantId,
                     () =>
                     {
                         var tenant = GetTenantOrNull(tenantId);
-                        return tenant == null ? null : CreateTenantCacheItem(tenant);
+                        if (tenant == null)
+                        {
+                            return null;
+                        }
+
+                        return CreateTenantCacheItem(tenant);
                     }
                 );
         }
@@ -97,26 +102,26 @@ namespace StudioX.MultiTenancy
         [UnitOfWork]
         protected virtual TTenant GetTenantOrNull(int tenantId)
         {
-            using (unitOfWorkManager.Current.SetTenantId(null))
+            using (_unitOfWorkManager.Current.SetTenantId(null))
             {
-                return tenantRepository.FirstOrDefault(tenantId);
+                return _tenantRepository.FirstOrDefault(tenantId);
             }
         }
 
         [UnitOfWork]
         protected virtual TTenant GetTenantOrNull(string tenancyName)
         {
-            using (unitOfWorkManager.Current.SetTenantId(null))
+            using (_unitOfWorkManager.Current.SetTenantId(null))
             {
-                return tenantRepository.FirstOrDefault(t => t.TenancyName == tenancyName);
+                return _tenantRepository.FirstOrDefault(t => t.TenancyName == tenancyName);
             }
         }
 
         public void HandleEvent(EntityChangedEventData<TTenant> eventData)
         {
-            var existingCacheItem = cacheManager.GetTenantCache().GetOrDefault(eventData.Entity.Id);
+            var existingCacheItem = _cacheManager.GetTenantCache().GetOrDefault(eventData.Entity.Id);
 
-            cacheManager
+            _cacheManager
                 .GetTenantByNameCache()
                 .Remove(
                     existingCacheItem != null
@@ -124,7 +129,7 @@ namespace StudioX.MultiTenancy
                         : eventData.Entity.TenancyName.ToLowerInvariant()
                 );
 
-            cacheManager
+            _cacheManager
                 .GetTenantCache()
                 .Remove(eventData.Entity.Id);
         }

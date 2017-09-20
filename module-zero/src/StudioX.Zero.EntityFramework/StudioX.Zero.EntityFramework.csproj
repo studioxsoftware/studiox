@@ -3,7 +3,7 @@
   <Import Project="..\..\common.props" />
 
   <PropertyGroup>
-    <TargetFramework>net46</TargetFramework>
+    <TargetFramework>net461</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>StudioX.Zero.EntityFramework</AssemblyName>
     <PackageId>StudioX.Zero.EntityFramework</PackageId>
@@ -15,22 +15,21 @@
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
     <RootNamespace>StudioX</RootNamespace>
-    <Version>1.1.3</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Update="bin\Release\net46\StudioX.Zero.EntityFramework.pdb">
-      <PackagePath>lib/net46/</PackagePath>
+    <None Include="bin\Release\net461\StudioX.Zero.EntityFramework.pdb">
+      <PackagePath>lib/net461/</PackagePath>
       <Pack>true</Pack>
     </None>
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\framework\src\StudioX.EntityFramework\StudioX.EntityFramework.csproj" />
+    <ProjectReference Include="..\StudioX.EntityFramework\StudioX.EntityFramework.csproj" />
     <ProjectReference Include="..\StudioX.Zero\StudioX.Zero.csproj" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">
+  <ItemGroup>
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Configuration" />

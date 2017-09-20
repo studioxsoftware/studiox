@@ -18,28 +18,24 @@ namespace StudioX.Domain.Uow
         /// <inheritdoc/>
         public TimeSpan? Timeout { get; set; }
 
-#if NET46
         /// <inheritdoc/>
         public bool IsTransactionScopeAvailable { get; set; }
-#endif
 
         /// <inheritdoc/>
         public IsolationLevel? IsolationLevel { get; set; }
 
-        public IReadOnlyList<DataFilterConfiguration> Filters => filters;
-        private readonly List<DataFilterConfiguration> filters;
+        public IReadOnlyList<DataFilterConfiguration> Filters => _filters;
+        private readonly List<DataFilterConfiguration> _filters;
 
         public List<Func<Type, bool>> ConventionalUowSelectors { get; }
 
         public UnitOfWorkDefaultOptions()
         {
-            filters = new List<DataFilterConfiguration>();
+            _filters = new List<DataFilterConfiguration>();
             IsTransactional = true;
             Scope = TransactionScopeOption.Required;
 
-#if NET46
             IsTransactionScopeAvailable = true;
-#endif
 
             ConventionalUowSelectors = new List<Func<Type, bool>>
             {
@@ -50,18 +46,18 @@ namespace StudioX.Domain.Uow
 
         public void RegisterFilter(string filterName, bool isEnabledByDefault)
         {
-            if (filters.Any(f => f.FilterName == filterName))
+            if (_filters.Any(f => f.FilterName == filterName))
             {
                 throw new StudioXException("There is already a filter with name: " + filterName);
             }
 
-            filters.Add(new DataFilterConfiguration(filterName, isEnabledByDefault));
+            _filters.Add(new DataFilterConfiguration(filterName, isEnabledByDefault));
         }
 
         public void OverrideFilter(string filterName, bool isEnabledByDefault)
         {
-            filters.RemoveAll(f => f.FilterName == filterName);
-            filters.Add(new DataFilterConfiguration(filterName, isEnabledByDefault));
+            _filters.RemoveAll(f => f.FilterName == filterName);
+            _filters.Add(new DataFilterConfiguration(filterName, isEnabledByDefault));
         }
     }
 }

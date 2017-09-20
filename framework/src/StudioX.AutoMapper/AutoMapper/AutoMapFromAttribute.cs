@@ -1,6 +1,6 @@
 ﻿using System;
-using AutoMapper;
 using StudioX.Collections.Extensions;
+using AutoMapper;
 
 namespace StudioX.AutoMapper
 {
@@ -11,6 +11,7 @@ namespace StudioX.AutoMapper
         public AutoMapFromAttribute(params Type[] targetTypes)
             : base(targetTypes)
         {
+
         }
 
         public AutoMapFromAttribute(MemberList memberList, params Type[] targetTypes)

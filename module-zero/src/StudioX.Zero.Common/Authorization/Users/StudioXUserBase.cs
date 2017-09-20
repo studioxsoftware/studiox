@@ -26,19 +26,14 @@ namespace StudioX.Authorization.Users
         public const int MaxEmailAddressLength = 256;
 
         /// <summary>
-        /// Maximum length of the <see cref="PhoneNumber"/> property.
+        /// Maximum length of the <see cref="Name"/> property.
         /// </summary>
-        public const int MaxPhoneNumberLength = 32;
+        public const int MaxNameLength = 32;
 
         /// <summary>
-        /// Maximum length of the <see cref="FirstName"/> property.
+        /// Maximum length of the <see cref="Surname"/> property.
         /// </summary>
-        public const int MaxFirstNameLength = 32;
-
-        /// <summary>
-        /// Maximum length of the <see cref="LastName"/> property.
-        /// </summary>
-        public const int MaxLastNameLength = 32;
+        public const int MaxSurnameLength = 32;
 
         /// <summary>
         /// Maximum length of the <see cref="AuthenticationSource"/> property.
@@ -62,11 +57,6 @@ namespace StudioX.Authorization.Users
         public const int MaxPlainPasswordLength = 32;
 
         /// <summary>
-        /// Maximum length of the <see cref="PhoneNumber"/> without hashed.
-        /// </summary>
-        public const int MaxPhoneNumberdLength = 32;
-
-        /// <summary>
         /// Maximum length of the <see cref="EmailConfirmationCode"/> property.
         /// </summary>
         public const int MaxEmailConfirmationCodeLength = 328;
@@ -75,12 +65,7 @@ namespace StudioX.Authorization.Users
         /// Maximum length of the <see cref="PasswordResetCode"/> property.
         /// </summary>
         public const int MaxPasswordResetCodeLength = 328;
-
-        /// <summary>
-        /// Maximum length of the <see cref="SecurityStamp"/> property.
-        /// </summary>
-        public const int MaxSecurityStampLength = 50;
-
+        
         /// <summary>
         /// Authorization source name.
         /// It's set to external authentication source name if created by an external source.
@@ -114,21 +99,21 @@ namespace StudioX.Authorization.Users
         /// Name of the user.
         /// </summary>
         [Required]
-        [StringLength(MaxFirstNameLength)]
-        public virtual string FirstName { get; set; }
+        [StringLength(MaxNameLength)]
+        public virtual string Name { get; set; }
 
         /// <summary>
-        /// LastName of the user.
+        /// Surname of the user.
         /// </summary>
         [Required]
-        [StringLength(MaxLastNameLength)]
-        public virtual string LastName { get; set; }
+        [StringLength(MaxSurnameLength)]
+        public virtual string Surname { get; set; }
 
         /// <summary>
-        /// Return full name (Name LastName )
+        /// Return full name (Name Surname )
         /// </summary>
         [NotMapped]
-        public virtual string FullName { get { return this.FirstName + " " + this.LastName; } }
+        public virtual string FullName { get { return this.Name + " " + this.Surname; } }
 
         /// <summary>
         /// Password of the user.
@@ -169,7 +154,6 @@ namespace StudioX.Authorization.Users
         /// <summary>
         /// Gets or sets the phone number.
         /// </summary>
-        [StringLength(MaxPhoneNumberLength)]
         public virtual string PhoneNumber { get; set; }
 
         /// <summary>
@@ -180,7 +164,6 @@ namespace StudioX.Authorization.Users
         /// <summary>
         /// Gets or sets the security stamp.
         /// </summary>
-        [StringLength(MaxSecurityStampLength)]
         public virtual string SecurityStamp { get; set; }
 
         /// <summary>

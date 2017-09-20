@@ -12,8 +12,8 @@ namespace StudioX.Configuration
     /// </summary>
     public class SettingStore : ISettingStore, ITransientDependency
     {
-        private readonly IRepository<Setting, long> settingRepository;
-        private readonly IUnitOfWorkManager unitOfWorkManager;
+        private readonly IRepository<Setting, long> _settingRepository;
+        private readonly IUnitOfWorkManager _unitOfWorkManager;
 
         /// <summary>
         /// Constructor.
@@ -22,8 +22,8 @@ namespace StudioX.Configuration
             IRepository<Setting, long> settingRepository,
             IUnitOfWorkManager unitOfWorkManager)
         {
-            this.settingRepository = settingRepository;
-            this.unitOfWorkManager = unitOfWorkManager;
+            _settingRepository = settingRepository;
+            _unitOfWorkManager = unitOfWorkManager;
         }
 
         [UnitOfWork]
@@ -33,12 +33,12 @@ namespace StudioX.Configuration
              * SetTenantId switches database (for tenant) if needed.
              * DisableFilter and Where condition ensures to work even if tenantId is null for single db approach.
              */
-            using (unitOfWorkManager.Current.SetTenantId(tenantId))
+            using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {
-                using (unitOfWorkManager.Current.DisableFilter(StudioXDataFilters.MayHaveTenant))
+                using (_unitOfWorkManager.Current.DisableFilter(StudioXDataFilters.MayHaveTenant))
                 {
                     return
-                        (await settingRepository.GetAllListAsync(s => s.UserId == userId && s.TenantId == tenantId))
+                        (await _settingRepository.GetAllListAsync(s => s.UserId == userId && s.TenantId == tenantId))
                         .Select(s => s.ToSettingInfo())
                         .ToList();
                 }
@@ -48,11 +48,11 @@ namespace StudioX.Configuration
         [UnitOfWork]
         public virtual async Task<SettingInfo> GetSettingOrNullAsync(int? tenantId, long? userId, string name)
         {
-            using (unitOfWorkManager.Current.SetTenantId(tenantId))
+            using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {
-                using (unitOfWorkManager.Current.DisableFilter(StudioXDataFilters.MayHaveTenant))
+                using (_unitOfWorkManager.Current.DisableFilter(StudioXDataFilters.MayHaveTenant))
                 {
-                    return (await settingRepository.FirstOrDefaultAsync(s => s.UserId == userId && s.Name == name && s.TenantId == tenantId))
+                    return (await _settingRepository.FirstOrDefaultAsync(s => s.UserId == userId && s.Name == name && s.TenantId == tenantId))
                     .ToSettingInfo();
                 }
             }
@@ -61,14 +61,14 @@ namespace StudioX.Configuration
         [UnitOfWork]
         public virtual async Task DeleteAsync(SettingInfo settingInfo)
         {
-            using (unitOfWorkManager.Current.SetTenantId(settingInfo.TenantId))
+            using (_unitOfWorkManager.Current.SetTenantId(settingInfo.TenantId))
             {
-                using (unitOfWorkManager.Current.DisableFilter(StudioXDataFilters.MayHaveTenant))
+                using (_unitOfWorkManager.Current.DisableFilter(StudioXDataFilters.MayHaveTenant))
                 {
-                    await settingRepository.DeleteAsync(
+                    await _settingRepository.DeleteAsync(
                     s => s.UserId == settingInfo.UserId && s.Name == settingInfo.Name && s.TenantId == settingInfo.TenantId
                     );
-                    await unitOfWorkManager.Current.SaveChangesAsync();
+                    await _unitOfWorkManager.Current.SaveChangesAsync();
                 }
             }
         }
@@ -76,12 +76,12 @@ namespace StudioX.Configuration
         [UnitOfWork]
         public virtual async Task CreateAsync(SettingInfo settingInfo)
         {
-            using (unitOfWorkManager.Current.SetTenantId(settingInfo.TenantId))
+            using (_unitOfWorkManager.Current.SetTenantId(settingInfo.TenantId))
             {
-                using (unitOfWorkManager.Current.DisableFilter(StudioXDataFilters.MayHaveTenant))
+                using (_unitOfWorkManager.Current.DisableFilter(StudioXDataFilters.MayHaveTenant))
                 {
-                    await settingRepository.InsertAsync(settingInfo.ToSetting());
-                    await unitOfWorkManager.Current.SaveChangesAsync();
+                    await _settingRepository.InsertAsync(settingInfo.ToSetting());
+                    await _unitOfWorkManager.Current.SaveChangesAsync();
                 }
             }
         }
@@ -89,11 +89,11 @@ namespace StudioX.Configuration
         [UnitOfWork]
         public virtual async Task UpdateAsync(SettingInfo settingInfo)
         {
-            using (unitOfWorkManager.Current.SetTenantId(settingInfo.TenantId))
+            using (_unitOfWorkManager.Current.SetTenantId(settingInfo.TenantId))
             {
-                using (unitOfWorkManager.Current.DisableFilter(StudioXDataFilters.MayHaveTenant))
+                using (_unitOfWorkManager.Current.DisableFilter(StudioXDataFilters.MayHaveTenant))
                 {
-                    var setting = await settingRepository.FirstOrDefaultAsync(
+                    var setting = await _settingRepository.FirstOrDefaultAsync(
                         s => s.TenantId == settingInfo.TenantId &&
                              s.UserId == settingInfo.UserId &&
                              s.Name == settingInfo.Name
@@ -104,7 +104,7 @@ namespace StudioX.Configuration
                         setting.Value = settingInfo.Value;
                     }
 
-                    await unitOfWorkManager.Current.SaveChangesAsync();
+                    await _unitOfWorkManager.Current.SaveChangesAsync();
                 }
             }
         }

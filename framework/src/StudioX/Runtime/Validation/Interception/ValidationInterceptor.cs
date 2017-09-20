@@ -1,4 +1,5 @@
-﻿using StudioX.Aspects;
+﻿using StudioX.Application.Services;
+using StudioX.Aspects;
 using StudioX.Dependency;
 using Castle.DynamicProxy;
 
@@ -9,11 +10,11 @@ namespace StudioX.Runtime.Validation.Interception
     /// </summary>
     public class ValidationInterceptor : IInterceptor
     {
-        private readonly IIocResolver iocResolver;
+        private readonly IIocResolver _iocResolver;
 
         public ValidationInterceptor(IIocResolver iocResolver)
         {
-            this.iocResolver = iocResolver;
+            _iocResolver = iocResolver;
         }
 
         public void Intercept(IInvocation invocation)
@@ -24,7 +25,7 @@ namespace StudioX.Runtime.Validation.Interception
                 return;
             }
 
-            using (var validator = iocResolver.ResolveAsDisposable<MethodInvocationValidator>())
+            using (var validator = _iocResolver.ResolveAsDisposable<MethodInvocationValidator>())
             {
                 validator.Object.Initialize(invocation.MethodInvocationTarget, invocation.Arguments);
                 validator.Object.Validate();

@@ -7,14 +7,15 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 
 [assembly: AssemblyTitle("StudioX.Zero")]
-[assembly: AssemblyDescription("StudioX - Module Zero")]
+[assembly: AssemblyDescription("StudioX Software - Module Zero")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("StudioX")]
 [assembly: AssemblyProduct("StudioX.Zero")]
-[assembly: AssemblyCopyright("Copyright © 2017")]
+[assembly: AssemblyCopyright("Copyright © 2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
+[assembly: InternalsVisibleTo("StudioX.Zero.NHibernate")]
 [assembly: InternalsVisibleTo("StudioX.Zero.EntityFramework")]
 [assembly: InternalsVisibleTo("StudioX.Zero.Application")]
 [assembly: InternalsVisibleTo("StudioX.Zero.Web.Api")]

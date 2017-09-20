@@ -25,16 +25,16 @@ namespace StudioX.Runtime.Validation.Interception
         protected List<ValidationResult> ValidationErrors { get; }
         protected List<IShouldNormalize> ObjectsToBeNormalized { get; }
 
-        private readonly IValidationConfiguration configuration;
-        private readonly IIocResolver iocResolver;
+        private readonly IValidationConfiguration _configuration;
+        private readonly IIocResolver _iocResolver;
 
         /// <summary>
         /// Creates a new <see cref="MethodInvocationValidator"/> instance.
         /// </summary>
         public MethodInvocationValidator(IValidationConfiguration configuration, IIocResolver iocResolver)
         {
-            this.configuration = configuration;
-            this.iocResolver = iocResolver;
+            _configuration = configuration;
+            _iocResolver = iocResolver;
 
             ValidationErrors = new List<ValidationResult>();
             ObjectsToBeNormalized = new List<IShouldNormalize>();
@@ -141,7 +141,7 @@ namespace StudioX.Runtime.Validation.Interception
             if (parameterValue == null)
             {
                 if (!parameterInfo.IsOptional && 
-                    !parameterInfo.IsOut &&
+                    !parameterInfo.IsOut && 
                     !TypeHelper.IsPrimitiveExtendedIncludingNullable(parameterInfo.ParameterType, includeEnums: true))
                 {
                     ValidationErrors.Add(new ValidationResult(parameterInfo.Name + " is null!", new[] { parameterInfo.Name }));
@@ -180,7 +180,7 @@ namespace StudioX.Runtime.Validation.Interception
             (validatingObject as ICustomValidate)?.AddValidationErrors(
                 new CustomValidationContext(
                     ValidationErrors,
-                    iocResolver
+                    _iocResolver
                 )
             );
 
@@ -204,7 +204,7 @@ namespace StudioX.Runtime.Validation.Interception
                 return;
             }
 
-            if (configuration.IgnoredTypes.Any(t => t.IsInstanceOfType(validatingObject)))
+            if (_configuration.IgnoredTypes.Any(t => t.IsInstanceOfType(validatingObject)))
             {
                 return;
             }

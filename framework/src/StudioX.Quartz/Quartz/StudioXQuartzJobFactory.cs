@@ -3,25 +3,25 @@ using StudioX.Extensions;
 using Quartz;
 using Quartz.Spi;
 
-namespace StudioX.Quartz
+namespace StudioX.Quartz.Quartz
 {
     public class StudioXQuartzJobFactory : IJobFactory
     {
-        private readonly IIocResolver iocResolver;
+        private readonly IIocResolver _iocResolver;
 
         public StudioXQuartzJobFactory(IIocResolver iocResolver)
         {
-            this.iocResolver = iocResolver;
+            _iocResolver = iocResolver;
         }
 
         public IJob NewJob(TriggerFiredBundle bundle, IScheduler scheduler)
         {
-            return iocResolver.Resolve(bundle.JobDetail.JobType).As<IJob>();
+            return _iocResolver.Resolve(bundle.JobDetail.JobType).As<IJob>();
         }
 
         public void ReturnJob(IJob job)
         {
-            iocResolver.Release(job);
+            _iocResolver.Release(job);
         }
     }
 }

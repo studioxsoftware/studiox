@@ -6,17 +6,17 @@ namespace StudioX.Zero.AspNetCore
 {
     public class AspNetCoreUserTokenProviderAccessor : IUserTokenProviderAccessor
     {
-        private readonly IDataProtectionProvider dataProtectionProvider;
+        private readonly IDataProtectionProvider _dataProtectionProvider;
 
         public AspNetCoreUserTokenProviderAccessor(IDataProtectionProvider dataProtectionProvider)
         {
-            this.dataProtectionProvider = dataProtectionProvider;
+            _dataProtectionProvider = dataProtectionProvider;
         }
 
         public IUserTokenProvider<TUser, long> GetUserTokenProviderOrNull<TUser>()
             where TUser : StudioXUser<TUser>
         {
-            return new DataProtectorUserTokenProvider<TUser>(dataProtectionProvider.CreateProtector("ASP.NET Identity"));
+            return new DataProtectorUserTokenProvider<TUser>(_dataProtectionProvider.CreateProtector("ASP.NET Identity"));
         }
     }
 }

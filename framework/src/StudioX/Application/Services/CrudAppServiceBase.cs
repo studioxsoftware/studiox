@@ -11,11 +11,10 @@ using StudioX.ObjectMapping;
 namespace StudioX.Application.Services
 {
     /// <summary>
-    ///     This is a common base class for CrudAppService and AsyncCrudAppService classes.
-    ///     Inherit either from CrudAppService or AsyncCrudAppService, not from this class.
+    /// This is a common base class for CrudAppService and AsyncCrudAppService classes.
+    /// Inherit either from CrudAppService or AsyncCrudAppService, not from this class.
     /// </summary>
-    public abstract class CrudAppServiceBase<TEntity, TEntityDto, TPrimaryKey, TGetAllInput, TCreateInput,
-        TUpdateInput> : ApplicationService
+    public abstract class CrudAppServiceBase<TEntity, TEntityDto, TPrimaryKey, TGetAllInput, TCreateInput, TUpdateInput> : ApplicationService
         where TEntity : class, IEntity<TPrimaryKey>
         where TEntityDto : IEntityDto<TPrimaryKey>
         where TUpdateInput : IEntityDto<TPrimaryKey>
@@ -38,7 +37,7 @@ namespace StudioX.Application.Services
         }
 
         /// <summary>
-        ///     Should apply sorting if needed.
+        /// Should apply sorting if needed.
         /// </summary>
         /// <param name="query">The query.</param>
         /// <param name="input">The input.</param>
@@ -65,7 +64,7 @@ namespace StudioX.Application.Services
         }
 
         /// <summary>
-        ///     Should apply paging if needed.
+        /// Should apply paging if needed.
         /// </summary>
         /// <param name="query">The query.</param>
         /// <param name="input">The input.</param>
@@ -90,10 +89,10 @@ namespace StudioX.Application.Services
         }
 
         /// <summary>
-        ///     This method should create <see cref="IQueryable{TEntity}" /> based on given input.
-        ///     It should filter query if needed, but should not do sorting or paging.
-        ///     Sorting should be done in <see cref="ApplySorting" /> and paging should be done in <see cref="ApplyPaging" />
-        ///     methods.
+        /// This method should create <see cref="IQueryable{TEntity}"/> based on given input.
+        /// It should filter query if needed, but should not do sorting or paging.
+        /// Sorting should be done in <see cref="ApplySorting"/> and paging should be done in <see cref="ApplyPaging"/>
+        /// methods.
         /// </summary>
         /// <param name="input">The input.</param>
         protected virtual IQueryable<TEntity> CreateFilteredQuery(TGetAllInput input)
@@ -102,9 +101,9 @@ namespace StudioX.Application.Services
         }
 
         /// <summary>
-        ///     Maps <see cref="TEntity" /> to <see cref="TEntityDto" />.
-        ///     It uses <see cref="IObjectMapper" /> by default.
-        ///     It can be overrided for custom mapping.
+        /// Maps <see cref="TEntity"/> to <see cref="TEntityDto"/>.
+        /// It uses <see cref="IObjectMapper"/> by default.
+        /// It can be overrided for custom mapping.
         /// </summary>
         protected virtual TEntityDto MapToEntityDto(TEntity entity)
         {
@@ -112,9 +111,9 @@ namespace StudioX.Application.Services
         }
 
         /// <summary>
-        ///     Maps <see cref="TEntityDto" /> to <see cref="TEntity" /> to create a new entity.
-        ///     It uses <see cref="IObjectMapper" /> by default.
-        ///     It can be overrided for custom mapping.
+        /// Maps <see cref="TEntityDto"/> to <see cref="TEntity"/> to create a new entity.
+        /// It uses <see cref="IObjectMapper"/> by default.
+        /// It can be overrided for custom mapping.
         /// </summary>
         protected virtual TEntity MapToEntity(TCreateInput createInput)
         {
@@ -122,9 +121,9 @@ namespace StudioX.Application.Services
         }
 
         /// <summary>
-        ///     Maps <see cref="TUpdateInput" /> to <see cref="TEntity" /> to update the entity.
-        ///     It uses <see cref="IObjectMapper" /> by default.
-        ///     It can be overrided for custom mapping.
+        /// Maps <see cref="TUpdateInput"/> to <see cref="TEntity"/> to update the entity.
+        /// It uses <see cref="IObjectMapper"/> by default.
+        /// It can be overrided for custom mapping.
         /// </summary>
         protected virtual void MapToEntity(TUpdateInput updateInput, TEntity entity)
         {

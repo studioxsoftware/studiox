@@ -5,12 +5,12 @@ using System.Reflection;
 namespace StudioX.Reflection.Extensions
 {
     /// <summary>
-    ///     Extensions to <see cref="MemberInfo" />.
+    /// Extensions to <see cref="MemberInfo"/>.
     /// </summary>
     public static class MemberInfoExtensions
     {
         /// <summary>
-        ///     Gets a single attribute for a member.
+        /// Gets a single attribute for a member.
         /// </summary>
         /// <typeparam name="TAttribute">Type of the attribute</typeparam>
         /// <param name="memberInfo">The member that will be checked for the attribute</param>
@@ -27,15 +27,14 @@ namespace StudioX.Reflection.Extensions
             var attrs = memberInfo.GetCustomAttributes(typeof(TAttribute), inherit).ToArray();
             if (attrs.Length > 0)
             {
-                return (TAttribute) attrs[0];
+                return (TAttribute)attrs[0];
             }
 
             return default(TAttribute);
         }
 
 
-        public static TAttribute GetSingleAttributeOfTypeOrBaseTypesOrNull<TAttribute>(this Type type,
-            bool inherit = true)
+        public static TAttribute GetSingleAttributeOfTypeOrBaseTypesOrNull<TAttribute>(this Type type, bool inherit = true)
             where TAttribute : Attribute
         {
             var attr = type.GetTypeInfo().GetSingleAttributeOrNull<TAttribute>();

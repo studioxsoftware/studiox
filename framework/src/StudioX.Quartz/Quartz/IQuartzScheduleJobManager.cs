@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using StudioX.Threading.BackgroundWorkers;
 using Quartz;
 
-namespace StudioX.Quartz
+namespace StudioX.Quartz.Quartz
 {
     /// <summary>
     /// Defines interface of Quartz schedule job manager.

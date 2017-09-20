@@ -26,8 +26,8 @@ namespace StudioX.Localization.Sources.Resource
         /// </summary>
         public ResourceManager ResourceManager { get; }
 
-        private ILogger logger;
-        private ILocalizationConfiguration configuration;
+        private ILogger _logger;
+        private ILocalizationConfiguration _configuration;
 
         /// <param name="name">Unique Name of the source</param>
         /// <param name="resourceManager">Reference to the <see cref="ResourceManager"/> object related to this localization source</param>
@@ -42,9 +42,9 @@ namespace StudioX.Localization.Sources.Resource
         /// </summary>
         public virtual void Initialize(ILocalizationConfiguration configuration, IIocResolver iocResolver)
         {
-            this.configuration = configuration;
+            _configuration = configuration;
 
-            logger = iocResolver.IsRegistered(typeof(ILoggerFactory))
+            _logger = iocResolver.IsRegistered(typeof(ILoggerFactory))
                 ? iocResolver.Resolve<ILoggerFactory>().Create(typeof(ResourceFileLocalizationSource))
                 : NullLogger.Instance;
         }
@@ -96,25 +96,21 @@ namespace StudioX.Localization.Sources.Resource
         /// </summary>
         public virtual IReadOnlyList<LocalizedString> GetAllStrings(CultureInfo culture, bool includeDefaults = true)
         {
-#if NET46
             return ResourceManager
                 .GetResourceSet(culture, true, includeDefaults)
                 .Cast<DictionaryEntry>()
                 .Select(entry => new LocalizedString(entry.Key.ToString(), entry.Value.ToString(), culture))
                 .ToImmutableList();
-#else
-            return new LocalizedString[0];
-#endif
         }
 
         protected virtual string ReturnGivenNameOrThrowException(string name, CultureInfo culture)
         {
             return LocalizationSourceHelper.ReturnGivenNameOrThrowException(
-                configuration,
+                _configuration,
                 Name,
                 name,
                 culture,
-                logger
+                _logger
             );
         }
     }

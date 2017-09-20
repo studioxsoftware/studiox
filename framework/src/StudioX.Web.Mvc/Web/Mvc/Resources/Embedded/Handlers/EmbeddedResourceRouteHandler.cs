@@ -7,16 +7,16 @@ namespace StudioX.Web.Mvc.Resources.Embedded.Handlers
     [Obsolete]
     internal class EmbeddedResourceRouteHandler : IRouteHandler
     {
-        private readonly string rootPath;
+        private readonly string _rootPath;
 
         public EmbeddedResourceRouteHandler(string rootPath)
         {
-            this.rootPath = rootPath;
+            _rootPath = rootPath;
         }
 
         public IHttpHandler GetHttpHandler(RequestContext requestContext)
         {
-            return new EmbeddedResourceHttpHandler(rootPath, requestContext.RouteData);
+            return new EmbeddedResourceHttpHandler(_rootPath, requestContext.RouteData);
         }
     }
 }

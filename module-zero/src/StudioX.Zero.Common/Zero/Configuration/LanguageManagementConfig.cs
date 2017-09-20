@@ -11,22 +11,22 @@ namespace StudioX.Zero.Configuration
     {
         public ILogger Logger { get; set; }
 
-        private readonly IIocManager iocManager;
-        private readonly IStudioXStartupConfiguration configuration;
+        private readonly IIocManager _iocManager;
+        private readonly IStudioXStartupConfiguration _configuration;
 
         public LanguageManagementConfig(IIocManager iocManager, IStudioXStartupConfiguration configuration)
         {
-            this.iocManager = iocManager;
-            this.configuration = configuration;
+            _iocManager = iocManager;
+            _configuration = configuration;
 
             Logger = NullLogger.Instance;
         }
 
         public void EnableDbLocalization()
         {
-            iocManager.Register<ILanguageProvider, ApplicationLanguageProvider>(DependencyLifeStyle.Transient);
+            _iocManager.Register<ILanguageProvider, ApplicationLanguageProvider>(DependencyLifeStyle.Transient);
 
-            var sources = configuration
+            var sources = _configuration
                 .Localization
                 .Sources
                 .Where(s => s is IDictionaryBasedLocalizationSource)
@@ -35,13 +35,13 @@ namespace StudioX.Zero.Configuration
             
             foreach (var source in sources)
             {
-                configuration.Localization.Sources.Remove(source);
-                configuration.Localization.Sources.Add(
+                _configuration.Localization.Sources.Remove(source);
+                _configuration.Localization.Sources.Add(
                     new MultiTenantLocalizationSource(
                         source.Name,
                         new MultiTenantLocalizationDictionaryProvider(
                             source.DictionaryProvider,
-                            iocManager
+                            _iocManager
                             )
                         )
                     );

@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 namespace StudioX.Events.Bus.Entities
 {
     /// <summary>
-    ///     Used to trigger entity change events.
+    /// Used to trigger entity change events.
     /// </summary>
     public interface IEntityChangeEventHelper
     {
@@ -16,11 +16,11 @@ namespace StudioX.Events.Bus.Entities
         void TriggerEntityCreatedEventOnUowCompleted(object entity);
 
         void TriggerEntityUpdatingEvent(object entity);
-
+        
         void TriggerEntityUpdatedEventOnUowCompleted(object entity);
 
         void TriggerEntityDeletingEvent(object entity);
-
+        
         void TriggerEntityDeletedEventOnUowCompleted(object entity);
     }
 }

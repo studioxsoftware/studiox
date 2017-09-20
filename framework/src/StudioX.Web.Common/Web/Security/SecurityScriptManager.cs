@@ -6,11 +6,11 @@ namespace StudioX.Web.Security
 {
     internal class SecurityScriptManager : ISecurityScriptManager, ITransientDependency
     {
-        private readonly IStudioXAntiForgeryConfiguration studioXAntiForgeryConfiguration;
+        private readonly IStudioXAntiForgeryConfiguration _studioXAntiForgeryConfiguration;
 
-        public SecurityScriptManager(IStudioXAntiForgeryConfiguration antiForgeryConfiguration)
+        public SecurityScriptManager(IStudioXAntiForgeryConfiguration studioxAntiForgeryConfiguration)
         {
-            studioXAntiForgeryConfiguration = antiForgeryConfiguration;
+            _studioXAntiForgeryConfiguration = studioxAntiForgeryConfiguration;
         }
 
         public string GetScript()
@@ -18,8 +18,8 @@ namespace StudioX.Web.Security
             var script = new StringBuilder();
 
             script.AppendLine("(function(){");
-            script.AppendLine("    studiox.security.antiForgery.tokenCookieName = '" + studioXAntiForgeryConfiguration.TokenCookieName + "';");
-            script.AppendLine("    studiox.security.antiForgery.tokenHeaderName = '" + studioXAntiForgeryConfiguration.TokenHeaderName + "';");
+            script.AppendLine("    studiox.security.antiForgery.tokenCookieName = '" + _studioXAntiForgeryConfiguration.TokenCookieName + "';");
+            script.AppendLine("    studiox.security.antiForgery.tokenHeaderName = '" + _studioXAntiForgeryConfiguration.TokenHeaderName + "';");
             script.Append("})();");
 
             return script.ToString();

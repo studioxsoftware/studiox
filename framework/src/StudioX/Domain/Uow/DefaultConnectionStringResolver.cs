@@ -1,7 +1,4 @@
-using System;
-#if NET46
 using System.Configuration;
-#endif
 using StudioX.Configuration.Startup;
 using StudioX.Dependency;
 
@@ -15,27 +12,26 @@ namespace StudioX.Domain.Uow
     /// </summary>
     public class DefaultConnectionStringResolver : IConnectionStringResolver, ITransientDependency
     {
-        private readonly IStudioXStartupConfiguration configuration;
+        private readonly IStudioXStartupConfiguration _configuration;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultConnectionStringResolver"/> class.
         /// </summary>
         public DefaultConnectionStringResolver(IStudioXStartupConfiguration configuration)
         {
-            this.configuration = configuration;
+            _configuration = configuration;
         }
 
         public virtual string GetNameOrConnectionString(ConnectionStringResolveArgs args)
         {
             Check.NotNull(args, nameof(args));
 
-            var defaultConnectionString = configuration.DefaultNameOrConnectionString;
+            var defaultConnectionString = _configuration.DefaultNameOrConnectionString;
             if (!string.IsNullOrWhiteSpace(defaultConnectionString))
             {
                 return defaultConnectionString;
             }
 
-#if NET46
             if (ConfigurationManager.ConnectionStrings["Default"] != null)
             {
                 return "Default";
@@ -45,7 +41,6 @@ namespace StudioX.Domain.Uow
             {
                 return ConfigurationManager.ConnectionStrings[0].ConnectionString;
             }
-#endif
 
             throw new StudioXException("Could not find a connection string definition for the application. Set IStudioXStartupConfiguration.DefaultNameOrConnectionString or add a 'Default' connection string to application .config file.");
         }

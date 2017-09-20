@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using StudioX.Configuration.Startup;
+﻿using StudioX.Configuration.Startup;
 using StudioX.Localization.Dictionaries;
 using StudioX.Localization.Dictionaries.Xml;
 using StudioX.Modules;

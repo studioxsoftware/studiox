@@ -2,6 +2,7 @@
 using StudioX.AspNetCore.Configuration;
 using StudioX.AspNetCore.MultiTenancy;
 using StudioX.AspNetCore.Mvc.Auditing;
+using StudioX.AspNetCore.Mvc.Results.Wrapping;
 using StudioX.AspNetCore.Runtime.Session;
 using StudioX.AspNetCore.Security.AntiForgery;
 using StudioX.Auditing;

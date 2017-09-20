@@ -12,22 +12,28 @@ using StudioX.Web.Configuration;
 
 namespace StudioX.Web.Models
 {
-    //TODO@Long: I did not like constructing ErrorInfo this way. It works wlll but I think we should change it later...
+    //TODO@Halil: I did not like constructing ErrorInfo this way. It works wlll but I think we should change it later...
     internal class DefaultErrorInfoConverter : IExceptionToErrorInfoConverter
     {
-        private readonly IStudioXWebCommonModuleConfiguration configuration;
-        private readonly ILocalizationManager localizationManager;
+        private readonly IStudioXWebCommonModuleConfiguration _configuration;
+        private readonly ILocalizationManager _localizationManager;
 
         public IExceptionToErrorInfoConverter Next { set; private get; }
 
-        private bool SendAllExceptionsToClients => configuration.SendAllExceptionsToClients;
+        private bool SendAllExceptionsToClients
+        {
+            get
+            {
+                return _configuration.SendAllExceptionsToClients;
+            }
+        }
 
         public DefaultErrorInfoConverter(
-            IStudioXWebCommonModuleConfiguration configuration, 
+            IStudioXWebCommonModuleConfiguration configuration,
             ILocalizationManager localizationManager)
         {
-            this.configuration = configuration;
-            this.localizationManager = localizationManager;
+            _configuration = configuration;
+            _localizationManager = localizationManager;
         }
 
         public ErrorInfo Convert(Exception exception)
@@ -93,8 +99,6 @@ namespace StudioX.Web.Models
                     entityNotFoundException.Message
                 );
             }
-
-
 
             if (exception is StudioX.Authorization.StudioXAuthorizationException)
             {
@@ -197,7 +201,7 @@ namespace StudioX.Web.Models
         {
             var detailBuilder = new StringBuilder();
             detailBuilder.AppendLine(L("ValidationNarrativeTitle"));
-            
+
             foreach (var validationResult in validationException.ValidationErrors)
             {
                 detailBuilder.AppendFormat(" - {0}", validationResult.ErrorMessage);
@@ -211,7 +215,7 @@ namespace StudioX.Web.Models
         {
             try
             {
-                return localizationManager.GetString(StudioXWebConsts.LocalizaionSourceName, name);
+                return _localizationManager.GetString(StudioXWebConsts.LocalizaionSourceName, name);
             }
             catch (Exception)
             {

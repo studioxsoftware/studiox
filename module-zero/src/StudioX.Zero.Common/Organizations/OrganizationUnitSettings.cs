@@ -14,16 +14,22 @@ namespace StudioX.Organizations
         /// Maximum allowed organization unit membership count for a user.
         /// Returns value for current tenant.
         /// </summary>
-        public int MaxUserMembershipCount => settingManager.GetSettingValue<int>(StudioXZeroSettingNames.OrganizationUnits.MaxUserMembershipCount);
+        public int MaxUserMembershipCount
+        {
+            get
+            {
+                return _settingManager.GetSettingValue<int>(StudioXZeroSettingNames.OrganizationUnits.MaxUserMembershipCount);
+            }
+        }
 
-        private readonly ISettingManager settingManager;
+        private readonly ISettingManager _settingManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OrganizationUnitSettings"/> class.
         /// </summary>
         public OrganizationUnitSettings(ISettingManager settingManager)
         {
-            this.settingManager = settingManager;
+            _settingManager = settingManager;
         }
 
         /// <summary>
@@ -34,11 +40,11 @@ namespace StudioX.Organizations
         {
             if (tenantId.HasValue)
             {
-                return await settingManager.GetSettingValueForTenantAsync<int>(StudioXZeroSettingNames.OrganizationUnits.MaxUserMembershipCount, tenantId.Value);
+                return await _settingManager.GetSettingValueForTenantAsync<int>(StudioXZeroSettingNames.OrganizationUnits.MaxUserMembershipCount, tenantId.Value);
             }
             else
             {
-                return await settingManager.GetSettingValueForApplicationAsync<int>(StudioXZeroSettingNames.OrganizationUnits.MaxUserMembershipCount);
+                return await _settingManager.GetSettingValueForApplicationAsync<int>(StudioXZeroSettingNames.OrganizationUnits.MaxUserMembershipCount);
             }
         }
 
@@ -46,11 +52,11 @@ namespace StudioX.Organizations
         {
             if (tenantId.HasValue)
             {
-                await settingManager.ChangeSettingForTenantAsync(tenantId.Value, StudioXZeroSettingNames.OrganizationUnits.MaxUserMembershipCount, value.ToString());
+                await _settingManager.ChangeSettingForTenantAsync(tenantId.Value, StudioXZeroSettingNames.OrganizationUnits.MaxUserMembershipCount, value.ToString());
             }
             else
             {
-                await settingManager.ChangeSettingForApplicationAsync(StudioXZeroSettingNames.OrganizationUnits.MaxUserMembershipCount, value.ToString());
+                await _settingManager.ChangeSettingForApplicationAsync(StudioXZeroSettingNames.OrganizationUnits.MaxUserMembershipCount, value.ToString());
             }
         }
     }
