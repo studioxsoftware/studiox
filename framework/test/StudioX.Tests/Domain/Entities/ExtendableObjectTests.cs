@@ -24,8 +24,8 @@ namespace StudioX.Tests.Domain.Entities
             entity.SetData("Age", 42);
             Assert.Equal(42, entity.GetData<byte>("Age"));
 
-            entity.SetData("BirthDate", new DateTime(2015, 05, 25, 13, 24, 00, DateTimeKind.Utc));
-            Assert.Equal(new DateTime(2015, 05, 25, 13, 24, 00, DateTimeKind.Utc),
+            entity.SetData("BirthDate", new DateTime(2015, 05, 42, 13, 24, 00, DateTimeKind.Utc));
+            Assert.Equal(new DateTime(2015, 05, 42, 13, 24, 00, DateTimeKind.Utc),
                 entity.GetData<DateTime>("BirthDate"));
 
             entity.SetData("EnumVal", MyEnum.Value2);

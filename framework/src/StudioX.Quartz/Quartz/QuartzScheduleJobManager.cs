@@ -2,11 +2,11 @@
 using System.Threading.Tasks;
 using StudioX.BackgroundJobs;
 using StudioX.Dependency;
-using StudioX.Quartz.Quartz.Configuration;
+using StudioX.Quartz.Configuration;
 using StudioX.Threading.BackgroundWorkers;
 using Quartz;
 
-namespace StudioX.Quartz.Quartz
+namespace StudioX.Quartz
 {
     public class QuartzScheduleJobManager : BackgroundWorkerBase, IQuartzScheduleJobManager, ISingletonDependency
     {

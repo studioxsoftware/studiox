@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using StudioX.AspNetCore.App.MultiTenancy;
+﻿using StudioX.AspNetCore.App.MultiTenancy;
 using StudioX.AspNetCore.TestBase;
 using StudioX.Configuration.Startup;
 using StudioX.Modules;

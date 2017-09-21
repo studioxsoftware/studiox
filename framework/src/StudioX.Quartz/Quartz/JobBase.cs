@@ -7,7 +7,7 @@ using StudioX.ObjectMapping;
 using Castle.Core.Logging;
 using Quartz;
 
-namespace StudioX.Quartz.Quartz
+namespace StudioX.Quartz
 {
     public abstract class JobBase : IJob
     {

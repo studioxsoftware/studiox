@@ -1,7 +1,7 @@
 ﻿using Quartz;
 using Quartz.Impl;
 
-namespace StudioX.Quartz.Quartz.Configuration
+namespace StudioX.Quartz.Configuration
 {
     public class StudioXQuartzConfiguration : IStudioXQuartzConfiguration
     {

@@ -3,7 +3,7 @@ using StudioX.Extensions;
 using Quartz;
 using Quartz.Spi;
 
-namespace StudioX.Quartz.Quartz
+namespace StudioX.Quartz
 {
     public class StudioXQuartzJobFactory : IJobFactory
     {
