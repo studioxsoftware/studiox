@@ -35,7 +35,7 @@ namespace StudioX.Events.Bus
         /// Key: Type of the event
         /// Value: List of handler factories
         /// </summary>
-        private readonly ConcurrentDictionary<Type, List<IEventHandlerFactory>> _handlerFactories;
+        private readonly ConcurrentDictionary<Type, List<IEventHandlerFactory>> handlerFactories;
 
         /// <summary>
         /// Creates a new <see cref="EventBus"/> instance.
@@ -43,7 +43,7 @@ namespace StudioX.Events.Bus
         /// </summary>
         public EventBus()
         {
-            _handlerFactories = new ConcurrentDictionary<Type, List<IEventHandlerFactory>>();
+            handlerFactories = new ConcurrentDictionary<Type, List<IEventHandlerFactory>>();
             Logger = NullLogger.Instance;
         }
 
@@ -261,7 +261,7 @@ namespace StudioX.Events.Bus
         {
             var handlerFactoryList = new List<EventTypeWithEventHandlerFactories>();
 
-            foreach (var handlerFactory in _handlerFactories.Where(hf => ShouldTriggerEventForHandler(eventType, hf.Key)))
+            foreach (var handlerFactory in handlerFactories.Where(hf => ShouldTriggerEventForHandler(eventType, hf.Key)))
             {
                 handlerFactoryList.Add(new EventTypeWithEventHandlerFactories(handlerFactory.Key, handlerFactory.Value));
             }
@@ -346,7 +346,7 @@ namespace StudioX.Events.Bus
 
         private List<IEventHandlerFactory> GetOrCreateHandlerFactories(Type eventType)
         {
-            return _handlerFactories.GetOrAdd(eventType, (type) => new List<IEventHandlerFactory>());
+            return handlerFactories.GetOrAdd(eventType, (type) => new List<IEventHandlerFactory>());
         }
 
         private class EventTypeWithEventHandlerFactories

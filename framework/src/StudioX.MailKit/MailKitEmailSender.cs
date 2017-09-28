@@ -8,7 +8,7 @@ namespace StudioX.MailKit
 {
     public class MailKitEmailSender : EmailSenderBase
     {
-        private readonly IMailKitSmtpBuilder _smtpBuilder;
+        private readonly IMailKitSmtpBuilder smtpBuilder;
 
         public MailKitEmailSender(
             IEmailSenderConfiguration smtpEmailSenderConfiguration,
@@ -16,7 +16,7 @@ namespace StudioX.MailKit
             : base(
                   smtpEmailSenderConfiguration)
         {
-            _smtpBuilder = smtpBuilder;
+            this.smtpBuilder = smtpBuilder;
         }
 
         public override async Task SendAsync(string from, string to, string subject, string body, bool isBodyHtml = true)
@@ -61,7 +61,7 @@ namespace StudioX.MailKit
 
         protected virtual SmtpClient BuildSmtpClient()
         {
-            return _smtpBuilder.Build();
+            return smtpBuilder.Build();
         }
 
         private static MimeMessage BuildMimeMessage(string from, string to, string subject, string body, bool isBodyHtml = true)

@@ -11,13 +11,13 @@ namespace StudioX.Domain.Uow
     /// </summary>
     internal class UnitOfWorkInterceptor : IInterceptor
     {
-        private readonly IUnitOfWorkManager _unitOfWorkManager;
-        private readonly IUnitOfWorkDefaultOptions _unitOfWorkOptions;
+        private readonly IUnitOfWorkManager unitOfWorkManager;
+        private readonly IUnitOfWorkDefaultOptions unitOfWorkOptions;
 
         public UnitOfWorkInterceptor(IUnitOfWorkManager unitOfWorkManager, IUnitOfWorkDefaultOptions unitOfWorkOptions)
         {
-            _unitOfWorkManager = unitOfWorkManager;
-            _unitOfWorkOptions = unitOfWorkOptions;
+            this.unitOfWorkManager = unitOfWorkManager;
+            this.unitOfWorkOptions = unitOfWorkOptions;
         }
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace StudioX.Domain.Uow
                 method = invocation.GetConcreteMethod();
             }
 
-            var unitOfWorkAttr = _unitOfWorkOptions.GetUnitOfWorkAttributeOrNull(method);
+            var unitOfWorkAttr = unitOfWorkOptions.GetUnitOfWorkAttributeOrNull(method);
             if (unitOfWorkAttr == null || unitOfWorkAttr.IsDisabled)
             {
                 //No need to a uow
@@ -62,7 +62,7 @@ namespace StudioX.Domain.Uow
 
         private void PerformSyncUow(IInvocation invocation, UnitOfWorkOptions options)
         {
-            using (var uow = _unitOfWorkManager.Begin(options))
+            using (var uow = unitOfWorkManager.Begin(options))
             {
                 invocation.Proceed();
                 uow.Complete();
@@ -71,7 +71,7 @@ namespace StudioX.Domain.Uow
 
         private void PerformAsyncUow(IInvocation invocation, UnitOfWorkOptions options)
         {
-            var uow = _unitOfWorkManager.Begin(options);
+            var uow = unitOfWorkManager.Begin(options);
 
             try
             {

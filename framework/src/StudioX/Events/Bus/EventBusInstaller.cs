@@ -15,32 +15,25 @@ namespace StudioX.Events.Bus
     /// </summary>
     internal class EventBusInstaller : IWindsorInstaller
     {
-        private readonly IIocResolver _iocResolver;
-        private readonly IEventBusConfiguration _eventBusConfiguration;
-        private IEventBus _eventBus;
+        private readonly IIocResolver iocResolver;
+        private readonly IEventBusConfiguration eventBusConfiguration;
+        private IEventBus eventBus;
 
         public EventBusInstaller(IIocResolver iocResolver)
         {
-            _iocResolver = iocResolver;
-            _eventBusConfiguration = iocResolver.Resolve<IEventBusConfiguration>();
+            this.iocResolver = iocResolver;
+            eventBusConfiguration = iocResolver.Resolve<IEventBusConfiguration>();
         }
 
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
-            if (_eventBusConfiguration.UseDefaultEventBus)
-            {
-                container.Register(
-                    Component.For<IEventBus>().UsingFactoryMethod(() => EventBus.Default).LifestyleSingleton()
-                    );
-            }
-            else
-            {
-                container.Register(
-                    Component.For<IEventBus>().ImplementedBy<EventBus>().LifestyleSingleton()
-                    );
-            }
+            container.Register(
+                eventBusConfiguration.UseDefaultEventBus
+                    ? Component.For<IEventBus>().UsingFactoryMethod(() => EventBus.Default).LifestyleSingleton()
+                    : Component.For<IEventBus>().ImplementedBy<EventBus>().LifestyleSingleton()
+            );
 
-            _eventBus = container.Resolve<IEventBus>();
+            eventBus = container.Resolve<IEventBus>();
 
             container.Kernel.ComponentRegistered += Kernel_ComponentRegistered;
         }
@@ -66,7 +59,7 @@ namespace StudioX.Events.Bus
                 var genericArgs = @interface.GetGenericArguments();
                 if (genericArgs.Length == 1)
                 {
-                    _eventBus.Register(genericArgs[0], new IocHandlerFactory(_iocResolver, handler.ComponentModel.Implementation));
+                    eventBus.Register(genericArgs[0], new IocHandlerFactory(iocResolver, handler.ComponentModel.Implementation));
                 }
             }
         }

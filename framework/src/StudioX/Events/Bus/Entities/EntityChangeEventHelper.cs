@@ -13,11 +13,11 @@ namespace StudioX.Events.Bus.Entities
     {
         public IEventBus EventBus { get; set; }
 
-        private readonly IUnitOfWorkManager _unitOfWorkManager;
+        private readonly IUnitOfWorkManager unitOfWorkManager;
 
         public EntityChangeEventHelper(IUnitOfWorkManager unitOfWorkManager)
         {
-            _unitOfWorkManager = unitOfWorkManager;
+            this.unitOfWorkManager = unitOfWorkManager;
             EventBus = NullEventBus.Instance;
         }
 
@@ -25,24 +25,24 @@ namespace StudioX.Events.Bus.Entities
         {
             TriggerEventsInternal(changeReport);
 
-            if (changeReport.IsEmpty() || _unitOfWorkManager.Current == null)
+            if (changeReport.IsEmpty() || unitOfWorkManager.Current == null)
             {
                 return;
             }
 
-            _unitOfWorkManager.Current.SaveChanges();
+            unitOfWorkManager.Current.SaveChanges();
         }
 
         public Task TriggerEventsAsync(EntityChangeReport changeReport)
         {
             TriggerEventsInternal(changeReport);
 
-            if (changeReport.IsEmpty() || _unitOfWorkManager.Current == null)
+            if (changeReport.IsEmpty() || unitOfWorkManager.Current == null)
             {
                 return Task.FromResult(0);
             }
 
-            return _unitOfWorkManager.Current.SaveChangesAsync();
+            return unitOfWorkManager.Current.SaveChangesAsync();
         }
 
         public virtual void TriggerEntityCreatingEvent(object entity)
@@ -118,13 +118,13 @@ namespace StudioX.Events.Bus.Entities
             var entityType = entity.GetType();
             var eventType = genericEventType.MakeGenericType(entityType);
 
-            if (triggerInCurrentUnitOfWork || _unitOfWorkManager.Current == null)
+            if (triggerInCurrentUnitOfWork || unitOfWorkManager.Current == null)
             {
                 EventBus.Trigger(eventType, (IEventData)Activator.CreateInstance(eventType, new[] { entity }));
                 return;
             }
 
-            _unitOfWorkManager.Current.Completed += (sender, args) => EventBus.Trigger(eventType, (IEventData)Activator.CreateInstance(eventType, new[] { entity }));
+            unitOfWorkManager.Current.Completed += (sender, args) => EventBus.Trigger(eventType, (IEventData)Activator.CreateInstance(eventType, new[] { entity }));
         }
     }
 }

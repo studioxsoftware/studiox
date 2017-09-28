@@ -11,11 +11,11 @@ namespace StudioX.Auditing
     /// </summary>
     public class AuditingContractResolver : CamelCasePropertyNamesContractResolver
     {
-        private readonly List<Type> _ignoredTypes;
+        private readonly List<Type> ignoredTypes;
 
         public AuditingContractResolver(List<Type> ignoredTypes)
         {
-            _ignoredTypes = ignoredTypes;
+            this.ignoredTypes = ignoredTypes;
         }
 
         protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
@@ -27,7 +27,7 @@ namespace StudioX.Auditing
                 property.ShouldSerialize = instance => false;
             }
 
-            foreach (var ignoredType in _ignoredTypes)
+            foreach (var ignoredType in ignoredTypes)
             {
                 if (ignoredType.GetTypeInfo().IsAssignableFrom(property.PropertyType))
                 {

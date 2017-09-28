@@ -24,14 +24,14 @@ namespace StudioX.Domain.Uow
         /// <inheritdoc/>
         public IsolationLevel? IsolationLevel { get; set; }
 
-        public IReadOnlyList<DataFilterConfiguration> Filters => _filters;
-        private readonly List<DataFilterConfiguration> _filters;
+        public IReadOnlyList<DataFilterConfiguration> Filters => filters;
+        private readonly List<DataFilterConfiguration> filters;
 
         public List<Func<Type, bool>> ConventionalUowSelectors { get; }
 
         public UnitOfWorkDefaultOptions()
         {
-            _filters = new List<DataFilterConfiguration>();
+            filters = new List<DataFilterConfiguration>();
             IsTransactional = true;
             Scope = TransactionScopeOption.Required;
 
@@ -46,18 +46,18 @@ namespace StudioX.Domain.Uow
 
         public void RegisterFilter(string filterName, bool isEnabledByDefault)
         {
-            if (_filters.Any(f => f.FilterName == filterName))
+            if (filters.Any(f => f.FilterName == filterName))
             {
                 throw new StudioXException("There is already a filter with name: " + filterName);
             }
 
-            _filters.Add(new DataFilterConfiguration(filterName, isEnabledByDefault));
+            filters.Add(new DataFilterConfiguration(filterName, isEnabledByDefault));
         }
 
         public void OverrideFilter(string filterName, bool isEnabledByDefault)
         {
-            _filters.RemoveAll(f => f.FilterName == filterName);
-            _filters.Add(new DataFilterConfiguration(filterName, isEnabledByDefault));
+            filters.RemoveAll(f => f.FilterName == filterName);
+            filters.Add(new DataFilterConfiguration(filterName, isEnabledByDefault));
         }
     }
 }

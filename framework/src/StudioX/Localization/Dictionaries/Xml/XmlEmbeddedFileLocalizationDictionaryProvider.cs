@@ -7,8 +7,8 @@ namespace StudioX.Localization.Dictionaries.Xml
     /// </summary>
     public class XmlEmbeddedFileLocalizationDictionaryProvider : LocalizationDictionaryProviderBase
     {
-        private readonly Assembly _assembly;
-        private readonly string _rootNamespace;
+        private readonly Assembly assembly;
+        private readonly string rootNamespace;
         
         /// <summary>
         /// Creates a new <see cref="XmlEmbeddedFileLocalizationDictionaryProvider"/> object.
@@ -17,18 +17,18 @@ namespace StudioX.Localization.Dictionaries.Xml
         /// <param name="rootNamespace">Namespace of the embedded xml dictionary files</param>
         public XmlEmbeddedFileLocalizationDictionaryProvider(Assembly assembly, string rootNamespace)
         {
-            _assembly = assembly;
-            _rootNamespace = rootNamespace;
+            this.assembly = assembly;
+            this.rootNamespace = rootNamespace;
         }
 
         public override void Initialize(string sourceName)
         {
-            var resourceNames = _assembly.GetManifestResourceNames();
+            var resourceNames = assembly.GetManifestResourceNames();
             foreach (var resourceName in resourceNames)
             {
-                if (resourceName.StartsWith(_rootNamespace))
+                if (resourceName.StartsWith(rootNamespace))
                 {
-                    using (var stream = _assembly.GetManifestResourceStream(resourceName))
+                    using (var stream = assembly.GetManifestResourceStream(resourceName))
                     {
                         var xmlString = Utf8Helper.ReadStringFromStream(stream);
 

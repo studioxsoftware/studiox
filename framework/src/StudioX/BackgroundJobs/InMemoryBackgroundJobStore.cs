@@ -13,28 +13,28 @@ namespace StudioX.BackgroundJobs
     /// </summary>
     public class InMemoryBackgroundJobStore : IBackgroundJobStore
     {
-        private readonly Dictionary<long, BackgroundJobInfo> _jobs;
-        private long _lastId;
+        private readonly Dictionary<long, BackgroundJobInfo> jobs;
+        private long lastId;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InMemoryBackgroundJobStore"/> class.
         /// </summary>
         public InMemoryBackgroundJobStore()
         {
-            _jobs = new Dictionary<long, BackgroundJobInfo>();
+            jobs = new Dictionary<long, BackgroundJobInfo>();
         }
 
         public Task InsertAsync(BackgroundJobInfo jobInfo)
         {
-            jobInfo.Id = Interlocked.Increment(ref _lastId);
-            _jobs[jobInfo.Id] = jobInfo;
+            jobInfo.Id = Interlocked.Increment(ref lastId);
+            jobs[jobInfo.Id] = jobInfo;
 
             return Task.FromResult(0);
         }
 
         public Task<List<BackgroundJobInfo>> GetWaitingJobsAsync(int maxResultCount)
         {
-            var waitingJobs = _jobs.Values
+            var waitingJobs = jobs.Values
                 .Where(t => !t.IsAbandoned && t.NextTryTime <= Clock.Now)
                 .OrderByDescending(t => t.Priority)
                 .ThenBy(t => t.TryCount)
@@ -47,12 +47,12 @@ namespace StudioX.BackgroundJobs
 
         public Task DeleteAsync(BackgroundJobInfo jobInfo)
         {
-            if (!_jobs.ContainsKey(jobInfo.Id))
+            if (!jobs.ContainsKey(jobInfo.Id))
             {
                 return Task.FromResult(0);
             }
 
-            _jobs.Remove(jobInfo.Id);
+            jobs.Remove(jobInfo.Id);
 
             return Task.FromResult(0);
         }

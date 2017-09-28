@@ -26,8 +26,8 @@ namespace StudioX.BackgroundJobs
         /// </summary>
         public static int JobPollPeriod { get; set; }
 
-        private readonly IIocResolver _iocResolver;
-        private readonly IBackgroundJobStore _store;
+        private readonly IIocResolver iocResolver;
+        private readonly IBackgroundJobStore store;
 
         static BackgroundJobManager()
         {
@@ -43,8 +43,8 @@ namespace StudioX.BackgroundJobs
             StudioXTimer timer)
             : base(timer)
         {
-            _store = store;
-            _iocResolver = iocResolver;
+            this.store = store;
+            this.iocResolver = iocResolver;
 
             EventBus = NullEventBus.Instance;
 
@@ -66,12 +66,12 @@ namespace StudioX.BackgroundJobs
                 jobInfo.NextTryTime = Clock.Now.Add(delay.Value);
             }
 
-            await _store.InsertAsync(jobInfo);
+            await store.InsertAsync(jobInfo);
         }
 
         protected override void DoWork()
         {
-            var waitingJobs = AsyncHelper.RunSync(() => _store.GetWaitingJobsAsync(1000));
+            var waitingJobs = AsyncHelper.RunSync(() => store.GetWaitingJobsAsync(1000));
 
             foreach (var job in waitingJobs)
             {
@@ -87,7 +87,7 @@ namespace StudioX.BackgroundJobs
                 jobInfo.LastTryTime = Clock.Now;
 
                 var jobType = Type.GetType(jobInfo.JobType);
-                using (var job = _iocResolver.ResolveAsDisposable(jobType))
+                using (var job = iocResolver.ResolveAsDisposable(jobType))
                 {
                     try
                     {
@@ -97,7 +97,7 @@ namespace StudioX.BackgroundJobs
 
                         jobExecuteMethod.Invoke(job.Object, new[] { argsObj });
 
-                        AsyncHelper.RunSync(() => _store.DeleteAsync(jobInfo));
+                        AsyncHelper.RunSync(() => store.DeleteAsync(jobInfo));
                     }
                     catch (Exception ex)
                     {
@@ -145,7 +145,7 @@ namespace StudioX.BackgroundJobs
         {
             try
             {
-                _store.UpdateAsync(jobInfo);
+                store.UpdateAsync(jobInfo);
             }
             catch (Exception updateEx)
             {

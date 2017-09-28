@@ -8,8 +8,8 @@ namespace StudioX.Localization.Dictionaries.Json
     /// </summary>
     public class JsonEmbeddedFileLocalizationDictionaryProvider : LocalizationDictionaryProviderBase
     {
-        private readonly Assembly _assembly;
-        private readonly string _rootNamespace;
+        private readonly Assembly assembly;
+        private readonly string rootNamespace;
 
         /// <summary>
         /// Creates a new <see cref="JsonEmbeddedFileLocalizationDictionaryProvider"/> object.
@@ -28,18 +28,18 @@ namespace StudioX.Localization.Dictionaries.Json
         /// </param>
         public JsonEmbeddedFileLocalizationDictionaryProvider(Assembly assembly, string rootNamespace)
         {
-            _assembly = assembly;
-            _rootNamespace = rootNamespace;
+            this.assembly = assembly;
+            this.rootNamespace = rootNamespace;
         }
 
         public override void Initialize(string sourceName)
         {
-            var resourceNames = _assembly.GetManifestResourceNames();
+            var resourceNames = assembly.GetManifestResourceNames();
             foreach (var resourceName in resourceNames)
             {
-                if (resourceName.StartsWith(_rootNamespace))
+                if (resourceName.StartsWith(rootNamespace))
                 {
-                    using (var stream = _assembly.GetManifestResourceStream(resourceName))
+                    using (var stream = assembly.GetManifestResourceStream(resourceName))
                     {
                         var jsonString = Utf8Helper.ReadStringFromStream(stream);
 

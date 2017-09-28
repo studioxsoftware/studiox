@@ -76,11 +76,9 @@ namespace StudioX.Application.Features
         /// <summary>
         /// List of child features.
         /// </summary>
-        public IReadOnlyList<Feature> Children
-        {
-            get { return _children.ToImmutableList(); }
-        }
-        private readonly List<Feature> _children;
+        public IReadOnlyList<Feature> Children => children.ToImmutableList();
+
+        private readonly List<Feature> children;
 
         /// <summary>
         /// Creates a new feature.
@@ -105,7 +103,7 @@ namespace StudioX.Application.Features
             DefaultValue = defaultValue;
             InputType = inputType ?? new CheckboxInputType();
 
-            _children = new List<Feature>();
+            children = new List<Feature>();
             Attributes = new Dictionary<string, object>();
         }
 
@@ -116,7 +114,7 @@ namespace StudioX.Application.Features
         public Feature CreateChildFeature(string name, string defaultValue, ILocalizableString displayName = null, ILocalizableString description = null, FeatureScopes scope = FeatureScopes.All, IInputType inputType = null)
         {
             var feature = new Feature(name, defaultValue, displayName, description, scope, inputType) { Parent = this };
-            _children.Add(feature);
+            children.Add(feature);
             return feature;
         }
 

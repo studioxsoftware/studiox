@@ -9,23 +9,20 @@ namespace StudioX.Domain.Uow
     /// </summary>
     internal class UnitOfWorkManager : IUnitOfWorkManager, ITransientDependency
     {
-        private readonly IIocResolver _iocResolver;
-        private readonly ICurrentUnitOfWorkProvider _currentUnitOfWorkProvider;
-        private readonly IUnitOfWorkDefaultOptions _defaultOptions;
+        private readonly IIocResolver iocResolver;
+        private readonly ICurrentUnitOfWorkProvider currentUnitOfWorkProvider;
+        private readonly IUnitOfWorkDefaultOptions defaultOptions;
 
-        public IActiveUnitOfWork Current
-        {
-            get { return _currentUnitOfWorkProvider.Current; }
-        }
+        public IActiveUnitOfWork Current => currentUnitOfWorkProvider.Current;
 
         public UnitOfWorkManager(
             IIocResolver iocResolver,
             ICurrentUnitOfWorkProvider currentUnitOfWorkProvider,
             IUnitOfWorkDefaultOptions defaultOptions)
         {
-            _iocResolver = iocResolver;
-            _currentUnitOfWorkProvider = currentUnitOfWorkProvider;
-            _defaultOptions = defaultOptions;
+            this.iocResolver = iocResolver;
+            this.currentUnitOfWorkProvider = currentUnitOfWorkProvider;
+            this.defaultOptions = defaultOptions;
         }
 
         public IUnitOfWorkCompleteHandle Begin()
@@ -40,30 +37,30 @@ namespace StudioX.Domain.Uow
 
         public IUnitOfWorkCompleteHandle Begin(UnitOfWorkOptions options)
         {
-            options.FillDefaultsForNonProvidedOptions(_defaultOptions);
+            options.FillDefaultsForNonProvidedOptions(defaultOptions);
 
-            var outerUow = _currentUnitOfWorkProvider.Current;
+            var outerUow = currentUnitOfWorkProvider.Current;
 
             if (options.Scope == TransactionScopeOption.Required && outerUow != null)
             {
                 return new InnerUnitOfWorkCompleteHandle();
             }
 
-            var uow = _iocResolver.Resolve<IUnitOfWork>();
+            var uow = iocResolver.Resolve<IUnitOfWork>();
 
             uow.Completed += (sender, args) =>
             {
-                _currentUnitOfWorkProvider.Current = null;
+                currentUnitOfWorkProvider.Current = null;
             };
 
             uow.Failed += (sender, args) =>
             {
-                _currentUnitOfWorkProvider.Current = null;
+                currentUnitOfWorkProvider.Current = null;
             };
 
             uow.Disposed += (sender, args) =>
             {
-                _iocResolver.Release(uow);
+                iocResolver.Release(uow);
             };
 
             //Inherit filters from outer UOW
@@ -80,7 +77,7 @@ namespace StudioX.Domain.Uow
                 uow.SetTenantId(outerUow.GetTenantId(), false);
             }
 
-            _currentUnitOfWorkProvider.Current = uow;
+            currentUnitOfWorkProvider.Current = uow;
 
             return uow;
         }

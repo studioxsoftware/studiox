@@ -7,20 +7,20 @@ namespace StudioX.Events.Bus.Factories.Internals
     /// </summary>
     internal class FactoryUnregistrar : IDisposable
     {
-        private readonly IEventBus _eventBus;
-        private readonly Type _eventType;
-        private readonly IEventHandlerFactory _factory;
+        private readonly IEventBus eventBus;
+        private readonly Type eventType;
+        private readonly IEventHandlerFactory factory;
 
         public FactoryUnregistrar(IEventBus eventBus, Type eventType, IEventHandlerFactory factory)
         {
-            _eventBus = eventBus;
-            _eventType = eventType;
-            _factory = factory;
+            this.eventBus = eventBus;
+            this.eventType = eventType;
+            this.factory = factory;
         }
 
         public void Dispose()
         {
-            _eventBus.Unregister(_eventType, _factory);
+            eventBus.Unregister(eventType, factory);
         }
     }
 }

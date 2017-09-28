@@ -30,11 +30,9 @@ namespace StudioX.Configuration
         /// <summary>
         /// Gets a list of all children of this group.
         /// </summary>
-        public IReadOnlyList<SettingDefinitionGroup> Children
-        {
-            get { return _children.ToImmutableList(); }
-        }
-        private readonly List<SettingDefinitionGroup> _children;
+        public IReadOnlyList<SettingDefinitionGroup> Children => children.ToImmutableList();
+
+        private readonly List<SettingDefinitionGroup> children;
 
         /// <summary>
         /// Creates a new <see cref="SettingDefinitionGroup"/> object.
@@ -47,7 +45,7 @@ namespace StudioX.Configuration
 
             Name = name;
             DisplayName = displayName;
-            _children = new List<SettingDefinitionGroup>();
+            children = new List<SettingDefinitionGroup>();
         }
 
         /// <summary>
@@ -62,7 +60,7 @@ namespace StudioX.Configuration
                 throw new StudioXException("Setting group " + child.Name + " has already a Parent (" + child.Parent.Name + ").");
             }
 
-            _children.Add(child);
+            children.Add(child);
             child.Parent = this;
             return this;
         }

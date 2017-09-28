@@ -9,18 +9,15 @@ namespace StudioX.Application.Navigation
     {
         public IDictionary<string, MenuDefinition> Menus { get; private set; }
 
-        public MenuDefinition MainMenu
-        {
-            get { return Menus["MainMenu"]; }
-        }
+        public MenuDefinition MainMenu => Menus["MainMenu"];
 
-        private readonly IIocResolver _iocResolver;
-        private readonly INavigationConfiguration _configuration;
+        private readonly IIocResolver iocResolver;
+        private readonly INavigationConfiguration configuration;
 
         public NavigationManager(IIocResolver iocResolver, INavigationConfiguration configuration)
         {
-            _iocResolver = iocResolver;
-            _configuration = configuration;
+            this.iocResolver = iocResolver;
+            this.configuration = configuration;
 
             Menus = new Dictionary<string, MenuDefinition>
                     {
@@ -32,9 +29,9 @@ namespace StudioX.Application.Navigation
         {
             var context = new NavigationProviderContext(this);
 
-            foreach (var providerType in _configuration.Providers)
+            foreach (var providerType in configuration.Providers)
             {
-                using (var provider = _iocResolver.ResolveAsDisposable<NavigationProvider>(providerType))
+                using (var provider = iocResolver.ResolveAsDisposable<NavigationProvider>(providerType))
                 {
                     provider.Object.SetNavigation(context);
                 }

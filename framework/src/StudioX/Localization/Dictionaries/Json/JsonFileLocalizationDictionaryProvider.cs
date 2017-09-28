@@ -9,7 +9,7 @@ namespace StudioX.Localization.Dictionaries.Json
     /// </summary>
     public class JsonFileLocalizationDictionaryProvider : LocalizationDictionaryProviderBase
     {
-        private readonly string _directoryPath;
+        private readonly string directoryPath;
 
         /// <summary>
         ///     Creates a new <see cref="JsonFileLocalizationDictionaryProvider" />.
@@ -17,12 +17,12 @@ namespace StudioX.Localization.Dictionaries.Json
         /// <param name="directoryPath">Path of the dictionary that contains all related XML files</param>
         public JsonFileLocalizationDictionaryProvider(string directoryPath)
         {
-            _directoryPath = directoryPath;
+            this.directoryPath = directoryPath;
         }
         
         public override void Initialize(string sourceName)
         {
-            var fileNames = Directory.GetFiles(_directoryPath, "*.json", SearchOption.TopDirectoryOnly);
+            var fileNames = Directory.GetFiles(directoryPath, "*.json", SearchOption.TopDirectoryOnly);
 
             foreach (var fileName in fileNames)
             {

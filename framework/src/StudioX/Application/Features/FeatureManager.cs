@@ -10,18 +10,18 @@ namespace StudioX.Application.Features
     /// </summary>
     internal class FeatureManager : FeatureDefinitionContextBase, IFeatureManager, ISingletonDependency
     {
-        private readonly IIocManager _iocManager;
-        private readonly IFeatureConfiguration _featureConfiguration;
+        private readonly IIocManager iocManager;
+        private readonly IFeatureConfiguration featureConfiguration;
 
         public FeatureManager(IIocManager iocManager, IFeatureConfiguration featureConfiguration)
         {
-            _iocManager = iocManager;
-            _featureConfiguration = featureConfiguration;
+            this.iocManager = iocManager;
+            this.featureConfiguration = featureConfiguration;
         }
 
         public void Initialize()
         {
-            foreach (var providerType in _featureConfiguration.Providers)
+            foreach (var providerType in featureConfiguration.Providers)
             {
                 using (var provider = CreateProvider(providerType))
                 {
@@ -50,7 +50,7 @@ namespace StudioX.Application.Features
 
         private IDisposableDependencyObjectWrapper<FeatureProvider> CreateProvider(Type providerType)
         {
-            return _iocManager.ResolveAsDisposable<FeatureProvider>(providerType);
+            return iocManager.ResolveAsDisposable<FeatureProvider>(providerType);
         }
     }
 }

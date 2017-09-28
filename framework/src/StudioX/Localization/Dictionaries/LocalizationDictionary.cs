@@ -19,15 +19,15 @@ namespace StudioX.Localization.Dictionaries
             get
             {
                 var localizedString = GetOrNull(name);
-                return localizedString == null ? null : localizedString.Value;
+                return localizedString?.Value;
             }
             set
             {
-                _dictionary[name] = new LocalizedString(name, value, CultureInfo);
+                dictionary[name] = new LocalizedString(name, value, CultureInfo);
             }
         }
 
-        private readonly Dictionary<string, LocalizedString> _dictionary;
+        private readonly Dictionary<string, LocalizedString> dictionary;
 
         /// <summary>
         /// Creates a new <see cref="LocalizationDictionary"/> object.
@@ -36,20 +36,20 @@ namespace StudioX.Localization.Dictionaries
         public LocalizationDictionary(CultureInfo cultureInfo)
         {
             CultureInfo = cultureInfo;
-            _dictionary = new Dictionary<string, LocalizedString>();
+            dictionary = new Dictionary<string, LocalizedString>();
         }
 
         /// <inheritdoc/>
         public virtual LocalizedString GetOrNull(string name)
         {
             LocalizedString localizedString;
-            return _dictionary.TryGetValue(name, out localizedString) ? localizedString : null;
+            return dictionary.TryGetValue(name, out localizedString) ? localizedString : null;
         }
 
         /// <inheritdoc/>
         public virtual IReadOnlyList<LocalizedString> GetAllStrings()
         {
-            return _dictionary.Values.ToImmutableList();
+            return dictionary.Values.ToImmutableList();
         }
 
         /// <inheritdoc/>
@@ -65,7 +65,7 @@ namespace StudioX.Localization.Dictionaries
 
         protected bool Contains(string name)
         {
-            return _dictionary.ContainsKey(name);
+            return dictionary.ContainsKey(name);
         }
     }
 }

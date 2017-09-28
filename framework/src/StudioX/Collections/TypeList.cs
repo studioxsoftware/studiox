@@ -22,13 +22,13 @@ namespace StudioX.Collections
         /// Gets the count.
         /// </summary>
         /// <value>The count.</value>
-        public int Count { get { return _typeList.Count; } }
+        public int Count => typeList.Count;
 
         /// <summary>
         /// Gets a value indicating whether this instance is read only.
         /// </summary>
         /// <value><c>true</c> if this instance is read only; otherwise, <c>false</c>.</value>
-        public bool IsReadOnly { get { return false; } }
+        public bool IsReadOnly => false;
 
         /// <summary>
         /// Gets or sets the <see cref="Type"/> at the specified index.
@@ -36,47 +36,47 @@ namespace StudioX.Collections
         /// <param name="index">Index.</param>
         public Type this[int index]
         {
-            get { return _typeList[index]; }
+            get => typeList[index];
             set
             {
                 CheckType(value);
-                _typeList[index] = value;
+                typeList[index] = value;
             }
         }
 
-        private readonly List<Type> _typeList;
+        private readonly List<Type> typeList;
 
         /// <summary>
         /// Creates a new <see cref="TypeList{T}"/> object.
         /// </summary>
         public TypeList()
         {
-            _typeList = new List<Type>();
+            typeList = new List<Type>();
         }
 
         /// <inheritdoc/>
         public void Add<T>() where T : TBaseType
         {
-            _typeList.Add(typeof(T));
+            typeList.Add(typeof(T));
         }
 
         /// <inheritdoc/>
         public void Add(Type item)
         {
             CheckType(item);
-            _typeList.Add(item);
+            typeList.Add(item);
         }
 
         /// <inheritdoc/>
         public void Insert(int index, Type item)
         {
-            _typeList.Insert(index, item);
+            typeList.Insert(index, item);
         }
 
         /// <inheritdoc/>
         public int IndexOf(Type item)
         {
-            return _typeList.IndexOf(item);
+            return typeList.IndexOf(item);
         }
 
         /// <inheritdoc/>
@@ -88,48 +88,48 @@ namespace StudioX.Collections
         /// <inheritdoc/>
         public bool Contains(Type item)
         {
-            return _typeList.Contains(item);
+            return typeList.Contains(item);
         }
 
         /// <inheritdoc/>
         public void Remove<T>() where T : TBaseType
         {
-            _typeList.Remove(typeof(T));
+            typeList.Remove(typeof(T));
         }
 
         /// <inheritdoc/>
         public bool Remove(Type item)
         {
-            return _typeList.Remove(item);
+            return typeList.Remove(item);
         }
 
         /// <inheritdoc/>
         public void RemoveAt(int index)
         {
-            _typeList.RemoveAt(index);
+            typeList.RemoveAt(index);
         }
 
         /// <inheritdoc/>
         public void Clear()
         {
-            _typeList.Clear();
+            typeList.Clear();
         }
 
         /// <inheritdoc/>
         public void CopyTo(Type[] array, int arrayIndex)
         {
-            _typeList.CopyTo(array, arrayIndex);
+            typeList.CopyTo(array, arrayIndex);
         }
 
         /// <inheritdoc/>
         public IEnumerator<Type> GetEnumerator()
         {
-            return _typeList.GetEnumerator();
+            return typeList.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return _typeList.GetEnumerator();
+            return typeList.GetEnumerator();
         }
 
         private static void CheckType(Type item)

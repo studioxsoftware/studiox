@@ -26,7 +26,7 @@ namespace StudioX.Dependency
         /// <summary>
         /// List of all registered conventional registrars.
         /// </summary>
-        private readonly List<IConventionalDependencyRegistrar> _conventionalRegistrars;
+        private readonly List<IConventionalDependencyRegistrar> conventionalRegistrars;
 
         static IocManager()
         {
@@ -41,7 +41,7 @@ namespace StudioX.Dependency
         public IocManager()
         {
             IocContainer = new WindsorContainer();
-            _conventionalRegistrars = new List<IConventionalDependencyRegistrar>();
+            conventionalRegistrars = new List<IConventionalDependencyRegistrar>();
 
             //Register self!
             IocContainer.Register(
@@ -55,7 +55,7 @@ namespace StudioX.Dependency
         /// <param name="registrar">dependency registrar</param>
         public void AddConventionalRegistrar(IConventionalDependencyRegistrar registrar)
         {
-            _conventionalRegistrars.Add(registrar);
+            conventionalRegistrars.Add(registrar);
         }
 
         /// <summary>
@@ -76,7 +76,7 @@ namespace StudioX.Dependency
         {
             var context = new ConventionalRegistrationContext(assembly, this, config);
 
-            foreach (var registerer in _conventionalRegistrars)
+            foreach (var registerer in conventionalRegistrars)
             {
                 registerer.RegisterAssembly(context);
             }

@@ -11,19 +11,19 @@ namespace StudioX.Dependency
 
     internal class DisposableDependencyObjectWrapper<T> : IDisposableDependencyObjectWrapper<T>
     {
-        private readonly IIocResolver _iocResolver;
+        private readonly IIocResolver iocResolver;
 
         public T Object { get; private set; }
 
         public DisposableDependencyObjectWrapper(IIocResolver iocResolver, T obj)
         {
-            _iocResolver = iocResolver;
+            this.iocResolver = iocResolver;
             Object = obj;
         }
 
         public void Dispose()
         {
-            _iocResolver.Release(Object);
+            iocResolver.Release(Object);
         }
     }
 }

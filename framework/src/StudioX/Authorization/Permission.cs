@@ -49,8 +49,8 @@ namespace StudioX.Authorization
         /// <summary>
         /// List of child permissions. A child permission can be granted only if parent is granted.
         /// </summary>
-        public IReadOnlyList<Permission> Children => _children.ToImmutableList();
-        private readonly List<Permission> _children;
+        public IReadOnlyList<Permission> Children => children.ToImmutableList();
+        private readonly List<Permission> children;
 
         /// <summary>
         /// Creates a new Permission.
@@ -78,7 +78,7 @@ namespace StudioX.Authorization
             MultiTenancySides = multiTenancySides;
             FeatureDependency = featureDependency;
 
-            _children = new List<Permission>();
+            children = new List<Permission>();
         }
 
         /// <summary>
@@ -94,7 +94,7 @@ namespace StudioX.Authorization
             IFeatureDependency featureDependency = null)
         {
             var permission = new Permission(name, displayName, description, multiTenancySides, featureDependency) { Parent = this };
-            _children.Add(permission);
+            children.Add(permission);
             return permission;
         }
 

@@ -15,7 +15,7 @@ namespace StudioX.Events.Bus.Factories
         /// </summary>
         public Type HandlerType { get; private set; }
 
-        private readonly IIocResolver _iocResolver;
+        private readonly IIocResolver iocResolver;
 
         /// <summary>
         /// Creates a new instance of <see cref="IocHandlerFactory"/> class.
@@ -24,7 +24,7 @@ namespace StudioX.Events.Bus.Factories
         /// <param name="handlerType">Type of the handler</param>
         public IocHandlerFactory(IIocResolver iocResolver, Type handlerType)
         {
-            _iocResolver = iocResolver;
+            this.iocResolver = iocResolver;
             HandlerType = handlerType;
         }
 
@@ -34,7 +34,7 @@ namespace StudioX.Events.Bus.Factories
         /// <returns>Resolved handler object</returns>
         public IEventHandler GetHandler()
         {
-            return (IEventHandler)_iocResolver.Resolve(HandlerType);
+            return (IEventHandler)iocResolver.Resolve(HandlerType);
         }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace StudioX.Events.Bus.Factories
         /// <param name="handler">Handler to be released</param>
         public void ReleaseHandler(IEventHandler handler)
         {
-            _iocResolver.Release(handler);
+            iocResolver.Release(handler);
         }
     }
 }

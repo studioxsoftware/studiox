@@ -14,30 +14,30 @@ namespace StudioX.Application.Navigation
     {
         public IStudioXSession StudioXSession { get; set; }
 
-        private readonly INavigationManager _navigationManager;
-        private readonly ILocalizationContext _localizationContext;
-        private readonly IIocResolver _iocResolver;
+        private readonly INavigationManager navigationManager;
+        private readonly ILocalizationContext localizationContext;
+        private readonly IIocResolver iocResolver;
 
         public UserNavigationManager(
             INavigationManager navigationManager,
             ILocalizationContext localizationContext,
             IIocResolver iocResolver)
         {
-            _navigationManager = navigationManager;
-            _localizationContext = localizationContext;
-            _iocResolver = iocResolver;
+            this.navigationManager = navigationManager;
+            this.localizationContext = localizationContext;
+            this.iocResolver = iocResolver;
             StudioXSession = NullStudioXSession.Instance;
         }
 
         public async Task<UserMenu> GetMenuAsync(string menuName, UserIdentifier user)
         {
-            var menuDefinition = _navigationManager.Menus.GetOrDefault(menuName);
+            var menuDefinition = navigationManager.Menus.GetOrDefault(menuName);
             if (menuDefinition == null)
             {
                 throw new StudioXException("There is no menu with given name: " + menuName);
             }
 
-            var userMenu = new UserMenu(menuDefinition, _localizationContext);
+            var userMenu = new UserMenu(menuDefinition, localizationContext);
             await FillUserMenuItems(user, menuDefinition.Items, userMenu.Items);
             return userMenu;
         }
@@ -46,7 +46,7 @@ namespace StudioX.Application.Navigation
         {
             var userMenus = new List<UserMenu>();
 
-            foreach (var menu in _navigationManager.Menus.Values)
+            foreach (var menu in navigationManager.Menus.Values)
             {
                 userMenus.Add(await GetMenuAsync(menu.Name, user));
             }
@@ -60,7 +60,7 @@ namespace StudioX.Application.Navigation
 
             var addedMenuItemCount = 0;
 
-            using (var scope = _iocResolver.CreateScope())
+            using (var scope = iocResolver.CreateScope())
             {
                 var permissionDependencyContext = scope.Resolve<PermissionDependencyContext>();
                 permissionDependencyContext.User = user;
@@ -97,7 +97,7 @@ namespace StudioX.Application.Navigation
                         continue;
                     }
 
-                    var userMenuItem = new UserMenuItem(menuItemDefinition, _localizationContext);
+                    var userMenuItem = new UserMenuItem(menuItemDefinition, localizationContext);
                     if (menuItemDefinition.IsLeaf || (await FillUserMenuItems(user, menuItemDefinition.Items, userMenuItem.Items)) > 0)
                     {
                         userMenuItems.Add(userMenuItem);

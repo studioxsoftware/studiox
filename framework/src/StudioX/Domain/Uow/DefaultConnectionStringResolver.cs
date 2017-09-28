@@ -12,21 +12,21 @@ namespace StudioX.Domain.Uow
     /// </summary>
     public class DefaultConnectionStringResolver : IConnectionStringResolver, ITransientDependency
     {
-        private readonly IStudioXStartupConfiguration _configuration;
+        private readonly IStudioXStartupConfiguration configuration;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultConnectionStringResolver"/> class.
         /// </summary>
         public DefaultConnectionStringResolver(IStudioXStartupConfiguration configuration)
         {
-            _configuration = configuration;
+            this.configuration = configuration;
         }
 
         public virtual string GetNameOrConnectionString(ConnectionStringResolveArgs args)
         {
             Check.NotNull(args, nameof(args));
 
-            var defaultConnectionString = _configuration.DefaultNameOrConnectionString;
+            var defaultConnectionString = configuration.DefaultNameOrConnectionString;
             if (!string.IsNullOrWhiteSpace(defaultConnectionString))
             {
                 return defaultConnectionString;

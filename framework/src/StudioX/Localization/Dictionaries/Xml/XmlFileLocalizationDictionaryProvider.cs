@@ -8,7 +8,7 @@ namespace StudioX.Localization.Dictionaries.Xml
     /// </summary>
     public class XmlFileLocalizationDictionaryProvider : LocalizationDictionaryProviderBase
     {
-        private readonly string _directoryPath;
+        private readonly string directoryPath;
 
         /// <summary>
         /// Creates a new <see cref="XmlFileLocalizationDictionaryProvider"/>.
@@ -16,12 +16,12 @@ namespace StudioX.Localization.Dictionaries.Xml
         /// <param name="directoryPath">Path of the dictionary that contains all related XML files</param>
         public XmlFileLocalizationDictionaryProvider(string directoryPath)
         {
-            _directoryPath = directoryPath;
+            this.directoryPath = directoryPath;
         }
 
         public override void Initialize(string sourceName)
         {
-            var fileNames = Directory.GetFiles(_directoryPath, "*.xml", SearchOption.TopDirectoryOnly);
+            var fileNames = Directory.GetFiles(directoryPath, "*.xml", SearchOption.TopDirectoryOnly);
 
             foreach (var fileName in fileNames)
             {

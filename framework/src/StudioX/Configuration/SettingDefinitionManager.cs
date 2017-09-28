@@ -11,31 +11,31 @@ namespace StudioX.Configuration
     /// </summary>
     internal class SettingDefinitionManager : ISettingDefinitionManager, ISingletonDependency
     {
-        private readonly IIocManager _iocManager;
-        private readonly ISettingsConfiguration _settingsConfiguration;
-        private readonly IDictionary<string, SettingDefinition> _settings;
+        private readonly IIocManager iocManager;
+        private readonly ISettingsConfiguration settingsConfiguration;
+        private readonly IDictionary<string, SettingDefinition> settings;
 
         /// <summary>
         /// Constructor.
         /// </summary>
         public SettingDefinitionManager(IIocManager iocManager, ISettingsConfiguration settingsConfiguration)
         {
-            _iocManager = iocManager;
-            _settingsConfiguration = settingsConfiguration;
-            _settings = new Dictionary<string, SettingDefinition>();
+            this.iocManager = iocManager;
+            this.settingsConfiguration = settingsConfiguration;
+            settings = new Dictionary<string, SettingDefinition>();
         }
 
         public void Initialize()
         {
             var context = new SettingDefinitionProviderContext(this);
 
-            foreach (var providerType in _settingsConfiguration.Providers)
+            foreach (var providerType in settingsConfiguration.Providers)
             {
                 using (var provider = CreateProvider(providerType))
                 {
                     foreach (var settings in provider.Object.GetSettingDefinitions(context))
                     {
-                        _settings[settings.Name] = settings;
+                        this.settings[settings.Name] = settings;
                     }
                 }
             }
@@ -44,7 +44,7 @@ namespace StudioX.Configuration
         public SettingDefinition GetSettingDefinition(string name)
         {
             SettingDefinition settingDefinition;
-            if (!_settings.TryGetValue(name, out settingDefinition))
+            if (!settings.TryGetValue(name, out settingDefinition))
             {
                 throw new StudioXException("There is no setting defined with name: " + name);
             }
@@ -54,12 +54,12 @@ namespace StudioX.Configuration
 
         public IReadOnlyList<SettingDefinition> GetAllSettingDefinitions()
         {
-            return _settings.Values.ToImmutableList();
+            return settings.Values.ToImmutableList();
         }
 
         private IDisposableDependencyObjectWrapper<SettingProvider> CreateProvider(Type providerType)
         {
-            return _iocManager.ResolveAsDisposable<SettingProvider>(providerType);
+            return iocManager.ResolveAsDisposable<SettingProvider>(providerType);
         }
     }
 }

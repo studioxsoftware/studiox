@@ -19,14 +19,14 @@ namespace StudioX.Application.Features
         /// </summary>
         public IFeatureValueStore FeatureValueStore { get; set; }
 
-        private readonly IFeatureManager _featureManager;
+        private readonly IFeatureManager featureManager;
 
         /// <summary>
         /// Creates a new <see cref="FeatureChecker"/> object.
         /// </summary>
         public FeatureChecker(IFeatureManager featureManager)
         {
-            _featureManager = featureManager;
+            this.featureManager = featureManager;
 
             FeatureValueStore = NullFeatureValueStore.Instance;
             StudioXSession = NullStudioXSession.Instance;
@@ -46,7 +46,7 @@ namespace StudioX.Application.Features
         /// <inheritdoc/>
         public async Task<string> GetValueAsync(int tenantId, string name)
         {
-            var feature = _featureManager.Get(name);
+            var feature = featureManager.Get(name);
 
             var value = await FeatureValueStore.GetValueOrNullAsync(tenantId, feature);
             if (value == null)

@@ -5,18 +5,18 @@ namespace StudioX.Auditing
 {
     public class JsonNetAuditSerializer : IAuditSerializer, ITransientDependency
     {
-        private readonly IAuditingConfiguration _configuration;
+        private readonly IAuditingConfiguration configuration;
 
         public JsonNetAuditSerializer(IAuditingConfiguration configuration)
         {
-            _configuration = configuration;
+            this.configuration = configuration;
         }
 
         public string Serialize(object obj)
         {
             var options = new JsonSerializerSettings
             {
-                ContractResolver = new AuditingContractResolver(_configuration.IgnoredTypes)
+                ContractResolver = new AuditingContractResolver(configuration.IgnoredTypes)
             };
 
             return JsonConvert.SerializeObject(obj, options);

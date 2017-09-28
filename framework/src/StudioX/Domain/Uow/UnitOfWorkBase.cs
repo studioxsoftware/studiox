@@ -33,11 +33,9 @@ namespace StudioX.Domain.Uow
         public UnitOfWorkOptions Options { get; private set; }
 
         /// <inheritdoc/>
-        public IReadOnlyList<DataFilterConfiguration> Filters
-        {
-            get { return _filters.ToImmutableList(); }
-        }
-        private readonly List<DataFilterConfiguration> _filters;
+        public IReadOnlyList<DataFilterConfiguration> Filters => filters.ToImmutableList();
+
+        private readonly List<DataFilterConfiguration> filters;
 
         /// <summary>
         /// Gets default UOW options.
@@ -96,7 +94,7 @@ namespace StudioX.Domain.Uow
             ConnectionStringResolver = connectionStringResolver;
 
             Id = Guid.NewGuid().ToString("N");
-            _filters = defaultOptions.Filters.ToList();
+            filters = defaultOptions.Filters.ToList();
 
             StudioXSession = NullStudioXSession.Instance;
         }
@@ -132,10 +130,10 @@ namespace StudioX.Domain.Uow
             foreach (var filterName in filterNames)
             {
                 var filterIndex = GetFilterIndex(filterName);
-                if (_filters[filterIndex].IsEnabled)
+                if (filters[filterIndex].IsEnabled)
                 {
                     disabledFilters.Add(filterName);
-                    _filters[filterIndex] = new DataFilterConfiguration(_filters[filterIndex], false);
+                    filters[filterIndex] = new DataFilterConfiguration(filters[filterIndex], false);
                 }
             }
 
@@ -154,10 +152,10 @@ namespace StudioX.Domain.Uow
             foreach (var filterName in filterNames)
             {
                 var filterIndex = GetFilterIndex(filterName);
-                if (!_filters[filterIndex].IsEnabled)
+                if (!filters[filterIndex].IsEnabled)
                 {
                     enabledFilters.Add(filterName);
-                    _filters[filterIndex] = new DataFilterConfiguration(_filters[filterIndex], true);
+                    filters[filterIndex] = new DataFilterConfiguration(filters[filterIndex], true);
                 }
             }
 
@@ -177,7 +175,7 @@ namespace StudioX.Domain.Uow
         {
             var filterIndex = GetFilterIndex(filterName);
 
-            var newfilter = new DataFilterConfiguration(_filters[filterIndex]);
+            var newfilter = new DataFilterConfiguration(filters[filterIndex]);
 
             //Store old value
             object oldValue = null;
@@ -189,7 +187,7 @@ namespace StudioX.Domain.Uow
 
             newfilter.FilterParameters[parameterName] = value;
 
-            _filters[filterIndex] = newfilter;
+            filters[filterIndex] = newfilter;
 
             ApplyFilterParameterValue(filterName, parameterName, value);
 
@@ -386,12 +384,12 @@ namespace StudioX.Domain.Uow
 
         private void SetFilters(List<DataFilterConfiguration> filterOverrides)
         {
-            for (var i = 0; i < _filters.Count; i++)
+            for (var i = 0; i < filters.Count; i++)
             {
-                var filterOverride = filterOverrides.FirstOrDefault(f => f.FilterName == _filters[i].FilterName);
+                var filterOverride = filterOverrides.FirstOrDefault(f => f.FilterName == filters[i].FilterName);
                 if (filterOverride != null)
                 {
-                    _filters[i] = filterOverride;
+                    filters[i] = filterOverride;
                 }
             }
 
@@ -408,23 +406,23 @@ namespace StudioX.Domain.Uow
                 return;
             }
 
-            var index = _filters.FindIndex(f => f.FilterName == filterName);
+            var index = filters.FindIndex(f => f.FilterName == filterName);
             if (index < 0)
             {
                 return;
             }
 
-            if (_filters[index].IsEnabled == isEnabled)
+            if (filters[index].IsEnabled == isEnabled)
             {
                 return;
             }
 
-            _filters[index] = new DataFilterConfiguration(filterName, isEnabled);
+            filters[index] = new DataFilterConfiguration(filterName, isEnabled);
         }
 
         private DataFilterConfiguration GetFilter(string filterName)
         {
-            var filter = _filters.FirstOrDefault(f => f.FilterName == filterName);
+            var filter = filters.FirstOrDefault(f => f.FilterName == filterName);
             if (filter == null)
             {
                 throw new StudioXException("Unknown filter name: " + filterName + ". Be sure this filter is registered before.");
@@ -435,7 +433,7 @@ namespace StudioX.Domain.Uow
 
         private int GetFilterIndex(string filterName)
         {
-            var filterIndex = _filters.FindIndex(f => f.FilterName == filterName);
+            var filterIndex = filters.FindIndex(f => f.FilterName == filterName);
             if (filterIndex < 0)
             {
                 throw new StudioXException("Unknown filter name: " + filterName + ". Be sure this filter is registered before.");

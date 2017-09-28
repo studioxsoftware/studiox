@@ -19,13 +19,13 @@ namespace StudioX.Authorization
         public IFeatureChecker FeatureChecker { get; set; }
         public ILocalizationManager LocalizationManager { get; set; }
 
-        private readonly IFeatureChecker _featureChecker;
-        private readonly IAuthorizationConfiguration _authConfiguration;
+        private readonly IFeatureChecker featureChecker;
+        private readonly IAuthorizationConfiguration authConfiguration;
 
         public AuthorizationHelper(IFeatureChecker featureChecker, IAuthorizationConfiguration authConfiguration)
         {
-            _featureChecker = featureChecker;
-            _authConfiguration = authConfiguration;
+            this.featureChecker = featureChecker;
+            this.authConfiguration = authConfiguration;
             StudioXSession = NullStudioXSession.Instance;
             PermissionChecker = NullPermissionChecker.Instance;
             LocalizationManager = NullLocalizationManager.Instance;
@@ -33,7 +33,7 @@ namespace StudioX.Authorization
 
         public async Task AuthorizeAsync(IEnumerable<IStudioXAuthorizeAttribute> authorizeAttributes)
         {
-            if (!_authConfiguration.IsEnabled)
+            if (!authConfiguration.IsEnabled)
             {
                 return;
             }
@@ -68,13 +68,13 @@ namespace StudioX.Authorization
 
             foreach (var featureAttribute in featureAttributes)
             {
-                await _featureChecker.CheckEnabledAsync(featureAttribute.RequiresAll, featureAttribute.Features);
+                await featureChecker.CheckEnabledAsync(featureAttribute.RequiresAll, featureAttribute.Features);
             }
         }
 
         private async Task CheckPermissions(MethodInfo methodInfo, Type type)
         {
-            if (!_authConfiguration.IsEnabled)
+            if (!authConfiguration.IsEnabled)
             {
                 return;
             }

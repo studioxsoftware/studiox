@@ -7,16 +7,16 @@ namespace StudioX.Authorization
     /// </summary>
     public class AuthorizationInterceptor : IInterceptor
     {
-        private readonly IAuthorizationHelper _authorizationHelper;
+        private readonly IAuthorizationHelper authorizationHelper;
 
         public AuthorizationInterceptor(IAuthorizationHelper authorizationHelper)
         {
-            _authorizationHelper = authorizationHelper;
+            this.authorizationHelper = authorizationHelper;
         }
 
         public void Intercept(IInvocation invocation)
         {
-            _authorizationHelper.Authorize(invocation.MethodInvocationTarget, invocation.TargetType);
+            authorizationHelper.Authorize(invocation.MethodInvocationTarget, invocation.TargetType);
             invocation.Proceed();
         }
     }

@@ -19,10 +19,10 @@ namespace StudioX.Auditing
         public IStudioXSession StudioXSession { get; set; }
         public IAuditingStore AuditingStore { get; set; }
 
-        private readonly IAuditInfoProvider _auditInfoProvider;
-        private readonly IAuditingConfiguration _configuration;
-        private readonly IUnitOfWorkManager _unitOfWorkManager;
-        private readonly IAuditSerializer _auditSerializer;
+        private readonly IAuditInfoProvider auditInfoProvider;
+        private readonly IAuditingConfiguration configuration;
+        private readonly IUnitOfWorkManager unitOfWorkManager;
+        private readonly IAuditSerializer auditSerializer;
 
         public AuditingHelper(
             IAuditInfoProvider auditInfoProvider,
@@ -30,10 +30,10 @@ namespace StudioX.Auditing
             IUnitOfWorkManager unitOfWorkManager,
             IAuditSerializer auditSerializer)
         {
-            _auditInfoProvider = auditInfoProvider;
-            _configuration = configuration;
-            _unitOfWorkManager = unitOfWorkManager;
-            _auditSerializer = auditSerializer;
+            this.auditInfoProvider = auditInfoProvider;
+            this.configuration = configuration;
+            this.unitOfWorkManager = unitOfWorkManager;
+            this.auditSerializer = auditSerializer;
 
             StudioXSession = NullStudioXSession.Instance;
             Logger = NullLogger.Instance;
@@ -42,12 +42,12 @@ namespace StudioX.Auditing
 
         public bool ShouldSaveAudit(MethodInfo methodInfo, bool defaultValue = false)
         {
-            if (!_configuration.IsEnabled)
+            if (!configuration.IsEnabled)
             {
                 return false;
             }
 
-            if (!_configuration.IsEnabledForAnonymousUsers && (StudioXSession?.UserId == null))
+            if (!configuration.IsEnabledForAnonymousUsers && (StudioXSession?.UserId == null))
             {
                 return false;
             }
@@ -85,7 +85,7 @@ namespace StudioX.Auditing
                     return false;
                 }
 
-                if (_configuration.Selectors.Any(selector => selector.Predicate(classType)))
+                if (configuration.Selectors.Any(selector => selector.Predicate(classType)))
                 {
                     return true;
                 }
@@ -117,7 +117,7 @@ namespace StudioX.Auditing
 
             try
             {
-                _auditInfoProvider.Fill(auditInfo);
+                auditInfoProvider.Fill(auditInfo);
             }
             catch (Exception ex)
             {
@@ -129,7 +129,7 @@ namespace StudioX.Auditing
 
         public void Save(AuditInfo auditInfo)
         {
-            using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.Suppress))
+            using (var uow = unitOfWorkManager.Begin(TransactionScopeOption.Suppress))
             {
                 AuditingStore.Save(auditInfo);
                 uow.Complete();
@@ -138,7 +138,7 @@ namespace StudioX.Auditing
 
         public async Task SaveAsync(AuditInfo auditInfo)
         {
-            using (var uow = _unitOfWorkManager.Begin(TransactionScopeOption.Suppress))
+            using (var uow = unitOfWorkManager.Begin(TransactionScopeOption.Suppress))
             {
                 await AuditingStore.SaveAsync(auditInfo);
                 await uow.CompleteAsync();
@@ -158,7 +158,7 @@ namespace StudioX.Auditing
 
                 foreach (var argument in arguments)
                 {
-                    if (argument.Value != null && _configuration.IgnoredTypes.Any(t => t.IsInstanceOfType(argument.Value)))
+                    if (argument.Value != null && configuration.IgnoredTypes.Any(t => t.IsInstanceOfType(argument.Value)))
                     {
                         dictionary[argument.Key] = null;
                     }
@@ -168,7 +168,7 @@ namespace StudioX.Auditing
                     }
                 }
 
-                return _auditSerializer.Serialize(dictionary);
+                return auditSerializer.Serialize(dictionary);
             }
             catch (Exception ex)
             {

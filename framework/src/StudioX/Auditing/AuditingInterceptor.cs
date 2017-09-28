@@ -9,11 +9,11 @@ namespace StudioX.Auditing
 {
     internal class AuditingInterceptor : IInterceptor
     {
-        private readonly IAuditingHelper _auditingHelper;
+        private readonly IAuditingHelper auditingHelper;
 
         public AuditingInterceptor(IAuditingHelper auditingHelper)
         {
-            _auditingHelper = auditingHelper;
+            this.auditingHelper = auditingHelper;
         }
 
         public void Intercept(IInvocation invocation)
@@ -24,13 +24,13 @@ namespace StudioX.Auditing
                 return;
             }
 
-            if (!_auditingHelper.ShouldSaveAudit(invocation.MethodInvocationTarget))
+            if (!auditingHelper.ShouldSaveAudit(invocation.MethodInvocationTarget))
             {
                 invocation.Proceed();
                 return;
             }
 
-            var auditInfo = _auditingHelper.CreateAuditInfo(invocation.TargetType, invocation.MethodInvocationTarget, invocation.Arguments);
+            var auditInfo = auditingHelper.CreateAuditInfo(invocation.TargetType, invocation.MethodInvocationTarget, invocation.Arguments);
 
             if (AsyncHelper.IsAsyncMethod(invocation.Method))
             {
@@ -59,7 +59,7 @@ namespace StudioX.Auditing
             {
                 stopwatch.Stop();
                 auditInfo.ExecutionDuration = Convert.ToInt32(stopwatch.Elapsed.TotalMilliseconds);
-                _auditingHelper.Save(auditInfo);
+                auditingHelper.Save(auditInfo);
             }
         }
 
@@ -92,7 +92,7 @@ namespace StudioX.Auditing
             auditInfo.Exception = exception;
             auditInfo.ExecutionDuration = Convert.ToInt32(stopwatch.Elapsed.TotalMilliseconds);
 
-            _auditingHelper.Save(auditInfo);
+            auditingHelper.Save(auditInfo);
         }
     }
 }

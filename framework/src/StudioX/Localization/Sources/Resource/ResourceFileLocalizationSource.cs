@@ -26,8 +26,8 @@ namespace StudioX.Localization.Sources.Resource
         /// </summary>
         public ResourceManager ResourceManager { get; }
 
-        private ILogger _logger;
-        private ILocalizationConfiguration _configuration;
+        private ILogger logger;
+        private ILocalizationConfiguration configuration;
 
         /// <param name="name">Unique Name of the source</param>
         /// <param name="resourceManager">Reference to the <see cref="ResourceManager"/> object related to this localization source</param>
@@ -42,9 +42,9 @@ namespace StudioX.Localization.Sources.Resource
         /// </summary>
         public virtual void Initialize(ILocalizationConfiguration configuration, IIocResolver iocResolver)
         {
-            _configuration = configuration;
+            this.configuration = configuration;
 
-            _logger = iocResolver.IsRegistered(typeof(ILoggerFactory))
+            logger = iocResolver.IsRegistered(typeof(ILoggerFactory))
                 ? iocResolver.Resolve<ILoggerFactory>().Create(typeof(ResourceFileLocalizationSource))
                 : NullLogger.Instance;
         }
@@ -106,11 +106,11 @@ namespace StudioX.Localization.Sources.Resource
         protected virtual string ReturnGivenNameOrThrowException(string name, CultureInfo culture)
         {
             return LocalizationSourceHelper.ReturnGivenNameOrThrowException(
-                _configuration,
+                configuration,
                 Name,
                 name,
                 culture,
-                _logger
+                logger
             );
         }
     }
