@@ -11,8 +11,6 @@ See <a href="https://github.com/studioxsoftware/studiox/tree/master/angular" tar
 
 StudioX provides a layered architectural model based on **Domain Driven Design**. Provides a **SOLID** model for your application.
 
-![NLayer Architecture](_screenshots/nlayer-architecture.png)
-
 See <a href="https://studioxsoftware.github.io/pages/documents/NLayerArchitecture.pdf" target="_blank">NLayer Architecture</a> document for details. 
  
 User Interface is based on [BSB Admin theme](https://github.com/gurayyarar/AdminBSBMaterialDesign).
