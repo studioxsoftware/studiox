@@ -16,7 +16,7 @@ namespace StudioX.Web.Authorization
         /// <inheritdoc/>
         public IStudioXSession StudioXSession { get; set; }
 
-        private readonly IPermissionManager permissionManager;
+        private readonly IPermissionManager _permissionManager;
 
         public IPermissionChecker PermissionChecker { get; set; }
 
@@ -26,13 +26,13 @@ namespace StudioX.Web.Authorization
             StudioXSession = NullStudioXSession.Instance;
             PermissionChecker = NullPermissionChecker.Instance;
 
-            this.permissionManager = permissionManager;
+            _permissionManager = permissionManager;
         }
 
         /// <inheritdoc/>
         public async Task<string> GetScriptAsync()
         {
-            var allPermissionNames = permissionManager.GetAllPermissions(false).Select(p => p.Name).ToList();
+            var allPermissionNames = _permissionManager.GetAllPermissions(false).Select(p => p.Name).ToList();
             var grantedPermissionNames = new List<string>();
 
             if (StudioXSession.UserId.HasValue)

@@ -15,18 +15,18 @@ namespace StudioX.Web.Mvc.Authorization
 {
     public class StudioXMvcAuthorizeFilter : IAuthorizationFilter, ITransientDependency
     {
-        private readonly IAuthorizationHelper authorizationHelper;
-        private readonly IErrorInfoBuilder errorInfoBuilder;
-        private readonly IEventBus eventBus;
+        private readonly IAuthorizationHelper _authorizationHelper;
+        private readonly IErrorInfoBuilder _errorInfoBuilder;
+        private readonly IEventBus _eventBus;
 
         public StudioXMvcAuthorizeFilter(
-            IAuthorizationHelper authorizationHelper, 
+            IAuthorizationHelper authorizationHelper,
             IErrorInfoBuilder errorInfoBuilder,
             IEventBus eventBus)
         {
-            this.authorizationHelper = authorizationHelper;
-            this.errorInfoBuilder = errorInfoBuilder;
-            this.eventBus = eventBus;
+            _authorizationHelper = authorizationHelper;
+            _errorInfoBuilder = errorInfoBuilder;
+            _eventBus = eventBus;
         }
 
         public virtual void OnAuthorization(AuthorizationContext filterContext)
@@ -45,7 +45,7 @@ namespace StudioX.Web.Mvc.Authorization
 
             try
             {
-                authorizationHelper.Authorize(methodInfo, methodInfo.DeclaringType);
+                _authorizationHelper.Authorize(methodInfo, methodInfo.DeclaringType);
             }
             catch (StudioXAuthorizationException ex)
             {
@@ -55,14 +55,14 @@ namespace StudioX.Web.Mvc.Authorization
         }
 
         protected virtual void HandleUnauthorizedRequest(
-            AuthorizationContext filterContext, 
-            MethodInfo methodInfo, 
+            AuthorizationContext filterContext,
+            MethodInfo methodInfo,
             StudioXAuthorizationException ex)
         {
             filterContext.HttpContext.Response.StatusCode =
                 filterContext.RequestContext.HttpContext.User?.Identity?.IsAuthenticated ?? false
-                    ? (int) HttpStatusCode.Forbidden
-                    : (int) HttpStatusCode.Unauthorized;
+                    ? (int)HttpStatusCode.Forbidden
+                    : (int)HttpStatusCode.Unauthorized;
 
             var isJsonResult = MethodInfoHelper.IsJsonResult(methodInfo);
 
@@ -80,16 +80,16 @@ namespace StudioX.Web.Mvc.Authorization
                 filterContext.HttpContext.Response.SuppressFormsAuthenticationRedirect = true;
             }
 
-            eventBus.Trigger(this, new StudioXHandledExceptionData(ex));
+            _eventBus.Trigger(this, new StudioXHandledExceptionData(ex));
         }
 
         protected virtual StudioXJsonResult CreateUnAuthorizedJsonResult(StudioXAuthorizationException ex)
         {
             return new StudioXJsonResult(
-                new AjaxResponse(errorInfoBuilder.BuildForException(ex), true))
-                {
-                    JsonRequestBehavior = JsonRequestBehavior.AllowGet
-                };
+                new AjaxResponse(_errorInfoBuilder.BuildForException(ex), true))
+            {
+                JsonRequestBehavior = JsonRequestBehavior.AllowGet
+            };
         }
 
         protected virtual HttpStatusCodeResult CreateUnAuthorizedNonJsonResult(AuthorizationContext filterContext, StudioXAuthorizationException ex)

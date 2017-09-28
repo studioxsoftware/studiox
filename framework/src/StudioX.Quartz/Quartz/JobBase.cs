@@ -11,8 +11,8 @@ namespace StudioX.Quartz
 {
     public abstract class JobBase : IJob
     {
-        private ILocalizationSource localizationSource;
-        private IUnitOfWorkManager unitOfWorkManager;
+        private ILocalizationSource _localizationSource;
+        private IUnitOfWorkManager _unitOfWorkManager;
 
         protected JobBase()
         {
@@ -34,18 +34,21 @@ namespace StudioX.Quartz
         {
             get
             {
-                if (unitOfWorkManager == null)
+                if (_unitOfWorkManager == null)
                     throw new StudioXException("Must set UnitOfWorkManager before use it.");
 
-                return unitOfWorkManager;
+                return _unitOfWorkManager;
             }
-            set => unitOfWorkManager = value;
+            set { _unitOfWorkManager = value; }
         }
 
         /// <summary>
         ///     Gets current unit of work.
         /// </summary>
-        protected IActiveUnitOfWork CurrentUnitOfWork => UnitOfWorkManager.Current;
+        protected IActiveUnitOfWork CurrentUnitOfWork
+        {
+            get { return UnitOfWorkManager.Current; }
+        }
 
         /// <summary>
         ///     Reference to the localization manager.
@@ -69,10 +72,10 @@ namespace StudioX.Quartz
                 if (LocalizationSourceName == null)
                     throw new StudioXException("Must set LocalizationSourceName before, in order to get LocalizationSource");
 
-                if ((localizationSource == null) || (localizationSource.Name != LocalizationSourceName))
-                    localizationSource = LocalizationManager.GetSource(LocalizationSourceName);
+                if ((_localizationSource == null) || (_localizationSource.Name != LocalizationSourceName))
+                    _localizationSource = LocalizationManager.GetSource(LocalizationSourceName);
 
-                return localizationSource;
+                return _localizationSource;
             }
         }
 

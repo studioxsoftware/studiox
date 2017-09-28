@@ -7,16 +7,16 @@ namespace StudioX.Resources.Embedded
 {
     public class EmbeddedResourceManager : IEmbeddedResourceManager, ISingletonDependency
     {
-        private readonly IEmbeddedResourcesConfiguration configuration;
-        private readonly Lazy<Dictionary<string, EmbeddedResourceItem>> resources;
+        private readonly IEmbeddedResourcesConfiguration _configuration;
+        private readonly Lazy<Dictionary<string, EmbeddedResourceItem>> _resources;
 
         /// <summary>
         /// Constructor.
         /// </summary>
         public EmbeddedResourceManager(IEmbeddedResourcesConfiguration configuration)
         {
-            this.configuration = configuration;
-            resources = new Lazy<Dictionary<string, EmbeddedResourceItem>>(
+            _configuration = configuration;
+            _resources = new Lazy<Dictionary<string, EmbeddedResourceItem>>(
                 CreateResourcesDictionary,
                 true
             );
@@ -25,14 +25,14 @@ namespace StudioX.Resources.Embedded
         /// <inheritdoc/>
         public EmbeddedResourceItem GetResource(string fullPath)
         {
-            return resources.Value.GetOrDefault(EmbeddedResourcePathHelper.NormalizePath(fullPath));
+            return _resources.Value.GetOrDefault(EmbeddedResourcePathHelper.NormalizePath(fullPath));
         }
 
         private Dictionary<string, EmbeddedResourceItem> CreateResourcesDictionary()
         {
             var resources = new Dictionary<string, EmbeddedResourceItem>(StringComparer.OrdinalIgnoreCase);
 
-            foreach (var source in configuration.Sources)
+            foreach (var source in _configuration.Sources)
             {
                 source.AddResources(resources);
             }

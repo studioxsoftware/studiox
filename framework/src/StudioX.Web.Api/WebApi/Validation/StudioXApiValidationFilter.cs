@@ -13,19 +13,18 @@ namespace StudioX.WebApi.Validation
     {
         public bool AllowMultiple => false;
 
-        private readonly IIocResolver iocResolver;
-        private readonly IStudioXWebApiConfiguration configuration;
+        private readonly IIocResolver _iocResolver;
+        private readonly IStudioXWebApiConfiguration _configuration;
 
         public StudioXApiValidationFilter(IIocResolver iocResolver, IStudioXWebApiConfiguration configuration)
         {
-            this.iocResolver = iocResolver;
-            this.configuration = configuration;
+            _iocResolver = iocResolver;
+            _configuration = configuration;
         }
 
-        public async Task<HttpResponseMessage> ExecuteActionFilterAsync(HttpActionContext actionContext,
-            CancellationToken cancellationToken, Func<Task<HttpResponseMessage>> continuation)
+        public async Task<HttpResponseMessage> ExecuteActionFilterAsync(HttpActionContext actionContext, CancellationToken cancellationToken, Func<Task<HttpResponseMessage>> continuation)
         {
-            if (!configuration.IsValidationEnabledForControllers)
+            if (!_configuration.IsValidationEnabledForControllers)
             {
                 return await continuation();
             }
@@ -45,7 +44,7 @@ namespace StudioX.WebApi.Validation
                 return await continuation();
             }
 
-            using (var validator = iocResolver.ResolveAsDisposable<WebApiActionInvocationValidator>())
+            using (var validator = _iocResolver.ResolveAsDisposable<WebApiActionInvocationValidator>())
             {
                 validator.Object.Initialize(actionContext, methodInfo);
                 validator.Object.Validate();

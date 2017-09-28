@@ -3,15 +3,15 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using JetBrains.Annotations;
 using StudioX.Collections.Extensions;
 using StudioX.Dependency;
 using StudioX.Extensions;
+using JetBrains.Annotations;
 
 namespace StudioX.RealTime
 {
     /// <summary>
-    ///     Implements <see cref="IOnlineClientManager" />.
+    /// Implements <see cref="IOnlineClientManager"/>.
     /// </summary>
     public class OnlineClientManager : IOnlineClientManager, ISingletonDependency
     {
@@ -21,14 +21,14 @@ namespace StudioX.RealTime
         public event EventHandler<OnlineUserEventArgs> UserDisconnected;
 
         /// <summary>
-        ///     Online clients.
+        /// Online clients.
         /// </summary>
         protected ConcurrentDictionary<string, IOnlineClient> Clients { get; }
 
         protected readonly object SyncObj = new object();
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="OnlineClientManager" /> class.
+        /// Initializes a new instance of the <see cref="OnlineClientManager"/> class.
         /// </summary>
         public OnlineClientManager()
         {
@@ -88,7 +88,7 @@ namespace StudioX.RealTime
                 return Clients.GetOrDefault(connectionId);
             }
         }
-
+        
         public virtual IReadOnlyList<IOnlineClient> GetAllClients()
         {
             lock (SyncObj)
@@ -103,8 +103,8 @@ namespace StudioX.RealTime
             Check.NotNull(user, nameof(user));
 
             return GetAllClients()
-                .Where(c => c.UserId == user.UserId && c.TenantId == user.TenantId)
-                .ToImmutableList();
+                 .Where(c => (c.UserId == user.UserId && c.TenantId == user.TenantId))
+                 .ToImmutableList();
         }
     }
 }

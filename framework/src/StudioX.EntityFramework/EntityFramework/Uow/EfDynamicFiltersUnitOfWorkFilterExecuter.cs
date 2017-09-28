@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Data.Entity;
-using EntityFramework.DynamicFilters;
 using StudioX.Domain.Uow;
 using StudioX.Extensions;
 using StudioX.Reflection;
+using EntityFramework.DynamicFilters;
 
 namespace StudioX.EntityFramework.Uow
 {
@@ -25,14 +25,13 @@ namespace StudioX.EntityFramework.Uow
             }
         }
 
-        public void ApplyFilterParameterValue(IUnitOfWork unitOfWork, string filterName, string parameterName,
-            object value)
+        public void ApplyFilterParameterValue(IUnitOfWork unitOfWork, string filterName, string parameterName, object value)
         {
             foreach (var activeDbContext in unitOfWork.As<EfUnitOfWork>().GetAllActiveDbContexts())
             {
                 if (TypeHelper.IsFunc<object>(value))
                 {
-                    activeDbContext.SetFilterScopedParameterValue(filterName, parameterName, (Func<object>) value);
+                    activeDbContext.SetFilterScopedParameterValue(filterName, parameterName, (Func<object>)value);
                 }
                 else
                 {
@@ -58,13 +57,11 @@ namespace StudioX.EntityFramework.Uow
                 {
                     if (TypeHelper.IsFunc<object>(filterParameter.Value))
                     {
-                        dbContext.SetFilterScopedParameterValue(filter.FilterName, filterParameter.Key,
-                            (Func<object>) filterParameter.Value);
+                        dbContext.SetFilterScopedParameterValue(filter.FilterName, filterParameter.Key, (Func<object>)filterParameter.Value);
                     }
                     else
                     {
-                        dbContext.SetFilterScopedParameterValue(filter.FilterName, filterParameter.Key,
-                            filterParameter.Value);
+                        dbContext.SetFilterScopedParameterValue(filter.FilterName, filterParameter.Key, filterParameter.Value);
                     }
                 }
             }

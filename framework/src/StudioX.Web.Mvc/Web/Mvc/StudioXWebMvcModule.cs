@@ -51,9 +51,9 @@ namespace StudioX.Web.Mvc
             GlobalFilters.Filters.Add(IocManager.Resolve<StudioXMvcValidationFilter>());
             GlobalFilters.Filters.Add(IocManager.Resolve<StudioXMvcUowFilter>());
 
-            var mvcDateTimeBinder = new StudioXMvcDateTimeBinder();
-            ModelBinders.Binders.Add(typeof(DateTime), mvcDateTimeBinder);
-            ModelBinders.Binders.Add(typeof(DateTime?), mvcDateTimeBinder);
+            var studioxMvcDateTimeBinder = new StudioXMvcDateTimeBinder();
+            ModelBinders.Binders.Add(typeof(DateTime), studioxMvcDateTimeBinder);
+            ModelBinders.Binders.Add(typeof(DateTime?), studioxMvcDateTimeBinder);
         }
     }
 }

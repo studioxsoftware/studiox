@@ -14,7 +14,6 @@ namespace StudioX.Domain.Uow
 
         }
 
-#if NET46
         /// <summary>
         /// Creates a new <see cref="StudioXException"/> object.
         /// </summary>
@@ -23,7 +22,6 @@ namespace StudioX.Domain.Uow
         {
 
         }
-#endif
 
         /// <summary>
         /// Creates a new <see cref="StudioXDbConcurrencyException"/> object.

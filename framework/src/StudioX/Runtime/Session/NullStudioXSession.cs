@@ -1,5 +1,4 @@
-﻿using System;
-using StudioX.Configuration.Startup;
+﻿using StudioX.Configuration.Startup;
 using StudioX.MultiTenancy;
 using StudioX.Runtime.Remoting;
 
@@ -28,13 +27,9 @@ namespace StudioX.Runtime.Session
         public override int? ImpersonatorTenantId => null;
 
         private NullStudioXSession() 
-            : base(new MultiTenancyConfig(), new DataContextAmbientScopeProvider<SessionOverride>(
-#if NET46
-                new CallContextAmbientDataContext()
-#else
-                new AsyncLocalAmbientDataContext()
-#endif
-                )
+            : base(
+                  new MultiTenancyConfig(), 
+                  new DataContextAmbientScopeProvider<SessionOverride>(new AsyncLocalAmbientDataContext())
             )
         {
 

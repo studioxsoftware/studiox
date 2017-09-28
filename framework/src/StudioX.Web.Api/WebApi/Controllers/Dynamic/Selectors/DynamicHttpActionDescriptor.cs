@@ -39,12 +39,12 @@ namespace StudioX.WebApi.Controllers.Dynamic.Selectors
     {
         public override Collection<HttpMethod> SupportedHttpMethods { get; }
 
-        private readonly DynamicApiActionInfo actionInfo;
-        private readonly Lazy<Collection<IFilter>> filters;
-        private readonly Lazy<Collection<HttpParameterDescriptor>> parameters;
+        private readonly DynamicApiActionInfo _actionInfo;
+        private readonly Lazy<Collection<IFilter>> _filters;
+        private readonly Lazy<Collection<HttpParameterDescriptor>> _parameters;
 
-        private readonly object[] attributes;
-        private readonly object[] declaredOnlyAttributes;
+        private readonly object[] _attributes;
+        private readonly object[] _declaredOnlyAttributes;
         
         public DynamicHttpActionDescriptor(
             IStudioXWebApiConfiguration configuration,
@@ -54,7 +54,7 @@ namespace StudioX.WebApi.Controllers.Dynamic.Selectors
                   controllerDescriptor,
                   actionInfo.Method)
         {
-            this.actionInfo = actionInfo;
+            _actionInfo = actionInfo;
             SupportedHttpMethods = new Collection<HttpMethod> { actionInfo.Verb.ToHttpMethod() };
 
             Properties["__StudioXDynamicApiActionInfo"] = actionInfo;
@@ -64,11 +64,11 @@ namespace StudioX.WebApi.Controllers.Dynamic.Selectors
                     configuration.DefaultDynamicApiWrapResultAttribute
                 );
 
-            filters = new Lazy<Collection<IFilter>>(GetFiltersInternal, true);
-            parameters = new Lazy<Collection<HttpParameterDescriptor>>(GetParametersInternal, true);
+            _filters = new Lazy<Collection<IFilter>>(GetFiltersInternal, true);
+            _parameters = new Lazy<Collection<HttpParameterDescriptor>>(GetParametersInternal, true);
 
-            declaredOnlyAttributes = this.actionInfo.Method.GetCustomAttributes(inherit: false);
-            attributes = this.actionInfo.Method.GetCustomAttributes(inherit: true);
+            _declaredOnlyAttributes = _actionInfo.Method.GetCustomAttributes(inherit: false);
+            _attributes = _actionInfo.Method.GetCustomAttributes(inherit: true);
         }
 
         /// <summary>
@@ -77,30 +77,30 @@ namespace StudioX.WebApi.Controllers.Dynamic.Selectors
         /// <returns> The Collection of filters.</returns>
         public override Collection<IFilter> GetFilters()
         {
-            return filters.Value;
+            return _filters.Value;
         }
 
         public override Collection<T> GetCustomAttributes<T>(bool inherit)
         {
-            object[] attributes = inherit ? this.attributes : declaredOnlyAttributes;
+            object[] attributes = inherit ? _attributes : _declaredOnlyAttributes;
             return new Collection<T>(DynamicApiDescriptorHelper.FilterType<T>(attributes));
         }
 
         public override Collection<HttpParameterDescriptor> GetParameters()
         {
-            return parameters.Value;
+            return _parameters.Value;
         }
 
         private Collection<IFilter> GetFiltersInternal()
         {
-            if (actionInfo.Filters.IsNullOrEmpty())
+            if (_actionInfo.Filters.IsNullOrEmpty())
             {
                 return base.GetFilters();
             }
 
             var actionFilters = new Collection<IFilter>();
 
-            foreach (var filter in actionInfo.Filters)
+            foreach (var filter in _actionInfo.Filters)
             {
                 actionFilters.Add(filter);
             }
@@ -117,7 +117,7 @@ namespace StudioX.WebApi.Controllers.Dynamic.Selectors
         {
             var parameters = base.GetParameters();
 
-            if (actionInfo.Verb.IsIn(HttpVerb.Get, HttpVerb.Head))
+            if (_actionInfo.Verb.IsIn(HttpVerb.Get, HttpVerb.Head))
             {
                 foreach (var parameter in parameters)
                 {

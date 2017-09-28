@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using System.Linq;
 using StudioX.Application.Features;
 using StudioX.Configuration.Startup;
 using StudioX.Dependency;
@@ -41,15 +41,13 @@ namespace StudioX.Authorization
             if (!StudioXSession.UserId.HasValue)
             {
                 throw new StudioXAuthorizationException(
-                    LocalizationManager.GetString(StudioXConsts.LocalizationSourceName,
-                        "CurrentUserDidNotLoginToTheApplication")
-                );
+                    LocalizationManager.GetString(StudioXConsts.LocalizationSourceName, "CurrentUserDidNotLoginToTheApplication")
+                    );
             }
 
             foreach (var authorizeAttribute in authorizeAttributes)
             {
-                await PermissionChecker.AuthorizeAsync(authorizeAttribute.RequireAllPermissions,
-                    authorizeAttribute.Permissions);
+                await PermissionChecker.AuthorizeAsync(authorizeAttribute.RequireAllPermissions, authorizeAttribute.Permissions);
             }
         }
 
@@ -100,10 +98,10 @@ namespace StudioX.Authorization
             await AuthorizeAsync(authorizeAttributes);
         }
 
-        private static bool AllowAnonymous(MemberInfo methodInfo, Type type)
+        private static bool AllowAnonymous(MemberInfo memberInfo, Type type)
         {
             return ReflectionHelper
-                .GetAttributesOfMemberAndType(methodInfo, type)
+                .GetAttributesOfMemberAndType(memberInfo, type)
                 .OfType<IStudioXAllowAnonymousAttribute>()
                 .Any();
         }

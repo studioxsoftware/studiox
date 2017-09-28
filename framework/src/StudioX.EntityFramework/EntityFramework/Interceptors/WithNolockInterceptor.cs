@@ -10,18 +10,16 @@ namespace StudioX.EntityFramework.Interceptors
     public class WithNoLockInterceptor : DbCommandInterceptor, ITransientDependency
     {
         private const string InterceptionContextKey = "StudioX.EntityFramework.Interceptors.WithNolockInterceptor";
+        private static readonly Regex TableAliasRegex = new Regex(@"(?<tableAlias>AS \[Extent\d+\](?! WITH \(NOLOCK\)))", RegexOptions.Multiline | RegexOptions.IgnoreCase);
 
-        private static readonly Regex TableAliasRegex = new Regex(
-            @"(?<tableAlias>AS \[Extent\d+\](?! WITH \(NOLOCK\)))", RegexOptions.Multiline | RegexOptions.IgnoreCase);
-
-        private readonly IAmbientScopeProvider<InterceptionContext> interceptionScopeProvider;
+        private readonly IAmbientScopeProvider<InterceptionContext> _interceptionScopeProvider;
 
         public WithNoLockInterceptor(IAmbientScopeProvider<InterceptionContext> interceptionScopeProvider)
         {
-            this.interceptionScopeProvider = interceptionScopeProvider;
+            _interceptionScopeProvider = interceptionScopeProvider;
         }
 
-        public InterceptionContext NolockingContext => interceptionScopeProvider.GetValue(InterceptionContextKey);
+        public InterceptionContext NolockingContext => _interceptionScopeProvider.GetValue(InterceptionContextKey);
 
         public override void ScalarExecuting(DbCommand command, DbCommandInterceptionContext<object> interceptionContext)
         {
@@ -32,8 +30,7 @@ namespace StudioX.EntityFramework.Interceptors
             }
         }
 
-        public override void ReaderExecuting(DbCommand command,
-            DbCommandInterceptionContext<DbDataReader> interceptionContext)
+        public override void ReaderExecuting(DbCommand command, DbCommandInterceptionContext<DbDataReader> interceptionContext)
         {
             if (NolockingContext?.UseNolocking ?? false)
             {
@@ -44,8 +41,7 @@ namespace StudioX.EntityFramework.Interceptors
 
         public IDisposable UseNolocking()
         {
-            return interceptionScopeProvider.BeginScope(InterceptionContextKey,
-                new InterceptionContext(string.Empty, true));
+            return _interceptionScopeProvider.BeginScope(InterceptionContextKey, new InterceptionContext(string.Empty, true));
         }
 
         public class InterceptionContext

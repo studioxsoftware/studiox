@@ -1,5 +1,5 @@
-using Microsoft.EntityFrameworkCore;
 using StudioX.MultiTenancy;
+using Microsoft.EntityFrameworkCore;
 
 namespace StudioX.EntityFrameworkCore
 {
@@ -8,6 +8,6 @@ namespace StudioX.EntityFrameworkCore
     {
         TDbContext GetDbContext();
 
-        TDbContext GetDbContext(MultiTenancySides? multiTenancySide);
+        TDbContext GetDbContext(MultiTenancySides? multiTenancySide );
     }
 }

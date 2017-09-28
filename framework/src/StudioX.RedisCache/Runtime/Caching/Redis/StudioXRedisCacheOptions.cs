@@ -1,6 +1,4 @@
-﻿#if NET46
-using System.Configuration;
-#endif
+﻿using System.Configuration;
 using StudioX.Configuration.Startup;
 using StudioX.Extensions;
 
@@ -8,7 +6,7 @@ namespace StudioX.Runtime.Caching.Redis
 {
     public class StudioXRedisCacheOptions
     {
-        public IStudioXStartupConfiguration StudioXStartupConfiguration { get; private set; }
+        public IStudioXStartupConfiguration StudioXStartupConfiguration { get; }
 
         private const string ConnectionStringKey = "StudioX.Redis.Cache";
 
@@ -18,9 +16,9 @@ namespace StudioX.Runtime.Caching.Redis
 
         public int DatabaseId { get; set; }
 
-        public StudioXRedisCacheOptions(IStudioXStartupConfiguration startupConfiguration)
+        public StudioXRedisCacheOptions(IStudioXStartupConfiguration studioxStartupConfiguration)
         {
-            StudioXStartupConfiguration = startupConfiguration;
+            StudioXStartupConfiguration = studioxStartupConfiguration;
 
             ConnectionString = GetDefaultConnectionString();
             DatabaseId = GetDefaultDatabaseId();
@@ -28,7 +26,6 @@ namespace StudioX.Runtime.Caching.Redis
 
         private static int GetDefaultDatabaseId()
         {
-#if NET46
             var appSetting = ConfigurationManager.AppSettings[DatabaseIdSettingKey];
             if (appSetting.IsNullOrEmpty())
             {
@@ -42,14 +39,10 @@ namespace StudioX.Runtime.Caching.Redis
             }
 
             return databaseId;
-#else
-            return -1;
-#endif
         }
 
         private static string GetDefaultConnectionString()
         {
-#if NET46
             var connStr = ConfigurationManager.ConnectionStrings[ConnectionStringKey];
             if (connStr == null || connStr.ConnectionString.IsNullOrWhiteSpace())
             {
@@ -57,9 +50,6 @@ namespace StudioX.Runtime.Caching.Redis
             }
 
             return connStr.ConnectionString;
-#else
-            return "localhost";
-#endif
         }
     }
 }

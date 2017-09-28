@@ -1,20 +1,19 @@
 ﻿using System;
-using Newtonsoft.Json;
 using StudioX.Domain.Entities;
 using StudioX.Extensions;
+using Newtonsoft.Json;
 
 namespace StudioX.Notifications
 {
     /// <summary>
-    ///     Extension methods for <see cref="NotificationSubscriptionInfo" />.
+    /// Extension methods for <see cref="NotificationSubscriptionInfo"/>.
     /// </summary>
     public static class NotificationSubscriptionInfoExtensions
     {
         /// <summary>
-        ///     Converts <see cref="UserNotificationInfo" /> to <see cref="UserNotification" />.
+        /// Converts <see cref="UserNotificationInfo"/> to <see cref="UserNotification"/>.
         /// </summary>
-        public static NotificationSubscription ToNotificationSubscription(
-            this NotificationSubscriptionInfo subscriptionInfo)
+        public static NotificationSubscription ToNotificationSubscription(this NotificationSubscriptionInfo subscriptionInfo)
         {
             var entityType = subscriptionInfo.EntityTypeAssemblyQualifiedName.IsNullOrEmpty()
                 ? null
@@ -27,11 +26,7 @@ namespace StudioX.Notifications
                 NotificationName = subscriptionInfo.NotificationName,
                 EntityType = entityType,
                 EntityTypeName = subscriptionInfo.EntityTypeName,
-                EntityId =
-                    subscriptionInfo.EntityId.IsNullOrEmpty()
-                        ? null
-                        : JsonConvert.DeserializeObject(subscriptionInfo.EntityId,
-                            EntityHelper.GetPrimaryKeyType(entityType)),
+                EntityId = subscriptionInfo.EntityId.IsNullOrEmpty() ? null : JsonConvert.DeserializeObject(subscriptionInfo.EntityId, EntityHelper.GetPrimaryKeyType(entityType)),
                 CreationTime = subscriptionInfo.CreationTime
             };
         }

@@ -11,18 +11,18 @@ namespace StudioX.Web.Mvc.Uow
     {
         public const string UowHttpContextKey = "__StudioXUnitOfWork";
 
-        private readonly IUnitOfWorkManager unitOfWorkManager;
-        private readonly IStudioXMvcConfiguration mvcConfiguration;
-        private readonly IUnitOfWorkDefaultOptions unitOfWorkDefaultOptions;
+        private readonly IUnitOfWorkManager _unitOfWorkManager;
+        private readonly IStudioXMvcConfiguration _mvcConfiguration;
+        private readonly IUnitOfWorkDefaultOptions _unitOfWorkDefaultOptions;
 
         public StudioXMvcUowFilter(
             IUnitOfWorkManager unitOfWorkManager,
             IStudioXMvcConfiguration mvcConfiguration, 
             IUnitOfWorkDefaultOptions unitOfWorkDefaultOptions)
         {
-            this.unitOfWorkManager = unitOfWorkManager;
-            this.mvcConfiguration = mvcConfiguration;
-            this.unitOfWorkDefaultOptions = unitOfWorkDefaultOptions;
+            _unitOfWorkManager = unitOfWorkManager;
+            _mvcConfiguration = mvcConfiguration;
+            _unitOfWorkDefaultOptions = unitOfWorkDefaultOptions;
         }
 
         public void OnActionExecuting(ActionExecutingContext filterContext)
@@ -39,8 +39,8 @@ namespace StudioX.Web.Mvc.Uow
             }
 
             var unitOfWorkAttr =
-                unitOfWorkDefaultOptions.GetUnitOfWorkAttributeOrNull(methodInfo) ??
-                mvcConfiguration.DefaultUnitOfWorkAttribute;
+                _unitOfWorkDefaultOptions.GetUnitOfWorkAttributeOrNull(methodInfo) ??
+                _mvcConfiguration.DefaultUnitOfWorkAttribute;
 
             if (unitOfWorkAttr.IsDisabled)
             {
@@ -49,7 +49,7 @@ namespace StudioX.Web.Mvc.Uow
 
             SetCurrentUow(
                 filterContext.HttpContext,
-                unitOfWorkManager.Begin(unitOfWorkAttr.CreateOptions())
+                _unitOfWorkManager.Begin(unitOfWorkAttr.CreateOptions())
             );
         }
 

@@ -11,15 +11,15 @@ using StudioX.WebApi.Controllers.Dynamic.Scripting.jQuery;
 
 namespace StudioX.WebApi.Controllers.Dynamic.Scripting
 {
-    //TODO@Long: This class can be optimized.
+    //TODO@Halil: This class can be optimized.
     public class ScriptProxyManager : ISingletonDependency
     {
         private readonly IDictionary<string, ScriptInfo> CachedScripts;
-        private readonly DynamicApiControllerManager dynamicApiControllerManager;
+        private readonly DynamicApiControllerManager _dynamicApiControllerManager;
 
         public ScriptProxyManager(DynamicApiControllerManager dynamicApiControllerManager)
         {
-            this.dynamicApiControllerManager = dynamicApiControllerManager;
+            _dynamicApiControllerManager = dynamicApiControllerManager;
             CachedScripts = new Dictionary<string, ScriptInfo>();
         }
 
@@ -37,7 +37,7 @@ namespace StudioX.WebApi.Controllers.Dynamic.Scripting
                 var cachedScript = CachedScripts.GetOrDefault(cacheKey);
                 if (cachedScript == null)
                 {
-                    var dynamicController = dynamicApiControllerManager
+                    var dynamicController = _dynamicApiControllerManager
                         .GetAll()
                         .FirstOrDefault(ci => ci.ServiceName == name && ci.IsProxyScriptingEnabled);
 
@@ -63,7 +63,7 @@ namespace StudioX.WebApi.Controllers.Dynamic.Scripting
                 {
                     var script = new StringBuilder();
 
-                    var dynamicControllers = dynamicApiControllerManager.GetAll().Where(ci => ci.IsProxyScriptingEnabled);
+                    var dynamicControllers = _dynamicApiControllerManager.GetAll().Where(ci => ci.IsProxyScriptingEnabled);
                     foreach (var dynamicController in dynamicControllers)
                     {
                         var proxyGenerator = CreateProxyGenerator(type, dynamicController, false);

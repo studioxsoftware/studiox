@@ -9,13 +9,13 @@ namespace StudioX.MongoDb.Uow
     /// </summary>
     public class UnitOfWorkMongoDatabaseProvider : IMongoDatabaseProvider, ITransientDependency
     {
-        public MongoDatabase Database => ((MongoDbUnitOfWork)currentUnitOfWork.Current).Database;
+        public MongoDatabase Database { get { return ((MongoDbUnitOfWork)_currentUnitOfWork.Current).Database; } }
 
-        private readonly ICurrentUnitOfWorkProvider currentUnitOfWork;
+        private readonly ICurrentUnitOfWorkProvider _currentUnitOfWork;
 
         public UnitOfWorkMongoDatabaseProvider(ICurrentUnitOfWorkProvider currentUnitOfWork)
         {
-            this.currentUnitOfWork = currentUnitOfWork;
+            _currentUnitOfWork = currentUnitOfWork;
         }
     }
 }

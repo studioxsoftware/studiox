@@ -56,7 +56,7 @@ namespace StudioX.EntityFramework.Uow
 
             var transactionOptions = new TransactionOptions
             {
-                IsolationLevel = Options.IsolationLevel.GetValueOrDefault(IsolationLevel.ReadUncommitted)
+                IsolationLevel = Options.IsolationLevel.GetValueOrDefault(IsolationLevel.ReadUncommitted),
             };
 
             if (Options.Timeout.HasValue)

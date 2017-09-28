@@ -12,8 +12,6 @@ namespace StudioX.Application.Navigation
 {
     internal class UserNavigationManager : IUserNavigationManager, ITransientDependency
     {
-        public IPermissionChecker PermissionChecker { get; set; }
-
         public IStudioXSession StudioXSession { get; set; }
 
         private readonly INavigationManager navigationManager;
@@ -28,7 +26,6 @@ namespace StudioX.Application.Navigation
             this.navigationManager = navigationManager;
             this.localizationContext = localizationContext;
             this.iocResolver = iocResolver;
-            PermissionChecker = NullPermissionChecker.Instance;
             StudioXSession = NullStudioXSession.Instance;
         }
 
@@ -57,8 +54,7 @@ namespace StudioX.Application.Navigation
             return userMenus;
         }
 
-        private async Task<int> FillUserMenuItems(UserIdentifier user, IList<MenuItemDefinition> menuItemDefinitions,
-            IList<UserMenuItem> userMenuItems)
+        private async Task<int> FillUserMenuItems(UserIdentifier user, IList<MenuItemDefinition> menuItemDefinitions, IList<UserMenuItem> userMenuItems)
         {
             //TODO: Can be optimized by re-using FeatureDependencyContext.
 
@@ -71,7 +67,7 @@ namespace StudioX.Application.Navigation
 
                 var featureDependencyContext = scope.Resolve<FeatureDependencyContext>();
                 featureDependencyContext.TenantId = user == null ? null : user.TenantId;
-
+                
                 foreach (var menuItemDefinition in menuItemDefinitions)
                 {
                     if (menuItemDefinition.RequiresAuthentication && user == null)

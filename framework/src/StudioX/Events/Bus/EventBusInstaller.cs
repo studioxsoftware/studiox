@@ -1,17 +1,17 @@
 ﻿using System.Reflection;
-using Castle.MicroKernel;
-using Castle.MicroKernel.Registration;
-using Castle.MicroKernel.SubSystems.Configuration;
-using Castle.Windsor;
 using StudioX.Configuration.Startup;
 using StudioX.Dependency;
 using StudioX.Events.Bus.Factories;
 using StudioX.Events.Bus.Handlers;
+using Castle.MicroKernel;
+using Castle.MicroKernel.Registration;
+using Castle.MicroKernel.SubSystems.Configuration;
+using Castle.Windsor;
 
 namespace StudioX.Events.Bus
 {
     /// <summary>
-    ///     Installs event bus system and registers all handlers automatically.
+    /// Installs event bus system and registers all handlers automatically.
     /// </summary>
     internal class EventBusInstaller : IWindsorInstaller
     {
@@ -59,8 +59,7 @@ namespace StudioX.Events.Bus
                 var genericArgs = @interface.GetGenericArguments();
                 if (genericArgs.Length == 1)
                 {
-                    eventBus.Register(genericArgs[0],
-                        new IocHandlerFactory(iocResolver, handler.ComponentModel.Implementation));
+                    eventBus.Register(genericArgs[0], new IocHandlerFactory(iocResolver, handler.ComponentModel.Implementation));
                 }
             }
         }

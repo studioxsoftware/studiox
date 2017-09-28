@@ -10,8 +10,6 @@ using System.Data.Entity.Validation;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Castle.Core.Logging;
-using EntityFramework.DynamicFilters;
 using StudioX.Collections.Extensions;
 using StudioX.Configuration.Startup;
 using StudioX.Dependency;
@@ -21,61 +19,64 @@ using StudioX.Domain.Uow;
 using StudioX.Events.Bus;
 using StudioX.Events.Bus.Entities;
 using StudioX.Extensions;
+using StudioX.MultiTenancy;
 using StudioX.Reflection;
 using StudioX.Runtime.Session;
 using StudioX.Timing;
+using Castle.Core.Logging;
+using EntityFramework.DynamicFilters;
 
 namespace StudioX.EntityFramework
 {
     /// <summary>
-    ///     Base class for all DbContext classes in the application.
+    /// Base class for all DbContext classes in the application.
     /// </summary>
     public abstract class StudioXDbContext : DbContext, ITransientDependency, IShouldInitialize
     {
         /// <summary>
-        ///     Used to get current session values.
+        /// Used to get current session values.
         /// </summary>
         public IStudioXSession StudioXSession { get; set; }
 
         /// <summary>
-        ///     Used to trigger entity change events.
+        /// Used to trigger entity change events.
         /// </summary>
         public IEntityChangeEventHelper EntityChangeEventHelper { get; set; }
 
         /// <summary>
-        ///     Reference to the logger.
+        /// Reference to the logger.
         /// </summary>
         public ILogger Logger { get; set; }
 
         /// <summary>
-        ///     Reference to the event bus.
+        /// Reference to the event bus.
         /// </summary>
         public IEventBus EventBus { get; set; }
 
         /// <summary>
-        ///     Reference to GUID generator.
+        /// Reference to GUID generator.
         /// </summary>
         public IGuidGenerator GuidGenerator { get; set; }
 
         /// <summary>
-        ///     Reference to the current UOW provider.
+        /// Reference to the current UOW provider.
         /// </summary>
         public ICurrentUnitOfWorkProvider CurrentUnitOfWorkProvider { get; set; }
 
         /// <summary>
-        ///     Reference to multi tenancy configuration.
+        /// Reference to multi tenancy configuration.
         /// </summary>
         public IMultiTenancyConfig MultiTenancyConfig { get; set; }
 
         /// <summary>
-        ///     Can be used to suppress automatically setting TenantId on SaveChanges.
-        ///     Default: false.
+        /// Can be used to suppress automatically setting TenantId on SaveChanges.
+        /// Default: false.
         /// </summary>
         public bool SuppressAutoSetTenantId { get; set; }
 
         /// <summary>
-        ///     Constructor.
-        ///     Uses <see cref="IStudioXStartupConfiguration.DefaultNameOrConnectionString" /> as connection string.
+        /// Constructor.
+        /// Uses <see cref="IStudioXStartupConfiguration.DefaultNameOrConnectionString"/> as connection string.
         /// </summary>
         protected StudioXDbContext()
         {
@@ -83,7 +84,7 @@ namespace StudioX.EntityFramework
         }
 
         /// <summary>
-        ///     Constructor.
+        /// Constructor.
         /// </summary>
         protected StudioXDbContext(string nameOrConnectionString)
             : base(nameOrConnectionString)
@@ -92,7 +93,7 @@ namespace StudioX.EntityFramework
         }
 
         /// <summary>
-        ///     Constructor.
+        /// Constructor.
         /// </summary>
         protected StudioXDbContext(DbCompiledModel model)
             : base(model)
@@ -101,7 +102,7 @@ namespace StudioX.EntityFramework
         }
 
         /// <summary>
-        ///     Constructor.
+        /// Constructor.
         /// </summary>
         protected StudioXDbContext(DbConnection existingConnection, bool contextOwnsConnection)
             : base(existingConnection, contextOwnsConnection)
@@ -110,7 +111,7 @@ namespace StudioX.EntityFramework
         }
 
         /// <summary>
-        ///     Constructor.
+        /// Constructor.
         /// </summary>
         protected StudioXDbContext(string nameOrConnectionString, DbCompiledModel model)
             : base(nameOrConnectionString, model)
@@ -119,7 +120,7 @@ namespace StudioX.EntityFramework
         }
 
         /// <summary>
-        ///     Constructor.
+        /// Constructor.
         /// </summary>
         protected StudioXDbContext(ObjectContext objectContext, bool dbContextOwnsObjectContext)
             : base(objectContext, dbContextOwnsObjectContext)
@@ -128,7 +129,7 @@ namespace StudioX.EntityFramework
         }
 
         /// <summary>
-        ///     Constructor.
+        /// Constructor.
         /// </summary>
         protected StudioXDbContext(DbConnection existingConnection, DbCompiledModel model, bool contextOwnsConnection)
             : base(existingConnection, model, contextOwnsConnection)
@@ -151,7 +152,7 @@ namespace StudioX.EntityFramework
         }
 
         protected virtual void ObjectStateManager_ObjectStateManagerChanged(object sender,
-            CollectionChangeEventArgs e)
+            System.ComponentModel.CollectionChangeEventArgs e)
         {
             var contextAdapter = (IObjectContextAdapter) this;
             if (e.Action != CollectionChangeAction.Add)
@@ -196,9 +197,8 @@ namespace StudioX.EntityFramework
             base.OnModelCreating(modelBuilder);
             modelBuilder.Filter(StudioXDataFilters.SoftDelete, (ISoftDelete d) => d.IsDeleted, false);
             modelBuilder.Filter(StudioXDataFilters.MustHaveTenant,
-                    (IMustHaveTenant t, int tenantId) => t.TenantId == tenantId || (int?) t.TenantId == null,
-                    0);
-                //While "(int?)t.TenantId == null" seems wrong, it's needed. See https://github.com/jcachat/EntityFramework.DynamicFilters/issues/62#issuecomment-208198058
+                (IMustHaveTenant t, int tenantId) => t.TenantId == tenantId || (int?) t.TenantId == null,
+                0); //While "(int?)t.TenantId == null" seems wrong, it's needed. See https://github.com/jcachat/EntityFramework.DynamicFilters/issues/62#issuecomment-208198058
             modelBuilder.Filter(StudioXDataFilters.MayHaveTenant,
                 (IMayHaveTenant t, int? tenantId) => t.TenantId == tenantId, 0);
         }
@@ -267,8 +267,7 @@ namespace StudioX.EntityFramework
             AddDomainEvents(changeReport.DomainEvents, entry.Entity);
         }
 
-        protected virtual void ApplyStudioXConceptsForAddedEntity(DbEntityEntry entry, long? userId,
-            EntityChangeReport changeReport)
+        protected virtual void ApplyStudioXConceptsForAddedEntity(DbEntityEntry entry, long? userId, EntityChangeReport changeReport)
         {
             CheckAndSetId(entry.Entity);
             CheckAndSetMustHaveTenantIdProperty(entry.Entity);
@@ -277,8 +276,7 @@ namespace StudioX.EntityFramework
             changeReport.ChangedEntities.Add(new EntityChangeEntry(entry.Entity, EntityChangeType.Created));
         }
 
-        protected virtual void ApplyStudioXConceptsForModifiedEntity(DbEntityEntry entry, long? userId,
-            EntityChangeReport changeReport)
+        protected virtual void ApplyStudioXConceptsForModifiedEntity(DbEntityEntry entry, long? userId, EntityChangeReport changeReport)
         {
             SetModificationAuditProperties(entry.Entity, userId);
 
@@ -293,8 +291,7 @@ namespace StudioX.EntityFramework
             }
         }
 
-        protected virtual void ApplyStudioXConceptsForDeletedEntity(DbEntityEntry entry, long? userId,
-            EntityChangeReport changeReport)
+        protected virtual void ApplyStudioXConceptsForDeletedEntity(DbEntityEntry entry, long? userId, EntityChangeReport changeReport)
         {
             CancelDeletionForSoftDelete(entry);
             SetDeletionAuditProperties(entry.Entity, userId);
@@ -462,8 +459,8 @@ namespace StudioX.EntityFramework
                 if (entity is IMayHaveTenant || entity is IMustHaveTenant)
                 {
                     //Sets LastModifierUserId only if current user is in same tenant/host with the given entity
-                    if (entity is IMayHaveTenant && entity.As<IMayHaveTenant>().TenantId == StudioXSession.TenantId ||
-                        entity is IMustHaveTenant && entity.As<IMustHaveTenant>().TenantId == StudioXSession.TenantId)
+                    if ((entity is IMayHaveTenant && entity.As<IMayHaveTenant>().TenantId == StudioXSession.TenantId) ||
+                        (entity is IMustHaveTenant && entity.As<IMustHaveTenant>().TenantId == StudioXSession.TenantId))
                     {
                         entity.DeleterUserId = userId;
                     }

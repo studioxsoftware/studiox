@@ -2,10 +2,7 @@
 using StudioX.Net.Mail;
 using MimeKit;
 using SmtpClient = MailKit.Net.Smtp.SmtpClient;
-
-#if NET46
 using System.Net.Mail;
-#endif
 
 namespace StudioX.MailKit
 {
@@ -42,7 +39,6 @@ namespace StudioX.MailKit
             }
         }
 
-#if NET46
         protected override async Task SendEmailAsync(MailMessage mail)
         {
             using (var client = BuildSmtpClient())
@@ -62,7 +58,6 @@ namespace StudioX.MailKit
                 client.Disconnect(true);
             }
         }
-#endif
 
         protected virtual SmtpClient BuildSmtpClient()
         {

@@ -7,7 +7,7 @@ namespace StudioX.Application.Navigation
 {
     internal class NavigationManager : INavigationManager, ISingletonDependency
     {
-        public IDictionary<string, MenuDefinition> Menus { get; }
+        public IDictionary<string, MenuDefinition> Menus { get; private set; }
 
         public MenuDefinition MainMenu => Menus["MainMenu"];
 
@@ -20,13 +20,9 @@ namespace StudioX.Application.Navigation
             this.configuration = configuration;
 
             Menus = new Dictionary<string, MenuDefinition>
-            {
-                {
-                    "MainMenu",
-                    new MenuDefinition("MainMenu",
-                        new LocalizableString("MainMenu", StudioXConsts.LocalizationSourceName))
-                }
-            };
+                    {
+                        {"MainMenu", new MenuDefinition("MainMenu", new LocalizableString("MainMenu", StudioXConsts.LocalizationSourceName))}
+                    };
         }
 
         public void Initialize()

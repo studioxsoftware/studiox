@@ -4,13 +4,17 @@ using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+
 using StudioX.Dapper.Extensions;
 using StudioX.Dapper.Filters.Action;
 using StudioX.Dapper.Filters.Query;
 using StudioX.Data;
 using StudioX.Domain.Entities;
+using StudioX.Domain.Uow;
 using StudioX.Events.Bus.Entities;
+
 using Dapper;
+
 using DapperExtensions;
 
 namespace StudioX.Dapper.Repositories
@@ -18,11 +22,11 @@ namespace StudioX.Dapper.Repositories
     public class DapperRepositoryBase<TEntity, TPrimaryKey> : StudioXDapperRepositoryBase<TEntity, TPrimaryKey>
         where TEntity : class, IEntity<TPrimaryKey>
     {
-        private readonly IActiveTransactionProvider activeTransactionProvider;
+        private readonly IActiveTransactionProvider _activeTransactionProvider;
 
         public DapperRepositoryBase(IActiveTransactionProvider activeTransactionProvider)
         {
-            this.activeTransactionProvider = activeTransactionProvider;
+            _activeTransactionProvider = activeTransactionProvider;
 
             EntityChangeEventHelper = NullEntityChangeEventHelper.Instance;
             DapperQueryFilterExecuter = NullDapperQueryFilterExecuter.Instance;
@@ -35,7 +39,10 @@ namespace StudioX.Dapper.Repositories
 
         public IDapperActionFilterExecuter DapperActionFilterExecuter { get; set; }
 
-        public virtual DbConnection Connection => (DbConnection)activeTransactionProvider.GetActiveConnection(ActiveTransactionProviderArgs.Empty);
+        public virtual DbConnection Connection
+        {
+            get { return (DbConnection)_activeTransactionProvider.GetActiveConnection(ActiveTransactionProviderArgs.Empty); }
+        }
 
         /// <summary>
         ///     Gets the active transaction. If Dapper is active then <see cref="IUnitOfWork" /> should be started before
@@ -44,7 +51,10 @@ namespace StudioX.Dapper.Repositories
         /// <value>
         ///     The active transaction.
         /// </value>
-        public virtual DbTransaction ActiveTransaction => (DbTransaction)activeTransactionProvider.GetActiveTransaction(ActiveTransactionProviderArgs.Empty);
+        public virtual DbTransaction ActiveTransaction
+        {
+            get { return (DbTransaction)_activeTransactionProvider.GetActiveTransaction(ActiveTransactionProviderArgs.Empty); }
+        }
 
         public override TEntity Single(TPrimaryKey id)
         {

@@ -21,7 +21,6 @@ namespace StudioX.BackgroundJobs
 
         }
 
-#if NET46
         /// <summary>
         /// Creates a new <see cref="BackgroundJobException"/> object.
         /// </summary>
@@ -30,7 +29,6 @@ namespace StudioX.BackgroundJobs
         {
 
         }
-#endif
 
         /// <summary>
         /// Creates a new <see cref="BackgroundJobException"/> object.

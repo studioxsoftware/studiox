@@ -13,16 +13,16 @@ namespace StudioX.Dapper.Filters.Query
 {
     public class DapperQueryFilterExecuter : IDapperQueryFilterExecuter, ITransientDependency
     {
-        private readonly IEnumerable<IDapperQueryFilter> queryFilters;
+        private readonly IEnumerable<IDapperQueryFilter> _queryFilters;
 
         public DapperQueryFilterExecuter(IIocResolver iocResolver)
         {
-            queryFilters = iocResolver.ResolveAll<IDapperQueryFilter>();
+            _queryFilters = iocResolver.ResolveAll<IDapperQueryFilter>();
         }
 
         public IPredicate ExecuteFilter<TEntity, TPrimaryKey>(Expression<Func<TEntity, bool>> predicate) where TEntity : class, IEntity<TPrimaryKey>
         {
-            ICollection<IDapperQueryFilter> filters = queryFilters.ToList();
+            ICollection<IDapperQueryFilter> filters = _queryFilters.ToList();
 
             foreach (IDapperQueryFilter filter in filters)
             {
@@ -35,7 +35,7 @@ namespace StudioX.Dapper.Filters.Query
 
         public PredicateGroup ExecuteFilter<TEntity, TPrimaryKey>() where TEntity : class, IEntity<TPrimaryKey>
         {
-            ICollection<IDapperQueryFilter> filters = queryFilters.ToList();
+            ICollection<IDapperQueryFilter> filters = _queryFilters.ToList();
             var groups = new PredicateGroup
             {
                 Operator = GroupOperator.And,

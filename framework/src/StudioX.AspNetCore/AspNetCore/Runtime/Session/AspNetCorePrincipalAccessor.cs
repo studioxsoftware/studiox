@@ -6,13 +6,13 @@ namespace StudioX.AspNetCore.Runtime.Session
 {
     public class AspNetCorePrincipalAccessor : DefaultPrincipalAccessor
     {
-        public override ClaimsPrincipal Principal => httpContextAccessor.HttpContext?.User ?? base.Principal;
+        public override ClaimsPrincipal Principal => _httpContextAccessor.HttpContext?.User ?? base.Principal;
 
-        private readonly IHttpContextAccessor httpContextAccessor;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public AspNetCorePrincipalAccessor(IHttpContextAccessor httpContextAccessor)
         {
-            this.httpContextAccessor = httpContextAccessor;
+            _httpContextAccessor = httpContextAccessor;
         }
     }
 }

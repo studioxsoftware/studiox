@@ -27,11 +27,11 @@ namespace StudioX.Dapper.Expressions
 
         private class SubtreeEvaluator : ExpressionVisitor
         {
-            private readonly HashSet<Expression> candidates;
+            private readonly HashSet<Expression> _candidates;
 
             internal SubtreeEvaluator(HashSet<Expression> candidates)
             {
-                this.candidates = candidates;
+                _candidates = candidates;
             }
 
             internal Expression Eval(Expression exp)
@@ -46,7 +46,7 @@ namespace StudioX.Dapper.Expressions
                     return null;
                 }
 
-                if (candidates.Contains(exp))
+                if (_candidates.Contains(exp))
                 {
                     return Evaluate(exp);
                 }
@@ -70,20 +70,20 @@ namespace StudioX.Dapper.Expressions
 
         private class Nominator : ExpressionVisitor
         {
-            private readonly Func<Expression, bool> canBeEval;
-            private HashSet<Expression> candidates;
-            private bool cannotBeEval;
+            private readonly Func<Expression, bool> _canBeEval;
+            private HashSet<Expression> _candidates;
+            private bool _cannotBeEval;
 
             internal Nominator(Func<Expression, bool> canBeEval)
             {
-                this.canBeEval = canBeEval;
+                _canBeEval = canBeEval;
             }
 
             internal HashSet<Expression> Nominate(Expression exp)
             {
-                candidates = new HashSet<Expression>();
+                _candidates = new HashSet<Expression>();
                 Visit(exp);
-                return candidates;
+                return _candidates;
             }
 
             public override Expression Visit(Expression exp)
@@ -93,24 +93,24 @@ namespace StudioX.Dapper.Expressions
                     return null;
                 }
 
-                bool saveCannotBeEval = cannotBeEval;
-                cannotBeEval = false;
+                bool saveCannotBeEval = _cannotBeEval;
+                _cannotBeEval = false;
 
                 base.Visit(exp);
 
-                if (!cannotBeEval)
+                if (!_cannotBeEval)
                 {
-                    if (canBeEval(exp))
+                    if (_canBeEval(exp))
                     {
-                        candidates.Add(exp);
+                        _candidates.Add(exp);
                     }
                     else
                     {
-                        cannotBeEval = true;
+                        _cannotBeEval = true;
                     }
                 }
 
-                cannotBeEval |= saveCannotBeEval;
+                _cannotBeEval |= saveCannotBeEval;
 
                 return exp;
             }

@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Filters;
 using StudioX.Extensions;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace StudioX.AspNetCore.Mvc.Results.Caching
 {
@@ -9,7 +9,7 @@ namespace StudioX.AspNetCore.Mvc.Results.Caching
 
         public AllowClientCacheAttribute()
         {
-
+            
         }
 
         public AllowClientCacheAttribute(ClientCacheScope scope)

@@ -1,12 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Transactions;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
-using StudioX.Collections.Extensions;
+﻿using StudioX.Collections.Extensions;
 using StudioX.Dependency;
 using StudioX.Domain.Uow;
 using StudioX.EntityFrameworkCore.Extensions;
 using StudioX.Transactions.Extensions;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
+using System.Collections.Generic;
+using System.Transactions;
 
 namespace StudioX.EntityFrameworkCore.Uow
 {
@@ -26,8 +26,7 @@ namespace StudioX.EntityFrameworkCore.Uow
             Options = options;
         }
 
-        public DbContext CreateDbContext<TDbContext>(string connectionString, IDbContextResolver dbContextResolver)
-            where TDbContext : DbContext
+        public DbContext CreateDbContext<TDbContext>(string connectionString, IDbContextResolver dbContextResolver) where TDbContext : DbContext
         {
             DbContext dbContext;
 
@@ -36,9 +35,7 @@ namespace StudioX.EntityFrameworkCore.Uow
             {
                 dbContext = dbContextResolver.Resolve<TDbContext>(connectionString, null);
 
-                var dbtransaction =
-                    dbContext.Database.BeginTransaction(
-                        (Options.IsolationLevel ?? IsolationLevel.ReadUncommitted).ToSystemDataIsolationLevel());
+                var dbtransaction = dbContext.Database.BeginTransaction((Options.IsolationLevel ?? IsolationLevel.ReadUncommitted).ToSystemDataIsolationLevel());
                 activeTransaction = new ActiveTransactionInfo(dbtransaction, dbContext);
                 ActiveTransactions[connectionString] = activeTransaction;
             }

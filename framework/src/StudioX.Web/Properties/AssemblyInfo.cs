@@ -6,12 +6,12 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 
-[assembly: AssemblyTitle("StudioX - Web")]
-[assembly: AssemblyDescription("StudioX - Web Layer")]
+[assembly: AssemblyTitle("StudioX Software - Web")]
+[assembly: AssemblyDescription("StudioX Software - Web Layer")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("StudioX")]
 [assembly: AssemblyProduct("StudioX.Web")]
-[assembly: AssemblyCopyright("Copyright © 2017")]
+[assembly: AssemblyCopyright("Copyright © 2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

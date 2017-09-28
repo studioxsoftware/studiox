@@ -6,7 +6,7 @@ namespace StudioX.AspNetCore.App.MultiTenancy
 {
     public class TestTenantStore : ITenantStore
     {
-        private readonly List<TenantInfo> tenants = new List<TenantInfo>
+        private readonly List<TenantInfo> _tenants = new List<TenantInfo>
         {
             new TenantInfo(1, "Default"),
             new TenantInfo(42, "acme"),
@@ -15,12 +15,12 @@ namespace StudioX.AspNetCore.App.MultiTenancy
 
         public TenantInfo Find(int tenantId)
         {
-            return tenants.FirstOrDefault(t => t.Id == tenantId);
+            return _tenants.FirstOrDefault(t => t.Id == tenantId);
         }
 
         public TenantInfo Find(string tenancyName)
         {
-            return tenants.FirstOrDefault(t => t.TenancyName.ToLower() == tenancyName.ToLower());
+            return _tenants.FirstOrDefault(t => t.TenancyName.ToLower() == tenancyName.ToLower());
         }
     }
 }

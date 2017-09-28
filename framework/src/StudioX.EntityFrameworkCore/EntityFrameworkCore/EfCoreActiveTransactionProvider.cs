@@ -1,21 +1,21 @@
 ﻿using System;
 using System.Data;
 using System.Reflection;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
 using StudioX.Data;
 using StudioX.Dependency;
 using StudioX.MultiTenancy;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace StudioX.EntityFrameworkCore
 {
     public class EfCoreActiveTransactionProvider : IActiveTransactionProvider, ITransientDependency
     {
-        private readonly IIocResolver iocResolver;
+        private readonly IIocResolver _iocResolver;
 
         public EfCoreActiveTransactionProvider(IIocResolver iocResolver)
         {
-            this.iocResolver = iocResolver;
+            _iocResolver = iocResolver;
         }
 
         public IDbTransaction GetActiveTransaction(ActiveTransactionProviderArgs args)
@@ -30,19 +30,19 @@ namespace StudioX.EntityFrameworkCore
 
         private DbContext GetDbContext(ActiveTransactionProviderArgs args)
         {
-            var dbContextProviderType = typeof(IDbContextProvider<>).MakeGenericType((Type) args["ContextType"]);
+            Type dbContextProviderType = typeof(IDbContextProvider<>).MakeGenericType((Type)args["ContextType"]);
 
-            using (var dbContextProviderWrapper = iocResolver.ResolveAsDisposable(dbContextProviderType))
+            using (IDisposableDependencyObjectWrapper dbContextProviderWrapper = _iocResolver.ResolveAsDisposable(dbContextProviderType))
             {
-                var method = dbContextProviderWrapper.Object.GetType()
-                    .GetMethod(
-                        nameof(IDbContextProvider<StudioXDbContext>.GetDbContext),
-                        new[] {typeof(MultiTenancySides)}
-                    );
+                MethodInfo method = dbContextProviderWrapper.Object.GetType()
+                                                            .GetMethod(
+                                                                nameof(IDbContextProvider<StudioXDbContext>.GetDbContext),
+                                                                new[] { typeof(MultiTenancySides) }
+                                                            );
 
-                return (DbContext) method.Invoke(
+                return (DbContext)method.Invoke(
                     dbContextProviderWrapper.Object,
-                    new object[] {(MultiTenancySides?) args["MultiTenancySide"]}
+                    new object[] { (MultiTenancySides?)args["MultiTenancySide"] }
                 );
             }
         }

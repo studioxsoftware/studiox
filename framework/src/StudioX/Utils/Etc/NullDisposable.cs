@@ -3,7 +3,7 @@ using System;
 namespace StudioX.Utils.Etc
 {
     /// <summary>
-    ///     This class is used to simulate a Disposable that does nothing.
+    /// This class is used to simulate a Disposable that does nothing.
     /// </summary>
     internal sealed class NullDisposable : IDisposable
     {
@@ -11,10 +11,12 @@ namespace StudioX.Utils.Etc
 
         private NullDisposable()
         {
+            
         }
 
         public void Dispose()
         {
+
         }
     }
 }

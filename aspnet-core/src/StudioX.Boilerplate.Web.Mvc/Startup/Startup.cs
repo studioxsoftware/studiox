@@ -1,6 +1,7 @@
 ﻿using System;
 using StudioX.AspNetCore;
 using StudioX.Castle.Logging.Log4Net;
+using StudioX.Boilerplate.Authentication.JwtBearer;
 using StudioX.Boilerplate.Configuration;
 using StudioX.Boilerplate.Identity;
 using StudioX.Boilerplate.Web.Resources;
@@ -11,6 +12,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 #if FEATURE_SIGNALR
 using Owin;
@@ -38,6 +41,7 @@ namespace StudioX.Boilerplate.Web.Startup
             });
 
             IdentityRegistrar.Register(services);
+            AuthConfigurer.Configure(services, appConfiguration);
 
             services.AddScoped<IWebResourceManager, WebResourceManager>();
 
@@ -53,7 +57,7 @@ namespace StudioX.Boilerplate.Web.Startup
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            app.UseStudioX(); //Initializes StudioX framework.
+            app.UseStudioX(); //Initializes ABP framework.
 
             if (env.IsDevelopment())
             {
@@ -64,9 +68,10 @@ namespace StudioX.Boilerplate.Web.Startup
                 app.UseExceptionHandler("/Error");
             }
 
-            AuthConfigurer.Configure(app, appConfiguration);
-
             app.UseStaticFiles();
+
+            app.UseAuthentication();
+            app.UseJwtTokenMiddleware();
 
 #if FEATURE_SIGNALR
             //Integrate to OWIN

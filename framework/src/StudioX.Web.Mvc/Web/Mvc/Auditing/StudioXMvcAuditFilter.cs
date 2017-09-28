@@ -10,13 +10,13 @@ namespace StudioX.Web.Mvc.Auditing
 {
     public class StudioXMvcAuditFilter : IActionFilter, ITransientDependency
     {
-        private readonly IStudioXMvcConfiguration configuration;
-        private readonly IAuditingHelper auditingHelper;
+        private readonly IStudioXMvcConfiguration _configuration;
+        private readonly IAuditingHelper _auditingHelper;
 
         public StudioXMvcAuditFilter(IStudioXMvcConfiguration configuration, IAuditingHelper auditingHelper)
         {
-            this.configuration = configuration;
-            this.auditingHelper = auditingHelper;
+            _configuration = configuration;
+            _auditingHelper = auditingHelper;
         }
 
         public void OnActionExecuting(ActionExecutingContext filterContext)
@@ -27,7 +27,8 @@ namespace StudioX.Web.Mvc.Auditing
                 return;
             }
 
-            var auditInfo = auditingHelper.CreateAuditInfo(
+            var auditInfo = _auditingHelper.CreateAuditInfo(
+                filterContext.ActionDescriptor.ControllerDescriptor.ControllerType,
                 filterContext.ActionDescriptor.GetMethodInfoOrNull(),
                 filterContext.ActionParameters
             );
@@ -56,7 +57,7 @@ namespace StudioX.Web.Mvc.Auditing
             auditData.AuditInfo.ExecutionDuration = Convert.ToInt32(auditData.Stopwatch.Elapsed.TotalMilliseconds);
             auditData.AuditInfo.Exception = filterContext.Exception;
 
-            auditingHelper.Save(auditData.AuditInfo);
+            _auditingHelper.Save(auditData.AuditInfo);
         }
 
         private bool ShouldSaveAudit(ActionExecutingContext filterContext)
@@ -67,22 +68,22 @@ namespace StudioX.Web.Mvc.Auditing
                 return false;
             }
 
-            if (configuration == null)
+            if (_configuration == null)
             {
                 return false;
             }
 
-            if (!configuration.IsAuditingEnabled)
+            if (!_configuration.IsAuditingEnabled)
             {
                 return false;
             }
 
-            if (filterContext.IsChildAction && !configuration.IsAuditingEnabledForChildActions)
+            if (filterContext.IsChildAction && !_configuration.IsAuditingEnabledForChildActions)
             {
                 return false;
             }
 
-            return auditingHelper.ShouldSaveAudit(currentMethodInfo, true);
+            return _auditingHelper.ShouldSaveAudit(currentMethodInfo, true);
         }
     }
 }

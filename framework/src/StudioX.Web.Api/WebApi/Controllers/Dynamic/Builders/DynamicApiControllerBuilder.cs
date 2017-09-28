@@ -8,11 +8,11 @@ namespace StudioX.WebApi.Controllers.Dynamic.Builders
     /// </summary>
     public class DynamicApiControllerBuilder : IDynamicApiControllerBuilder
     {
-        private readonly IIocResolver iocResolver;
+        private readonly IIocResolver _iocResolver;
 
         public DynamicApiControllerBuilder(IIocResolver iocResolver)
         {
-            this.iocResolver = iocResolver;
+            _iocResolver = iocResolver;
         }
 
         /// <summary>
@@ -22,7 +22,7 @@ namespace StudioX.WebApi.Controllers.Dynamic.Builders
         /// <typeparam name="T">Type of the proxied object</typeparam>
         public IApiControllerBuilder<T> For<T>(string serviceName)
         {
-            return new ApiControllerBuilder<T>(serviceName, iocResolver);
+            return new ApiControllerBuilder<T>(serviceName, _iocResolver);
         }
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace StudioX.WebApi.Controllers.Dynamic.Builders
         /// <param name="servicePrefix">Service prefix</param>
         public IBatchApiControllerBuilder<T> ForAll<T>(Assembly assembly, string servicePrefix)
         {
-            return new BatchApiControllerBuilder<T>(iocResolver, this,  assembly, servicePrefix);
+            return new BatchApiControllerBuilder<T>(_iocResolver, this,  assembly, servicePrefix);
         }
     }
 }

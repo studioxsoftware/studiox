@@ -16,8 +16,8 @@ namespace StudioX.Tests.Extensions
             DayOfWeek.Saturday.IsWeekend().ShouldBe(true);
             DayOfWeek.Saturday.IsWeekday().ShouldBe(false);
 
-            var datetime1 = new DateTime(2014, 10, 5, 16, 37, 25); //Sunday
-            var datetime2 = new DateTime(2014, 10, 7, 16, 37, 25); //Tuesday
+            var datetime1 = new DateTime(2014, 10, 5, 16, 37, 42); //Sunday
+            var datetime2 = new DateTime(2014, 10, 7, 16, 37, 42); //Tuesday
 
             datetime1.DayOfWeek.IsWeekend().ShouldBe(true);
             datetime2.DayOfWeek.IsWeekend().ShouldBe(false);

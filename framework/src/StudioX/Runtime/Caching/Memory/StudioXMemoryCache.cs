@@ -1,6 +1,6 @@
-﻿#if NET46
-using System;
-using System.Runtime.Caching;
+﻿using System;
+using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace StudioX.Runtime.Caching.Memory
 {
@@ -9,7 +9,7 @@ namespace StudioX.Runtime.Caching.Memory
     /// </summary>
     public class StudioXMemoryCache : CacheBase
     {
-        private MemoryCache memoryCache;
+        private MemoryCache _memoryCache;
 
         /// <summary>
         /// Constructor.
@@ -18,12 +18,12 @@ namespace StudioX.Runtime.Caching.Memory
         public StudioXMemoryCache(string name)
             : base(name)
         {
-            memoryCache = new MemoryCache(Name);
+            _memoryCache = new MemoryCache(new OptionsWrapper<MemoryCacheOptions>(new MemoryCacheOptions()));
         }
 
         public override object GetOrDefault(string key)
         {
-            return memoryCache.Get(key);
+            return _memoryCache.Get(key);
         }
 
         public override void Set(string key, object value, TimeSpan? slidingExpireTime = null, TimeSpan? absoluteExpireTime = null)
@@ -33,44 +33,39 @@ namespace StudioX.Runtime.Caching.Memory
                 throw new StudioXException("Can not insert null values to the cache!");
             }
 
-            var cachePolicy = new CacheItemPolicy();
-
             if (absoluteExpireTime != null)
             {
-                cachePolicy.AbsoluteExpiration = DateTimeOffset.Now.Add(absoluteExpireTime.Value);
+                _memoryCache.Set(key, value, DateTimeOffset.Now.Add(absoluteExpireTime.Value));
             }
             else if (slidingExpireTime != null)
             {
-                cachePolicy.SlidingExpiration = slidingExpireTime.Value;
+                _memoryCache.Set(key, value, slidingExpireTime.Value);
             }
-            else if(DefaultAbsoluteExpireTime != null)
+            else if (DefaultAbsoluteExpireTime != null)
             {
-                cachePolicy.AbsoluteExpiration = DateTimeOffset.Now.Add(DefaultAbsoluteExpireTime.Value);
+                _memoryCache.Set(key, value, DateTimeOffset.Now.Add(DefaultAbsoluteExpireTime.Value));
             }
             else
             {
-                cachePolicy.SlidingExpiration = DefaultSlidingExpireTime;
+                _memoryCache.Set(key, value, DefaultSlidingExpireTime);
             }
-
-            memoryCache.Set(key, value, cachePolicy);
         }
 
         public override void Remove(string key)
         {
-            memoryCache.Remove(key);
+            _memoryCache.Remove(key);
         }
 
         public override void Clear()
         {
-            memoryCache.Dispose();
-            memoryCache = new MemoryCache(Name);
+            _memoryCache.Dispose();
+            _memoryCache = new MemoryCache(new OptionsWrapper<MemoryCacheOptions>(new MemoryCacheOptions()));
         }
 
         public override void Dispose()
         {
-            memoryCache.Dispose();
+            _memoryCache.Dispose();
             base.Dispose();
         }
     }
 }
-#endif

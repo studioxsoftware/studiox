@@ -4,7 +4,7 @@ using StudioX.Localization.Dictionaries.Xml;
 namespace StudioX.Localization.Dictionaries.Json
 {
     /// <summary>
-    ///     Provides localization dictionaries from JSON files embedded into an <see cref="Assembly" />.
+    /// Provides localization dictionaries from JSON files embedded into an <see cref="Assembly"/>.
     /// </summary>
     public class JsonEmbeddedFileLocalizationDictionaryProvider : LocalizationDictionaryProviderBase
     {
@@ -12,19 +12,19 @@ namespace StudioX.Localization.Dictionaries.Json
         private readonly string rootNamespace;
 
         /// <summary>
-        ///     Creates a new <see cref="JsonEmbeddedFileLocalizationDictionaryProvider" /> object.
+        /// Creates a new <see cref="JsonEmbeddedFileLocalizationDictionaryProvider"/> object.
         /// </summary>
         /// <param name="assembly">Assembly that contains embedded json files</param>
         /// <param name="rootNamespace">
-        ///     <para>
-        ///         Namespace of the embedded json dictionary files
-        ///     </para>
-        ///     <para>
-        ///         Notice : Json folder name is different from Xml folder name.
-        ///     </para>
-        ///     <para>
-        ///         You must name it like this : Json**** and Xml****; Do not name : ****Json and ****Xml
-        ///     </para>
+        /// <para>
+        /// Namespace of the embedded json dictionary files
+        /// </para>
+        /// <para>
+        /// Notice : Json folder name is different from Xml folder name.
+        /// </para>
+        /// <para>
+        /// You must name it like this : Json**** and Xml****; Do not name : ****Json and ****Xml
+        /// </para>
         /// </param>
         public JsonEmbeddedFileLocalizationDictionaryProvider(Assembly assembly, string rootNamespace)
         {
@@ -46,9 +46,7 @@ namespace StudioX.Localization.Dictionaries.Json
                         var dictionary = CreateJsonLocalizationDictionary(jsonString);
                         if (Dictionaries.ContainsKey(dictionary.CultureInfo.Name))
                         {
-                            throw new StudioXInitializationException(sourceName +
-                                                                     " source contains more than one dictionary for the culture: " +
-                                                                     dictionary.CultureInfo.Name);
+                            throw new StudioXInitializationException(sourceName + " source contains more than one dictionary for the culture: " + dictionary.CultureInfo.Name);
                         }
 
                         Dictionaries[dictionary.CultureInfo.Name] = dictionary;
@@ -57,8 +55,7 @@ namespace StudioX.Localization.Dictionaries.Json
                         {
                             if (DefaultDictionary != null)
                             {
-                                throw new StudioXInitializationException(
-                                    "Only one default localization dictionary can be for source: " + sourceName);
+                                throw new StudioXInitializationException("Only one default localization dictionary can be for source: " + sourceName);
                             }
 
                             DefaultDictionary = dictionary;

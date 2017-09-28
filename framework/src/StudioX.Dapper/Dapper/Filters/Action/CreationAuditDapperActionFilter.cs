@@ -10,11 +10,11 @@ namespace StudioX.Dapper.Filters.Action
 {
     public class CreationAuditDapperActionFilter : DapperActionFilterBase, IDapperActionFilter
     {
-        private readonly IMultiTenancyConfig multiTenancyConfig;
+        private readonly IMultiTenancyConfig _multiTenancyConfig;
 
         public CreationAuditDapperActionFilter(IMultiTenancyConfig multiTenancyConfig)
         {
-            this.multiTenancyConfig = multiTenancyConfig;
+            _multiTenancyConfig = multiTenancyConfig;
         }
 
         public void ExecuteFilter<TEntity, TPrimaryKey>(TEntity entity) where TEntity : class, IEntity<TPrimaryKey>
@@ -113,7 +113,7 @@ namespace StudioX.Dapper.Filters.Action
             }
 
             //Only works for single tenant applications
-            if (!multiTenancyConfig?.IsEnabled ?? false)
+            if (!_multiTenancyConfig?.IsEnabled ?? false)
             {
                 return;
             }

@@ -8,35 +8,36 @@ using System.Threading.Tasks;
 using StudioX.Dependency;
 using StudioX.Extensions;
 using StudioX.Web;
+using StudioX.WebApi.Controllers.Dynamic.Scripting.Angular;
 
 namespace StudioX.WebApi.Controllers.Dynamic.Scripting.TypeScript
 {
     internal class TypeScriptServiceProxyGenerator : ITransientDependency
     {
-        private DynamicApiControllerInfo controllerInfo;
-        private HashSet<Type> typesToBeDone = new HashSet<Type>();
-        private HashSet<Type> doneTypes = new HashSet<Type>();
-        private string servicePrefix = "";
+        private DynamicApiControllerInfo _controllerInfo;
+        private HashSet<Type> _typesToBeDone = new HashSet<Type>();
+        private HashSet<Type> _doneTypes = new HashSet<Type>();
+        private string _servicePrefix = "";
 
         public string Generate(DynamicApiControllerInfo controllerInfo, string servicePrefix)
         {
-            if (this.servicePrefix != servicePrefix)
+            if (_servicePrefix != servicePrefix)
             {
                 //if there is a change in servicePrefix, we need to generate the types again
-                this.servicePrefix = servicePrefix;
-                typesToBeDone = new HashSet<Type>();
-                doneTypes = new HashSet<Type>();
+                _servicePrefix = servicePrefix;
+                _typesToBeDone = new HashSet<Type>();
+                _doneTypes = new HashSet<Type>();
             }
-            this.controllerInfo = controllerInfo;
+            _controllerInfo = controllerInfo;
 
             var script = new StringBuilder();
 
-            script.AppendLine("     export class " + this.controllerInfo.ServiceName.Substring(this.controllerInfo.ServiceName.IndexOf('/') + 1));
+            script.AppendLine("     export class " + _controllerInfo.ServiceName.Substring(_controllerInfo.ServiceName.IndexOf('/') + 1));
             script.AppendLine("     {");
             script.AppendLine("         static $inject = ['$http'];");
             script.AppendLine("         constructor(private $http: ng.IHttpService){");
             script.AppendLine("     }");
-            foreach (var methodInfo in this.controllerInfo.Actions.Values)
+            foreach (var methodInfo in _controllerInfo.Actions.Values)
             {
                 PrepareInputParameterTypes(methodInfo.Method);
                 List<Type> newTypes = new List<Type>();
@@ -50,7 +51,7 @@ namespace StudioX.WebApi.Controllers.Dynamic.Scripting.TypeScript
                     script.AppendLine("                    var self = this;");
                     script.AppendLine("                    return self.$http(angular.extend({");
                     script.AppendLine("                        studiox: true,");
-                    script.AppendLine("                        url: studiox.appPath + '" + ActionScriptingHelper.GenerateUrlWithParameters(this.controllerInfo, methodInfo) + "',");
+                    script.AppendLine("                        url: studiox.appPath + '" + ActionScriptingHelper.GenerateUrlWithParameters(_controllerInfo, methodInfo) + "',");
                     script.AppendLine("                        method: '" + methodInfo.Verb.ToString().ToUpper(CultureInfo.InvariantCulture) + "',");
 
                     if (methodInfo.Verb == HttpVerb.Get)
@@ -64,7 +65,10 @@ namespace StudioX.WebApi.Controllers.Dynamic.Scripting.TypeScript
 
                     script.AppendLine("                    }, httpParams));");
 
+
                     script.AppendLine("}");
+
+
                 }
 
                 else
@@ -75,7 +79,7 @@ namespace StudioX.WebApi.Controllers.Dynamic.Scripting.TypeScript
                     script.AppendLine("                    var self = this;");
                     script.AppendLine("                    return self.$http(angular.extend({");
                     script.AppendLine("                        studiox: true,");
-                    script.AppendLine("                        url: studiox.appPath + '" + ActionScriptingHelper.GenerateUrlWithParameters(this.controllerInfo, methodInfo) + "',");
+                    script.AppendLine("                        url: studiox.appPath + '" + ActionScriptingHelper.GenerateUrlWithParameters(_controllerInfo, methodInfo) + "',");
                     script.AppendLine("                        method: '" + methodInfo.Verb.ToString().ToUpper(CultureInfo.InvariantCulture) + "',");
 
                     if (methodInfo.Verb == HttpVerb.Get)
@@ -91,19 +95,22 @@ namespace StudioX.WebApi.Controllers.Dynamic.Scripting.TypeScript
 
                     script.AppendLine("}");
                 }
+                    
+
             }
             
             script.AppendLine("     }");
 
-            script.AppendLine("angular.module('studiox').service('studiox.services." + this.controllerInfo.ServiceName.Replace("/", ".") + "', studiox.services." + this.controllerInfo.ServiceName.Replace("/", ".")+");");
+            script.AppendLine("angular.module('studiox').service('studiox.services." + _controllerInfo.ServiceName.Replace("/", ".") + "', studiox.services." + _controllerInfo.ServiceName.Replace("/", ".")+");");
 
-            while (typesToBeDone != null && typesToBeDone.Count > 0)
+
+            while (_typesToBeDone != null && _typesToBeDone.Count > 0)
             {
-                Type type = typesToBeDone.First();
+                Type type = _typesToBeDone.First();
 
                 script.AppendLine(GenerateTypeScript(type));
-                doneTypes.Add(type);
-                typesToBeDone.RemoveWhere(x => x == type);
+                _doneTypes.Add(type);
+                _typesToBeDone.RemoveWhere(x => x == type);
             }
             return script.ToString();
         }
@@ -142,6 +149,8 @@ namespace StudioX.WebApi.Controllers.Dynamic.Scripting.TypeScript
                 return "";
             }
 
+
+
             var myscript = new StringBuilder();
             List<Type> newTypes = new List<Type>();
             myscript.AppendLine("     export class " + TypeScriptHelper.GetTypeContractName(type, newTypes));
@@ -159,7 +168,7 @@ namespace StudioX.WebApi.Controllers.Dynamic.Scripting.TypeScript
         {
             foreach (var type in newTypes)
                 if (this.CanAddToBeDone(type))
-                    typesToBeDone.Add(type);
+                    _typesToBeDone.Add(type);
         }
 
         protected void PrepareInputParameterTypes(MethodInfo methodInfo)
@@ -174,14 +183,14 @@ namespace StudioX.WebApi.Controllers.Dynamic.Scripting.TypeScript
         {
             if (this.CanAddToBeDone(methodInfo.ReturnType))
             {
-                typesToBeDone.Add(methodInfo.ReturnType);
+                _typesToBeDone.Add(methodInfo.ReturnType);
             }
         }
         private bool CanAddToBeDone(Type type)
         {
             if (type == typeof(Task))
                 return false;
-            if (typesToBeDone.Count(z => z.FullName == type.FullName) == 0 && !TypeScriptHelper.IsIgnorantType(type) && !TypeScriptHelper.IsBasicType(type) && doneTypes.Count(z => z.FullName == type.FullName) == 0)
+            if (_typesToBeDone.Count(z => z.FullName == type.FullName) == 0 && !TypeScriptHelper.IsIgnorantType(type) && !TypeScriptHelper.IsBasicType(type) && _doneTypes.Count(z => z.FullName == type.FullName) == 0)
                 return true;
             return false;
         }

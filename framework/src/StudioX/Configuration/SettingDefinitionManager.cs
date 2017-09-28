@@ -7,7 +7,7 @@ using StudioX.Dependency;
 namespace StudioX.Configuration
 {
     /// <summary>
-    ///     Implements <see cref="ISettingDefinitionManager" />.
+    /// Implements <see cref="ISettingDefinitionManager"/>.
     /// </summary>
     internal class SettingDefinitionManager : ISettingDefinitionManager, ISingletonDependency
     {
@@ -16,7 +16,7 @@ namespace StudioX.Configuration
         private readonly IDictionary<string, SettingDefinition> settings;
 
         /// <summary>
-        ///     Constructor.
+        /// Constructor.
         /// </summary>
         public SettingDefinitionManager(IIocManager iocManager, ISettingsConfiguration settingsConfiguration)
         {

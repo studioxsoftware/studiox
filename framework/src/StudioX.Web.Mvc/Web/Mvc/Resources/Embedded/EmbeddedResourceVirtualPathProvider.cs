@@ -11,11 +11,11 @@ namespace StudioX.Web.Mvc.Resources.Embedded
 {
     public class EmbeddedResourceVirtualPathProvider : VirtualPathProvider, ITransientDependency
     {
-        private readonly IEmbeddedResourceManager embeddedResourceManager;
+        private readonly IEmbeddedResourceManager _embeddedResourceManager;
 
         public EmbeddedResourceVirtualPathProvider(IEmbeddedResourceManager embeddedResourceManager)
         {
-            this.embeddedResourceManager = embeddedResourceManager;
+            _embeddedResourceManager = embeddedResourceManager;
         }
 
         public override CacheDependency GetCacheDependency(string virtualPath, IEnumerable virtualPathDependencies, DateTime utcStart)
@@ -57,7 +57,7 @@ namespace StudioX.Web.Mvc.Resources.Embedded
 
         private EmbeddedResourceItem GetResource(string virtualPath)
         {
-            return embeddedResourceManager.GetResource(VirtualPathUtility.ToAppRelative(virtualPath).RemovePreFix("~"));
+            return _embeddedResourceManager.GetResource(VirtualPathUtility.ToAppRelative(virtualPath).RemovePreFix("~"));
         }
     }
 }

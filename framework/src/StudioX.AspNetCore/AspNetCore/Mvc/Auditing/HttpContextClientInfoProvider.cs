@@ -15,24 +15,24 @@ namespace StudioX.AspNetCore.Mvc.Auditing
 
         public ILogger Logger { get; set; }
 
-        private readonly IHttpContextAccessor httpContextAccessor;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        private readonly HttpContext httpContext;
+        private readonly HttpContext _httpContext;
 
         /// <summary>
         /// Creates a new <see cref="HttpContextClientInfoProvider"/>.
         /// </summary>
         public HttpContextClientInfoProvider(IHttpContextAccessor httpContextAccessor)
         {
-            this.httpContextAccessor = httpContextAccessor;
-            httpContext = httpContextAccessor.HttpContext;
+            _httpContextAccessor = httpContextAccessor;
+            _httpContext = httpContextAccessor.HttpContext;
 
             Logger = NullLogger.Instance;
         }
 
         protected virtual string GetBrowserInfo()
         {
-            var httpContext = httpContextAccessor.HttpContext ?? this.httpContext;
+            var httpContext = _httpContextAccessor.HttpContext ?? _httpContext;
             return httpContext?.Request?.Headers?["User-Agent"];
         }
 
@@ -40,7 +40,7 @@ namespace StudioX.AspNetCore.Mvc.Auditing
         {
             try
             {
-                var httpContext = httpContextAccessor.HttpContext ?? this.httpContext;
+                var httpContext = _httpContextAccessor.HttpContext ?? _httpContext;
                 return httpContext?.Connection?.RemoteIpAddress?.ToString();
             }
             catch (Exception ex)

@@ -3,7 +3,7 @@
   <Import Project="..\..\common.props" />
   
   <PropertyGroup>
-    <TargetFrameworks>net46;netstandard1.6</TargetFrameworks>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>StudioX.Dapper</AssemblyName>
     <PackageId>StudioX.Dapper</PackageId>
     <PackageTags>asp.net;asp.net mvc;boilerplate;application framework;web framework;framework;domain driven design;Dapper;ORM</PackageTags>
@@ -12,16 +12,11 @@
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <RootNamespace>StudioX</RootNamespace>
-    <Version>1.3.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Update="bin\Release\net46\StudioX.Dapper.pdb">
-      <PackagePath>lib/net46/</PackagePath>
-      <Pack>true</Pack>
-    </None>
-    <None Update="bin\Release\netstandard1.6\StudioX.Dapper.pdb">
-      <PackagePath>lib/netstandard1.6/</PackagePath>
+    <None Include="bin\Release\netstandard2.0\StudioX.Dapper.pdb">
+      <PackagePath>lib/netstandard2.0/</PackagePath>
       <Pack>true</Pack>
     </None>
   </ItemGroup>
@@ -30,17 +25,8 @@
     <ProjectReference Include="..\StudioX\StudioX.csproj" />
     <PackageReference Include="Dapper" Version="1.50.2" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
-    <PackageReference Include="DapperExtensions.DotnetCore" Version="1.0.1" />
     <PackageReference Include="System.Data.Common" Version="4.3.0" />
+    <PackageReference Include="DapperExtensions.DotnetCore" Version="1.0.1" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">
-    <Reference Include="System" />
-    <Reference Include="Microsoft.CSharp" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.6'">
-    <PackageReference Include="NETStandard.Library" Version="1.6.1" />
-  </ItemGroup>
-  
 </Project>

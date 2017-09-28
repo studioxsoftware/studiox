@@ -18,9 +18,15 @@ namespace StudioX.Runtime.Session
 
         public abstract int? ImpersonatorTenantId { get; }
 
-        public virtual MultiTenancySides MultiTenancySide => MultiTenancy.IsEnabled && !TenantId.HasValue
-            ? MultiTenancySides.Host
-            : MultiTenancySides.Tenant;
+        public virtual MultiTenancySides MultiTenancySide
+        {
+            get
+            {
+                return MultiTenancy.IsEnabled && !TenantId.HasValue
+                    ? MultiTenancySides.Host
+                    : MultiTenancySides.Tenant;
+            }
+        }
 
         protected SessionOverride OverridedValue => SessionOverrideScopeProvider.GetValue(SessionOverrideContextKey);
         protected IAmbientScopeProvider<SessionOverride> SessionOverrideScopeProvider { get; }

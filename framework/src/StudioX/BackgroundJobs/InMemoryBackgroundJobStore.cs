@@ -7,10 +7,9 @@ using StudioX.Timing;
 namespace StudioX.BackgroundJobs
 {
     /// <summary>
-    ///     In memory implementation of <see cref="IBackgroundJobStore" />.
-    ///     It's used if <see cref="IBackgroundJobStore" /> is not implemented by actual persistent store
-    ///     and job execution is enabled (<see cref="IBackgroundJobConfiguration.IsJobExecutionEnabled" />) for the
-    ///     application.
+    /// In memory implementation of <see cref="IBackgroundJobStore"/>.
+    /// It's used if <see cref="IBackgroundJobStore"/> is not implemented by actual persistent store
+    /// and job execution is enabled (<see cref="IBackgroundJobConfiguration.IsJobExecutionEnabled"/>) for the application.
     /// </summary>
     public class InMemoryBackgroundJobStore : IBackgroundJobStore
     {
@@ -18,7 +17,7 @@ namespace StudioX.BackgroundJobs
         private long lastId;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="InMemoryBackgroundJobStore" /> class.
+        /// Initializes a new instance of the <see cref="InMemoryBackgroundJobStore"/> class.
         /// </summary>
         public InMemoryBackgroundJobStore()
         {

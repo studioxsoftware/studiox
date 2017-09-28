@@ -1,6 +1,6 @@
 ﻿using StudioX.Authorization;
 using StudioX.Boilerplate.Authorization.Roles;
-using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 
 namespace StudioX.Boilerplate.Authorization.Users

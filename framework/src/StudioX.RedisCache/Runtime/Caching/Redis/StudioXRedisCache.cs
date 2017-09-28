@@ -11,8 +11,8 @@ namespace StudioX.Runtime.Caching.Redis
     /// </summary>
     public class StudioXRedisCache : CacheBase
     {
-        private readonly IDatabase database;
-        private readonly IRedisCacheSerializer serializer;
+        private readonly IDatabase _database;
+        private readonly IRedisCacheSerializer _serializer;
 
         /// <summary>
         /// Constructor.
@@ -23,13 +23,13 @@ namespace StudioX.Runtime.Caching.Redis
             IRedisCacheSerializer redisCacheSerializer)
             : base(name)
         {
-            database = redisCacheDatabaseProvider.GetDatabase();
-            serializer = redisCacheSerializer;
+            _database = redisCacheDatabaseProvider.GetDatabase();
+            _serializer = redisCacheSerializer;
         }
 
         public override object GetOrDefault(string key)
         {
-            var objbyte = database.StringGet(GetLocalizedKey(key));
+            var objbyte = _database.StringGet(GetLocalizedKey(key));
             return objbyte.HasValue ? Deserialize(objbyte) : null;
         }
 
@@ -48,7 +48,7 @@ namespace StudioX.Runtime.Caching.Redis
                 type = type.GetTypeInfo().BaseType;
             }
 
-            database.StringSet(
+            _database.StringSet(
                 GetLocalizedKey(key),
                 Serialize(value, type),
                 absoluteExpireTime ?? slidingExpireTime ?? DefaultAbsoluteExpireTime ?? DefaultSlidingExpireTime
@@ -57,22 +57,22 @@ namespace StudioX.Runtime.Caching.Redis
 
         public override void Remove(string key)
         {
-            database.KeyDelete(GetLocalizedKey(key));
+            _database.KeyDelete(GetLocalizedKey(key));
         }
 
         public override void Clear()
         {
-            database.KeyDeleteWithPrefix(GetLocalizedKey("*"));
+            _database.KeyDeleteWithPrefix(GetLocalizedKey("*"));
         }
 
         protected virtual string Serialize(object value, Type type)
         {
-            return serializer.Serialize(value, type);
+            return _serializer.Serialize(value, type);
         }
 
         protected virtual object Deserialize(RedisValue objbyte)
         {
-            return serializer.Deserialize(objbyte);
+            return _serializer.Deserialize(objbyte);
         }
 
         protected virtual string GetLocalizedKey(string key)

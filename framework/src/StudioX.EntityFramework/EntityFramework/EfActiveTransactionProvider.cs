@@ -9,11 +9,11 @@ namespace StudioX.EntityFramework
 {
     public class EfActiveTransactionProvider : IActiveTransactionProvider, ITransientDependency
     {
-        private readonly IIocResolver iocResolver;
+        private readonly IIocResolver _iocResolver;
 
         public EfActiveTransactionProvider(IIocResolver iocResolver)
         {
-            this.iocResolver = iocResolver;
+            _iocResolver = iocResolver;
         }
 
         public IDbTransaction GetActiveTransaction(ActiveTransactionProviderArgs args)
@@ -28,9 +28,9 @@ namespace StudioX.EntityFramework
 
         private DbContext GetDbContext(ActiveTransactionProviderArgs args)
         {
-            var dbContextProviderType = typeof(IDbContextProvider<>).MakeGenericType((Type) args["ContextType"]);
+            var dbContextProviderType = typeof(IDbContextProvider<>).MakeGenericType((Type)args["ContextType"]);
 
-            using (var dbContextProviderWrapper = iocResolver.ResolveAsDisposable(dbContextProviderType))
+            using (var dbContextProviderWrapper = _iocResolver.ResolveAsDisposable(dbContextProviderType))
             {
                 var method = dbContextProviderWrapper.Object.GetType()
                     .GetMethod(
@@ -40,7 +40,7 @@ namespace StudioX.EntityFramework
 
                 return (DbContext) method.Invoke(
                     dbContextProviderWrapper.Object,
-                    new object[] {(MultiTenancySides?) args["MultiTenancySide"]}
+                    new object[] { (MultiTenancySides?)args["MultiTenancySide"] }
                 );
             }
         }

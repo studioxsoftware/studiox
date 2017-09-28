@@ -12,18 +12,18 @@ namespace StudioX.Dapper.Filters.Query
 {
     public class SoftDeleteDapperQueryFilter : IDapperQueryFilter
     {
-        private readonly ICurrentUnitOfWorkProvider currentUnitOfWorkProvider;
+        private readonly ICurrentUnitOfWorkProvider _currentUnitOfWorkProvider;
 
         public SoftDeleteDapperQueryFilter(ICurrentUnitOfWorkProvider currentUnitOfWorkProvider)
         {
-            this.currentUnitOfWorkProvider = currentUnitOfWorkProvider;
+            _currentUnitOfWorkProvider = currentUnitOfWorkProvider;
         }
 
         public bool IsDeleted => false;
 
         public string FilterName { get; } = StudioXDataFilters.SoftDelete;
 
-        public bool IsEnabled => currentUnitOfWorkProvider.Current.IsFilterEnabled(FilterName);
+        public bool IsEnabled => _currentUnitOfWorkProvider.Current.IsFilterEnabled(FilterName);
 
         public IFieldPredicate ExecuteFilter<TEntity, TPrimaryKey>() where TEntity : class, IEntity<TPrimaryKey>
         {

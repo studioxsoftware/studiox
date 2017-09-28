@@ -7,18 +7,18 @@ namespace StudioX.Reflection
 {
     public class StudioXAssemblyFinder : IAssemblyFinder
     {
-        private readonly IStudioXModuleManager moduleManager;
+        private readonly IStudioXModuleManager _moduleManager;
 
         public StudioXAssemblyFinder(IStudioXModuleManager moduleManager)
         {
-            this.moduleManager = moduleManager;
+            _moduleManager = moduleManager;
         }
 
         public List<Assembly> GetAllAssemblies()
         {
             var assemblies = new List<Assembly>();
 
-            foreach (var module in moduleManager.Modules)
+            foreach (var module in _moduleManager.Modules)
             {
                 assemblies.Add(module.Assembly);
                 assemblies.AddRange(module.Instance.GetAdditionalAssemblies());

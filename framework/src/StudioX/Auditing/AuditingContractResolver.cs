@@ -20,7 +20,7 @@ namespace StudioX.Auditing
 
         protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
         {
-            var property = base.CreateProperty(member, memberSerialization);
+            JsonProperty property = base.CreateProperty(member, memberSerialization);
 
             if (member.IsDefined(typeof(DisableAuditingAttribute)) || member.IsDefined(typeof(JsonIgnoreAttribute)))
             {

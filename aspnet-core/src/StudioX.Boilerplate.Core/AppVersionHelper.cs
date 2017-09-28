@@ -19,9 +19,6 @@ namespace StudioX.Boilerplate
         /// Gets release (last build) date of the application.
         /// It's shown in the web page.
         /// </summary>
-        public static DateTime ReleaseDate
-        {
-            get { return new FileInfo(typeof(AppVersionHelper).GetAssembly().Location).LastWriteTime; }
-        }
+        public static DateTime ReleaseDate => new FileInfo(typeof(AppVersionHelper).GetAssembly().Location).LastWriteTime;
     }
 }

@@ -10,17 +10,17 @@ namespace StudioX.AspNetCore.Mvc.Proxying
     [DisableAuditing]
     public class StudioXServiceProxiesController : StudioXController
     {
-        private readonly IApiProxyScriptManager proxyScriptManager;
+        private readonly IApiProxyScriptManager _proxyScriptManager;
 
         public StudioXServiceProxiesController(IApiProxyScriptManager proxyScriptManager)
         {
-            this.proxyScriptManager = proxyScriptManager;
+            _proxyScriptManager = proxyScriptManager;
         }
 
-        [Produces("text/javascript")]
+        [Produces("text/javascript", "text/plain")]
         public string GetAll(ApiProxyGenerationModel model)
         {
-            return proxyScriptManager.GetScript(model.CreateOptions());
+            return _proxyScriptManager.GetScript(model.CreateOptions());
         }
     }
 }

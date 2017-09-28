@@ -12,13 +12,13 @@ namespace StudioX.EntityFramework
 {
     public abstract class DbContextTypeMatcher<TBaseDbContext> : IDbContextTypeMatcher, ISingletonDependency
     {
-        private readonly ICurrentUnitOfWorkProvider currentUnitOfWorkProvider;
-        private readonly Dictionary<Type, List<Type>> dbContextTypes;
+        private readonly ICurrentUnitOfWorkProvider _currentUnitOfWorkProvider;
+        private readonly Dictionary<Type, List<Type>> _dbContextTypes;
 
         protected DbContextTypeMatcher(ICurrentUnitOfWorkProvider currentUnitOfWorkProvider)
         {
-            this.currentUnitOfWorkProvider = currentUnitOfWorkProvider;
-            dbContextTypes = new Dictionary<Type, List<Type>>();
+            _currentUnitOfWorkProvider = currentUnitOfWorkProvider;
+            _dbContextTypes = new Dictionary<Type, List<Type>>();
         }
 
         public void Populate(Type[] dbContextTypes)
@@ -48,7 +48,7 @@ namespace StudioX.EntityFramework
             }
             
             //Get possible concrete types for given DbContext type
-            var allTargetTypes = dbContextTypes.GetOrDefault(sourceDbContextType);
+            var allTargetTypes = _dbContextTypes.GetOrDefault(sourceDbContextType);
 
             if (allTargetTypes.IsNullOrEmpty())
             {
@@ -82,7 +82,7 @@ namespace StudioX.EntityFramework
 
         private void CheckCurrentUow()
         {
-            if (currentUnitOfWorkProvider.Current == null)
+            if (_currentUnitOfWorkProvider.Current == null)
             {
                 throw new StudioXException("GetConcreteType method should be called in a UOW.");
             }
@@ -90,7 +90,7 @@ namespace StudioX.EntityFramework
 
         private MultiTenancySides GetCurrentTenancySide()
         {
-            return currentUnitOfWorkProvider.Current.GetTenantId() == null
+            return _currentUnitOfWorkProvider.Current.GetTenantId() == null
                        ? MultiTenancySides.Host
                        : MultiTenancySides.Tenant;
         }
@@ -148,12 +148,12 @@ namespace StudioX.EntityFramework
 
         private void Add(Type sourceDbContextType, Type targetDbContextType)
         {
-            if (!dbContextTypes.ContainsKey(sourceDbContextType))
+            if (!_dbContextTypes.ContainsKey(sourceDbContextType))
             {
-                dbContextTypes[sourceDbContextType] = new List<Type>();
+                _dbContextTypes[sourceDbContextType] = new List<Type>();
             }
 
-            dbContextTypes[sourceDbContextType].Add(targetDbContextType);
+            _dbContextTypes[sourceDbContextType].Add(targetDbContextType);
         }
     }
 }

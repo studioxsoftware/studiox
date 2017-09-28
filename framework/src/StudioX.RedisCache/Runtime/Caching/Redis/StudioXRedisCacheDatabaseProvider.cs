@@ -9,16 +9,16 @@ namespace StudioX.Runtime.Caching.Redis
     /// </summary>
     public class StudioXRedisCacheDatabaseProvider : IStudioXRedisCacheDatabaseProvider, ISingletonDependency
     {
-        private readonly StudioXRedisCacheOptions options;
-        private readonly Lazy<ConnectionMultiplexer> connectionMultiplexer;
+        private readonly StudioXRedisCacheOptions _options;
+        private readonly Lazy<ConnectionMultiplexer> _connectionMultiplexer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StudioXRedisCacheDatabaseProvider"/> class.
         /// </summary>
         public StudioXRedisCacheDatabaseProvider(StudioXRedisCacheOptions options)
         {
-            this.options = options;
-            connectionMultiplexer = new Lazy<ConnectionMultiplexer>(CreateConnectionMultiplexer);
+            _options = options;
+            _connectionMultiplexer = new Lazy<ConnectionMultiplexer>(CreateConnectionMultiplexer);
         }
 
         /// <summary>
@@ -26,12 +26,12 @@ namespace StudioX.Runtime.Caching.Redis
         /// </summary>
         public IDatabase GetDatabase()
         {
-            return connectionMultiplexer.Value.GetDatabase(options.DatabaseId);
+            return _connectionMultiplexer.Value.GetDatabase(_options.DatabaseId);
         }
 
         private ConnectionMultiplexer CreateConnectionMultiplexer()
         {
-            return ConnectionMultiplexer.Connect(options.ConnectionString);
+            return ConnectionMultiplexer.Connect(_options.ConnectionString);
         }
     }
 }

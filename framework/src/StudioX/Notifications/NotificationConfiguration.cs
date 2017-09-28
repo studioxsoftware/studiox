@@ -4,7 +4,7 @@ namespace StudioX.Notifications
 {
     internal class NotificationConfiguration : INotificationConfiguration
     {
-        public ITypeList<NotificationProvider> Providers { get; }
+        public ITypeList<NotificationProvider> Providers { get; private set; }
 
         public NotificationConfiguration()
         {

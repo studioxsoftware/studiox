@@ -1,6 +1,6 @@
+﻿using StudioX.Dependency;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Mvc.Filters;
-using StudioX.Dependency;
 
 namespace StudioX.AspNetCore.Mvc.Results.Wrapping
 {

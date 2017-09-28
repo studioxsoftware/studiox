@@ -6,12 +6,7 @@ namespace StudioX.Runtime.Session
 {
     public class DefaultPrincipalAccessor : IPrincipalAccessor, ISingletonDependency
     {
-        public virtual ClaimsPrincipal Principal =>
-#if NET46
-            Thread.CurrentPrincipal as ClaimsPrincipal;
-#else
-            null;
-#endif
+        public virtual ClaimsPrincipal Principal => Thread.CurrentPrincipal as ClaimsPrincipal;
 
         public static DefaultPrincipalAccessor Instance => new DefaultPrincipalAccessor();
     }

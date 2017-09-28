@@ -10,34 +10,34 @@ namespace StudioX.Hangfire
 {
     public class HangfireBackgroundJobManager : BackgroundWorkerBase, IBackgroundJobManager
     {
-        private readonly IBackgroundJobConfiguration backgroundJobConfiguration;
-        private readonly IStudioXHangfireConfiguration hangfireConfiguration;
+        private readonly IBackgroundJobConfiguration _backgroundJobConfiguration;
+        private readonly IStudioXHangfireConfiguration _hangfireConfiguration;
 
         public HangfireBackgroundJobManager(
             IBackgroundJobConfiguration backgroundJobConfiguration,
             IStudioXHangfireConfiguration hangfireConfiguration)
         {
-            this.backgroundJobConfiguration = backgroundJobConfiguration;
-            this.hangfireConfiguration = hangfireConfiguration;
+            _backgroundJobConfiguration = backgroundJobConfiguration;
+            _hangfireConfiguration = hangfireConfiguration;
         }
 
         public override void Start()
         {
             base.Start();
 
-            if (hangfireConfiguration.Server == null && backgroundJobConfiguration.IsJobExecutionEnabled)
+            if (_hangfireConfiguration.Server == null && _backgroundJobConfiguration.IsJobExecutionEnabled)
             {
-                hangfireConfiguration.Server = new BackgroundJobServer();
+                _hangfireConfiguration.Server = new BackgroundJobServer();
             }
         }
 
         public override void WaitToStop()
         {
-            if (hangfireConfiguration.Server != null)
+            if (_hangfireConfiguration.Server != null)
             {
                 try
                 {
-                    hangfireConfiguration.Server.Dispose();
+                    _hangfireConfiguration.Server.Dispose();
                 }
                 catch (Exception ex)
                 {

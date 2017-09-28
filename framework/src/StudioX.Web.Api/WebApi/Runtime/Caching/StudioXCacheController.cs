@@ -13,11 +13,11 @@ namespace StudioX.WebApi.Runtime.Caching
     [DontWrapResult]
     public class StudioXCacheController : StudioXApiController
     {
-        private readonly ICacheManager cacheManager;
+        private readonly ICacheManager _cacheManager;
 
         public StudioXCacheController(ICacheManager cacheManager)
         {
-            this.cacheManager = cacheManager;
+            _cacheManager = cacheManager;
         }
 
         [HttpPost]
@@ -35,7 +35,7 @@ namespace StudioX.WebApi.Runtime.Caching
 
             await CheckPassword(model.Password);
 
-            var caches = cacheManager.GetAllCaches().Where(c => model.Caches.Contains(c.Name));
+            var caches = _cacheManager.GetAllCaches().Where(c => model.Caches.Contains(c.Name));
             foreach (var cache in caches)
             {
                 await cache.ClearAsync();
@@ -55,7 +55,7 @@ namespace StudioX.WebApi.Runtime.Caching
 
             await CheckPassword(model.Password);
 
-            var caches = cacheManager.GetAllCaches();
+            var caches = _cacheManager.GetAllCaches();
             foreach (var cache in caches)
             {
                 await cache.ClearAsync();

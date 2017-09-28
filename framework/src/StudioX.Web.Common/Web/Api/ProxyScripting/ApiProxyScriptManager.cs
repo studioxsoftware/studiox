@@ -11,50 +11,50 @@ namespace StudioX.Web.Api.ProxyScripting
 {
     public class ApiProxyScriptManager : IApiProxyScriptManager, ISingletonDependency
     {
-        private readonly IApiDescriptionModelProvider modelProvider;
-        private readonly IApiProxyScriptingConfiguration configuration;
-        private readonly IIocResolver iocResolver;
+        private readonly IApiDescriptionModelProvider _modelProvider;
+        private readonly IApiProxyScriptingConfiguration _configuration;
+        private readonly IIocResolver _iocResolver;
 
-        private readonly ConcurrentDictionary<string, string> cache;
+        private readonly ConcurrentDictionary<string, string> _cache;
 
         public ApiProxyScriptManager(
             IApiDescriptionModelProvider modelProvider, 
             IApiProxyScriptingConfiguration configuration,
             IIocResolver iocResolver)
         {
-            this.modelProvider = modelProvider;
-            this.configuration = configuration;
-            this.iocResolver = iocResolver;
+            _modelProvider = modelProvider;
+            _configuration = configuration;
+            _iocResolver = iocResolver;
 
-            cache = new ConcurrentDictionary<string, string>();
+            _cache = new ConcurrentDictionary<string, string>();
         }
 
         public string GetScript(ApiProxyGenerationOptions options)
         {
             if (options.UseCache)
             {
-                return cache.GetOrAdd(CreateCacheKey(options), (key) => CreateScript(options));
+                return _cache.GetOrAdd(CreateCacheKey(options), (key) => CreateScript(options));
             }
 
-            return cache[CreateCacheKey(options)] = CreateScript(options);
+            return _cache[CreateCacheKey(options)] = CreateScript(options);
         }
 
         private string CreateScript(ApiProxyGenerationOptions options)
         {
-            var model = modelProvider.CreateModel();
+            var model = _modelProvider.CreateModel();
 
             if (options.IsPartialRequest())
             {
                 model = model.CreateSubModel(options.Modules, options.Controllers, options.Actions);
             }
 
-            var generatorType = configuration.Generators.GetOrDefault(options.GeneratorType);
+            var generatorType = _configuration.Generators.GetOrDefault(options.GeneratorType);
             if (generatorType == null)
             {
                 throw new StudioXException($"Could not find a proxy script generator with given name: {options.GeneratorType}");
             }
 
-            using (var generator = iocResolver.ResolveAsDisposable<IProxyScriptGenerator>(generatorType))
+            using (var generator = _iocResolver.ResolveAsDisposable<IProxyScriptGenerator>(generatorType))
             {
                 return generator.Object.CreateScript(model);
             }

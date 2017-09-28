@@ -41,8 +41,7 @@ namespace StudioX.Owin
             {
                 if (HttpContext.Current?.Server == null)
                 {
-                    throw new StudioXInitializationException(@"Can not enable UseEmbeddedFiles for OWIN since HttpContext.Current is null! 
-                            If you are using ASP.NET Core, serve embedded resources through ASP.NET Core middleware instead of OWIN.");
+                    throw new StudioXInitializationException("Can not enable UseEmbeddedFiles for OWIN since HttpContext.Current is null! If you are using ASP.NET Core, serve embedded resources through ASP.NET Core middleware instead of OWIN. See http://www.aspnetboilerplate.com/Pages/Documents/Embedded-Resource-Files#aspnet-core-configuration");
                 }
 
                 app.UseStaticFiles(new StaticFileOptions
@@ -80,10 +79,10 @@ namespace StudioX.Owin
 
             if (!app.Properties.ContainsKey("_StudioXBootstrapper.Instance"))
             {
-                var bootstrapper = StudioXBootstrapper.Create<TStartupModule>();
-                app.Properties["_StudioXBootstrapper.Instance"] = bootstrapper;
-                configureAction?.Invoke(bootstrapper);
-                bootstrapper.Initialize();
+                var studioxBootstrapper = StudioXBootstrapper.Create<TStartupModule>();
+                app.Properties["_StudioXBootstrapper.Instance"] = studioxBootstrapper;
+                configureAction?.Invoke(studioxBootstrapper);
+                studioxBootstrapper.Initialize();
             }
         }
     }

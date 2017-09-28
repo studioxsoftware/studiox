@@ -21,7 +21,7 @@ namespace StudioX.EntityFrameworkCore.Tests.Tests
             parallelQueryExecuteDemo = Resolve<ParallelQueryExecuteDemo>();
         }
 
-        [Fact]
+        //[Fact]
         public async Task ShouldRunParallelWithDifferentUnitOfWorks()
         {
             await parallelQueryExecuteDemo.RunAsync();

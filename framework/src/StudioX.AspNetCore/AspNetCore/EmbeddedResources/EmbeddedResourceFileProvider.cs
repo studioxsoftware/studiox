@@ -9,17 +9,17 @@ namespace StudioX.AspNetCore.EmbeddedResources
 {
     public class EmbeddedResourceFileProvider : IFileProvider
     {
-        private readonly Lazy<IEmbeddedResourceManager> embeddedResourceManager;
-        private readonly Lazy<IWebEmbeddedResourcesConfiguration> configuration;
+        private readonly Lazy<IEmbeddedResourceManager> _embeddedResourceManager;
+        private readonly Lazy<IWebEmbeddedResourcesConfiguration> _configuration;
 
         public EmbeddedResourceFileProvider(IIocResolver iocResolver)
         {
-            embeddedResourceManager = new Lazy<IEmbeddedResourceManager>(
+            _embeddedResourceManager = new Lazy<IEmbeddedResourceManager>(
                 () => iocResolver.Resolve<IEmbeddedResourceManager>(),
                 true
             );
 
-            configuration = new Lazy<IWebEmbeddedResourcesConfiguration>(
+            _configuration = new Lazy<IWebEmbeddedResourcesConfiguration>(
                 () => iocResolver.Resolve<IWebEmbeddedResourcesConfiguration>(),
                 true
             );
@@ -27,7 +27,7 @@ namespace StudioX.AspNetCore.EmbeddedResources
 
         public IFileInfo GetFileInfo(string subpath)
         {
-            var resource = embeddedResourceManager.Value.GetResource(subpath);
+            var resource = _embeddedResourceManager.Value.GetResource(subpath);
 
             if (resource == null || IsIgnoredFile(resource))
             {
@@ -51,7 +51,7 @@ namespace StudioX.AspNetCore.EmbeddedResources
 
         protected virtual bool IsIgnoredFile(EmbeddedResourceItem resource)
         {
-            return resource.FileExtension != null && configuration.Value.IgnoredFileExtensions.Contains(resource.FileExtension);
+            return resource.FileExtension != null && _configuration.Value.IgnoredFileExtensions.Contains(resource.FileExtension);
         }
     }
 }

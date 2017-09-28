@@ -1,9 +1,9 @@
 ﻿using System.Linq;
-using Castle.Core.Logging;
-using Microsoft.AspNetCore.Http;
 using StudioX.Collections.Extensions;
 using StudioX.Dependency;
 using StudioX.MultiTenancy;
+using Castle.Core.Logging;
+using Microsoft.AspNetCore.Http;
 
 namespace StudioX.AspNetCore.MultiTenancy
 {
@@ -11,18 +11,18 @@ namespace StudioX.AspNetCore.MultiTenancy
     {
         public ILogger Logger { get; set; }
 
-        private readonly IHttpContextAccessor httpContextAccessor;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public HttpHeaderTenantResolveContributor(IHttpContextAccessor httpContextAccessor)
         {
-            this.httpContextAccessor = httpContextAccessor;
+            _httpContextAccessor = httpContextAccessor;
 
             Logger = NullLogger.Instance;
         }
 
         public int? ResolveTenantId()
         {
-            var httpContext = httpContextAccessor.HttpContext;
+            var httpContext = _httpContextAccessor.HttpContext;
             if (httpContext == null)
             {
                 return null;
@@ -35,10 +35,10 @@ namespace StudioX.AspNetCore.MultiTenancy
             }
 
             if (tenantIdHeader.Count > 1)
-            {
+            { 
                 Logger.Warn(
                     $"HTTP request includes more than one {MultiTenancyConsts.TenantIdResolveKey} header value. First one will be used. All of them: {tenantIdHeader.JoinAsString(", ")}"
-                );
+                    );
             }
 
             int tenantId;

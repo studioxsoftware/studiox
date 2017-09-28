@@ -3,7 +3,7 @@
   <Import Project="..\..\common.props" />
   
   <PropertyGroup>
-    <TargetFramework>net46</TargetFramework>
+    <TargetFramework>net461</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>StudioX.Web</AssemblyName>
     <PackageId>StudioX.Web</PackageId>
@@ -16,13 +16,12 @@
     <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <RootNamespace>StudioX</RootNamespace>
-    <Version>1.3.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Web\Localization\StudioXWebXmlSource\*.xml" Exclude="bin\**;obj\**;**\*.xproj;packages\**;@(EmbeddedResource)" />
-    <None Update="bin\Release\net46\StudioX.Web.pdb">
-      <PackagePath>lib/net46/</PackagePath>
+    <None Include="bin\Release\net461\StudioX.Web.pdb">
+      <PackagePath>lib/net461/</PackagePath>
       <Pack>true</Pack>
     </None>
   </ItemGroup>
@@ -31,7 +30,7 @@
     <ProjectReference Include="..\StudioX.Web.Common\StudioX.Web.Common.csproj" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
     <Reference Include="System.Web" />
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />

@@ -19,16 +19,22 @@ namespace StudioX.Web.SignalR.Notifications
         /// </summary>
         public ILogger Logger { get; set; }
 
-        private readonly IOnlineClientManager onlineClientManager;
+        private readonly IOnlineClientManager _onlineClientManager;
 
-        private static IHubContext CommonHub => GlobalHost.ConnectionManager.GetHubContext<StudioXCommonHub>();
+        private static IHubContext CommonHub
+        {
+            get
+            {
+                return GlobalHost.ConnectionManager.GetHubContext<StudioXCommonHub>();
+            }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SignalRRealTimeNotifier"/> class.
         /// </summary>
         public SignalRRealTimeNotifier(IOnlineClientManager onlineClientManager)
         {
-            this.onlineClientManager = onlineClientManager;
+            _onlineClientManager = onlineClientManager;
             Logger = NullLogger.Instance;
         }
 
@@ -39,7 +45,7 @@ namespace StudioX.Web.SignalR.Notifications
             {
                 try
                 {
-                    var onlineClients = onlineClientManager.GetAllByUserId(userNotification);
+                    var onlineClients = _onlineClientManager.GetAllByUserId(userNotification);
                     foreach (var onlineClient in onlineClients)
                     {
                         var signalRClient = CommonHub.Clients.Client(onlineClient.ConnectionId);

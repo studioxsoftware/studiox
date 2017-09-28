@@ -4,10 +4,6 @@ using System.Linq;
 using System.Reflection;
 using StudioX.Collections.Extensions;
 using StudioX.Modules;
-#if !NET46
-using System.Runtime.Loader;
-
-#endif
 
 namespace StudioX.PlugIns
 {
@@ -16,18 +12,18 @@ namespace StudioX.PlugIns
     {
         public string[] FilePaths { get; }
 
-        private readonly Lazy<List<Assembly>> assemblies;
+        private readonly Lazy<List<Assembly>> _assemblies;
 
         public AssemblyFileListPlugInSource(params string[] filePaths)
         {
             FilePaths = filePaths ?? new string[0];
 
-            assemblies = new Lazy<List<Assembly>>(LoadAssemblies, true);
+            _assemblies = new Lazy<List<Assembly>>(LoadAssemblies, true);
         }
 
         public List<Assembly> GetAssemblies()
         {
-            return assemblies.Value;
+            return _assemblies.Value;
         }
 
         public List<Type> GetModules()
@@ -48,8 +44,7 @@ namespace StudioX.PlugIns
                 }
                 catch (Exception ex)
                 {
-                    throw new StudioXInitializationException(
-                        "Could not get module types from assembly: " + assembly.FullName, ex);
+                    throw new StudioXInitializationException("Could not get module types from assembly: " + assembly.FullName, ex);
                 }
             }
 
@@ -59,11 +54,7 @@ namespace StudioX.PlugIns
         private List<Assembly> LoadAssemblies()
         {
             return FilePaths.Select(
-#if NET46
-                Assembly.LoadFile
-#else
-                AssemblyLoadContext.Default.LoadFromAssemblyPath
-#endif
+                Assembly.LoadFile //TODO: Use AssemblyLoadContext.Default.LoadFromAssemblyPath instead?
             ).ToList();
         }
     }

@@ -1,5 +1,4 @@
-﻿#if !NET46
-using System.Threading;
+﻿using System.Threading;
 using StudioX.Dependency;
 using Castle.Core;
 using Castle.Core.Logging;
@@ -96,4 +95,3 @@ namespace StudioX.Domain.Uow
         }
     }
 }
-#endif

@@ -1,32 +1,30 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
 using StudioX.Dependency;
 
 namespace StudioX.Localization
 {
     public class LanguageManager : ILanguageManager, ITransientDependency
     {
-        public LanguageInfo CurrentLanguage
-        {
-            get { return GetCurrentLanguage(); }
-        }
+        public LanguageInfo CurrentLanguage { get { return GetCurrentLanguage(); } }
 
-        private readonly ILanguageProvider languageProvider;
+        private readonly ILanguageProvider _languageProvider;
 
         public LanguageManager(ILanguageProvider languageProvider)
         {
-            this.languageProvider = languageProvider;
+            _languageProvider = languageProvider;
         }
 
         public IReadOnlyList<LanguageInfo> GetLanguages()
         {
-            return languageProvider.GetLanguages();
+            return _languageProvider.GetLanguages();
         }
 
         private LanguageInfo GetCurrentLanguage()
         {
-            var languages = languageProvider.GetLanguages();
+            var languages = _languageProvider.GetLanguages();
             if (languages.Count <= 0)
             {
                 throw new StudioXException("No language defined in this application.");

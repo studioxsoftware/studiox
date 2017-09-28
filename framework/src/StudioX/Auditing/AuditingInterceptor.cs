@@ -30,7 +30,7 @@ namespace StudioX.Auditing
                 return;
             }
 
-            var auditInfo = auditingHelper.CreateAuditInfo(invocation.MethodInvocationTarget, invocation.Arguments);
+            var auditInfo = auditingHelper.CreateAuditInfo(invocation.TargetType, invocation.MethodInvocationTarget, invocation.Arguments);
 
             if (AsyncHelper.IsAsyncMethod(invocation.Method))
             {

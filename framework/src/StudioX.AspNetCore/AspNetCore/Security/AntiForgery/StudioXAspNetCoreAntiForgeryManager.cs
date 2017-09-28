@@ -8,8 +8,8 @@ namespace StudioX.AspNetCore.Security.AntiForgery
     {
         public IStudioXAntiForgeryConfiguration Configuration { get; }
 
-        private readonly IAntiforgery antiforgery;
-        private readonly IHttpContextAccessor httpContextAccessor;
+        private readonly IAntiforgery _antiforgery;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public StudioXAspNetCoreAntiForgeryManager(
             IAntiforgery antiforgery,
@@ -17,13 +17,13 @@ namespace StudioX.AspNetCore.Security.AntiForgery
             IStudioXAntiForgeryConfiguration configuration)
         {
             Configuration = configuration;
-            this.antiforgery = antiforgery;
-            this.httpContextAccessor = httpContextAccessor;
+            _antiforgery = antiforgery;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public string GenerateToken()
         {
-            return antiforgery.GetAndStoreTokens(httpContextAccessor.HttpContext).RequestToken;
+            return _antiforgery.GetAndStoreTokens(_httpContextAccessor.HttpContext).RequestToken;
         }
     }
 }

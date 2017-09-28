@@ -11,13 +11,13 @@ namespace StudioX.Web.Settings
     /// </summary>
     public class SettingScriptManager : ISettingScriptManager, ISingletonDependency
     {
-        private readonly ISettingDefinitionManager settingDefinitionManager;
-        private readonly ISettingManager settingManager;
+        private readonly ISettingDefinitionManager _settingDefinitionManager;
+        private readonly ISettingManager _settingManager;
 
         public SettingScriptManager(ISettingDefinitionManager settingDefinitionManager, ISettingManager settingManager)
         {
-            this.settingDefinitionManager = settingDefinitionManager;
-            this.settingManager = settingManager;
+            _settingDefinitionManager = settingDefinitionManager;
+            _settingManager = settingManager;
         }
 
         public async Task<string> GetScriptAsync()
@@ -28,7 +28,7 @@ namespace StudioX.Web.Settings
             script.AppendLine("    studiox.setting = studiox.setting || {};");
             script.AppendLine("    studiox.setting.values = {");
 
-            var settingDefinitions = settingDefinitionManager
+            var settingDefinitions = _settingDefinitionManager
                 .GetAllSettingDefinitions()
                 .Where(sd => sd.IsVisibleToClients);
 
@@ -44,7 +44,7 @@ namespace StudioX.Web.Settings
                     script.AppendLine();
                 }
 
-                var settingValue = await settingManager.GetSettingValueAsync(settingDefinition.Name);
+                var settingValue = await _settingManager.GetSettingValueAsync(settingDefinition.Name);
 
                 script.Append("        '" +
                               settingDefinition.Name .Replace("'", @"\'") + "': " +

@@ -229,8 +229,9 @@ namespace StudioX.Dapper.Repositories
         /// <summary>
         ///     Executes the given query text
         /// </summary>
-        /// <param name="query"></param>
-        /// <param name="parameters"></param>
+        /// <param name="query">The query.</param>
+        /// <param name="parameters">The parameters.</param>
+        /// <returns></returns>
         int Execute([NotNull] string query, [CanBeNull] object parameters = null);
 
         /// <summary>

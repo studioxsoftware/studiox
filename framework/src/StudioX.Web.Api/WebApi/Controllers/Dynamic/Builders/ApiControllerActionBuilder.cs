@@ -46,9 +46,11 @@ namespace StudioX.WebApi.Controllers.Dynamic.Builders
         /// <summary>
         /// Reference to the <see cref="ApiControllerBuilder{T}"/> which created this object.
         /// </summary>
-        public IApiControllerBuilder Controller => controller;
-
-        private readonly ApiControllerBuilder<T> controller;
+        public IApiControllerBuilder Controller
+        {
+            get { return _controller; }
+        }
+        private readonly ApiControllerBuilder<T> _controller;
 
         /// <summary>
         /// Creates a new <see cref="ApiControllerActionBuilder{T}"/> object.
@@ -57,7 +59,7 @@ namespace StudioX.WebApi.Controllers.Dynamic.Builders
         /// <param name="methodInfo">Method</param>
         public ApiControllerActionBuilder(ApiControllerBuilder<T> apiControllerBuilder, MethodInfo methodInfo)
         {
-            controller = apiControllerBuilder;
+            _controller = apiControllerBuilder;
             Method = methodInfo;
             ActionName = Method.Name;
         }
@@ -89,7 +91,7 @@ namespace StudioX.WebApi.Controllers.Dynamic.Builders
         /// <returns>Action builder</returns>
         public IApiControllerActionBuilder<T> ForMethod(string methodName)
         {
-            return controller.ForMethod(methodName);
+            return _controller.ForMethod(methodName);
         }
 
         /// <summary>
@@ -109,7 +111,7 @@ namespace StudioX.WebApi.Controllers.Dynamic.Builders
         public IApiControllerBuilder<T> DontCreateAction()
         {
             DontCreate = true;
-            return controller;
+            return _controller;
         }
 
         /// <summary>
@@ -118,7 +120,7 @@ namespace StudioX.WebApi.Controllers.Dynamic.Builders
         /// </summary>
         public void Build()
         {
-            controller.Build();
+            _controller.Build();
         }
 
         /// <summary>

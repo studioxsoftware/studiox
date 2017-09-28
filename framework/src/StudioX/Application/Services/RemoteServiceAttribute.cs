@@ -9,12 +9,12 @@ namespace StudioX.Application.Services
     public class RemoteServiceAttribute : Attribute
     {
         /// <summary>
-        ///     Default: true.
+        /// Default: true.
         /// </summary>
         public bool IsEnabled { get; set; }
 
         /// <summary>
-        ///     Default: true.
+        /// Default: true.
         /// </summary>
         public bool IsMetadataEnabled { get; set; }
 

@@ -7,37 +7,32 @@ namespace StudioX.PlugIns
     {
         public PlugInSourceList PlugInSources { get; }
 
-#if NET46
         private static readonly object SyncObj = new object();
-        private static bool isRegisteredToAssemblyResolve;
-#endif
+        private static bool _isRegisteredToAssemblyResolve;
 
         public StudioXPlugInManager()
         {
             PlugInSources = new PlugInSourceList();
 
-            //TODO: Try to use AssemblyLoadContext.Default!
-#if NET46
+            //TODO: Try to use AssemblyLoadContext.Default..?
             RegisterToAssemblyResolve(PlugInSources);
-#endif
         }
 
-#if NET46
         private static void RegisterToAssemblyResolve(PlugInSourceList plugInSources)
         {
-            if (isRegisteredToAssemblyResolve)
+            if (_isRegisteredToAssemblyResolve)
             {
                 return;
             }
 
             lock (SyncObj)
             {
-                if (isRegisteredToAssemblyResolve)
+                if (_isRegisteredToAssemblyResolve)
                 {
                     return;
                 }
 
-                isRegisteredToAssemblyResolve = true;
+                _isRegisteredToAssemblyResolve = true;
 
                 AppDomain.CurrentDomain.AssemblyResolve += (sender, args) =>
                 {
@@ -45,7 +40,5 @@ namespace StudioX.PlugIns
                 };
             }
         }
-
-#endif
     }
 }

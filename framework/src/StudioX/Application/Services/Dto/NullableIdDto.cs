@@ -3,8 +3,8 @@ using System;
 namespace StudioX.Application.Services.Dto
 {
     /// <summary>
-    ///     This DTO can be directly used (or inherited)
-    ///     to pass an nullable Id value to an application service method.
+    /// This DTO can be directly used (or inherited)
+    /// to pass an nullable Id value to an application service method.
     /// </summary>
     /// <typeparam name="TId">Type of the Id</typeparam>
     [Serializable]
@@ -15,6 +15,7 @@ namespace StudioX.Application.Services.Dto
 
         public NullableIdDto()
         {
+
         }
 
         public NullableIdDto(TId? id)
@@ -24,18 +25,20 @@ namespace StudioX.Application.Services.Dto
     }
 
     /// <summary>
-    ///     A shortcut of <see cref="NullableIdDto{TId}" /> for <see cref="int" />.
+    /// A shortcut of <see cref="NullableIdDto{TId}"/> for <see cref="int"/>.
     /// </summary>
     [Serializable]
     public class NullableIdDto : NullableIdDto<int>
     {
         public NullableIdDto()
         {
+
         }
 
         public NullableIdDto(int? id)
             : base(id)
         {
+
         }
     }
 }

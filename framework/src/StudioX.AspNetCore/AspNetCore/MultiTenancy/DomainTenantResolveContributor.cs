@@ -11,35 +11,35 @@ namespace StudioX.AspNetCore.MultiTenancy
 {
     public class DomainTenantResolveContributor : ITenantResolveContributor, ITransientDependency
     {
-        private readonly IHttpContextAccessor httpContextAccessor;
-        private readonly IWebMultiTenancyConfiguration multiTenancyConfiguration;
-        private readonly ITenantStore tenantStore;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IWebMultiTenancyConfiguration _multiTenancyConfiguration;
+        private readonly ITenantStore _tenantStore;
 
         public DomainTenantResolveContributor(
             IHttpContextAccessor httpContextAccessor,
             IWebMultiTenancyConfiguration multiTenancyConfiguration,
             ITenantStore tenantStore)
         {
-            this.httpContextAccessor = httpContextAccessor;
-            this.multiTenancyConfiguration = multiTenancyConfiguration;
-            this.tenantStore = tenantStore;
+            _httpContextAccessor = httpContextAccessor;
+            _multiTenancyConfiguration = multiTenancyConfiguration;
+            _tenantStore = tenantStore;
         }
 
         public int? ResolveTenantId()
         {
-            if (multiTenancyConfiguration.DomainFormat.IsNullOrEmpty())
+            if (_multiTenancyConfiguration.DomainFormat.IsNullOrEmpty())
             {
                 return null;
             }
 
-            var httpContext = httpContextAccessor.HttpContext;
+            var httpContext = _httpContextAccessor.HttpContext;
             if (httpContext == null)
             {
                 return null;
             }
 
             var hostName = httpContext.Request.Host.Host.RemovePreFix("http://", "https://").RemovePostFix("/");
-            var domainFormat = multiTenancyConfiguration.DomainFormat.RemovePreFix("http://", "https://").Split(':')[0].RemovePostFix("/");
+            var domainFormat = _multiTenancyConfiguration.DomainFormat.RemovePreFix("http://", "https://").Split(':')[0].RemovePostFix("/");
             var result = new FormattedStringValueExtracter().Extract(hostName, domainFormat, true);
 
             if (!result.IsMatch || !result.Matches.Any())
@@ -58,9 +58,13 @@ namespace StudioX.AspNetCore.MultiTenancy
                 return null;
             }
 
-            var tenantInfo = tenantStore.Find(tenancyName);
+            var tenantInfo = _tenantStore.Find(tenancyName);
+            if (tenantInfo == null)
+            {
+                return null;
+            }
 
-            return tenantInfo?.Id;
+            return tenantInfo.Id;
         }
     }
 }

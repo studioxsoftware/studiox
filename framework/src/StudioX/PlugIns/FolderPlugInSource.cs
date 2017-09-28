@@ -14,19 +14,19 @@ namespace StudioX.PlugIns
 
         public SearchOption SearchOption { get; set; }
 
-        private readonly Lazy<List<Assembly>> assemblies;
-
+        private readonly Lazy<List<Assembly>> _assemblies;
+        
         public FolderPlugInSource(string folder, SearchOption searchOption = SearchOption.TopDirectoryOnly)
         {
             Folder = folder;
             SearchOption = searchOption;
 
-            assemblies = new Lazy<List<Assembly>>(LoadAssemblies, true);
+            _assemblies = new Lazy<List<Assembly>>(LoadAssemblies, true);
         }
 
         public List<Assembly> GetAssemblies()
         {
-            return assemblies.Value;
+            return _assemblies.Value;
         }
 
         public List<Type> GetModules()
@@ -47,8 +47,7 @@ namespace StudioX.PlugIns
                 }
                 catch (Exception ex)
                 {
-                    throw new StudioXInitializationException(
-                        "Could not get module types from assembly: " + assembly.FullName, ex);
+                    throw new StudioXInitializationException("Could not get module types from assembly: " + assembly.FullName, ex);
                 }
             }
 

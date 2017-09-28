@@ -10,11 +10,14 @@ namespace StudioX.AspNetCore.MultiTenancy
 
         public TenantResolverCacheItem Value
         {
-            get => httpContextAccessor.HttpContext?.Items[CacheItemKey] as TenantResolverCacheItem;
+            get
+            {
+                return _httpContextAccessor.HttpContext?.Items[CacheItemKey] as TenantResolverCacheItem;
+            }
 
             set
             {
-                var httpContext = httpContextAccessor.HttpContext;
+                var httpContext = _httpContextAccessor.HttpContext;
                 if (httpContext == null)
                 {
                     return;
@@ -24,11 +27,11 @@ namespace StudioX.AspNetCore.MultiTenancy
             }
         }
 
-        private readonly IHttpContextAccessor httpContextAccessor;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public HttpContextTenantResolverCache(IHttpContextAccessor httpContextAccessor)
         {
-            this.httpContextAccessor = httpContextAccessor;
+            _httpContextAccessor = httpContextAccessor;
         }
     }
 }

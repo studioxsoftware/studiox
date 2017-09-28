@@ -4,12 +4,12 @@ using System.Collections.Generic;
 namespace StudioX.Collections.Extensions
 {
     /// <summary>
-    ///     Extension methods for Dictionary.
+    /// Extension methods for Dictionary.
     /// </summary>
     public static class DictionaryExtensions
     {
         /// <summary>
-        ///     This method is used to try to get a value in a dictionary if it does exists.
+        /// This method is used to try to get a value in a dictionary if it does exists.
         /// </summary>
         /// <typeparam name="T">Type of the value</typeparam>
         /// <param name="dictionary">The collection object</param>
@@ -21,7 +21,7 @@ namespace StudioX.Collections.Extensions
             object valueObj;
             if (dictionary.TryGetValue(key, out valueObj) && valueObj is T)
             {
-                value = (T) valueObj;
+                value = (T)valueObj;
                 return true;
             }
 
@@ -30,7 +30,7 @@ namespace StudioX.Collections.Extensions
         }
 
         /// <summary>
-        ///     Gets a value from the dictionary with given key. Returns default value if can not find.
+        /// Gets a value from the dictionary with given key. Returns default value if can not find.
         /// </summary>
         /// <param name="dictionary">Dictionary to check and get</param>
         /// <param name="key">Key to find the value</param>
@@ -44,7 +44,7 @@ namespace StudioX.Collections.Extensions
         }
 
         /// <summary>
-        ///     Gets a value from the dictionary with given key. Returns default value if can not find.
+        /// Gets a value from the dictionary with given key. Returns default value if can not find.
         /// </summary>
         /// <param name="dictionary">Dictionary to check and get</param>
         /// <param name="key">Key to find the value</param>
@@ -52,8 +52,7 @@ namespace StudioX.Collections.Extensions
         /// <typeparam name="TKey">Type of the key</typeparam>
         /// <typeparam name="TValue">Type of the value</typeparam>
         /// <returns>Value if found, default if can not found.</returns>
-        public static TValue GetOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key,
-            Func<TKey, TValue> factory)
+        public static TValue GetOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, Func<TKey, TValue> factory)
         {
             TValue obj;
             if (dictionary.TryGetValue(key, out obj))
@@ -63,9 +62,9 @@ namespace StudioX.Collections.Extensions
 
             return dictionary[key] = factory(key);
         }
-
+        
         /// <summary>
-        ///     Gets a value from the dictionary with given key. Returns default value if can not find.
+        /// Gets a value from the dictionary with given key. Returns default value if can not find.
         /// </summary>
         /// <param name="dictionary">Dictionary to check and get</param>
         /// <param name="key">Key to find the value</param>
@@ -73,8 +72,7 @@ namespace StudioX.Collections.Extensions
         /// <typeparam name="TKey">Type of the key</typeparam>
         /// <typeparam name="TValue">Type of the value</typeparam>
         /// <returns>Value if found, default if can not found.</returns>
-        public static TValue GetOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key,
-            Func<TValue> factory)
+        public static TValue GetOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, Func<TValue> factory)
         {
             return dictionary.GetOrAdd(key, k => factory());
         }

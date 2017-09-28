@@ -18,15 +18,15 @@ namespace StudioX.AspNetCore.Mvc.Proxying
     {
         public ILogger Logger { get; set; }
 
-        private readonly IApiDescriptionGroupCollectionProvider descriptionProvider;
-        private readonly StudioXAspNetCoreConfiguration configuration;
+        private readonly IApiDescriptionGroupCollectionProvider _descriptionProvider;
+        private readonly StudioXAspNetCoreConfiguration _configuration;
 
         public AspNetCoreApiDescriptionModelProvider(
             IApiDescriptionGroupCollectionProvider descriptionProvider,
             StudioXAspNetCoreConfiguration configuration)
         {
-            this.descriptionProvider = descriptionProvider;
-            this.configuration = configuration;
+            _descriptionProvider = descriptionProvider;
+            _configuration = configuration;
 
             Logger = NullLogger.Instance;
         }
@@ -35,10 +35,15 @@ namespace StudioX.AspNetCore.Mvc.Proxying
         {
             var model = new ApplicationApiDescriptionModel();
 
-            foreach (var descriptionGroupItem in descriptionProvider.ApiDescriptionGroups.Items)
+            foreach (var descriptionGroupItem in _descriptionProvider.ApiDescriptionGroups.Items)
             {
                 foreach (var apiDescription in descriptionGroupItem.Items)
                 {
+                    if (!apiDescription.ActionDescriptor.IsControllerAction())
+                    {
+                        continue;
+                    }
+
                     AddApiDescriptionToModel(apiDescription, model);
                 }
             }
@@ -131,7 +136,7 @@ namespace StudioX.AspNetCore.Mvc.Proxying
                 return StudioXControllerAssemblySetting.DefaultServiceModuleName;
             }
 
-            foreach (var controllerSetting in configuration.ControllerAssemblySettings)
+            foreach (var controllerSetting in _configuration.ControllerAssemblySettings)
             {
                 if (Equals(controllerType.GetAssembly(), controllerSetting.Assembly))
                 {

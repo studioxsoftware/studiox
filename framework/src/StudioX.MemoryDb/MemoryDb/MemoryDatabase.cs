@@ -8,27 +8,27 @@ namespace StudioX.MemoryDb
     [DependsOn(typeof(StudioXKernelModule))]
     public class MemoryDatabase : ISingletonDependency
     {
-        private readonly Dictionary<Type, object> sets;
+        private readonly Dictionary<Type, object> _sets;
 
-        private readonly object syncObj = new object();
+        private readonly object _syncObj = new object();
 
         public MemoryDatabase()
         {
-            sets = new Dictionary<Type, object>();
+            _sets = new Dictionary<Type, object>();
         }
 
         public List<TEntity> Set<TEntity>()
         {
             var entityType = typeof(TEntity);
 
-            lock (syncObj)
+            lock (_syncObj)
             {
-                if (!sets.ContainsKey(entityType))
+                if (!_sets.ContainsKey(entityType))
                 {
-                    sets[entityType] = new List<TEntity>();
+                    _sets[entityType] = new List<TEntity>();
                 }
 
-                return sets[entityType] as List<TEntity>;
+                return _sets[entityType] as List<TEntity>;
             }
         }
     }

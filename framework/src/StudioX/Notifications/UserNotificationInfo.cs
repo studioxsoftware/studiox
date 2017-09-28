@@ -8,30 +8,30 @@ using StudioX.Timing;
 namespace StudioX.Notifications
 {
     /// <summary>
-    ///     Used to store a user notification.
+    /// Used to store a user notification.
     /// </summary>
     [Serializable]
     [Table("UserNotifications")]
     public class UserNotificationInfo : Entity<Guid>, IHasCreationTime, IMayHaveTenant
     {
         /// <summary>
-        ///     Tenant Id.
+        /// Tenant Id.
         /// </summary>
         public virtual int? TenantId { get; set; }
 
         /// <summary>
-        ///     User Id.
+        /// User Id.
         /// </summary>
         public virtual long UserId { get; set; }
 
         /// <summary>
-        ///     Notification Id.
+        /// Notification Id.
         /// </summary>
         [Required]
         public virtual Guid TenantNotificationId { get; set; }
 
         /// <summary>
-        ///     Current state of the user notification.
+        /// Current state of the user notification.
         /// </summary>
         public virtual UserNotificationState State { get; set; }
 
@@ -39,10 +39,11 @@ namespace StudioX.Notifications
 
         public UserNotificationInfo()
         {
+            
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="UserNotificationInfo" /> class.
+        /// Initializes a new instance of the <see cref="UserNotificationInfo"/> class.
         /// </summary>
         /// <param name="create"></param>
         public UserNotificationInfo(Guid id)

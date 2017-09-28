@@ -6,7 +6,7 @@ using StudioX.Dependency;
 namespace StudioX.Application.Features
 {
     /// <summary>
-    ///     Implements <see cref="IFeatureManager" />.
+    /// Implements <see cref="IFeatureManager"/>.
     /// </summary>
     internal class FeatureManager : FeatureDefinitionContextBase, IFeatureManager, ISingletonDependency
     {

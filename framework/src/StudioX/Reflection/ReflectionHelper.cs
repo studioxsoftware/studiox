@@ -6,12 +6,12 @@ using System.Reflection;
 namespace StudioX.Reflection
 {
     /// <summary>
-    ///     Defines helper methods for reflection.
+    /// Defines helper methods for reflection.
     /// </summary>
     internal static class ReflectionHelper
     {
         /// <summary>
-        ///     Checks whether <paramref name="givenType" /> implements/inherits <paramref name="genericType" />.
+        /// Checks whether <paramref name="givenType"/> implements/inherits <paramref name="genericType"/>.
         /// </summary>
         /// <param name="givenType">Type to check</param>
         /// <param name="genericType">Generic type</param>
@@ -41,7 +41,7 @@ namespace StudioX.Reflection
         }
 
         /// <summary>
-        ///     Gets a list of attributes defined for a class member and it's declaring type including inherited attributes.
+        /// Gets a list of attributes defined for a class member and it's declaring type including inherited attributes.
         /// </summary>
         /// <param name="inherit">Inherit attribute from base classes</param>
         /// <param name="memberInfo">MemberInfo</param>
@@ -60,7 +60,7 @@ namespace StudioX.Reflection
         }
 
         /// <summary>
-        ///     Gets a list of attributes defined for a class member and type including inherited attributes.
+        /// Gets a list of attributes defined for a class member and type including inherited attributes.
         /// </summary>
         /// <param name="memberInfo">MemberInfo</param>
         /// <param name="type">Type</param>
@@ -74,13 +74,12 @@ namespace StudioX.Reflection
         }
 
         /// <summary>
-        ///     Gets a list of attributes defined for a class member and it's declaring type including inherited attributes.
+        /// Gets a list of attributes defined for a class member and it's declaring type including inherited attributes.
         /// </summary>
         /// <typeparam name="TAttribute">Type of the attribute</typeparam>
         /// <param name="memberInfo">MemberInfo</param>
         /// <param name="inherit">Inherit attribute from base classes</param>
-        public static List<TAttribute> GetAttributesOfMemberAndDeclaringType<TAttribute>(MemberInfo memberInfo,
-            bool inherit = true)
+        public static List<TAttribute> GetAttributesOfMemberAndDeclaringType<TAttribute>(MemberInfo memberInfo, bool inherit = true)
             where TAttribute : Attribute
         {
             var attributeList = new List<TAttribute>();
@@ -90,27 +89,22 @@ namespace StudioX.Reflection
                 attributeList.AddRange(memberInfo.GetCustomAttributes(typeof(TAttribute), inherit).Cast<TAttribute>());
             }
 
-            if (memberInfo.DeclaringType != null &&
-                memberInfo.DeclaringType.GetTypeInfo().IsDefined(typeof(TAttribute), inherit))
+            if (memberInfo.DeclaringType != null && memberInfo.DeclaringType.GetTypeInfo().IsDefined(typeof(TAttribute), inherit))
             {
-                attributeList.AddRange(
-                    memberInfo.DeclaringType.GetTypeInfo()
-                        .GetCustomAttributes(typeof(TAttribute), inherit)
-                        .Cast<TAttribute>());
+                attributeList.AddRange(memberInfo.DeclaringType.GetTypeInfo().GetCustomAttributes(typeof(TAttribute), inherit).Cast<TAttribute>());
             }
 
             return attributeList;
         }
 
         /// <summary>
-        ///     Gets a list of attributes defined for a class member and type including inherited attributes.
+        /// Gets a list of attributes defined for a class member and type including inherited attributes.
         /// </summary>
         /// <typeparam name="TAttribute">Type of the attribute</typeparam>
         /// <param name="memberInfo">MemberInfo</param>
         /// <param name="type">Type</param>
         /// <param name="inherit">Inherit attribute from base classes</param>
-        public static List<TAttribute> GetAttributesOfMemberAndType<TAttribute>(MemberInfo memberInfo, Type type,
-            bool inherit = true)
+        public static List<TAttribute> GetAttributesOfMemberAndType<TAttribute>(MemberInfo memberInfo, Type type, bool inherit = true)
             where TAttribute : Attribute
         {
             var attributeList = new List<TAttribute>();
@@ -122,23 +116,21 @@ namespace StudioX.Reflection
 
             if (type.GetTypeInfo().IsDefined(typeof(TAttribute), inherit))
             {
-                attributeList.AddRange(
-                    type.GetTypeInfo().GetCustomAttributes(typeof(TAttribute), inherit).Cast<TAttribute>());
+                attributeList.AddRange(type.GetTypeInfo().GetCustomAttributes(typeof(TAttribute), inherit).Cast<TAttribute>());
             }
 
             return attributeList;
         }
 
         /// <summary>
-        ///     Tries to gets an of attribute defined for a class member and it's declaring type including inherited attributes.
-        ///     Returns default value if it's not declared at all.
+        /// Tries to gets an of attribute defined for a class member and it's declaring type including inherited attributes.
+        /// Returns default value if it's not declared at all.
         /// </summary>
         /// <typeparam name="TAttribute">Type of the attribute</typeparam>
         /// <param name="memberInfo">MemberInfo</param>
         /// <param name="defaultValue">Default value (null as default)</param>
         /// <param name="inherit">Inherit attribute from base classes</param>
-        public static TAttribute GetSingleAttributeOfMemberOrDeclaringTypeOrDefault<TAttribute>(MemberInfo memberInfo,
-            TAttribute defaultValue = default(TAttribute), bool inherit = true)
+        public static TAttribute GetSingleAttributeOfMemberOrDeclaringTypeOrDefault<TAttribute>(MemberInfo memberInfo, TAttribute defaultValue = default(TAttribute), bool inherit = true)
             where TAttribute : class
         {
             return memberInfo.GetCustomAttributes(true).OfType<TAttribute>().FirstOrDefault()
@@ -147,17 +139,17 @@ namespace StudioX.Reflection
         }
 
         /// <summary>
-        ///     Tries to gets an of attribute defined for a class member and it's declaring type including inherited attributes.
-        ///     Returns default value if it's not declared at all.
+        /// Tries to gets an of attribute defined for a class member and it's declaring type including inherited attributes.
+        /// Returns default value if it's not declared at all.
         /// </summary>
         /// <typeparam name="TAttribute">Type of the attribute</typeparam>
         /// <param name="memberInfo">MemberInfo</param>
         /// <param name="defaultValue">Default value (null as default)</param>
         /// <param name="inherit">Inherit attribute from base classes</param>
-        public static TAttribute GetSingleAttributeOrDefault<TAttribute>(MemberInfo memberInfo,
-            TAttribute defaultValue = default(TAttribute), bool inherit = true)
+        public static TAttribute GetSingleAttributeOrDefault<TAttribute>(MemberInfo memberInfo, TAttribute defaultValue = default(TAttribute), bool inherit = true)
             where TAttribute : Attribute
         {
+            //Get attribute on the member
             if (memberInfo.IsDefined(typeof(TAttribute), inherit))
             {
                 return memberInfo.GetCustomAttributes(typeof(TAttribute), inherit).Cast<TAttribute>().First();
@@ -167,7 +159,7 @@ namespace StudioX.Reflection
         }
 
         /// <summary>
-        ///     Gets value of a property by it's full path from given object
+        /// Gets value of a property by it's full path from given object
         /// </summary>
         /// <param name="obj">Object to get value from</param>
         /// <param name="objectType">Type of given object</param>
@@ -195,7 +187,7 @@ namespace StudioX.Reflection
         }
 
         /// <summary>
-        ///     Sets value of a property by it's full path on given object
+        /// Sets value of a property by it's full path on given object
         /// </summary>
         /// <param name="obj"></param>
         /// <param name="objectType"></param>
@@ -221,7 +213,7 @@ namespace StudioX.Reflection
                 return;
             }
 
-            for (var i = 0; i < properties.Length - 1; i++)
+            for (int i = 0; i < properties.Length - 1; i++)
             {
                 property = currentType.GetProperty(properties[i]);
                 obj = property.GetValue(obj, null);

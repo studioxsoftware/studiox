@@ -12,7 +12,7 @@ namespace StudioX.WebApi.Validation
     {
         protected HttpActionContext ActionContext { get; private set; }
 
-        private bool isValidatedBefore;
+        private bool _isValidatedBefore;
 
         public WebApiActionInvocationValidator(IValidationConfiguration configuration, IIocResolver iocResolver)
             : base(configuration, iocResolver)
@@ -39,7 +39,7 @@ namespace StudioX.WebApi.Validation
 
         protected virtual void SetDataAnnotationAttributeErrors()
         {
-            if (isValidatedBefore || ActionContext.ModelState.IsValid)
+            if (_isValidatedBefore || ActionContext.ModelState.IsValid)
             {
                 return;
             }
@@ -52,7 +52,7 @@ namespace StudioX.WebApi.Validation
                 }
             }
 
-            isValidatedBefore = true;
+            _isValidatedBefore = true;
         }
 
         protected virtual object[] GetParameterValues(HttpActionContext actionContext, MethodInfo methodInfo)

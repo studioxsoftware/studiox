@@ -3,12 +3,12 @@ using System.Threading.Tasks;
 namespace StudioX.Authorization
 {
     /// <summary>
-    ///     Null (and default) implementation of <see cref="IPermissionChecker" />.
+    /// Null (and default) implementation of <see cref="IPermissionChecker"/>.
     /// </summary>
     public sealed class NullPermissionChecker : IPermissionChecker
     {
         /// <summary>
-        ///     Singleton instance.
+        /// Singleton instance.
         /// </summary>
         public static NullPermissionChecker Instance { get; } = new NullPermissionChecker();
 

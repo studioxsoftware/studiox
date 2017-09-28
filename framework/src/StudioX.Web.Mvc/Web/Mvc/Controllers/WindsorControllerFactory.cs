@@ -14,7 +14,7 @@ namespace StudioX.Web.Mvc.Controllers
         /// <summary>
         /// Reference to DI kernel.
         /// </summary>
-        private readonly IIocResolver iocManager;
+        private readonly IIocResolver _iocManager;
 
         /// <summary>
         /// Creates a new instance of WindsorControllerFactory.
@@ -22,7 +22,7 @@ namespace StudioX.Web.Mvc.Controllers
         /// <param name="iocManager">Reference to DI kernel</param>
         public WindsorControllerFactory(IIocResolver iocManager)
         {
-            this.iocManager = iocManager;
+            _iocManager = iocManager;
         }
 
         /// <summary>
@@ -31,7 +31,7 @@ namespace StudioX.Web.Mvc.Controllers
         /// <param name="controller">Controller instance</param>
         public override void ReleaseController(IController controller)
         {
-            iocManager.Release(controller);
+            _iocManager.Release(controller);
         }
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace StudioX.Web.Mvc.Controllers
                 return base.GetControllerInstance(requestContext, controllerType);
             }
 
-            return iocManager.Resolve<IController>(controllerType);
+            return _iocManager.Resolve<IController>(controllerType);
         }
     }
 }

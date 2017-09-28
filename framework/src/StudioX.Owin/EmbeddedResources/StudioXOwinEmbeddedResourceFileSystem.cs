@@ -9,28 +9,28 @@ namespace StudioX.Owin.EmbeddedResources
 {
     public class StudioXOwinEmbeddedResourceFileSystem : IFileSystem, ITransientDependency
     {
-        private readonly IEmbeddedResourceManager embeddedResourceManager;
-        private readonly IWebEmbeddedResourcesConfiguration configuration;
-        private readonly IFileSystem physicalFileSystem;
+        private readonly IEmbeddedResourceManager _embeddedResourceManager;
+        private readonly IWebEmbeddedResourcesConfiguration _configuration;
+        private readonly IFileSystem _physicalFileSystem;
 
         public StudioXOwinEmbeddedResourceFileSystem(
             IEmbeddedResourceManager embeddedResourceManager,
             IWebEmbeddedResourcesConfiguration configuration,
             string rootFolder)
         {
-            this.embeddedResourceManager = embeddedResourceManager;
-            this.configuration = configuration;
-            physicalFileSystem = new PhysicalFileSystem(rootFolder);
+            _embeddedResourceManager = embeddedResourceManager;
+            _configuration = configuration;
+            _physicalFileSystem = new PhysicalFileSystem(rootFolder);
         }
 
         public bool TryGetFileInfo(string subpath, out IFileInfo fileInfo)
         {
-            if (physicalFileSystem.TryGetFileInfo(subpath, out fileInfo))
+            if (_physicalFileSystem.TryGetFileInfo(subpath, out fileInfo))
             {
                 return true;
             }
 
-            var resource = embeddedResourceManager.GetResource(subpath);
+            var resource = _embeddedResourceManager.GetResource(subpath);
 
             if (resource == null || IsIgnoredFile(resource))
             {
@@ -44,7 +44,7 @@ namespace StudioX.Owin.EmbeddedResources
 
         public bool TryGetDirectoryContents(string subpath, out IEnumerable<IFileInfo> contents)
         {
-            if (physicalFileSystem.TryGetDirectoryContents(subpath, out contents))
+            if (_physicalFileSystem.TryGetDirectoryContents(subpath, out contents))
             {
                 return true;
             }
@@ -57,7 +57,7 @@ namespace StudioX.Owin.EmbeddedResources
 
         private bool IsIgnoredFile(EmbeddedResourceItem resource)
         {
-            return resource.FileExtension != null && configuration.IgnoredFileExtensions.Contains(resource.FileExtension);
+            return resource.FileExtension != null && _configuration.IgnoredFileExtensions.Contains(resource.FileExtension);
         }
     }
 }

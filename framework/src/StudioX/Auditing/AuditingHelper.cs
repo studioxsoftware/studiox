@@ -25,8 +25,8 @@ namespace StudioX.Auditing
         private readonly IAuditSerializer auditSerializer;
 
         public AuditingHelper(
-            IAuditInfoProvider auditInfoProvider, 
-            IAuditingConfiguration configuration, 
+            IAuditInfoProvider auditInfoProvider,
+            IAuditingConfiguration configuration,
             IUnitOfWorkManager unitOfWorkManager,
             IAuditSerializer auditSerializer)
         {
@@ -94,12 +94,12 @@ namespace StudioX.Auditing
             return defaultValue;
         }
 
-        public AuditInfo CreateAuditInfo(MethodInfo method, object[] arguments)
+        public AuditInfo CreateAuditInfo(Type type, MethodInfo method, object[] arguments)
         {
-            return CreateAuditInfo(method, CreateArgumentsDictionary(method, arguments));
+            return CreateAuditInfo(type, method, CreateArgumentsDictionary(method, arguments));
         }
 
-        public AuditInfo CreateAuditInfo(MethodInfo method, IDictionary<string, object> arguments)
+        public AuditInfo CreateAuditInfo(Type type, MethodInfo method, IDictionary<string, object> arguments)
         {
             var auditInfo = new AuditInfo
             {
@@ -107,8 +107,8 @@ namespace StudioX.Auditing
                 UserId = StudioXSession.UserId,
                 ImpersonatorUserId = StudioXSession.ImpersonatorUserId,
                 ImpersonatorTenantId = StudioXSession.ImpersonatorTenantId,
-                ServiceName = method.DeclaringType != null
-                    ? method.DeclaringType.FullName
+                ServiceName = type != null
+                    ? type.FullName
                     : "",
                 MethodName = method.Name,
                 Parameters = ConvertArgumentsToJson(arguments),

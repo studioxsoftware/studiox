@@ -1,17 +1,17 @@
 ﻿using System;
-using Newtonsoft.Json;
 using StudioX.Domain.Entities;
 using StudioX.Extensions;
+using Newtonsoft.Json;
 
 namespace StudioX.Notifications
 {
     /// <summary>
-    ///     Extension methods for <see cref="NotificationInfo" />.
+    /// Extension methods for <see cref="NotificationInfo"/>.
     /// </summary>
     public static class TenantNotificationInfoExtensions
     {
         /// <summary>
-        ///     Converts <see cref="NotificationInfo" /> to <see cref="TenantNotification" />.
+        /// Converts <see cref="NotificationInfo"/> to <see cref="TenantNotification"/>.
         /// </summary>
         public static TenantNotification ToTenantNotification(this TenantNotificationInfo tenantNotificationInfo)
         {
@@ -24,18 +24,10 @@ namespace StudioX.Notifications
                 Id = tenantNotificationInfo.Id,
                 TenantId = tenantNotificationInfo.TenantId,
                 NotificationName = tenantNotificationInfo.NotificationName,
-                Data =
-                    tenantNotificationInfo.Data.IsNullOrEmpty()
-                        ? null
-                        : JsonConvert.DeserializeObject(tenantNotificationInfo.Data,
-                            Type.GetType(tenantNotificationInfo.DataTypeName)) as NotificationData,
+                Data = tenantNotificationInfo.Data.IsNullOrEmpty() ? null : JsonConvert.DeserializeObject(tenantNotificationInfo.Data, Type.GetType(tenantNotificationInfo.DataTypeName)) as NotificationData,
                 EntityTypeName = tenantNotificationInfo.EntityTypeName,
                 EntityType = entityType,
-                EntityId =
-                    tenantNotificationInfo.EntityId.IsNullOrEmpty()
-                        ? null
-                        : JsonConvert.DeserializeObject(tenantNotificationInfo.EntityId,
-                            EntityHelper.GetPrimaryKeyType(entityType)),
+                EntityId = tenantNotificationInfo.EntityId.IsNullOrEmpty() ? null : JsonConvert.DeserializeObject(tenantNotificationInfo.EntityId, EntityHelper.GetPrimaryKeyType(entityType)),
                 Severity = tenantNotificationInfo.Severity,
                 CreationTime = tenantNotificationInfo.CreationTime
             };

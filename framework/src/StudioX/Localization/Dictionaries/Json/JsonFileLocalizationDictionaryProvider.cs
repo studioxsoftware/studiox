@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using StudioX.Localization.Dictionaries.Xml;
+using StudioX.Localization.Sources;
 
 namespace StudioX.Localization.Dictionaries.Json
 {
@@ -18,7 +19,7 @@ namespace StudioX.Localization.Dictionaries.Json
         {
             this.directoryPath = directoryPath;
         }
-
+        
         public override void Initialize(string sourceName)
         {
             var fileNames = Directory.GetFiles(directoryPath, "*.json", SearchOption.TopDirectoryOnly);
@@ -28,9 +29,7 @@ namespace StudioX.Localization.Dictionaries.Json
                 var dictionary = CreateJsonLocalizationDictionary(fileName);
                 if (Dictionaries.ContainsKey(dictionary.CultureInfo.Name))
                 {
-                    throw new StudioXInitializationException(sourceName +
-                                                             " source contains more than one dictionary for the culture: " +
-                                                             dictionary.CultureInfo.Name);
+                    throw new StudioXInitializationException(sourceName + " source contains more than one dictionary for the culture: " + dictionary.CultureInfo.Name);
                 }
 
                 Dictionaries[dictionary.CultureInfo.Name] = dictionary;
@@ -39,8 +38,7 @@ namespace StudioX.Localization.Dictionaries.Json
                 {
                     if (DefaultDictionary != null)
                     {
-                        throw new StudioXInitializationException(
-                            "Only one default localization dictionary can be for source: " + sourceName);
+                        throw new StudioXInitializationException("Only one default localization dictionary can be for source: " + sourceName);
                     }
 
                     DefaultDictionary = dictionary;

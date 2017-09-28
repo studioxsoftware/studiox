@@ -7,7 +7,7 @@ using StudioX.Domain.Uow;
 namespace StudioX.Events.Bus.Entities
 {
     /// <summary>
-    ///     Used to trigger entity change events.
+    /// Used to trigger entity change events.
     /// </summary>
     public class EntityChangeEventHelper : ITransientDependency, IEntityChangeEventHelper
     {
@@ -113,20 +113,18 @@ namespace StudioX.Events.Bus.Entities
             }
         }
 
-        protected virtual void TriggerEventWithEntity(Type genericEventType, object entity,
-            bool triggerInCurrentUnitOfWork)
+        protected virtual void TriggerEventWithEntity(Type genericEventType, object entity, bool triggerInCurrentUnitOfWork)
         {
             var entityType = entity.GetType();
             var eventType = genericEventType.MakeGenericType(entityType);
 
             if (triggerInCurrentUnitOfWork || unitOfWorkManager.Current == null)
             {
-                EventBus.Trigger(eventType, (IEventData) Activator.CreateInstance(eventType, entity));
+                EventBus.Trigger(eventType, (IEventData)Activator.CreateInstance(eventType, new[] { entity }));
                 return;
             }
 
-            unitOfWorkManager.Current.Completed +=
-                (sender, args) => EventBus.Trigger(eventType, (IEventData) Activator.CreateInstance(eventType, entity));
+            unitOfWorkManager.Current.Completed += (sender, args) => EventBus.Trigger(eventType, (IEventData)Activator.CreateInstance(eventType, new[] { entity }));
         }
     }
 }

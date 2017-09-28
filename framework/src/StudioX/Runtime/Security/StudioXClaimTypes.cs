@@ -28,16 +28,16 @@ namespace StudioX.Runtime.Security
         /// <summary>
         /// TenantId.
         /// </summary>
-        public static string TenantId { get; set; } = "http://www.studiox.com/identity/claims/tenantId";
+        public static string TenantId { get; set; } = "http://www.aspnetboilerplate.com/identity/claims/tenantId";
 
         /// <summary>
         /// ImpersonatorUserId.
         /// </summary>
-        public static string ImpersonatorUserId { get; set; } = "http://www.studiox.com/identity/claims/impersonatorUserId";
+        public static string ImpersonatorUserId { get; set; } = "http://www.aspnetboilerplate.com/identity/claims/impersonatorUserId";
 
         /// <summary>
         /// ImpersonatorTenantId
         /// </summary>
-        public static string ImpersonatorTenantId { get; set; } = "http://www.studiox.com/identity/claims/impersonatorTenantId";
+        public static string ImpersonatorTenantId { get; set; } = "http://www.aspnetboilerplate.com/identity/claims/impersonatorTenantId";
     }
 }

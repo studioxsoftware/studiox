@@ -9,33 +9,32 @@ using StudioX.Dependency;
 namespace StudioX.Notifications
 {
     /// <summary>
-    ///     Implements <see cref="INotificationDefinitionManager" />.
+    /// Implements <see cref="INotificationDefinitionManager"/>.
     /// </summary>
     internal class NotificationDefinitionManager : INotificationDefinitionManager, ISingletonDependency
     {
-        private readonly INotificationConfiguration configuration;
-        private readonly IocManager iocManager;
+        private readonly INotificationConfiguration _configuration;
+        private readonly IocManager _iocManager;
 
-        private readonly IDictionary<string, NotificationDefinition> notificationDefinitions;
+        private readonly IDictionary<string, NotificationDefinition> _notificationDefinitions;
 
         public NotificationDefinitionManager(
             IocManager iocManager,
             INotificationConfiguration configuration)
         {
-            this.configuration = configuration;
-            this.iocManager = iocManager;
+            _configuration = configuration;
+            _iocManager = iocManager;
 
-            notificationDefinitions = new Dictionary<string, NotificationDefinition>();
+            _notificationDefinitions = new Dictionary<string, NotificationDefinition>();
         }
 
         public void Initialize()
         {
             var context = new NotificationDefinitionContext(this);
 
-            foreach (var providerType in configuration.Providers)
+            foreach (var providerType in _configuration.Providers)
             {
-                iocManager.RegisterIfNot(providerType, DependencyLifeStyle.Transient); //TODO: Needed?
-                using (var provider = iocManager.ResolveAsDisposable<NotificationProvider>(providerType))
+                using (var provider = _iocManager.ResolveAsDisposable<NotificationProvider>(providerType))
                 {
                     provider.Object.SetNotifications(context);
                 }
@@ -44,14 +43,12 @@ namespace StudioX.Notifications
 
         public void Add(NotificationDefinition notificationDefinition)
         {
-            if (notificationDefinitions.ContainsKey(notificationDefinition.Name))
+            if (_notificationDefinitions.ContainsKey(notificationDefinition.Name))
             {
-                throw new StudioXInitializationException(
-                    "There is already a notification definition with given name: " + notificationDefinition.Name +
-                    ". Notification names must be unique!");
+                throw new StudioXInitializationException("There is already a notification definition with given name: " + notificationDefinition.Name + ". Notification names must be unique!");
             }
 
-            notificationDefinitions[notificationDefinition.Name] = notificationDefinition;
+            _notificationDefinitions[notificationDefinition.Name] = notificationDefinition;
         }
 
         public NotificationDefinition Get(string name)
@@ -67,12 +64,12 @@ namespace StudioX.Notifications
 
         public NotificationDefinition GetOrNull(string name)
         {
-            return notificationDefinitions.GetOrDefault(name);
+            return _notificationDefinitions.GetOrDefault(name);
         }
 
         public IReadOnlyList<NotificationDefinition> GetAll()
         {
-            return notificationDefinitions.Values.ToImmutableList();
+            return _notificationDefinitions.Values.ToImmutableList();
         }
 
         public async Task<bool> IsAvailableAsync(string name, UserIdentifier user)
@@ -85,12 +82,11 @@ namespace StudioX.Notifications
 
             if (notificationDefinition.FeatureDependency != null)
             {
-                using (var featureDependencyContext = iocManager.ResolveAsDisposable<FeatureDependencyContext>())
+                using (var featureDependencyContext = _iocManager.ResolveAsDisposable<FeatureDependencyContext>())
                 {
                     featureDependencyContext.Object.TenantId = user.TenantId;
 
-                    if (
-                        !await notificationDefinition.FeatureDependency.IsSatisfiedAsync(featureDependencyContext.Object))
+                    if (!await notificationDefinition.FeatureDependency.IsSatisfiedAsync(featureDependencyContext.Object))
                     {
                         return false;
                     }
@@ -99,13 +95,11 @@ namespace StudioX.Notifications
 
             if (notificationDefinition.PermissionDependency != null)
             {
-                using (var permissionDependencyContext = iocManager.ResolveAsDisposable<PermissionDependencyContext>())
+                using (var permissionDependencyContext = _iocManager.ResolveAsDisposable<PermissionDependencyContext>())
                 {
                     permissionDependencyContext.Object.User = user;
 
-                    if (
-                        !await notificationDefinition.PermissionDependency.IsSatisfiedAsync(
-                            permissionDependencyContext.Object))
+                    if (!await notificationDefinition.PermissionDependency.IsSatisfiedAsync(permissionDependencyContext.Object))
                     {
                         return false;
                     }
@@ -119,27 +113,25 @@ namespace StudioX.Notifications
         {
             var availableDefinitions = new List<NotificationDefinition>();
 
-            using (var permissionDependencyContext = iocManager.ResolveAsDisposable<PermissionDependencyContext>())
+            using (var permissionDependencyContext = _iocManager.ResolveAsDisposable<PermissionDependencyContext>())
             {
                 permissionDependencyContext.Object.User = user;
 
-                using (var featureDependencyContext = iocManager.ResolveAsDisposable<FeatureDependencyContext>())
+                using (var featureDependencyContext = _iocManager.ResolveAsDisposable<FeatureDependencyContext>())
                 {
                     featureDependencyContext.Object.TenantId = user.TenantId;
 
                     foreach (var notificationDefinition in GetAll())
                     {
                         if (notificationDefinition.PermissionDependency != null &&
-                            !await notificationDefinition.PermissionDependency.IsSatisfiedAsync(
-                                permissionDependencyContext.Object))
+                            !await notificationDefinition.PermissionDependency.IsSatisfiedAsync(permissionDependencyContext.Object))
                         {
                             continue;
                         }
 
                         if (user.TenantId.HasValue &&
                             notificationDefinition.FeatureDependency != null &&
-                            !await notificationDefinition.FeatureDependency.IsSatisfiedAsync(
-                                featureDependencyContext.Object))
+                            !await notificationDefinition.FeatureDependency.IsSatisfiedAsync(featureDependencyContext.Object))
                         {
                             continue;
                         }

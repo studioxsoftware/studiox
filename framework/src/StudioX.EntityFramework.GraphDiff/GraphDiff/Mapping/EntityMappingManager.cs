@@ -12,14 +12,14 @@ namespace StudioX.EntityFramework.GraphDiff.Mapping
     /// </summary>
     public class EntityMappingManager : IEntityMappingManager, ITransientDependency
     {
-        private readonly IStudioXEntityFrameworkGraphDiffModuleConfiguration moduleConfiguration;
+        private readonly IStudioXEntityFrameworkGraphDiffModuleConfiguration _moduleConfiguration;
 
         /// <summary>
         /// Constructor.
         /// </summary>
         public EntityMappingManager(IStudioXEntityFrameworkGraphDiffModuleConfiguration moduleConfiguration)
         {
-            this.moduleConfiguration = moduleConfiguration;
+            _moduleConfiguration = moduleConfiguration;
         }
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace StudioX.EntityFramework.GraphDiff.Mapping
         /// <returns>Entity mapping or null if mapping doesn't exist</returns>
         public Expression<Func<IUpdateConfiguration<TEntity>, object>> GetEntityMappingOrNull<TEntity>()
         {
-            var entityMapping = moduleConfiguration.EntityMappings.FirstOrDefault(m => m.EntityType == typeof(TEntity));
+            var entityMapping = _moduleConfiguration.EntityMappings.FirstOrDefault(m => m.EntityType == typeof(TEntity));
             var mappingExptession = entityMapping?.MappingExpression as Expression<Func<IUpdateConfiguration<TEntity>, object>>;
             return mappingExptession;
         }

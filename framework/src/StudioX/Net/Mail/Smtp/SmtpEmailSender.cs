@@ -1,5 +1,3 @@
-
-#if NET46
 using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
@@ -13,7 +11,7 @@ namespace StudioX.Net.Mail.Smtp
     /// </summary>
     public class SmtpEmailSender : EmailSenderBase, ISmtpEmailSender, ITransientDependency
     {
-        private readonly ISmtpEmailSenderConfiguration configuration;
+        private readonly ISmtpEmailSenderConfiguration _configuration;
 
         /// <summary>
         /// Creates a new <see cref="SmtpEmailSender"/>.
@@ -22,23 +20,23 @@ namespace StudioX.Net.Mail.Smtp
         public SmtpEmailSender(ISmtpEmailSenderConfiguration configuration)
             : base(configuration)
         {
-            this.configuration = configuration;
+            _configuration = configuration;
         }
 
         public SmtpClient BuildClient()
         {
-            var host = configuration.Host;
-            var port = configuration.Port;
+            var host = _configuration.Host;
+            var port = _configuration.Port;
 
             var smtpClient = new SmtpClient(host, port);
             try
             {
-                if (configuration.EnableSsl)
+                if (_configuration.EnableSsl)
                 {
                     smtpClient.EnableSsl = true;
                 }
 
-                if (configuration.UseDefaultCredentials)
+                if (_configuration.UseDefaultCredentials)
                 {
                     smtpClient.UseDefaultCredentials = true;
                 }
@@ -46,11 +44,11 @@ namespace StudioX.Net.Mail.Smtp
                 {
                     smtpClient.UseDefaultCredentials = false;
 
-                    var userName = configuration.UserName;
+                    var userName = _configuration.UserName;
                     if (!userName.IsNullOrEmpty())
                     {
-                        var password = configuration.Password;
-                        var domain = configuration.Domain;
+                        var password = _configuration.Password;
+                        var domain = _configuration.Domain;
                         smtpClient.Credentials = !domain.IsNullOrEmpty()
                             ? new NetworkCredential(userName, password, domain)
                             : new NetworkCredential(userName, password);
@@ -83,4 +81,3 @@ namespace StudioX.Net.Mail.Smtp
         }
     }
 }
-#endif

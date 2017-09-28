@@ -1,5 +1,4 @@
-﻿#if NET46
-using StudioX.Net.Mail.Smtp;
+﻿using StudioX.Net.Mail.Smtp;
 using NSubstitute;
 using Xunit;
 
@@ -17,7 +16,7 @@ namespace StudioX.Tests.Net.Mail
             configuration.DefaultFromDisplayName.Returns("...");
 
             configuration.Host.Returns("...");
-            configuration.Port.Returns(25);
+            configuration.Port.Returns(42);
 
             //configuration.Domain.Returns("...");
             configuration.UserName.Returns("...");
@@ -40,4 +39,3 @@ namespace StudioX.Tests.Net.Mail
         }
     }
 }
-#endif

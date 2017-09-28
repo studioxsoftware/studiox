@@ -60,8 +60,7 @@ namespace StudioX.Dapper.Repositories
         }
 
         public abstract int Execute(string query, object parameters = null);
-
-
+        
         public virtual Task<int> ExecuteAsync(string query, object parameters = null)
         {
             return Task.FromResult(Execute(query, parameters));

@@ -6,25 +6,28 @@ using StudioX.Dependency;
 namespace StudioX.Localization.Sources
 {
     /// <summary>
-    ///     Null object pattern for <see cref="ILocalizationSource" />.
+    /// Null object pattern for <see cref="ILocalizationSource"/>.
     /// </summary>
     internal class NullLocalizationSource : ILocalizationSource
     {
         /// <summary>
-        ///     Singleton instance.
+        /// Singleton instance.
         /// </summary>
-        public static NullLocalizationSource Instance { get; } = new NullLocalizationSource();
+        public static NullLocalizationSource Instance { get { return SingletonInstance; } }
+        private static readonly NullLocalizationSource SingletonInstance = new NullLocalizationSource();
 
-        public string Name => null;
+        public string Name { get { return null; } }
 
-        private readonly IReadOnlyList<LocalizedString> emptyStringArray = new LocalizedString[0];
+        private readonly IReadOnlyList<LocalizedString> _emptyStringArray = new LocalizedString[0];
 
         private NullLocalizationSource()
         {
+            
         }
 
         public void Initialize(ILocalizationConfiguration configuration, IIocResolver iocResolver)
         {
+            
         }
 
         public string GetString(string name)
@@ -49,12 +52,12 @@ namespace StudioX.Localization.Sources
 
         public IReadOnlyList<LocalizedString> GetAllStrings(bool includeDefaults = true)
         {
-            return emptyStringArray;
+            return _emptyStringArray;
         }
 
         public IReadOnlyList<LocalizedString> GetAllStrings(CultureInfo culture, bool includeDefaults = true)
         {
-            return emptyStringArray;
+            return _emptyStringArray;
         }
     }
 }

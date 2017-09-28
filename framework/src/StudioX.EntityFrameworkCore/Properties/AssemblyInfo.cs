@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("StudioX - EntityFrameworkCore adapter")]
-[assembly: AssemblyDescription("StudioX Boilerplate - EntityFrameworkCore adapter")]
+[assembly: AssemblyTitle("StudioX Software - EntityFrameworkCore adapter")]
+[assembly: AssemblyDescription("StudioX Software - EntityFrameworkCore adapter")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("StudioX")]
 [assembly: AssemblyProduct("StudioX.EntityFrameworkCore")]
-[assembly: AssemblyCopyright("Copyright © 2017")]
+[assembly: AssemblyCopyright("Copyright © 2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

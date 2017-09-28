@@ -10,20 +10,20 @@ namespace StudioX.Web.MultiTenancy
 {
     public class DomainTenantResolveContributor : ITenantResolveContributor, ITransientDependency
     {
-        private readonly IWebMultiTenancyConfiguration multiTenancyConfiguration;
-        private readonly ITenantStore tenantStore;
+        private readonly IWebMultiTenancyConfiguration _multiTenancyConfiguration;
+        private readonly ITenantStore _tenantStore;
 
         public DomainTenantResolveContributor(
             IWebMultiTenancyConfiguration multiTenancyConfiguration,
             ITenantStore tenantStore)
         {
-            this.multiTenancyConfiguration = multiTenancyConfiguration;
-            this.tenantStore = tenantStore;
+            _multiTenancyConfiguration = multiTenancyConfiguration;
+            _tenantStore = tenantStore;
         }
 
         public int? ResolveTenantId()
         {
-            if (multiTenancyConfiguration.DomainFormat.IsNullOrEmpty())
+            if (_multiTenancyConfiguration.DomainFormat.IsNullOrEmpty())
             {
                 return null;
             }
@@ -35,7 +35,7 @@ namespace StudioX.Web.MultiTenancy
             }
 
             var hostName = httpContext.Request.Url.Host.RemovePreFix("http://", "https://").RemovePostFix("/");
-            var domainFormat = multiTenancyConfiguration.DomainFormat.RemovePreFix("http://", "https://").Split(':')[0].RemovePostFix("/");
+            var domainFormat = _multiTenancyConfiguration.DomainFormat.RemovePreFix("http://", "https://").Split(':')[0].RemovePostFix("/");
             var result = new FormattedStringValueExtracter().Extract(hostName, domainFormat, true);
             if (!result.IsMatch || !result.Matches.Any())
             {
@@ -53,7 +53,7 @@ namespace StudioX.Web.MultiTenancy
                 return null;
             }
 
-            var tenantInfo = tenantStore.Find(tenancyName);
+            var tenantInfo = _tenantStore.Find(tenancyName);
             if (tenantInfo == null)
             {
                 return null;

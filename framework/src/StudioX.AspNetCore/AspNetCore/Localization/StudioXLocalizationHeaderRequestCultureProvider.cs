@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
-using Microsoft.AspNetCore.Mvc.Internal;
 
 namespace StudioX.AspNetCore.Localization
 {
@@ -10,8 +9,8 @@ namespace StudioX.AspNetCore.Localization
     {
         private static readonly char[] Separator = { '|' };
 
-        private static readonly string culturePrefix = "c=";
-        private static readonly string uiCulturePrefix = "uic=";
+        private static readonly string _culturePrefix = "c=";
+        private static readonly string _uiCulturePrefix = "uic=";
 
         /// <inheritdoc />
         public override Task<ProviderCultureResult> DetermineProviderCultureResult(HttpContext httpContext)
@@ -25,7 +24,7 @@ namespace StudioX.AspNetCore.Localization
 
             if (localizationHeader.Count == 0)
             {
-                return TaskCache<ProviderCultureResult>.DefaultCompletedTask;
+                return Task.FromResult((ProviderCultureResult) null);
             }
 
             return Task.FromResult(ParseHeaderValue(localizationHeader));
@@ -59,13 +58,13 @@ namespace StudioX.AspNetCore.Localization
             var potentialCultureName = parts[0];
             var potentialUiCultureName = parts[1];
 
-            if (!potentialCultureName.StartsWith(culturePrefix) || !potentialUiCultureName.StartsWith(uiCulturePrefix))
+            if (!potentialCultureName.StartsWith(_culturePrefix) || !potentialUiCultureName.StartsWith(_uiCulturePrefix))
             {
                 return null;
             }
 
-            var cultureName = potentialCultureName.Substring(culturePrefix.Length);
-            var uiCultureName = potentialUiCultureName.Substring(uiCulturePrefix.Length);
+            var cultureName = potentialCultureName.Substring(_culturePrefix.Length);
+            var uiCultureName = potentialUiCultureName.Substring(_uiCulturePrefix.Length);
 
             return new ProviderCultureResult(cultureName, uiCultureName);
         }

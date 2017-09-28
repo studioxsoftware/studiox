@@ -16,18 +16,18 @@ namespace StudioX.Web.Mvc.Security.AntiForgery
     {
         public ILogger Logger { get; set; }
 
-        private readonly IStudioXAntiForgeryManager studioXAntiForgeryManager;
-        private readonly IStudioXMvcConfiguration mvcConfiguration;
-        private readonly IStudioXAntiForgeryWebConfiguration antiForgeryWebConfiguration;
+        private readonly IStudioXAntiForgeryManager _studioXAntiForgeryManager;
+        private readonly IStudioXMvcConfiguration _mvcConfiguration;
+        private readonly IStudioXAntiForgeryWebConfiguration _antiForgeryWebConfiguration;
 
         public StudioXAntiForgeryMvcFilter(
-            IStudioXAntiForgeryManager antiForgeryManager, 
+            IStudioXAntiForgeryManager studioxAntiForgeryManager, 
             IStudioXMvcConfiguration mvcConfiguration,
             IStudioXAntiForgeryWebConfiguration antiForgeryWebConfiguration)
         {
-            studioXAntiForgeryManager = antiForgeryManager;
-            this.mvcConfiguration = mvcConfiguration;
-            this.antiForgeryWebConfiguration = antiForgeryWebConfiguration;
+            _studioXAntiForgeryManager = studioxAntiForgeryManager;
+            _mvcConfiguration = mvcConfiguration;
+            _antiForgeryWebConfiguration = antiForgeryWebConfiguration;
             Logger = NullLogger.Instance;
         }
 
@@ -40,12 +40,12 @@ namespace StudioX.Web.Mvc.Security.AntiForgery
             }
 
             var httpVerb = HttpVerbHelper.Create(context.HttpContext.Request.HttpMethod);
-            if (!studioXAntiForgeryManager.ShouldValidate(antiForgeryWebConfiguration, methodInfo, httpVerb, mvcConfiguration.IsAutomaticAntiForgeryValidationEnabled))
+            if (!_studioXAntiForgeryManager.ShouldValidate(_antiForgeryWebConfiguration, methodInfo, httpVerb, _mvcConfiguration.IsAutomaticAntiForgeryValidationEnabled))
             {
                 return;
             }
 
-            if (!studioXAntiForgeryManager.IsValid(context.HttpContext))
+            if (!_studioXAntiForgeryManager.IsValid(context.HttpContext))
             {
                 CreateErrorResponse(context, methodInfo, "Empty or invalid anti forgery header token.");
             }

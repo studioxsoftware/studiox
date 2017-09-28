@@ -27,15 +27,24 @@ namespace StudioX.MongoDb.Repositories
     public class MongoDbRepositoryBase<TEntity, TPrimaryKey> : StudioXRepositoryBase<TEntity, TPrimaryKey>
         where TEntity : class, IEntity<TPrimaryKey>
     {
-        public virtual MongoDatabase Database => databaseProvider.Database;
+        public virtual MongoDatabase Database
+        {
+            get { return _databaseProvider.Database; }
+        }
 
-        public virtual MongoCollection<TEntity> Collection => databaseProvider.Database.GetCollection<TEntity>(typeof(TEntity).Name);
+        public virtual MongoCollection<TEntity> Collection
+        {
+            get
+            {
+                return _databaseProvider.Database.GetCollection<TEntity>(typeof(TEntity).Name);
+            }
+        }
 
-        private readonly IMongoDatabaseProvider databaseProvider;
+        private readonly IMongoDatabaseProvider _databaseProvider;
 
         public MongoDbRepositoryBase(IMongoDatabaseProvider databaseProvider)
         {
-            this.databaseProvider = databaseProvider;
+            _databaseProvider = databaseProvider;
         }
 
         public override IQueryable<TEntity> GetAll()

@@ -27,7 +27,6 @@ namespace StudioX.Domain.Entities
 
         }
 
-#if NET46
         /// <summary>
         /// Creates a new <see cref="EntityNotFoundException"/> object.
         /// </summary>
@@ -36,7 +35,6 @@ namespace StudioX.Domain.Entities
         {
 
         }
-#endif
         
         /// <summary>
         /// Creates a new <see cref="EntityNotFoundException"/> object.

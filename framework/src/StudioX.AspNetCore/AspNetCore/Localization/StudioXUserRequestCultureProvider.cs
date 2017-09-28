@@ -18,8 +18,8 @@ namespace StudioX.AspNetCore.Localization
 
         public override async Task<ProviderCultureResult> DetermineProviderCultureResult(HttpContext httpContext)
         {
-            var session = httpContext.RequestServices.GetRequiredService<IStudioXSession>();
-            if (session.UserId == null)
+            var studioxSession = httpContext.RequestServices.GetRequiredService<IStudioXSession>();
+            if (studioxSession.UserId == null)
             {
                 return null;
             }
@@ -28,8 +28,8 @@ namespace StudioX.AspNetCore.Localization
 
             var culture = await settingManager.GetSettingValueForUserAsync(
                 LocalizationSettingNames.DefaultLanguage,
-                session.TenantId,
-                session.UserId.Value,
+                studioxSession.TenantId,
+                studioxSession.UserId.Value,
                 fallbackToDefault: false
             );
 
@@ -48,9 +48,9 @@ namespace StudioX.AspNetCore.Localization
 
             //Try to set user's language setting from cookie if available.
             await settingManager.ChangeSettingForUserAsync(
-                session.ToUserIdentifier(),
+                studioxSession.ToUserIdentifier(),
                 LocalizationSettingNames.DefaultLanguage,
-                result.Cultures.First()
+                result.Cultures.First().Value
             );
 
             return result;

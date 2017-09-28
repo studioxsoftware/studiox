@@ -1,4 +1,4 @@
-namespace StudioX.AspNetCore.Mvc.Results.Caching
+﻿namespace StudioX.AspNetCore.Mvc.Results.Caching
 {
     public enum ClientCacheScope
     {

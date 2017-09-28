@@ -23,14 +23,14 @@ namespace StudioX.Web.SignalR.Hubs
         /// </summary>
         public IStudioXSession StudioXSession { get; set; }
 
-        private readonly IOnlineClientManager onlineClientManager;
+        private readonly IOnlineClientManager _onlineClientManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StudioXCommonHub"/> class.
         /// </summary>
         public StudioXCommonHub(IOnlineClientManager onlineClientManager)
         {
-            this.onlineClientManager = onlineClientManager;
+            _onlineClientManager = onlineClientManager;
 
             Logger = NullLogger.Instance;
             StudioXSession = NullStudioXSession.Instance;
@@ -49,18 +49,18 @@ namespace StudioX.Web.SignalR.Hubs
 
             Logger.Debug("A client is connected: " + client);
             
-            onlineClientManager.Add(client);
+            _onlineClientManager.Add(client);
         }
 
         public override async Task OnReconnected()
         {
             await base.OnReconnected();
 
-            var client = onlineClientManager.GetByConnectionIdOrNull(Context.ConnectionId);
+            var client = _onlineClientManager.GetByConnectionIdOrNull(Context.ConnectionId);
             if (client == null)
             {
                 client = CreateClientForCurrentConnection();
-                onlineClientManager.Add(client);
+                _onlineClientManager.Add(client);
                 Logger.Debug("A client is connected (on reconnected event): " + client);
             }
             else
@@ -77,7 +77,7 @@ namespace StudioX.Web.SignalR.Hubs
 
             try
             {
-                onlineClientManager.Remove(Context.ConnectionId);
+                _onlineClientManager.Remove(Context.ConnectionId);
             }
             catch (Exception ex)
             {

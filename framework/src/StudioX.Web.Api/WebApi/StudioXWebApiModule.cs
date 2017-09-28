@@ -146,9 +146,9 @@ namespace StudioX.WebApi
 
         private static void InitializeModelBinders(HttpConfiguration httpConfiguration)
         {
-            var apiDateTimeBinder = new StudioXApiDateTimeBinder();
-            httpConfiguration.BindParameter(typeof(DateTime), apiDateTimeBinder);
-            httpConfiguration.BindParameter(typeof(DateTime?), apiDateTimeBinder);
+            var studioxApiDateTimeBinder = new StudioXApiDateTimeBinder();
+            httpConfiguration.BindParameter(typeof(DateTime), studioxApiDateTimeBinder);
+            httpConfiguration.BindParameter(typeof(DateTime?), studioxApiDateTimeBinder);
         }
     }
 }

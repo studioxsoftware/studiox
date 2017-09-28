@@ -10,15 +10,15 @@ namespace StudioX.Quartz
 {
     public class QuartzScheduleJobManager : BackgroundWorkerBase, IQuartzScheduleJobManager, ISingletonDependency
     {
-        private readonly IBackgroundJobConfiguration backgroundJobConfiguration;
-        private readonly IStudioXQuartzConfiguration quartzConfiguration;
+        private readonly IBackgroundJobConfiguration _backgroundJobConfiguration;
+        private readonly IStudioXQuartzConfiguration _quartzConfiguration;
 
         public QuartzScheduleJobManager(
             IStudioXQuartzConfiguration quartzConfiguration,
             IBackgroundJobConfiguration backgroundJobConfiguration)
         {
-            this.quartzConfiguration = quartzConfiguration;
-            this.backgroundJobConfiguration = backgroundJobConfiguration;
+            _quartzConfiguration = quartzConfiguration;
+            _backgroundJobConfiguration = backgroundJobConfiguration;
         }
 
         public Task ScheduleAsync<TJob>(Action<JobBuilder> configureJob, Action<TriggerBuilder> configureTrigger)
@@ -32,7 +32,7 @@ namespace StudioX.Quartz
             configureTrigger(triggerToBuild);
             var trigger = triggerToBuild.Build();
 
-            quartzConfiguration.Scheduler.ScheduleJob(job, trigger);
+            _quartzConfiguration.Scheduler.ScheduleJob(job, trigger);
 
             return Task.FromResult(0);
         }
@@ -41,9 +41,9 @@ namespace StudioX.Quartz
         {
             base.Start();
 
-            if (backgroundJobConfiguration.IsJobExecutionEnabled)
+            if (_backgroundJobConfiguration.IsJobExecutionEnabled)
             {
-                quartzConfiguration.Scheduler.Start();
+                _quartzConfiguration.Scheduler.Start();
             }
 
             Logger.Info("Started QuartzScheduleJobManager");
@@ -51,11 +51,11 @@ namespace StudioX.Quartz
 
         public override void WaitToStop()
         {
-            if (quartzConfiguration.Scheduler != null)
+            if (_quartzConfiguration.Scheduler != null)
             {
                 try
                 {
-                    quartzConfiguration.Scheduler.Shutdown(true);
+                    _quartzConfiguration.Scheduler.Shutdown(true);
                 }
                 catch (Exception ex)
                 {

@@ -1,7 +1,5 @@
 ﻿using System.Reflection;
-
 using StudioX.Modules;
-using StudioX.Quartz;
 
 namespace StudioX.Quartz.Tests
 {

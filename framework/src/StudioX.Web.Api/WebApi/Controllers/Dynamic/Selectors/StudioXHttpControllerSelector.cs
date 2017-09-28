@@ -14,8 +14,8 @@ namespace StudioX.WebApi.Controllers.Dynamic.Selectors
     /// </summary>
     public class StudioXHttpControllerSelector : DefaultHttpControllerSelector
     {
-        private readonly HttpConfiguration configuration;
-        private readonly DynamicApiControllerManager dynamicApiControllerManager;
+        private readonly HttpConfiguration _configuration;
+        private readonly DynamicApiControllerManager _dynamicApiControllerManager;
 
         /// <summary>
         /// Creates a new <see cref="StudioXHttpControllerSelector"/> object.
@@ -25,8 +25,8 @@ namespace StudioX.WebApi.Controllers.Dynamic.Selectors
         public StudioXHttpControllerSelector(HttpConfiguration configuration, DynamicApiControllerManager dynamicApiControllerManager)
             : base(configuration)
         {
-            this.configuration = configuration;
-            this.dynamicApiControllerManager = dynamicApiControllerManager;
+            _configuration = configuration;
+            _dynamicApiControllerManager = dynamicApiControllerManager;
         }
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace StudioX.WebApi.Controllers.Dynamic.Selectors
 
             //Get the dynamic controller
             var hasActionName = false;
-            var controllerInfo = dynamicApiControllerManager.FindOrNull(serviceNameWithAction);
+            var controllerInfo = _dynamicApiControllerManager.FindOrNull(serviceNameWithAction);
             if (controllerInfo == null)
             {
                 if (!DynamicApiServiceNameHelper.IsValidServiceNameWithAction(serviceNameWithAction))
@@ -73,7 +73,7 @@ namespace StudioX.WebApi.Controllers.Dynamic.Selectors
                 }
                 
                 var serviceName = DynamicApiServiceNameHelper.GetServiceNameInServiceNameWithAction(serviceNameWithAction);
-                controllerInfo = dynamicApiControllerManager.FindOrNull(serviceName);
+                controllerInfo = _dynamicApiControllerManager.FindOrNull(serviceName);
                 if (controllerInfo == null)
                 {
                     return base.SelectController(request);                    
@@ -83,7 +83,7 @@ namespace StudioX.WebApi.Controllers.Dynamic.Selectors
             }
             
             //Create the controller descriptor
-            var controllerDescriptor = new DynamicHttpControllerDescriptor(configuration, controllerInfo);
+            var controllerDescriptor = new DynamicHttpControllerDescriptor(_configuration, controllerInfo);
             controllerDescriptor.Properties["__StudioXDynamicApiControllerInfo"] = controllerInfo;
             controllerDescriptor.Properties["__StudioXDynamicApiHasActionName"] = hasActionName;
             return controllerDescriptor;

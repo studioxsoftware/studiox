@@ -48,17 +48,17 @@ namespace StudioX.Web.Mvc.Views
         /// </summary>
         protected string LocalizationSourceName
         {
-            get => localizationSource.Name;
-            set { localizationSource = LocalizationHelper.GetSource(value); }
+            get { return _localizationSource.Name; }
+            set { _localizationSource = LocalizationHelper.GetSource(value); }
         }
-        private ILocalizationSource localizationSource;
+        private ILocalizationSource _localizationSource;
 
         /// <summary>
         /// Constructor.
         /// </summary>
         protected StudioXWebViewPage()
         {
-            localizationSource = NullLocalizationSource.Instance;
+            _localizationSource = NullLocalizationSource.Instance;
             SettingManager = SingletonDependency<ISettingManager>.Instance;
         }
 
@@ -69,7 +69,7 @@ namespace StudioX.Web.Mvc.Views
         /// <returns>Localized string</returns>
         protected virtual string L(string name)
         {
-            return localizationSource.GetString(name);
+            return _localizationSource.GetString(name);
         }
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace StudioX.Web.Mvc.Views
         /// <returns>Localized string</returns>
         protected virtual string L(string name, params object[] args)
         {
-            return localizationSource.GetString(name, args);
+            return _localizationSource.GetString(name, args);
         }
 
         /// <summary>
@@ -91,7 +91,7 @@ namespace StudioX.Web.Mvc.Views
         /// <returns>Localized string</returns>
         protected virtual string L(string name, CultureInfo culture)
         {
-            return localizationSource.GetString(name, culture);
+            return _localizationSource.GetString(name, culture);
         }
 
         /// <summary>
@@ -103,7 +103,7 @@ namespace StudioX.Web.Mvc.Views
         /// <returns>Localized string</returns>
         protected string L(string name, CultureInfo culture, params object[] args)
         {
-            return localizationSource.GetString(name, culture, args);
+            return _localizationSource.GetString(name, culture, args);
         }
 
         /// <summary>

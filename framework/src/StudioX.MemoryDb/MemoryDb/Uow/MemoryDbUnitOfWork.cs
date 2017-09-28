@@ -15,8 +15,8 @@ namespace StudioX.MemoryDb.Uow
         /// </summary>
         public MemoryDatabase Database { get; private set; }
 
-        private readonly IStudioXMemoryDbModuleConfiguration configuration;
-        private readonly MemoryDatabase memoryDatabase;
+        private readonly IStudioXMemoryDbModuleConfiguration _configuration;
+        private readonly MemoryDatabase _memoryDatabase;
 
         /// <summary>
         /// Constructor.
@@ -32,13 +32,13 @@ namespace StudioX.MemoryDb.Uow
                   defaultOptions,
                   filterExecuter)
         {
-            this.configuration = configuration;
-            this.memoryDatabase = memoryDatabase;
+            _configuration = configuration;
+            _memoryDatabase = memoryDatabase;
         }
 
         protected override void BeginUow()
         {
-            Database = memoryDatabase;
+            Database = _memoryDatabase;
         }
 
         public override void SaveChanges()

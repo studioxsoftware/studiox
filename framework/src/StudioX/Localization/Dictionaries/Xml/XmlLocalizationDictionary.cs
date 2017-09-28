@@ -10,24 +10,25 @@ using StudioX.Xml.Extensions;
 namespace StudioX.Localization.Dictionaries.Xml
 {
     /// <summary>
-    ///     This class is used to build a localization dictionary from XML.
+    /// This class is used to build a localization dictionary from XML.
     /// </summary>
     /// <remarks>
-    ///     Use static Build methods to create instance of this class.
+    /// Use static Build methods to create instance of this class.
     /// </remarks>
     public class XmlLocalizationDictionary : LocalizationDictionary
     {
         /// <summary>
-        ///     Private constructor.
+        /// Private constructor.
         /// </summary>
         /// <param name="cultureInfo">Culture of the dictionary</param>
         private XmlLocalizationDictionary(CultureInfo cultureInfo)
             : base(cultureInfo)
         {
+
         }
 
         /// <summary>
-        ///     Builds an <see cref="XmlLocalizationDictionary" /> from given file.
+        /// Builds an <see cref="XmlLocalizationDictionary"/> from given file.
         /// </summary>
         /// <param name="filePath">Path of the file</param>
         public static XmlLocalizationDictionary BuildFomFile(string filePath)
@@ -43,7 +44,7 @@ namespace StudioX.Localization.Dictionaries.Xml
         }
 
         /// <summary>
-        ///     Builds an <see cref="XmlLocalizationDictionary" /> from given xml string.
+        /// Builds an <see cref="XmlLocalizationDictionary"/> from given xml string.
         /// </summary>
         /// <param name="xmlString">XML string</param>
         public static XmlLocalizationDictionary BuildFomXmlString(string xmlString)
@@ -63,7 +64,7 @@ namespace StudioX.Localization.Dictionaries.Xml
                 throw new StudioXException("culture is not defined in language XML file!");
             }
 
-            var dictionary = new XmlLocalizationDictionary(CultureInfoHelper.Get(cultureName));
+            var dictionary = new XmlLocalizationDictionary(CultureInfo.GetCultureInfo(cultureName));
 
             var dublicateNames = new List<string>();
 
@@ -89,9 +90,7 @@ namespace StudioX.Localization.Dictionaries.Xml
 
             if (dublicateNames.Count > 0)
             {
-                throw new StudioXException(
-                    "A dictionary can not contain same key twice. There are some duplicated names: " +
-                    dublicateNames.JoinAsString(", "));
+                throw new StudioXException("A dictionary can not contain same key twice. There are some duplicated names: " + dublicateNames.JoinAsString(", "));
             }
 
             return dictionary;

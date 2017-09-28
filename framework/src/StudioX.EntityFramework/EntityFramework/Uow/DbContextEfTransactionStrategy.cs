@@ -33,8 +33,7 @@ namespace StudioX.EntityFramework.Uow
             }
         }
 
-        public DbContext CreateDbContext<TDbContext>(string connectionString, IDbContextResolver dbContextResolver)
-            where TDbContext : DbContext
+        public DbContext CreateDbContext<TDbContext>(string connectionString, IDbContextResolver dbContextResolver) where TDbContext : DbContext
         {
             DbContext dbContext;
 
@@ -42,17 +41,13 @@ namespace StudioX.EntityFramework.Uow
             if (activeTransaction == null)
             {
                 dbContext = dbContextResolver.Resolve<TDbContext>(connectionString);
-                var dbtransaction =
-                    dbContext.Database.BeginTransaction(
-                        (Options.IsolationLevel ?? IsolationLevel.ReadUncommitted).ToSystemDataIsolationLevel());
+                var dbtransaction = dbContext.Database.BeginTransaction((Options.IsolationLevel ?? IsolationLevel.ReadUncommitted).ToSystemDataIsolationLevel());
                 activeTransaction = new ActiveTransactionInfo(dbtransaction, dbContext);
                 ActiveTransactions[connectionString] = activeTransaction;
             }
             else
             {
-                dbContext =
-                    dbContextResolver.Resolve<TDbContext>(
-                        activeTransaction.DbContextTransaction.UnderlyingTransaction.Connection, false);
+                dbContext = dbContextResolver.Resolve<TDbContext>(activeTransaction.DbContextTransaction.UnderlyingTransaction.Connection, false);
                 dbContext.Database.UseTransaction(activeTransaction.DbContextTransaction.UnderlyingTransaction);
                 activeTransaction.AttendedDbContexts.Add(dbContext);
             }

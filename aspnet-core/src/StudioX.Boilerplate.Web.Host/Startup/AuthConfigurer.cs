@@ -1,93 +1,51 @@
 ﻿using System;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
-using StudioX.Runtime.Security;
-using StudioX.Boilerplate.Authentication.External;
-using StudioX.Boilerplate.Authentication.External.Facebook;
-using StudioX.Boilerplate.Authentication.External.Google;
-using StudioX.Boilerplate.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using StudioX.Runtime.Security;
 
 namespace StudioX.Boilerplate.Web.Host.Startup
 {
     public static class AuthConfigurer
     {
-        /// <summary>
-        /// Configures the specified application.
-        /// </summary>
-        /// <param name="app">The application.</param>
-        /// <param name="configuration">The configuration.</param>
-        public static void Configure(IApplicationBuilder app, IConfiguration configuration)
+        public static void Configure(IServiceCollection services, IConfiguration configuration)
         {
             if (bool.Parse(configuration["Authentication:JwtBearer:IsEnabled"]))
             {
-                app.UseJwtBearerAuthentication(CreateJwtBearerAuthenticationOptions(app));
+                services.AddAuthentication()
+                    .AddJwtBearer(options =>
+                    {
+                        options.TokenValidationParameters = new TokenValidationParameters
+                        {
+                            // The signing key must match!
+                            ValidateIssuerSigningKey = true,
+                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(configuration["Authentication:JwtBearer:SecurityKey"])),
+
+                            // Validate the JWT Issuer (iss) claim
+                            ValidateIssuer = true,
+                            ValidIssuer = configuration["Authentication:JwtBearer:Issuer"],
+
+                            // Validate the JWT Audience (aud) claim
+                            ValidateAudience = true,
+                            ValidAudience = configuration["Authentication:JwtBearer:Audience"],
+
+                            // Validate the token expiry
+                            ValidateLifetime = true,
+
+                            // If you want to allow a certain amount of clock drift, set that here
+                            ClockSkew = TimeSpan.Zero
+                        };
+
+                        options.Events = new JwtBearerEvents
+                        {
+                            OnMessageReceived = QueryStringTokenResolver
+                        };
+                    });
             }
-
-            var externalAuthConfiguration = app.ApplicationServices.GetRequiredService<ExternalAuthConfiguration>();
-
-            if (bool.Parse(configuration["Authentication:Facebook:IsEnabled"]))
-            {
-                externalAuthConfiguration.Providers.Add(
-                    new ExternalLoginProviderInfo(
-                        FacebookAuthProviderApi.Name,
-                        configuration["Authentication:Facebook:AppId"],
-                        configuration["Authentication:Facebook:AppSecret"],
-                        typeof(FacebookAuthProviderApi)
-                    )
-                );
-            }
-
-            if (bool.Parse(configuration["Authentication:Google:IsEnabled"]))
-            {
-                externalAuthConfiguration.Providers.Add(
-                    new ExternalLoginProviderInfo(
-                        GoogleAuthProviderApi.Name,
-                        configuration["Authentication:Google:ClientId"],
-                        configuration["Authentication:Google:ClientSecret"],
-                        typeof(GoogleAuthProviderApi)
-                    )
-                );
-            }
-        }
-
-        private static JwtBearerOptions CreateJwtBearerAuthenticationOptions(IApplicationBuilder app)
-        {
-            var tokenAuthConfig = app.ApplicationServices.GetRequiredService<TokenAuthConfiguration>();
-            return new JwtBearerOptions
-            {
-                AutomaticAuthenticate = true,
-                AutomaticChallenge = true,
-                TokenValidationParameters = new TokenValidationParameters
-                {
-                    // The signing key must match!
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = tokenAuthConfig.SecurityKey,
-
-                    // Validate the JWT Issuer (iss) claim
-                    ValidateIssuer = true,
-                    ValidIssuer = tokenAuthConfig.Issuer,
-
-                    // Validate the JWT Audience (aud) claim
-                    ValidateAudience = true,
-                    ValidAudience = tokenAuthConfig.Audience,
-
-                    // Validate the token expiry
-                    ValidateLifetime = true,
-
-                    // If you want to allow a certain amount of clock drift, set that here
-                    ClockSkew = TimeSpan.Zero
-                },
-
-                Events = new JwtBearerEvents
-                {
-                    OnMessageReceived = QueryStringTokenResolver
-                }
-            };
         }
 
         /* This method is needed to authorize SignalR javascript client.

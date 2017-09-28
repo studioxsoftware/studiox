@@ -13,9 +13,9 @@ namespace StudioX.WebApi.Uow
 {
     public class StudioXApiUowFilter : IActionFilter, ITransientDependency
     {
-        private readonly IUnitOfWorkManager unitOfWorkManager;
-        private readonly IStudioXWebApiConfiguration webApiConfiguration;
-        private readonly IUnitOfWorkDefaultOptions unitOfWorkDefaultOptions;
+        private readonly IUnitOfWorkManager _unitOfWorkManager;
+        private readonly IStudioXWebApiConfiguration _webApiConfiguration;
+        private readonly IUnitOfWorkDefaultOptions _unitOfWorkDefaultOptions;
 
         public bool AllowMultiple => false;
 
@@ -24,9 +24,9 @@ namespace StudioX.WebApi.Uow
             IStudioXWebApiConfiguration webApiConfiguration, 
             IUnitOfWorkDefaultOptions unitOfWorkDefaultOptions)
         {
-            this.unitOfWorkManager = unitOfWorkManager;
-            this.webApiConfiguration = webApiConfiguration;
-            this.unitOfWorkDefaultOptions = unitOfWorkDefaultOptions;
+            _unitOfWorkManager = unitOfWorkManager;
+            _webApiConfiguration = webApiConfiguration;
+            _unitOfWorkDefaultOptions = unitOfWorkDefaultOptions;
         }
 
         public async Task<HttpResponseMessage> ExecuteActionFilterAsync(HttpActionContext actionContext, CancellationToken cancellationToken, Func<Task<HttpResponseMessage>> continuation)
@@ -42,15 +42,15 @@ namespace StudioX.WebApi.Uow
                 return await continuation();
             }
 
-            var unitOfWorkAttr = unitOfWorkDefaultOptions.GetUnitOfWorkAttributeOrNull(methodInfo) ??
-                                 webApiConfiguration.DefaultUnitOfWorkAttribute;
+            var unitOfWorkAttr = _unitOfWorkDefaultOptions.GetUnitOfWorkAttributeOrNull(methodInfo) ??
+                                 _webApiConfiguration.DefaultUnitOfWorkAttribute;
 
             if (unitOfWorkAttr.IsDisabled)
             {
                 return await continuation();
             }
 
-            using (var uow = unitOfWorkManager.Begin(unitOfWorkAttr.CreateOptions()))
+            using (var uow = _unitOfWorkManager.Begin(unitOfWorkAttr.CreateOptions()))
             {
                 var result = await continuation();
                 await uow.CompleteAsync();

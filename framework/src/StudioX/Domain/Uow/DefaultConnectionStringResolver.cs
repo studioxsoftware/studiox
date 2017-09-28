@@ -1,7 +1,4 @@
-using System;
-#if NET46
 using System.Configuration;
-#endif
 using StudioX.Configuration.Startup;
 using StudioX.Dependency;
 
@@ -35,7 +32,6 @@ namespace StudioX.Domain.Uow
                 return defaultConnectionString;
             }
 
-#if NET46
             if (ConfigurationManager.ConnectionStrings["Default"] != null)
             {
                 return "Default";
@@ -45,7 +41,6 @@ namespace StudioX.Domain.Uow
             {
                 return ConfigurationManager.ConnectionStrings[0].ConnectionString;
             }
-#endif
 
             throw new StudioXException("Could not find a connection string definition for the application. Set IStudioXStartupConfiguration.DefaultNameOrConnectionString or add a 'Default' connection string to application .config file.");
         }

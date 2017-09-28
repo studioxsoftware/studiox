@@ -7,26 +7,26 @@ namespace StudioX.Owin.EmbeddedResources
 {
     public class StudioXOwinEmbeddedResourceFileInfo : IFileInfo
     {
-        public long Length => resource.Content.Length;
+        public long Length => _resource.Content.Length;
 
         public string PhysicalPath => null;
 
-        public string Name => resource.FileName;
+        public string Name => _resource.FileName;
 
-        public DateTime LastModified => resource.LastModifiedUtc;
+        public DateTime LastModified => _resource.LastModifiedUtc;
 
         public bool IsDirectory => false;
 
-        private readonly EmbeddedResourceItem resource;
+        private readonly EmbeddedResourceItem _resource;
 
         public StudioXOwinEmbeddedResourceFileInfo(EmbeddedResourceItem resource)
         {
-            this.resource = resource;
+            _resource = resource;
         }
 
         public Stream CreateReadStream()
         {
-            return new MemoryStream(resource.Content);
+            return new MemoryStream(_resource.Content);
         }
     }
 }

@@ -99,15 +99,15 @@ namespace StudioX.Web.Mvc.Controllers
                     throw new StudioXException("Must set LocalizationSourceName before, in order to get LocalizationSource");
                 }
 
-                if (localizationSource == null || localizationSource.Name != LocalizationSourceName)
+                if (_localizationSource == null || _localizationSource.Name != LocalizationSourceName)
                 {
-                    localizationSource = LocalizationManager.GetSource(LocalizationSourceName);
+                    _localizationSource = LocalizationManager.GetSource(LocalizationSourceName);
                 }
 
-                return localizationSource;
+                return _localizationSource;
             }
         }
-        private ILocalizationSource localizationSource;
+        private ILocalizationSource _localizationSource;
 
         /// <summary>
         /// Reference to the logger to write logs.
@@ -126,16 +126,16 @@ namespace StudioX.Web.Mvc.Controllers
         {
             get
             {
-                if (unitOfWorkManager == null)
+                if (_unitOfWorkManager == null)
                 {
                     throw new StudioXException("Must set UnitOfWorkManager before use it.");
                 }
 
-                return unitOfWorkManager;
+                return _unitOfWorkManager;
             }
-            set => unitOfWorkManager = value;
+            set { _unitOfWorkManager = value; }
         }
-        private IUnitOfWorkManager unitOfWorkManager;
+        private IUnitOfWorkManager _unitOfWorkManager;
 
         /// <summary>
         /// Gets current unit of work.
@@ -147,12 +147,12 @@ namespace StudioX.Web.Mvc.Controllers
         /// <summary>
         /// MethodInfo for currently executing action.
         /// </summary>
-        private MethodInfo currentMethodInfo;
+        private MethodInfo _currentMethodInfo;
 
         /// <summary>
         /// WrapResultAttribute for currently executing action.
         /// </summary>
-        private WrapResultAttribute wrapResultAttribute;
+        private WrapResultAttribute _wrapResultAttribute;
 
         /// <summary>
         /// Constructor.
@@ -259,7 +259,7 @@ namespace StudioX.Web.Mvc.Controllers
         /// <param name="behavior">Behavior.</param>
         protected override JsonResult Json(object data, string contentType, Encoding contentEncoding, JsonRequestBehavior behavior)
         {
-            if (wrapResultAttribute != null && !wrapResultAttribute.WrapOnSuccess)
+            if (_wrapResultAttribute != null && !_wrapResultAttribute.WrapOnSuccess)
             {
                 return base.Json(data, contentType, contentEncoding, behavior);
             }
@@ -310,15 +310,15 @@ namespace StudioX.Web.Mvc.Controllers
         private void SetCurrentMethodInfoAndWrapResultAttribute(ActionExecutingContext filterContext)
         {
             //Prevent overriding for child actions
-            if (currentMethodInfo != null)
+            if (_currentMethodInfo != null)
             {
                 return;
             }
 
-            currentMethodInfo = filterContext.ActionDescriptor.GetMethodInfoOrNull();
-            wrapResultAttribute =
+            _currentMethodInfo = filterContext.ActionDescriptor.GetMethodInfoOrNull();
+            _wrapResultAttribute =
                 ReflectionHelper.GetSingleAttributeOfMemberOrDeclaringTypeOrDefault(
-                    currentMethodInfo,
+                    _currentMethodInfo,
                     StudioXMvcConfiguration.DefaultWrapResultAttribute
                 );
         }
@@ -343,7 +343,7 @@ namespace StudioX.Web.Mvc.Controllers
             }
 
             //Log exception
-            if (wrapResultAttribute == null || wrapResultAttribute.LogError)
+            if (_wrapResultAttribute == null || _wrapResultAttribute.LogError)
             {
                 LogHelper.LogException(Logger, context.Exception);
             }
@@ -365,7 +365,7 @@ namespace StudioX.Web.Mvc.Controllers
             }
 
             //Check WrapResultAttribute
-            if (wrapResultAttribute == null || !wrapResultAttribute.WrapOnError)
+            if (_wrapResultAttribute == null || !_wrapResultAttribute.WrapOnError)
             {
                 base.OnException(context);
                 return;
@@ -378,7 +378,7 @@ namespace StudioX.Web.Mvc.Controllers
             context.HttpContext.Response.Clear();
             context.HttpContext.Response.StatusCode = GetStatusCodeForException(context);
 
-            context.Result = MethodInfoHelper.IsJsonResult(currentMethodInfo)
+            context.Result = MethodInfoHelper.IsJsonResult(_currentMethodInfo)
                 ? GenerateJsonExceptionResult(context)
                 : GenerateNonJsonExceptionResult(context);
 

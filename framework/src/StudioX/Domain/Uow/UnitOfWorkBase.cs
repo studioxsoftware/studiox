@@ -62,24 +62,24 @@ namespace StudioX.Domain.Uow
         /// <summary>
         /// Is <see cref="Begin"/> method called before?
         /// </summary>
-        private bool isBeginCalledBefore;
+        private bool _isBeginCalledBefore;
 
         /// <summary>
         /// Is <see cref="Complete"/> method called before?
         /// </summary>
-        private bool isCompleteCalledBefore;
+        private bool _isCompleteCalledBefore;
 
         /// <summary>
         /// Is this unit of work successfully completed.
         /// </summary>
-        private bool succeed;
+        private bool _succeed;
 
         /// <summary>
         /// A reference to the exception if this unit of work failed.
         /// </summary>
-        private Exception exception;
+        private Exception _exception;
 
-        private int? tenantId;
+        private int? _tenantId;
 
         /// <summary>
         /// Constructor.
@@ -208,8 +208,8 @@ namespace StudioX.Domain.Uow
 
         public virtual IDisposable SetTenantId(int? tenantId, bool switchMustHaveTenantEnableDisable)
         {
-            var oldTenantId = this.tenantId;
-            this.tenantId = tenantId;
+            var oldTenantId = _tenantId;
+            _tenantId = tenantId;
 
 
             IDisposable mustHaveTenantEnableChange;
@@ -232,13 +232,13 @@ namespace StudioX.Domain.Uow
                 mayHaveTenantChange.Dispose();
                 mustHaveTenantChange.Dispose();
                 mustHaveTenantEnableChange.Dispose();
-                this.tenantId = oldTenantId;
+                _tenantId = oldTenantId;
             });
         }
 
         public int? GetTenantId()
         {
-            return tenantId;
+            return _tenantId;
         }
 
         /// <inheritdoc/>
@@ -248,12 +248,12 @@ namespace StudioX.Domain.Uow
             try
             {
                 CompleteUow();
-                succeed = true;
+                _succeed = true;
                 OnCompleted();
             }
             catch (Exception ex)
             {
-                exception = ex;
+                _exception = ex;
                 throw;
             }
         }
@@ -265,12 +265,12 @@ namespace StudioX.Domain.Uow
             try
             {
                 await CompleteUowAsync();
-                succeed = true;
+                _succeed = true;
                 OnCompleted();
             }
             catch (Exception ex)
             {
-                exception = ex;
+                _exception = ex;
                 throw;
             }
         }
@@ -278,16 +278,16 @@ namespace StudioX.Domain.Uow
         /// <inheritdoc/>
         public void Dispose()
         {
-            if (!isBeginCalledBefore || IsDisposed)
+            if (!_isBeginCalledBefore || IsDisposed)
             {
                 return;
             }
 
             IsDisposed = true;
 
-            if (!succeed)
+            if (!_succeed)
             {
-                OnFailed(exception);
+                OnFailed(_exception);
             }
 
             DisposeUow();
@@ -364,22 +364,22 @@ namespace StudioX.Domain.Uow
 
         private void PreventMultipleBegin()
         {
-            if (isBeginCalledBefore)
+            if (_isBeginCalledBefore)
             {
                 throw new StudioXException("This unit of work has started before. Can not call Start method more than once.");
             }
 
-            isBeginCalledBefore = true;
+            _isBeginCalledBefore = true;
         }
 
         private void PreventMultipleComplete()
         {
-            if (isCompleteCalledBefore)
+            if (_isCompleteCalledBefore)
             {
                 throw new StudioXException("Complete is called before!");
             }
 
-            isCompleteCalledBefore = true;
+            _isCompleteCalledBefore = true;
         }
 
         private void SetFilters(List<DataFilterConfiguration> filterOverrides)

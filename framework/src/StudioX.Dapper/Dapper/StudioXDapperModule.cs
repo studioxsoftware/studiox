@@ -10,9 +10,7 @@ namespace StudioX.Dapper
     {
         public override void PreInitialize()
         {
-#if NET46
             Configuration.UnitOfWork.IsTransactionScopeAvailable = false;
-#endif
         }
 
         public override void Initialize()
@@ -29,7 +27,12 @@ namespace StudioX.Dapper
                     {
                         registrar.RegisterRepositories(IocManager, EfBasedDapperAutoRepositoryTypes.Default);
                     }
-                
+
+                    if (registrar.OrmContextKey == StudioXConsts.Orms.NHibernate)
+                    {
+                        registrar.RegisterRepositories(IocManager, NhBasedDapperAutoRepositoryTypes.Default);
+                    }
+
                     if (registrar.OrmContextKey == StudioXConsts.Orms.EntityFrameworkCore)
                     {
                         registrar.RegisterRepositories(IocManager, EfBasedDapperAutoRepositoryTypes.Default);

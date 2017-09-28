@@ -9,15 +9,15 @@ namespace StudioX.Web.Localization
 {
     internal class LocalizationScriptManager : ILocalizationScriptManager, ISingletonDependency
     {
-        private readonly ILocalizationManager localizationManager;
-        private readonly ILanguageManager languageManager;
+        private readonly ILocalizationManager _localizationManager;
+        private readonly ILanguageManager _languageManager;
 
         public LocalizationScriptManager(
             ILocalizationManager localizationManager,
             ILanguageManager languageManager)
         {
-            this.localizationManager = localizationManager;
-            this.languageManager = languageManager;
+            _localizationManager = localizationManager;
+            _languageManager = languageManager;
         }
 
         /// <inheritdoc/>
@@ -31,7 +31,7 @@ namespace StudioX.Web.Localization
         {
             //NOTE: Disabled caching since it's not true (localization script is changed per user, per tenant, per culture...)
             return BuildAll(cultureInfo);
-            //return cacheManager.GetCache(StudioXCacheNames.LocalizationScripts).Get(cultureInfo.Name, () => BuildAll(cultureInfo));
+            //return _cacheManager.GetCache(StudioXCacheNames.LocalizationScripts).Get(cultureInfo.Name, () => BuildAll(cultureInfo));
         }
 
         private string BuildAll(CultureInfo cultureInfo)
@@ -49,7 +49,7 @@ namespace StudioX.Web.Localization
             script.AppendLine();
             script.Append("    studiox.localization.languages = [");
 
-            var languages = languageManager.GetLanguages();
+            var languages = _languageManager.GetLanguages();
             for (var i = 0; i < languages.Count; i++)
             {
                 var language = languages[i];
@@ -73,7 +73,7 @@ namespace StudioX.Web.Localization
 
             if (languages.Count > 0)
             {
-                var currentLanguage = languageManager.CurrentLanguage;
+                var currentLanguage = _languageManager.CurrentLanguage;
                 script.AppendLine("    studiox.localization.currentLanguage = {");
                 script.AppendLine("        name: '" + currentLanguage.Name + "',");
                 script.AppendLine("        displayName: '" + currentLanguage.DisplayName + "',");
@@ -83,7 +83,7 @@ namespace StudioX.Web.Localization
                 script.AppendLine("    };");
             }
 
-            var sources = localizationManager.GetAllSources().OrderBy(s => s.Name).ToArray();
+            var sources = _localizationManager.GetAllSources().OrderBy(s => s.Name).ToArray();
 
             script.AppendLine();
             script.AppendLine("    studiox.localization.sources = [");
@@ -109,7 +109,7 @@ namespace StudioX.Web.Localization
 
                 var stringValues = source.GetAllStrings(cultureInfo).OrderBy(s => s.Name).ToList();
                 var stringJson = stringValues
-                    .ToDictionary(s => s.Name, s => s.Value)
+                    .ToDictionary(_ => _.Name, _ => _.Value)
                     .ToJsonString(indented: true);
                 script.Append(stringJson);
 

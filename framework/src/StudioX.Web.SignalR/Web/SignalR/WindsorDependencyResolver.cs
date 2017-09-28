@@ -11,7 +11,7 @@ namespace StudioX.Web.SignalR
     /// </summary>
     public class WindsorDependencyResolver : DefaultDependencyResolver
     {
-        private readonly IWindsorContainer windsorContainer;
+        private readonly IWindsorContainer _windsorContainer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WindsorDependencyResolver"/> class.
@@ -19,20 +19,20 @@ namespace StudioX.Web.SignalR
         /// <param name="windsorContainer">The windsor container.</param>
         public WindsorDependencyResolver(IWindsorContainer windsorContainer)
         {
-            this.windsorContainer = windsorContainer;
+            _windsorContainer = windsorContainer;
         }
         
         public override object GetService(Type serviceType)
         {
-            return windsorContainer.Kernel.HasComponent(serviceType)
-                ? windsorContainer.Resolve(serviceType)
+            return _windsorContainer.Kernel.HasComponent(serviceType)
+                ? _windsorContainer.Resolve(serviceType)
                 : base.GetService(serviceType);
         }
 
         public override IEnumerable<object> GetServices(Type serviceType)
         {
-            return windsorContainer.Kernel.HasComponent(serviceType)
-                ? windsorContainer.ResolveAll(serviceType).Cast<object>()
+            return _windsorContainer.Kernel.HasComponent(serviceType)
+                ? _windsorContainer.ResolveAll(serviceType).Cast<object>()
                 : base.GetServices(serviceType);
         }
     }
