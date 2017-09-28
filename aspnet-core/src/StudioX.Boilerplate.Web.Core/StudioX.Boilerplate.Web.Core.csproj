@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <VersionPrefix>1.0.0.0</VersionPrefix>
-    <TargetFrameworks>net461;netcoreapp1.1</TargetFrameworks>
-    <PackageTargetFallback>$(PackageTargetFallback);dotnet5.6;portable-net45+win8</PackageTargetFallback>
+    <TargetFrameworks>net461;netcoreapp2.0</TargetFrameworks>
+    <AssetTargetFallback>$(AssetTargetFallback);portable-net45+win8+wp8+wpa81;</AssetTargetFallback>
     <AssemblyName>StudioX.Boilerplate.Web.Core</AssemblyName>
     <PackageId>StudioX.Boilerplate.Web.Core</PackageId>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
@@ -23,27 +23,25 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\framework\src\StudioX.AspNetCore\StudioX.AspNetCore.csproj" />
-    <ProjectReference Include="..\..\..\module-zero\src\StudioX.ZeroCore\StudioX.ZeroCore.csproj" />
     <ProjectReference Include="..\StudioX.Boilerplate.Application\StudioX.Boilerplate.Application.csproj" />
     <ProjectReference Include="..\StudioX.Boilerplate.EntityFrameworkCore\StudioX.Boilerplate.EntityFrameworkCore.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.ValueTuple" Version="4.3.1" />
+    <PackageReference Include="System.ValueTuple" Version="4.4.0" />
     <PackageReference Include="System.Net.Http" Version="4.3.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="1.1.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="1.1.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="1.1.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="1.1.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Owin" Version="1.1.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="2.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Owin" Version="2.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="1.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore" Version="2.0.0" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
-    <ProjectReference Include="..\..\..\framework\src\StudioX.Web.SignalR\StudioX.Web.SignalR.csproj" />
-    <ProjectReference Include="..\..\..\framework\src\StudioX.Owin\StudioX.Owin.csproj" />
+
+    <PackageReference Include="Abp.Web.SignalR" Version="3.0.0" />
+    <PackageReference Include="Abp.Owin" Version="3.0.0" />
   </ItemGroup>
 
 </Project>

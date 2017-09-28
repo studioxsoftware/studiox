@@ -1,23 +1,20 @@
-﻿using StudioX.Boilerplate.Authorization;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
+using StudioX.Boilerplate.Authorization;
 using StudioX.Boilerplate.Authorization.Roles;
 using StudioX.Boilerplate.Authorization.Users;
 using StudioX.Boilerplate.Editions;
 using StudioX.Boilerplate.MultiTenancy;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace StudioX.Boilerplate.Identity
 {
     public static class IdentityRegistrar
     {
-        public static void Register(IServiceCollection services)
+        public static IdentityBuilder Register(IServiceCollection services)
         {
             services.AddLogging();
 
-            services.AddStudioXIdentity<Tenant, User, Role>(options =>
-                {
-                    options.Cookies.ApplicationCookie.AuthenticationScheme = "StudioXZeroTemplateAuthSchema";
-                    options.Cookies.ApplicationCookie.CookieName = "StudioXZeroTemplateAuth";
-                })
+            return services.AddStudioXIdentity<Tenant, User, Role>()
                 .AddStudioXTenantManager<TenantManager>()
                 .AddStudioXUserManager<UserManager>()
                 .AddStudioXRoleManager<RoleManager>()
@@ -28,6 +25,7 @@ namespace StudioX.Boilerplate.Identity
                 .AddStudioXSignInManager<SignInManager>()
                 .AddStudioXSecurityStampValidator<SecurityStampValidator>()
                 .AddStudioXUserClaimsPrincipalFactory<UserClaimsPrincipalFactory>()
+                .AddPermissionChecker<PermissionChecker>()
                 .AddDefaultTokenProviders();
         }
     }

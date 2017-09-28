@@ -35,6 +35,13 @@ namespace StudioX.Authorization.Users
         /// </summary>
         public const int MaxLastNameLength = 32;
 
+
+        /// <summary>
+        /// Maximum length of the <see cref="PhoneNumber"/> property.
+        /// </summary>
+        public const int MaxPhoneNumberLength = 32;
+
+
         /// <summary>
         /// Maximum length of the <see cref="AuthenticationSource"/> property.
         /// </summary>
@@ -65,7 +72,10 @@ namespace StudioX.Authorization.Users
         /// Maximum length of the <see cref="PasswordResetCode"/> property.
         /// </summary>
         public const int MaxPasswordResetCodeLength = 328;
-        
+
+      
+        public const int MaxSecurityStampLength = 50;
+
         /// <summary>
         /// Authorization source name.
         /// It's set to external authentication source name if created by an external source.
@@ -154,6 +164,7 @@ namespace StudioX.Authorization.Users
         /// <summary>
         /// Gets or sets the phone number.
         /// </summary>
+        [StringLength(MaxPhoneNumberLength)]
         public virtual string PhoneNumber { get; set; }
 
         /// <summary>
@@ -164,6 +175,7 @@ namespace StudioX.Authorization.Users
         /// <summary>
         /// Gets or sets the security stamp.
         /// </summary>
+        [StringLength(MaxSecurityStampLength)]
         public virtual string SecurityStamp { get; set; }
 
         /// <summary>

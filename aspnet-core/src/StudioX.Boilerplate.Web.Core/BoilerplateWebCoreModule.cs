@@ -13,9 +13,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
-#if FEATURE_SIGNALR
-using StudioX.Web.SignalR;
-#endif
+//#if FEATURE_SIGNALR
+//using StudioX.Web.SignalR;
+//#endif
 
 namespace StudioX.Boilerplate
 {
@@ -23,9 +23,9 @@ namespace StudioX.Boilerplate
          typeof(BoilerplateApplicationModule),
          typeof(BoilerplateEntityFrameworkModule),
          typeof(StudioXAspNetCoreModule)
-#if FEATURE_SIGNALR 
-        ,typeof(StudioXWebSignalRModule)
-#endif
+//#if FEATURE_SIGNALR 
+//        ,typeof(StudioXWebSignalRModule)
+//#endif
      )]
     public class BoilerplateWebCoreModule : StudioXModule
     {

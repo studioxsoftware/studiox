@@ -275,11 +275,12 @@ namespace StudioX.Boilerplate.Web.Controllers
                 });
 
             return Challenge(
-                new Microsoft.AspNetCore.Http.Authentication.AuthenticationProperties
-                {
-                    Items = { { "LoginProvider", provider } },
-                    RedirectUri = redirectUrl
-                },
+                //TODO: ...?
+                //new Microsoft.AspNetCore.Http.Authentication.AuthenticationProperties
+                //{
+                //    Items = { { "LoginProvider", provider } },
+                //    RedirectUri = redirectUrl
+                //},
                 provider
             );
         }

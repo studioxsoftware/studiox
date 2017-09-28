@@ -4,10 +4,24 @@ namespace StudioX.Zero.Configuration
     {
         public static class UserManagement
         {
+            public static class SecurityPassword
+            {
+                /// <summary>
+                /// "StudioX.Zero.UserManagement.SecurityPassword.MaintainanceAdminPassword".
+                /// </summary>
+                public const string MaintainanceAdminPassword = "StudioX.Zero.UserManagement.SecurityPassword.MaintainanceAdminPassword";
+            }
+
+
             /// <summary>
             /// "StudioX.Zero.UserManagement.IsEmailConfirmationRequiredForLogin".
             /// </summary>
             public const string IsEmailConfirmationRequiredForLogin = "StudioX.Zero.UserManagement.IsEmailConfirmationRequiredForLogin";
+
+            /// <summary>
+            /// "StudioX.Zero.UserManagement.IsNewRegisteredUserActiveByDefault".
+            /// </summary>
+            public const string IsNewRegisteredUserActiveByDefault = "StudioX.Zero.UserManagement.IsNewRegisteredUserActiveByDefault";
 
             public static class UserLockOut
             {
