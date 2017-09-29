@@ -22,18 +22,20 @@ namespace StudioX.Web.Configuration
 {
     public class StudioXUserConfigurationBuilder : ITransientDependency
     {
-        private readonly IMultiTenancyConfig _multiTenancyConfig;
-        private readonly ILanguageManager _languageManager;
-        private readonly ILocalizationManager _localizationManager;
-        private readonly IFeatureManager _featureManager;
-        private readonly IFeatureChecker _featureChecker;
-        private readonly IPermissionManager _permissionManager;
-        private readonly IUserNavigationManager _userNavigationManager;
-        private readonly ISettingDefinitionManager _settingDefinitionManager;
-        private readonly ISettingManager _settingManager;
-        private readonly IStudioXAntiForgeryConfiguration _studioXAntiForgeryConfiguration;
-        private readonly IStudioXSession _studioXSession;
-        private readonly IPermissionChecker _permissionChecker;
+        private readonly IMultiTenancyConfig multiTenancyConfig;
+        private readonly ILanguageManager languageManager;
+        private readonly ILocalizationManager localizationManager;
+        private readonly IFeatureManager featureManager;
+        private readonly IFeatureChecker featureChecker;
+        private readonly IPermissionManager permissionManager;
+        private readonly IUserNavigationManager userNavigationManager;
+        private readonly ISettingDefinitionManager settingDefinitionManager;
+        private readonly ISettingManager settingManager;
+        private readonly IStudioXAntiForgeryConfiguration studioXAntiForgeryConfiguration;
+        private readonly IStudioXSession studioXSession;
+        private readonly IPermissionChecker permissionChecker;
+
+        public IStudioXSession StudioXSession => studioXSession;
 
         public StudioXUserConfigurationBuilder(
             IMultiTenancyConfig multiTenancyConfig,
@@ -49,18 +51,18 @@ namespace StudioX.Web.Configuration
             IStudioXSession studioxSession,
             IPermissionChecker permissionChecker)
         {
-            _multiTenancyConfig = multiTenancyConfig;
-            _languageManager = languageManager;
-            _localizationManager = localizationManager;
-            _featureManager = featureManager;
-            _featureChecker = featureChecker;
-            _permissionManager = permissionManager;
-            _userNavigationManager = userNavigationManager;
-            _settingDefinitionManager = settingDefinitionManager;
-            _settingManager = settingManager;
-            _studioXAntiForgeryConfiguration = studioxAntiForgeryConfiguration;
-            _studioXSession = studioxSession;
-            _permissionChecker = permissionChecker;
+            this.multiTenancyConfig = multiTenancyConfig;
+            this.languageManager = languageManager;
+            this.localizationManager = localizationManager;
+            this.featureManager = featureManager;
+            this.featureChecker = featureChecker;
+            this.permissionManager = permissionManager;
+            this.userNavigationManager = userNavigationManager;
+            this.settingDefinitionManager = settingDefinitionManager;
+            this.settingManager = settingManager;
+            studioXAntiForgeryConfiguration = studioxAntiForgeryConfiguration;
+            studioXSession = studioxSession;
+            this.permissionChecker = permissionChecker;
         }
 
         public async Task<StudioXUserConfigurationDto> GetAll()
@@ -84,7 +86,7 @@ namespace StudioX.Web.Configuration
         {
             return new StudioXMultiTenancyConfigDto
             {
-                IsEnabled = _multiTenancyConfig.IsEnabled
+                IsEnabled = multiTenancyConfig.IsEnabled
             };
         }
 
@@ -92,18 +94,18 @@ namespace StudioX.Web.Configuration
         {
             return new StudioXUserSessionConfigDto
             {
-                UserId = _studioXSession.UserId,
-                TenantId = _studioXSession.TenantId,
-                ImpersonatorUserId = _studioXSession.ImpersonatorUserId,
-                ImpersonatorTenantId = _studioXSession.ImpersonatorTenantId,
-                MultiTenancySide = _studioXSession.MultiTenancySide
+                UserId = StudioXSession.UserId,
+                TenantId = StudioXSession.TenantId,
+                ImpersonatorUserId = StudioXSession.ImpersonatorUserId,
+                ImpersonatorTenantId = StudioXSession.ImpersonatorTenantId,
+                MultiTenancySide = StudioXSession.MultiTenancySide
             };
         }
 
         private StudioXUserLocalizationConfigDto GetUserLocalizationConfig()
         {
             var currentCulture = CultureInfo.CurrentUICulture;
-            var languages = _languageManager.GetLanguages();
+            var languages = languageManager.GetLanguages();
 
             var config = new StudioXUserLocalizationConfigDto
             {
@@ -117,10 +119,10 @@ namespace StudioX.Web.Configuration
 
             if (languages.Count > 0)
             {
-                config.CurrentLanguage = _languageManager.CurrentLanguage;
+                config.CurrentLanguage = languageManager.CurrentLanguage;
             }
 
-            var sources = _localizationManager.GetAllSources().OrderBy(s => s.Name).ToArray();
+            var sources = localizationManager.GetAllSources().OrderBy(s => s.Name).ToArray();
             config.Sources = sources.Select(s => new StudioXLocalizationSourceDto
             {
                 Name = s.Name,
@@ -146,14 +148,14 @@ namespace StudioX.Web.Configuration
                 AllFeatures = new Dictionary<string, StudioXStringValueDto>()
             };
 
-            var allFeatures = _featureManager.GetAll().ToList();
+            var allFeatures = featureManager.GetAll().ToList();
 
-            if (_studioXSession.TenantId.HasValue)
+            if (StudioXSession.TenantId.HasValue)
             {
-                var currentTenantId = _studioXSession.GetTenantId();
+                var currentTenantId = StudioXSession.GetTenantId();
                 foreach (var feature in allFeatures)
                 {
-                    var value = await _featureChecker.GetValueAsync(currentTenantId, feature.Name);
+                    var value = await featureChecker.GetValueAsync(currentTenantId, feature.Name);
                     config.AllFeatures.Add(feature.Name, new StudioXStringValueDto
                     {
                         Value = value
@@ -178,14 +180,14 @@ namespace StudioX.Web.Configuration
         {
             var config = new StudioXUserAuthConfigDto();
 
-            var allPermissionNames = _permissionManager.GetAllPermissions(false).Select(p => p.Name).ToList();
+            var allPermissionNames = permissionManager.GetAllPermissions(false).Select(p => p.Name).ToList();
             var grantedPermissionNames = new List<string>();
 
-            if (_studioXSession.UserId.HasValue)
+            if (StudioXSession.UserId.HasValue)
             {
                 foreach (var permissionName in allPermissionNames)
                 {
-                    if (await _permissionChecker.IsGrantedAsync(permissionName))
+                    if (await permissionChecker.IsGrantedAsync(permissionName))
                     {
                         grantedPermissionNames.Add(permissionName);
                     }
@@ -200,7 +202,7 @@ namespace StudioX.Web.Configuration
 
         private async Task<StudioXUserNavConfigDto> GetUserNavConfig()
         {
-            var userMenus = await _userNavigationManager.GetMenusAsync(_studioXSession.ToUserIdentifier());
+            var userMenus = await userNavigationManager.GetMenusAsync(StudioXSession.ToUserIdentifier());
             return new StudioXUserNavConfigDto
             {
                 Menus = userMenus.ToDictionary(userMenu => userMenu.Name, userMenu => userMenu)
@@ -214,13 +216,13 @@ namespace StudioX.Web.Configuration
                 Values = new Dictionary<string, string>()
             };
 
-            var settingDefinitions = _settingDefinitionManager
+            var settingDefinitions = settingDefinitionManager
                 .GetAllSettingDefinitions()
                 .Where(sd => sd.IsVisibleToClients);
 
             foreach (var settingDefinition in settingDefinitions)
             {
-                var settingValue = await _settingManager.GetSettingValueAsync(settingDefinition.Name);
+                var settingValue = await settingManager.GetSettingValueAsync(settingDefinition.Name);
                 config.Values.Add(settingDefinition.Name, settingValue);
             }
 
@@ -237,7 +239,7 @@ namespace StudioX.Web.Configuration
 
         private async Task<StudioXUserTimingConfigDto> GetUserTimingConfig()
         {
-            var timezoneId = await _settingManager.GetSettingValueAsync(TimingSettingNames.TimeZone);
+            var timezoneId = await settingManager.GetSettingValueAsync(TimingSettingNames.TimeZone);
             var timezone = TimeZoneInfo.FindSystemTimeZoneById(timezoneId);
 
             return new StudioXUserTimingConfigDto
@@ -265,8 +267,8 @@ namespace StudioX.Web.Configuration
             {
                 AntiForgery = new StudioXUserAntiForgeryConfigDto
                 {
-                    TokenCookieName = _studioXAntiForgeryConfiguration.TokenCookieName,
-                    TokenHeaderName = _studioXAntiForgeryConfiguration.TokenHeaderName
+                    TokenCookieName = studioXAntiForgeryConfiguration.TokenCookieName,
+                    TokenHeaderName = studioXAntiForgeryConfiguration.TokenHeaderName
                 }
             };
         }

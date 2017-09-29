@@ -7,11 +7,11 @@ namespace StudioX.Boilerplate.EntityFrameworkCore.Seed.Host
 {
     public class DefaultSettingsCreator
     {
-        private readonly BoilerplateDbContext _context;
+        private readonly BoilerplateDbContext context;
 
         public DefaultSettingsCreator(BoilerplateDbContext context)
         {
-            _context = context;
+            this.context = context;
         }
 
         public void Create()
@@ -26,13 +26,13 @@ namespace StudioX.Boilerplate.EntityFrameworkCore.Seed.Host
 
         private void AddSettingIfNotExists(string name, string value, int? tenantId = null)
         {
-            if (_context.Settings.Any(s => s.Name == name && s.TenantId == tenantId && s.UserId == null))
+            if (context.Settings.Any(s => s.Name == name && s.TenantId == tenantId && s.UserId == null))
             {
                 return;
             }
 
-            _context.Settings.Add(new Setting(tenantId, null, name, value));
-            _context.SaveChanges();
+            context.Settings.Add(new Setting(tenantId, null, name, value));
+            context.SaveChanges();
         }
     }
 }

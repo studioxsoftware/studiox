@@ -24,7 +24,7 @@ namespace StudioX.Localization.Dictionaries
 
         protected ILocalizationConfiguration LocalizationConfiguration { get; private set; }
 
-        private ILogger _logger;
+        private ILogger logger;
 
         /// <summary>
         /// 
@@ -45,7 +45,7 @@ namespace StudioX.Localization.Dictionaries
         {
             LocalizationConfiguration = configuration;
 
-            _logger = iocResolver.IsRegistered(typeof(ILoggerFactory))
+            logger = iocResolver.IsRegistered(typeof(ILoggerFactory))
                 ? iocResolver.Resolve<ILoggerFactory>().Create(typeof(DictionaryBasedLocalizationSource))
                 : NullLogger.Instance;
 
@@ -198,7 +198,7 @@ namespace StudioX.Localization.Dictionaries
                 Name,
                 name,
                 culture,
-                _logger
+                logger
             );
         }
 

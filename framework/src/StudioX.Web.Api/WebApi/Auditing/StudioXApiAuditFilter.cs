@@ -15,11 +15,11 @@ namespace StudioX.WebApi.Auditing
     {
         public bool AllowMultiple => false;
 
-        private readonly IAuditingHelper _auditingHelper;
+        private readonly IAuditingHelper auditingHelper;
 
         public StudioXApiAuditFilter(IAuditingHelper auditingHelper)
         {
-            _auditingHelper = auditingHelper;
+            this.auditingHelper = auditingHelper;
         }
 
         public async Task<HttpResponseMessage> ExecuteActionFilterAsync(HttpActionContext actionContext, CancellationToken cancellationToken, Func<Task<HttpResponseMessage>> continuation)
@@ -30,7 +30,7 @@ namespace StudioX.WebApi.Auditing
                 return await continuation();
             }
 
-            var auditInfo = _auditingHelper.CreateAuditInfo(
+            var auditInfo = auditingHelper.CreateAuditInfo(
                 actionContext.ActionDescriptor.ControllerDescriptor.ControllerType,
                 method,
                 actionContext.ActionArguments
@@ -51,7 +51,7 @@ namespace StudioX.WebApi.Auditing
             {
                 stopwatch.Stop();
                 auditInfo.ExecutionDuration = Convert.ToInt32(stopwatch.Elapsed.TotalMilliseconds);
-                await _auditingHelper.SaveAsync(auditInfo);
+                await auditingHelper.SaveAsync(auditInfo);
             }
         }
 
@@ -62,7 +62,7 @@ namespace StudioX.WebApi.Auditing
                 return false;
             }
 
-            return _auditingHelper.ShouldSaveAudit(context.ActionDescriptor.GetMethodInfoOrNull(), true);
+            return auditingHelper.ShouldSaveAudit(context.ActionDescriptor.GetMethodInfoOrNull(), true);
         }
     }
 }

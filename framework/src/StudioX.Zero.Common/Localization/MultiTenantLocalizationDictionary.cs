@@ -17,12 +17,12 @@ namespace StudioX.Localization
     public class MultiTenantLocalizationDictionary :
         IMultiTenantLocalizationDictionary
     {
-        private readonly string _sourceName;
-        private readonly ILocalizationDictionary _internalDictionary;
-        private readonly IRepository<ApplicationLanguageText, long> _customLocalizationRepository;
-        private readonly ICacheManager _cacheManager;
-        private readonly IStudioXSession _session;
-        private readonly IUnitOfWorkManager _unitOfWorkManager;
+        private readonly string sourceName;
+        private readonly ILocalizationDictionary internalDictionary;
+        private readonly IRepository<ApplicationLanguageText, long> customLocalizationRepository;
+        private readonly ICacheManager cacheManager;
+        private readonly IStudioXSession session;
+        private readonly IUnitOfWorkManager unitOfWorkManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MultiTenantLocalizationDictionary"/> class.
@@ -35,31 +35,33 @@ namespace StudioX.Localization
             IStudioXSession session,
             IUnitOfWorkManager unitOfWorkManager)
         {
-            _sourceName = sourceName;
-            _internalDictionary = internalDictionary;
-            _customLocalizationRepository = customLocalizationRepository;
-            _cacheManager = cacheManager;
-            _session = session;
-            _unitOfWorkManager = unitOfWorkManager;
+            this.sourceName = sourceName;
+            this.internalDictionary = internalDictionary;
+            this.customLocalizationRepository = customLocalizationRepository;
+            this.cacheManager = cacheManager;
+            this.session = session;
+            this.unitOfWorkManager = unitOfWorkManager;
         }
 
-        public CultureInfo CultureInfo { get { return _internalDictionary.CultureInfo; } }
+        public CultureInfo CultureInfo => InternalDictionary.CultureInfo;
+
+        public ILocalizationDictionary InternalDictionary => internalDictionary;
 
         public string this[string name]
         {
-            get { return _internalDictionary[name]; }
-            set { _internalDictionary[name] = value; }
+            get => InternalDictionary[name];
+            set => InternalDictionary[name] = value;
         }
 
         public LocalizedString GetOrNull(string name)
         {
-            return GetOrNull(_session.TenantId, name);
+            return GetOrNull(session.TenantId, name);
         }
 
         public LocalizedString GetOrNull(int? tenantId, string name)
         {
             //Get cache
-            var cache = _cacheManager.GetMultiTenantLocalizationDictionaryCache();
+            var cache = cacheManager.GetMultiTenantLocalizationDictionaryCache();
 
             //Get for current tenant
             var dictionary = cache.Get(CalculateCacheKey(tenantId), () => GetAllValuesFromDatabase(tenantId));
@@ -81,7 +83,7 @@ namespace StudioX.Localization
             }
 
             //Not found in database, fall back to internal dictionary
-            var internalLocalizedString = _internalDictionary.GetOrNull(name);
+            var internalLocalizedString = InternalDictionary.GetOrNull(name);
             if (internalLocalizedString != null)
             {
                 return internalLocalizedString;
@@ -93,18 +95,18 @@ namespace StudioX.Localization
 
         public IReadOnlyList<LocalizedString> GetAllStrings()
         {
-            return GetAllStrings(_session.TenantId);
+            return GetAllStrings(session.TenantId);
         }
 
         public IReadOnlyList<LocalizedString> GetAllStrings(int? tenantId)
         {
             //Get cache
-            var cache = _cacheManager.GetMultiTenantLocalizationDictionaryCache();
+            var cache = cacheManager.GetMultiTenantLocalizationDictionaryCache();
 
             //Create a temp dictionary to build (by underlying dictionary)
             var dictionary = new Dictionary<string, LocalizedString>();
 
-            foreach (var localizedString in _internalDictionary.GetAllStrings())
+            foreach (var localizedString in InternalDictionary.GetAllStrings())
             {
                 dictionary[localizedString.Name] = localizedString;
             }
@@ -131,16 +133,16 @@ namespace StudioX.Localization
 
         private string CalculateCacheKey(int? tenantId)
         {
-            return MultiTenantLocalizationDictionaryCacheHelper.CalculateCacheKey(tenantId, _sourceName, CultureInfo.Name);
+            return MultiTenantLocalizationDictionaryCacheHelper.CalculateCacheKey(tenantId, sourceName, CultureInfo.Name);
         }
 
         [UnitOfWork]
         protected virtual Dictionary<string, string> GetAllValuesFromDatabase(int? tenantId)
         {
-            using (_unitOfWorkManager.Current.SetTenantId(tenantId))
+            using (unitOfWorkManager.Current.SetTenantId(tenantId))
             {
-                return _customLocalizationRepository
-                    .GetAllList(l => l.Source == _sourceName && l.LanguageName == CultureInfo.Name)
+                return customLocalizationRepository
+                    .GetAllList(l => l.Source == sourceName && l.LanguageName == CultureInfo.Name)
                     .ToDictionary(l => l.Key, l => l.Value);
             }
         }

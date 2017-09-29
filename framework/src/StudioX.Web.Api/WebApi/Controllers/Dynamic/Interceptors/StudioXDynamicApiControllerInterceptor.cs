@@ -16,7 +16,7 @@ namespace StudioX.WebApi.Controllers.Dynamic.Interceptors
         /// <summary>
         /// Real object instance to call it's methods when dynamic controller's methods are called.
         /// </summary>
-        private readonly T _proxiedObject;
+        private readonly T proxiedObject;
 
         /// <summary>
         /// Creates a new StudioXDynamicApiControllerInterceptor object.
@@ -24,7 +24,7 @@ namespace StudioX.WebApi.Controllers.Dynamic.Interceptors
         /// <param name="proxiedObject">Real object instance to call it's methods when dynamic controller's methods are called</param>
         public StudioXDynamicApiControllerInterceptor(T proxiedObject)
         {
-            _proxiedObject = proxiedObject;
+            this.proxiedObject = proxiedObject;
         }
 
         /// <summary>
@@ -39,14 +39,11 @@ namespace StudioX.WebApi.Controllers.Dynamic.Interceptors
                 //Call real object's method
                 try
                 {
-                    invocation.ReturnValue = invocation.Method.Invoke(_proxiedObject, invocation.Arguments);
+                    invocation.ReturnValue = invocation.Method.Invoke(proxiedObject, invocation.Arguments);
                 }
                 catch (TargetInvocationException targetInvocation)
                 {
-                    if (targetInvocation.InnerException != null)
-                    {
-                        targetInvocation.InnerException.ReThrow();
-                    }
+                    targetInvocation.InnerException?.ReThrow();
 
                     throw;
                 }

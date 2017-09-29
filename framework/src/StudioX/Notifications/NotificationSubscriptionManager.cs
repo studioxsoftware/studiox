@@ -12,9 +12,9 @@ namespace StudioX.Notifications
     /// </summary>
     public class NotificationSubscriptionManager : INotificationSubscriptionManager, ITransientDependency
     {
-        private readonly INotificationStore _store;
-        private readonly INotificationDefinitionManager _notificationDefinitionManager;
-        private readonly IGuidGenerator _guidGenerator;
+        private readonly INotificationStore store;
+        private readonly INotificationDefinitionManager notificationDefinitionManager;
+        private readonly IGuidGenerator guidGenerator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NotificationSubscriptionManager"/> class.
@@ -24,9 +24,9 @@ namespace StudioX.Notifications
             INotificationDefinitionManager notificationDefinitionManager,
             IGuidGenerator guidGenerator)
         {
-            _store = store;
-            _notificationDefinitionManager = notificationDefinitionManager;
-            _guidGenerator = guidGenerator;
+            this.store = store;
+            this.notificationDefinitionManager = notificationDefinitionManager;
+            this.guidGenerator = guidGenerator;
         }
 
         public async Task SubscribeAsync(UserIdentifier user, string notificationName, EntityIdentifier entityIdentifier = null)
@@ -36,9 +36,9 @@ namespace StudioX.Notifications
                 return;
             }
 
-            await _store.InsertSubscriptionAsync(
+            await store.InsertSubscriptionAsync(
                 new NotificationSubscriptionInfo(
-                    _guidGenerator.Create(),
+                    guidGenerator.Create(),
                     user.TenantId,
                     user.UserId,
                     notificationName,
@@ -49,7 +49,7 @@ namespace StudioX.Notifications
 
         public async Task SubscribeToAllAvailableNotificationsAsync(UserIdentifier user)
         {
-            var notificationDefinitions = (await _notificationDefinitionManager
+            var notificationDefinitions = (await notificationDefinitionManager
                 .GetAllAvailableAsync(user))
                 .Where(nd => nd.EntityType == null)
                 .ToList();
@@ -62,7 +62,7 @@ namespace StudioX.Notifications
 
         public async Task UnsubscribeAsync(UserIdentifier user, string notificationName, EntityIdentifier entityIdentifier = null)
         {
-            await _store.DeleteSubscriptionAsync(
+            await store.DeleteSubscriptionAsync(
                 user,
                 notificationName,
                 entityIdentifier == null ? null : entityIdentifier.Type.FullName,
@@ -73,7 +73,7 @@ namespace StudioX.Notifications
         // TODO: Can work only for single database approach!
         public async Task<List<NotificationSubscription>> GetSubscriptionsAsync(string notificationName, EntityIdentifier entityIdentifier = null)
         {
-            var notificationSubscriptionInfos = await _store.GetSubscriptionsAsync(
+            var notificationSubscriptionInfos = await store.GetSubscriptionsAsync(
                 notificationName,
                 entityIdentifier == null ? null : entityIdentifier.Type.FullName,
                 entityIdentifier == null ? null : entityIdentifier.Id.ToJsonString()
@@ -86,7 +86,7 @@ namespace StudioX.Notifications
 
         public async Task<List<NotificationSubscription>> GetSubscriptionsAsync(int? tenantId, string notificationName, EntityIdentifier entityIdentifier = null)
         {
-            var notificationSubscriptionInfos = await _store.GetSubscriptionsAsync(
+            var notificationSubscriptionInfos = await store.GetSubscriptionsAsync(
                 new[] { tenantId },
                 notificationName,
                 entityIdentifier == null ? null : entityIdentifier.Type.FullName,
@@ -100,7 +100,7 @@ namespace StudioX.Notifications
 
         public async Task<List<NotificationSubscription>> GetSubscribedNotificationsAsync(UserIdentifier user)
         {
-            var notificationSubscriptionInfos = await _store.GetSubscriptionsAsync(user);
+            var notificationSubscriptionInfos = await store.GetSubscriptionsAsync(user);
 
             return notificationSubscriptionInfos
                 .Select(nsi => nsi.ToNotificationSubscription())
@@ -109,7 +109,7 @@ namespace StudioX.Notifications
 
         public Task<bool> IsSubscribedAsync(UserIdentifier user, string notificationName, EntityIdentifier entityIdentifier = null)
         {
-            return _store.IsSubscribedAsync(
+            return store.IsSubscribedAsync(
                 user,
                 notificationName,
                 entityIdentifier == null ? null : entityIdentifier.Type.FullName,

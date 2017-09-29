@@ -11,7 +11,7 @@ namespace StudioX.Net.Mail.Smtp
     /// </summary>
     public class SmtpEmailSender : EmailSenderBase, ISmtpEmailSender, ITransientDependency
     {
-        private readonly ISmtpEmailSenderConfiguration _configuration;
+        private readonly ISmtpEmailSenderConfiguration configuration;
 
         /// <summary>
         /// Creates a new <see cref="SmtpEmailSender"/>.
@@ -20,23 +20,23 @@ namespace StudioX.Net.Mail.Smtp
         public SmtpEmailSender(ISmtpEmailSenderConfiguration configuration)
             : base(configuration)
         {
-            _configuration = configuration;
+            this.configuration = configuration;
         }
 
         public SmtpClient BuildClient()
         {
-            var host = _configuration.Host;
-            var port = _configuration.Port;
+            var host = configuration.Host;
+            var port = configuration.Port;
 
             var smtpClient = new SmtpClient(host, port);
             try
             {
-                if (_configuration.EnableSsl)
+                if (configuration.EnableSsl)
                 {
                     smtpClient.EnableSsl = true;
                 }
 
-                if (_configuration.UseDefaultCredentials)
+                if (configuration.UseDefaultCredentials)
                 {
                     smtpClient.UseDefaultCredentials = true;
                 }
@@ -44,11 +44,11 @@ namespace StudioX.Net.Mail.Smtp
                 {
                     smtpClient.UseDefaultCredentials = false;
 
-                    var userName = _configuration.UserName;
+                    var userName = configuration.UserName;
                     if (!userName.IsNullOrEmpty())
                     {
-                        var password = _configuration.Password;
-                        var domain = _configuration.Domain;
+                        var password = configuration.Password;
+                        var domain = configuration.Domain;
                         smtpClient.Credentials = !domain.IsNullOrEmpty()
                             ? new NetworkCredential(userName, password, domain)
                             : new NetworkCredential(userName, password);

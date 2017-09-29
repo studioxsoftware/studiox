@@ -12,9 +12,9 @@ namespace StudioX.Localization
     /// </summary>
     public class ApplicationLanguageTextManager : IApplicationLanguageTextManager, ITransientDependency
     {
-        private readonly ILocalizationManager _localizationManager;
-        private readonly IRepository<ApplicationLanguageText, long> _applicationTextRepository;
-        private readonly IUnitOfWorkManager _unitOfWorkManager;
+        private readonly ILocalizationManager localizationManager;
+        private readonly IRepository<ApplicationLanguageText, long> applicationTextRepository;
+        private readonly IUnitOfWorkManager unitOfWorkManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ApplicationLanguageTextManager"/> class.
@@ -24,9 +24,9 @@ namespace StudioX.Localization
             IRepository<ApplicationLanguageText, long> applicationTextRepository,
             IUnitOfWorkManager unitOfWorkManager)
         {
-            _localizationManager = localizationManager;
-            _applicationTextRepository = applicationTextRepository;
-            _unitOfWorkManager = unitOfWorkManager;
+            this.localizationManager = localizationManager;
+            this.applicationTextRepository = applicationTextRepository;
+            this.unitOfWorkManager = unitOfWorkManager;
         }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace StudioX.Localization
         /// <param name="tryDefaults">True: fallbacks to default languages if can not find in given culture</param>
         public string GetStringOrNull(int? tenantId, string sourceName, CultureInfo culture, string key, bool tryDefaults = true)
         {
-            var source = _localizationManager.GetSource(sourceName);
+            var source = localizationManager.GetSource(sourceName);
 
             if (!(source is IMultiTenantLocalizationSource))
             {
@@ -62,9 +62,9 @@ namespace StudioX.Localization
         [UnitOfWork]
         public virtual async Task UpdateStringAsync(int? tenantId, string sourceName, CultureInfo culture, string key, string value)
         {
-            using (_unitOfWorkManager.Current.SetTenantId(tenantId))
+            using (unitOfWorkManager.Current.SetTenantId(tenantId))
             {
-                var existingEntity = await _applicationTextRepository.FirstOrDefaultAsync(t =>
+                var existingEntity = await applicationTextRepository.FirstOrDefaultAsync(t =>
                     t.Source == sourceName &&
                     t.LanguageName == culture.Name &&
                     t.Key == key
@@ -75,12 +75,12 @@ namespace StudioX.Localization
                     if (existingEntity.Value != value)
                     {
                         existingEntity.Value = value;
-                        await _unitOfWorkManager.Current.SaveChangesAsync();
+                        await unitOfWorkManager.Current.SaveChangesAsync();
                     }
                 }
                 else
                 {
-                    await _applicationTextRepository.InsertAsync(
+                    await applicationTextRepository.InsertAsync(
                         new ApplicationLanguageText
                         {
                            TenantId = tenantId,
@@ -89,7 +89,7 @@ namespace StudioX.Localization
                            Key = key,
                            Value = value
                         });
-                    await _unitOfWorkManager.Current.SaveChangesAsync();
+                    await unitOfWorkManager.Current.SaveChangesAsync();
                 }
             }
         }

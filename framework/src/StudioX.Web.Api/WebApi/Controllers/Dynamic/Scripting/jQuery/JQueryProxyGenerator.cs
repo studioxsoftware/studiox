@@ -6,13 +6,13 @@ namespace StudioX.WebApi.Controllers.Dynamic.Scripting.jQuery
 {
     internal class JQueryProxyGenerator : IScriptProxyGenerator
     {
-        private readonly DynamicApiControllerInfo _controllerInfo;
-        private readonly bool _defineAmdModule;
+        private readonly DynamicApiControllerInfo controllerInfo;
+        private readonly bool defineAmdModule;
 
         public JQueryProxyGenerator(DynamicApiControllerInfo controllerInfo, bool defineAmdModule = true)
         {
-            _controllerInfo = controllerInfo;
-            _defineAmdModule = defineAmdModule;
+            this.controllerInfo = controllerInfo;
+            this.defineAmdModule = defineAmdModule;
         }
 
         public string Generate()
@@ -21,27 +21,27 @@ namespace StudioX.WebApi.Controllers.Dynamic.Scripting.jQuery
 
             script.AppendLine("(function(){");
             script.AppendLine();
-            script.AppendLine("    var serviceNamespace = studiox.utils.createNamespace(studiox, 'services." + _controllerInfo.ServiceName.Replace("/", ".") + "');");
+            script.AppendLine("    var serviceNamespace = studiox.utils.createNamespace(studiox, 'services." + controllerInfo.ServiceName.Replace("/", ".") + "');");
             script.AppendLine();
 
             //generate all methods
-            foreach (var methodInfo in _controllerInfo.Actions.Values)
+            foreach (var methodInfo in controllerInfo.Actions.Values)
             {
-                AppendMethod(script, _controllerInfo, methodInfo);
+                AppendMethod(script, controllerInfo, methodInfo);
                 script.AppendLine();
             }
 
             //generate amd module definition
-            if (_defineAmdModule)
+            if (defineAmdModule)
             {
                 script.AppendLine("    if(typeof define === 'function' && define.amd){");
                 script.AppendLine("        define(function (require, exports, module) {");
                 script.AppendLine("            return {");
 
                 var methodNo = 0;
-                foreach (var methodInfo in _controllerInfo.Actions.Values)
+                foreach (var methodInfo in controllerInfo.Actions.Values)
                 {
-                    script.AppendLine("                '" + methodInfo.ActionName.ToCamelCase() + "' : serviceNamespace" + ProxyScriptingJsFuncHelper.WrapWithBracketsOrWithDotPrefix(methodInfo.ActionName.ToCamelCase()) + ((methodNo++) < (_controllerInfo.Actions.Count - 1) ? "," : ""));
+                    script.AppendLine("                '" + methodInfo.ActionName.ToCamelCase() + "' : serviceNamespace" + ProxyScriptingJsFuncHelper.WrapWithBracketsOrWithDotPrefix(methodInfo.ActionName.ToCamelCase()) + ((methodNo++) < (controllerInfo.Actions.Count - 1) ? "," : ""));
                 }
 
                 script.AppendLine("            };");

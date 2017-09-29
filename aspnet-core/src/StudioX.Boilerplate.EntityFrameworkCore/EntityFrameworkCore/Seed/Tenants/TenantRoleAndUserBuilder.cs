@@ -7,6 +7,7 @@ using StudioX.Boilerplate.Authorization;
 using StudioX.Boilerplate.Authorization.Roles;
 using StudioX.Boilerplate.Authorization.Users;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
 namespace StudioX.Boilerplate.EntityFrameworkCore.Seed.Tenants
@@ -31,7 +32,8 @@ namespace StudioX.Boilerplate.EntityFrameworkCore.Seed.Tenants
         {
             //Admin role
 
-            var adminRole = context.Roles.FirstOrDefault(r => r.TenantId == tenantId && r.Name == StaticRoleNames.Tenants.Admin);
+            var adminRole = context.Roles.IgnoreQueryFilters()
+                .FirstOrDefault(r => r.TenantId == tenantId && r.Name == StaticRoleNames.Tenants.Admin);
             if (adminRole == null)
             {
                 adminRole = context.Roles.Add(new Role(tenantId, StaticRoleNames.Tenants.Admin, StaticRoleNames.Tenants.Admin) { IsStatic = true }).Entity;
@@ -60,7 +62,8 @@ namespace StudioX.Boilerplate.EntityFrameworkCore.Seed.Tenants
 
             //admin user
 
-            var adminUser = context.Users.FirstOrDefault(u => u.TenantId == tenantId && u.UserName == StudioXUserBase.AdminUserName);
+            var adminUser = context.Users.IgnoreQueryFilters()
+                .FirstOrDefault(u => u.TenantId == tenantId && u.UserName == StudioXUserBase.AdminUserName);
             if (adminUser == null)
             {
                 adminUser = User.CreateTenantAdminUser(tenantId, "admin@defaulttenant.com");

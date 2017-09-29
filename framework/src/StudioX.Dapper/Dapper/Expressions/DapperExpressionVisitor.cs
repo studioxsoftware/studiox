@@ -17,15 +17,15 @@ namespace StudioX.Dapper.Expressions
     /// <seealso cref="System.Linq.Expressions.ExpressionVisitor" />
     internal class DapperExpressionVisitor<TEntity, TPrimaryKey> : ExpressionVisitor where TEntity : class, IEntity<TPrimaryKey>
     {
-        private PredicateGroup _pg;
-        private Expression _processedProperty;
-        private bool _unarySpecified;
-        private Stack<PredicateGroup> _predicateGroupStack;
-        public PredicateGroup _currentGroup { get; set; }
+        private PredicateGroup pg;
+        private Expression processedProperty;
+        private bool unarySpecified;
+        private readonly Stack<PredicateGroup> predicateGroupStack;
+        public PredicateGroup CurrentGroup { get; set; }
         public DapperExpressionVisitor()
         {
             Expressions = new HashSet<Expression>();
-            _predicateGroupStack = new Stack<PredicateGroup>();
+            predicateGroupStack = new Stack<PredicateGroup>();
         }
 
         /// <summary>
@@ -35,17 +35,17 @@ namespace StudioX.Dapper.Expressions
 
         public IPredicate Process(Expression exp)
         {
-            _pg = new PredicateGroup { Predicates = new List<IPredicate>() };
-            _currentGroup = _pg;
+            pg = new PredicateGroup { Predicates = new List<IPredicate>() };
+            CurrentGroup = pg;
             Visit(Evaluator.PartialEval(exp));
 
             // the 1st expression determines root group operator
             if (Expressions.Any())
             {
-                _pg.Operator = Expressions.First().NodeType == ExpressionType.OrElse ? GroupOperator.Or : GroupOperator.And;
+                pg.Operator = Expressions.First().NodeType == ExpressionType.OrElse ? GroupOperator.Or : GroupOperator.And;
             }
 
-            return _pg.Predicates.Count == 1 ? _pg.Predicates[0] : _pg;
+            return pg.Predicates.Count == 1 ? pg.Predicates[0] : pg;
         }
 
         private static Operator DetermineOperator(Expression binaryExpression)
@@ -69,7 +69,7 @@ namespace StudioX.Dapper.Expressions
 
         private IFieldPredicate GetCurrentField()
         {
-            return GetCurrentField(_currentGroup);
+            return GetCurrentField(CurrentGroup);
         }
 
         private IFieldPredicate GetCurrentField(IPredicateGroup group)
@@ -84,7 +84,7 @@ namespace StudioX.Dapper.Expressions
 
         private void AddField(MemberExpression exp, Operator op = Operator.Eq, object value = null, bool not = false)
         {
-            PredicateGroup pg = _currentGroup;
+            PredicateGroup pg = CurrentGroup;
 
             // need convert from Expression<Func<T, bool>> to Expression<Func<T, object>> as this is what Predicates.Field() requires
             Expression<Func<TEntity, object>> fieldExp = Expression.Lambda<Func<TEntity, object>>(Expression.Convert(exp, typeof(object)), exp.Expression as ParameterExpression);
@@ -108,9 +108,9 @@ namespace StudioX.Dapper.Expressions
                     Predicates = new List<IPredicate>(),
                     Operator = nt == ExpressionType.OrElse ? GroupOperator.Or : GroupOperator.And
                 };
-                _currentGroup.Predicates.Add(pg);
-                _predicateGroupStack.Push(_currentGroup);
-                _currentGroup = pg;
+                CurrentGroup.Predicates.Add(pg);
+                predicateGroupStack.Push(CurrentGroup);
+                CurrentGroup = pg;
 
             }
 
@@ -130,7 +130,7 @@ namespace StudioX.Dapper.Expressions
             Visit(node.Right);
             if (nt == ExpressionType.OrElse || nt == ExpressionType.AndAlso)
             {
-                _currentGroup = _predicateGroupStack.Pop();
+                CurrentGroup = predicateGroupStack.Pop();
             }
             return node;
         }
@@ -143,9 +143,9 @@ namespace StudioX.Dapper.Expressions
             }
 
             // skip if prop is part of a VisitMethodCall
-            if (_processedProperty != null && _processedProperty == node)
+            if (processedProperty != null && processedProperty == node)
             {
-                _processedProperty = null;
+                processedProperty = null;
                 return node;
             }
 
@@ -187,13 +187,13 @@ namespace StudioX.Dapper.Expressions
                 }
 
                 // this is a PropertyExpression but as it's internal, to use, we cast to the base MemberExpression instead (see http://social.msdn.microsoft.com/Forums/en-US/ab528f6a-a60e-4af6-bf31-d58e3f373356/resolving-propertyexpressions-and-fieldexpressions-in-a-custom-linq-provider)
-                _processedProperty = node.Object;
-                var me = _processedProperty as MemberExpression;
+                processedProperty = node.Object;
+                var me = processedProperty as MemberExpression;
 
-                AddField(me, op, arg, _unarySpecified);
+                AddField(me, op, arg, unarySpecified);
 
                 // reset if applicable
-                _unarySpecified = false;
+                unarySpecified = false;
 
                 return node;
             }
@@ -208,7 +208,7 @@ namespace StudioX.Dapper.Expressions
                 throw new NotSupportedException($"The unary operator '{node.NodeType}' is not supported");
             }
 
-            _unarySpecified = true;
+            unarySpecified = true;
 
             return base.VisitUnary(node); // returning base because we want to continue further processing - ie subsequent call to VisitMethodCall
         }

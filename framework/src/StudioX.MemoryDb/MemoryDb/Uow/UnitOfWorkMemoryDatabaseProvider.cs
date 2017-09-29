@@ -8,13 +8,13 @@ namespace StudioX.MemoryDb.Uow
     /// </summary>
     public class UnitOfWorkMemoryDatabaseProvider : IMemoryDatabaseProvider, ITransientDependency
     {
-        public MemoryDatabase Database { get { return ((MemoryDbUnitOfWork)_currentUnitOfWork.Current).Database; } }
+        public MemoryDatabase Database => ((MemoryDbUnitOfWork)currentUnitOfWork.Current).Database;
 
-        private readonly ICurrentUnitOfWorkProvider _currentUnitOfWork;
+        private readonly ICurrentUnitOfWorkProvider currentUnitOfWork;
 
         public UnitOfWorkMemoryDatabaseProvider(ICurrentUnitOfWorkProvider currentUnitOfWork)
         {
-            _currentUnitOfWork = currentUnitOfWork;
+            this.currentUnitOfWork = currentUnitOfWork;
         }
     }
 }

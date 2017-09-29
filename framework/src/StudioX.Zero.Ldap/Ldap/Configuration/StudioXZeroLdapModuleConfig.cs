@@ -9,11 +9,11 @@ namespace StudioX.Zero.Ldap.Configuration
 
         public Type AuthenticationSourceType { get; private set; }
 
-        private readonly IStudioXZeroConfig _zeroConfig;
+        private readonly IStudioXZeroConfig zeroConfig;
 
         public StudioXZeroLdapModuleConfig(IStudioXZeroConfig zeroConfig)
         {
-            _zeroConfig = zeroConfig;
+            this.zeroConfig = zeroConfig;
         }
 
         public void Enable(Type authenticationSourceType)
@@ -21,7 +21,7 @@ namespace StudioX.Zero.Ldap.Configuration
             AuthenticationSourceType = authenticationSourceType;
             IsEnabled = true;
 
-            _zeroConfig.UserManagement.ExternalAuthenticationSources.Add(authenticationSourceType);
+            zeroConfig.UserManagement.ExternalAuthenticationSources.Add(authenticationSourceType);
         }
     }
 }

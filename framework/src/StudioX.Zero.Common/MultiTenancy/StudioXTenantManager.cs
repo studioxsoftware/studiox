@@ -42,7 +42,7 @@ namespace StudioX.MultiTenancy
 
         protected IRepository<TenantFeatureSetting, long> TenantFeatureRepository { get; set; }
 
-        private readonly IStudioXZeroFeatureValueStore _featureValueStore;
+        private readonly IStudioXZeroFeatureValueStore featureValueStore;
 
         public StudioXTenantManager(
             IRepository<TTenant> tenantRepository, 
@@ -50,7 +50,7 @@ namespace StudioX.MultiTenancy
             StudioXEditionManager editionManager,
             IStudioXZeroFeatureValueStore featureValueStore)
         {
-            _featureValueStore = featureValueStore;
+            this.featureValueStore = featureValueStore;
             TenantRepository = tenantRepository;
             TenantFeatureRepository = tenantFeatureRepository;
             EditionManager = editionManager;
@@ -109,7 +109,7 @@ namespace StudioX.MultiTenancy
 
         public Task<string> GetFeatureValueOrNullAsync(int tenantId, string featureName)
         {
-            return _featureValueStore.GetValueOrNullAsync(tenantId, featureName);
+            return featureValueStore.GetValueOrNullAsync(tenantId, featureName);
         }
 
         public virtual async Task<IReadOnlyList<NameValue>> GetFeatureValuesAsync(int tenantId)

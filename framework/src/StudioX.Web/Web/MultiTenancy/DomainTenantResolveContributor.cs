@@ -10,20 +10,20 @@ namespace StudioX.Web.MultiTenancy
 {
     public class DomainTenantResolveContributor : ITenantResolveContributor, ITransientDependency
     {
-        private readonly IWebMultiTenancyConfiguration _multiTenancyConfiguration;
-        private readonly ITenantStore _tenantStore;
+        private readonly IWebMultiTenancyConfiguration multiTenancyConfiguration;
+        private readonly ITenantStore tenantStore;
 
         public DomainTenantResolveContributor(
             IWebMultiTenancyConfiguration multiTenancyConfiguration,
             ITenantStore tenantStore)
         {
-            _multiTenancyConfiguration = multiTenancyConfiguration;
-            _tenantStore = tenantStore;
+            this.multiTenancyConfiguration = multiTenancyConfiguration;
+            this.tenantStore = tenantStore;
         }
 
         public int? ResolveTenantId()
         {
-            if (_multiTenancyConfiguration.DomainFormat.IsNullOrEmpty())
+            if (multiTenancyConfiguration.DomainFormat.IsNullOrEmpty())
             {
                 return null;
             }
@@ -35,7 +35,7 @@ namespace StudioX.Web.MultiTenancy
             }
 
             var hostName = httpContext.Request.Url.Host.RemovePreFix("http://", "https://").RemovePostFix("/");
-            var domainFormat = _multiTenancyConfiguration.DomainFormat.RemovePreFix("http://", "https://").Split(':')[0].RemovePostFix("/");
+            var domainFormat = multiTenancyConfiguration.DomainFormat.RemovePreFix("http://", "https://").Split(':')[0].RemovePostFix("/");
             var result = new FormattedStringValueExtracter().Extract(hostName, domainFormat, true);
             if (!result.IsMatch || !result.Matches.Any())
             {
@@ -53,13 +53,9 @@ namespace StudioX.Web.MultiTenancy
                 return null;
             }
 
-            var tenantInfo = _tenantStore.Find(tenancyName);
-            if (tenantInfo == null)
-            {
-                return null;
-            }
+            var tenantInfo = tenantStore.Find(tenancyName);
 
-            return tenantInfo.Id;
+            return tenantInfo?.Id;
         }
     }
 }

@@ -25,16 +25,16 @@ namespace StudioX.Runtime.Validation.Interception
         protected List<ValidationResult> ValidationErrors { get; }
         protected List<IShouldNormalize> ObjectsToBeNormalized { get; }
 
-        private readonly IValidationConfiguration _configuration;
-        private readonly IIocResolver _iocResolver;
+        private readonly IValidationConfiguration configuration;
+        private readonly IIocResolver iocResolver;
 
         /// <summary>
         /// Creates a new <see cref="MethodInvocationValidator"/> instance.
         /// </summary>
         public MethodInvocationValidator(IValidationConfiguration configuration, IIocResolver iocResolver)
         {
-            _configuration = configuration;
-            _iocResolver = iocResolver;
+            this.configuration = configuration;
+            this.iocResolver = iocResolver;
 
             ValidationErrors = new List<ValidationResult>();
             ObjectsToBeNormalized = new List<IShouldNormalize>();
@@ -180,7 +180,7 @@ namespace StudioX.Runtime.Validation.Interception
             (validatingObject as ICustomValidate)?.AddValidationErrors(
                 new CustomValidationContext(
                     ValidationErrors,
-                    _iocResolver
+                    iocResolver
                 )
             );
 
@@ -204,7 +204,7 @@ namespace StudioX.Runtime.Validation.Interception
                 return;
             }
 
-            if (_configuration.IgnoredTypes.Any(t => t.IsInstanceOfType(validatingObject)))
+            if (configuration.IgnoredTypes.Any(t => t.IsInstanceOfType(validatingObject)))
             {
                 return;
             }

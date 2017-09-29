@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using StudioX.Boilerplate.Editions;
 using StudioX.Boilerplate.MultiTenancy;
 
@@ -22,7 +23,8 @@ namespace StudioX.Boilerplate.EntityFrameworkCore.Seed.Tenants
         {
             //Default tenant
 
-            var defaultTenant = context.Tenants.FirstOrDefault(t => t.TenancyName == Tenant.DefaultTenantName);
+            var defaultTenant = context.Tenants.IgnoreQueryFilters()
+                .FirstOrDefault(t => t.TenancyName == Tenant.DefaultTenantName);
             if (defaultTenant == null)
             {
                 defaultTenant = new Tenant(Tenant.DefaultTenantName, Tenant.DefaultTenantName);

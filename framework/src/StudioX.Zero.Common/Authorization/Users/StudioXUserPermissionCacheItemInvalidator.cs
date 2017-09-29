@@ -12,29 +12,29 @@ namespace StudioX.Authorization.Users
 
         ITransientDependency
     {
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheManager cacheManager;
 
         public StudioXUserPermissionCacheItemInvalidator(ICacheManager cacheManager)
         {
-            _cacheManager = cacheManager;
+            this.cacheManager = cacheManager;
         }
 
         public void HandleEvent(EntityChangedEventData<UserPermissionSetting> eventData)
         {
             var cacheKey = eventData.Entity.UserId + "@" + (eventData.Entity.TenantId ?? 0);
-            _cacheManager.GetUserPermissionCache().Remove(cacheKey);
+            cacheManager.GetUserPermissionCache().Remove(cacheKey);
         }
 
         public void HandleEvent(EntityChangedEventData<UserRole> eventData)
         {
             var cacheKey = eventData.Entity.UserId + "@" + (eventData.Entity.TenantId ?? 0);
-            _cacheManager.GetUserPermissionCache().Remove(cacheKey);
+            cacheManager.GetUserPermissionCache().Remove(cacheKey);
         }
 
         public void HandleEvent(EntityDeletedEventData<StudioXUserBase> eventData)
         {
             var cacheKey = eventData.Entity.Id + "@" + (eventData.Entity.TenantId ?? 0);
-            _cacheManager.GetUserPermissionCache().Remove(cacheKey);
+            cacheManager.GetUserPermissionCache().Remove(cacheKey);
         }
     }
 }

@@ -28,6 +28,7 @@ namespace StudioX.Boilerplate.Tests
         public override void PreInitialize()
         {
             Configuration.UnitOfWork.Timeout = TimeSpan.FromMinutes(30);
+            Configuration.UnitOfWork.IsTransactional = false;
 
             //Disable static mapper usage since it breaks unit tests
             Configuration.Modules.StudioXAutoMapper().UseStaticMapper = false;

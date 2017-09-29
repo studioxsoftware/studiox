@@ -21,7 +21,7 @@ namespace StudioX.Runtime.Caching
 
         protected readonly object SyncObj = new object();
 
-        private readonly AsyncLock _asyncLock = new AsyncLock();
+        private readonly AsyncLock asyncLock = new AsyncLock();
 
         /// <summary>
         /// Constructor.
@@ -100,7 +100,7 @@ namespace StudioX.Runtime.Caching
 
             if (item == null)
             {
-                using (await _asyncLock.LockAsync())
+                using (await asyncLock.LockAsync())
                 {
                     try
                     {

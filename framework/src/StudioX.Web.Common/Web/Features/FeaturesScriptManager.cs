@@ -12,20 +12,20 @@ namespace StudioX.Web.Features
     {
         public IStudioXSession StudioXSession { get; set; }
 
-        private readonly IFeatureManager _featureManager;
-        private readonly IFeatureChecker _featureChecker;
+        private readonly IFeatureManager featureManager;
+        private readonly IFeatureChecker featureChecker;
 
         public FeaturesScriptManager(IFeatureManager featureManager, IFeatureChecker featureChecker)
         {
-            _featureManager = featureManager;
-            _featureChecker = featureChecker;
+            this.featureManager = featureManager;
+            this.featureChecker = featureChecker;
 
             StudioXSession = NullStudioXSession.Instance;
         }
 
         public async Task<string> GetScriptAsync()
         {
-            var allFeatures = _featureManager.GetAll().ToList();
+            var allFeatures = featureManager.GetAll().ToList();
             var currentValues = new Dictionary<string, string>();
 
             if (StudioXSession.TenantId.HasValue)
@@ -33,7 +33,7 @@ namespace StudioX.Web.Features
                 var currentTenantId = StudioXSession.GetTenantId();
                 foreach (var feature in allFeatures)
                 {
-                    currentValues[feature.Name] = await _featureChecker.GetValueAsync(currentTenantId, feature.Name);
+                    currentValues[feature.Name] = await featureChecker.GetValueAsync(currentTenantId, feature.Name);
                 }
             }
             else

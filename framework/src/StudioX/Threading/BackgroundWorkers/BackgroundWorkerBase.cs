@@ -24,21 +24,21 @@ namespace StudioX.Threading.BackgroundWorkers
         {
             get
             {
-                if (_unitOfWorkManager == null)
+                if (unitOfWorkManager == null)
                 {
                     throw new StudioXException("Must set UnitOfWorkManager before use it.");
                 }
 
-                return _unitOfWorkManager;
+                return unitOfWorkManager;
             }
-            set { _unitOfWorkManager = value; }
+            set => unitOfWorkManager = value;
         }
-        private IUnitOfWorkManager _unitOfWorkManager;
+        private IUnitOfWorkManager unitOfWorkManager;
 
         /// <summary>
         /// Gets current unit of work.
         /// </summary>
-        protected IActiveUnitOfWork CurrentUnitOfWork { get { return UnitOfWorkManager.Current; } }
+        protected IActiveUnitOfWork CurrentUnitOfWork => UnitOfWorkManager.Current;
 
         /// <summary>
         /// Reference to the localization manager.
@@ -64,15 +64,15 @@ namespace StudioX.Threading.BackgroundWorkers
                     throw new StudioXException("Must set LocalizationSourceName before, in order to get LocalizationSource");
                 }
 
-                if (_localizationSource == null || _localizationSource.Name != LocalizationSourceName)
+                if (localizationSource == null || localizationSource.Name != LocalizationSourceName)
                 {
-                    _localizationSource = LocalizationManager.GetSource(LocalizationSourceName);
+                    localizationSource = LocalizationManager.GetSource(LocalizationSourceName);
                 }
 
-                return _localizationSource;
+                return localizationSource;
             }
         }
-        private ILocalizationSource _localizationSource;
+        private ILocalizationSource localizationSource;
 
         /// <summary>
         /// Reference to the logger to write logs.

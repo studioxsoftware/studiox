@@ -12,16 +12,16 @@ namespace StudioX.WebApi.Controllers
     /// </summary>
     public class StudioXApiControllerActivator : IHttpControllerActivator
     {
-        private readonly IIocResolver _iocResolver;
+        private readonly IIocResolver iocResolver;
 
         public StudioXApiControllerActivator(IIocResolver iocResolver)
         {
-            _iocResolver = iocResolver;
+            this.iocResolver = iocResolver;
         }
 
         public IHttpController Create(HttpRequestMessage request, HttpControllerDescriptor controllerDescriptor, Type controllerType)
         {
-            var controllerWrapper = _iocResolver.ResolveAsDisposable<IHttpController>(controllerType);
+            var controllerWrapper = iocResolver.ResolveAsDisposable<IHttpController>(controllerType);
             request.RegisterForDispose(controllerWrapper);
             return controllerWrapper.Object;
         }

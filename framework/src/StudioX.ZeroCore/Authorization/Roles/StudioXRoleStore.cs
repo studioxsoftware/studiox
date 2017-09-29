@@ -44,20 +44,20 @@ namespace StudioX.Authorization.Roles
         /// </value>
         public bool AutoSaveChanges { get; set; } = true;
 
-        public IQueryable<TRole> Roles => _roleRepository.GetAll();
+        public IQueryable<TRole> Roles => roleRepository.GetAll();
 
-        private readonly IRepository<TRole> _roleRepository;
-        private readonly IUnitOfWorkManager _unitOfWorkManager;
-        private readonly IRepository<RolePermissionSetting, long> _rolePermissionSettingRepository;
+        private readonly IRepository<TRole> roleRepository;
+        private readonly IUnitOfWorkManager unitOfWorkManager;
+        private readonly IRepository<RolePermissionSetting, long> rolePermissionSettingRepository;
 
         public StudioXRoleStore(
             IUnitOfWorkManager unitOfWorkManager,
             IRepository<TRole> roleRepository, 
             IRepository<RolePermissionSetting, long> rolePermissionSettingRepository)
         {
-            _unitOfWorkManager = unitOfWorkManager;
-            _roleRepository = roleRepository;
-            _rolePermissionSettingRepository = rolePermissionSettingRepository;
+            this.unitOfWorkManager = unitOfWorkManager;
+            this.roleRepository = roleRepository;
+            this.rolePermissionSettingRepository = rolePermissionSettingRepository;
 
             ErrorDescriber = new IdentityErrorDescriber();
             Logger = NullLogger.Instance;
@@ -68,12 +68,12 @@ namespace StudioX.Authorization.Roles
         /// <returns>The <see cref="Task"/> that represents the asynchronous operation.</returns>
         protected Task SaveChanges(CancellationToken cancellationToken)
         {
-            if (!AutoSaveChanges || _unitOfWorkManager.Current == null)
+            if (!AutoSaveChanges || unitOfWorkManager.Current == null)
             {
                 return Task.CompletedTask;
             }
 
-            return _unitOfWorkManager.Current.SaveChangesAsync();
+            return unitOfWorkManager.Current.SaveChangesAsync();
         }
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace StudioX.Authorization.Roles
 
             Check.NotNull(role, nameof(role));
 
-            await _roleRepository.InsertAsync(role);
+            await roleRepository.InsertAsync(role);
             await SaveChanges(cancellationToken);
 
             return IdentityResult.Success;
@@ -107,7 +107,7 @@ namespace StudioX.Authorization.Roles
             Check.NotNull(role, nameof(role));
 
             role.ConcurrencyStamp = Guid.NewGuid().ToString();
-            await _roleRepository.UpdateAsync(role);
+            await roleRepository.UpdateAsync(role);
 
             try
             {
@@ -136,7 +136,7 @@ namespace StudioX.Authorization.Roles
 
             Check.NotNull(role, nameof(role));
 
-            await _roleRepository.DeleteAsync(role);
+            await roleRepository.DeleteAsync(role);
 
             try
             {
@@ -210,7 +210,7 @@ namespace StudioX.Authorization.Roles
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            return _roleRepository.GetAsync(id.To<int>());
+            return roleRepository.GetAsync(id.To<int>());
         }
 
         /// <summary>
@@ -225,7 +225,7 @@ namespace StudioX.Authorization.Roles
 
             Check.NotNull(normalizedName, nameof(normalizedName));
 
-            return _roleRepository.FirstOrDefaultAsync(r => r.NormalizedName == normalizedName);
+            return roleRepository.FirstOrDefaultAsync(r => r.NormalizedName == normalizedName);
         }
 
         /// <summary>
@@ -280,7 +280,7 @@ namespace StudioX.Authorization.Roles
 
             Check.NotNull(role, nameof(role));
 
-            await _roleRepository.EnsureCollectionLoadedAsync(role, u => u.Claims, cancellationToken);
+            await roleRepository.EnsureCollectionLoadedAsync(role, u => u.Claims, cancellationToken);
 
             return role.Claims.Select(c => new Claim(c.ClaimType, c.ClaimValue)).ToList();
         }
@@ -299,7 +299,7 @@ namespace StudioX.Authorization.Roles
             Check.NotNull(role, nameof(role));
             Check.NotNull(claim, nameof(claim));
 
-            await _roleRepository.EnsureCollectionLoadedAsync(role, u => u.Claims, cancellationToken);
+            await roleRepository.EnsureCollectionLoadedAsync(role, u => u.Claims, cancellationToken);
 
             role.Claims.Add(new RoleClaim(role, claim));
         }
@@ -316,14 +316,14 @@ namespace StudioX.Authorization.Roles
             Check.NotNull(role, nameof(role));
             Check.NotNull(claim, nameof(claim));
 
-            await _roleRepository.EnsureCollectionLoadedAsync(role, u => u.Claims, cancellationToken);
+            await roleRepository.EnsureCollectionLoadedAsync(role, u => u.Claims, cancellationToken);
 
             role.Claims.RemoveAll(c => c.ClaimValue == claim.Value && c.ClaimType == claim.Type);
         }
 
         public virtual async Task<TRole> FindByDisplayNameAsync(string displayName)
         {
-            return await _roleRepository.FirstOrDefaultAsync(
+            return await roleRepository.FirstOrDefaultAsync(
                 role => role.DisplayName == displayName
                 );
         }
@@ -335,7 +335,7 @@ namespace StudioX.Authorization.Roles
                 return;
             }
 
-            await _rolePermissionSettingRepository.InsertAsync(
+            await rolePermissionSettingRepository.InsertAsync(
                 new RolePermissionSetting
                 {
                     TenantId = role.TenantId,
@@ -348,7 +348,7 @@ namespace StudioX.Authorization.Roles
         /// <inheritdoc/>
         public virtual async Task RemovePermissionAsync(TRole role, PermissionGrantInfo permissionGrant)
         {
-            await _rolePermissionSettingRepository.DeleteAsync(
+            await rolePermissionSettingRepository.DeleteAsync(
                 permissionSetting => permissionSetting.RoleId == role.Id &&
                                      permissionSetting.Name == permissionGrant.Name &&
                                      permissionSetting.IsGranted == permissionGrant.IsGranted
@@ -363,7 +363,7 @@ namespace StudioX.Authorization.Roles
 
         public async Task<IList<PermissionGrantInfo>> GetPermissionsAsync(int roleId)
         {
-            return (await _rolePermissionSettingRepository.GetAllListAsync(p => p.RoleId == roleId))
+            return (await rolePermissionSettingRepository.GetAllListAsync(p => p.RoleId == roleId))
                 .Select(p => new PermissionGrantInfo(p.Name, p.IsGranted))
                 .ToList();
         }
@@ -371,7 +371,7 @@ namespace StudioX.Authorization.Roles
         /// <inheritdoc/>
         public virtual async Task<bool> HasPermissionAsync(int roleId, PermissionGrantInfo permissionGrant)
         {
-            return await _rolePermissionSettingRepository.FirstOrDefaultAsync(
+            return await rolePermissionSettingRepository.FirstOrDefaultAsync(
                 p => p.RoleId == roleId &&
                      p.Name == permissionGrant.Name &&
                      p.IsGranted == permissionGrant.IsGranted
@@ -381,7 +381,7 @@ namespace StudioX.Authorization.Roles
         /// <inheritdoc/>
         public virtual async Task RemoveAllPermissionSettingsAsync(TRole role)
         {
-            await _rolePermissionSettingRepository.DeleteAsync(s => s.RoleId == role.Id);
+            await rolePermissionSettingRepository.DeleteAsync(s => s.RoleId == role.Id);
         }
     }
 }

@@ -12,7 +12,7 @@ namespace StudioX.MultiTenancy
         IEventHandler<EntityChangedEventData<TenantFeatureSetting>>,
         ITransientDependency
     {
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheManager cacheManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TenantFeatureCacheItemInvalidator"/> class.
@@ -20,12 +20,12 @@ namespace StudioX.MultiTenancy
         /// <param name="cacheManager">The cache manager.</param>
         public TenantFeatureCacheItemInvalidator(ICacheManager cacheManager)
         {
-            _cacheManager = cacheManager;
+            this.cacheManager = cacheManager;
         }
 
         public void HandleEvent(EntityChangedEventData<TenantFeatureSetting> eventData)
         {
-            _cacheManager.GetTenantFeatureCache().Remove(eventData.Entity.TenantId);
+            cacheManager.GetTenantFeatureCache().Remove(eventData.Entity.TenantId);
         }
     }
 }

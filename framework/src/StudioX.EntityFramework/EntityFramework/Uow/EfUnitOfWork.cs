@@ -22,9 +22,9 @@ namespace StudioX.EntityFramework.Uow
         protected IDictionary<string, DbContext> ActiveDbContexts { get; }
         protected IIocResolver IocResolver { get; }
 
-        private readonly IDbContextResolver _dbContextResolver;
-        private readonly IDbContextTypeMatcher _dbContextTypeMatcher;
-        private readonly IEfTransactionStrategy _transactionStrategy;
+        private readonly IDbContextResolver dbContextResolver;
+        private readonly IDbContextTypeMatcher dbContextTypeMatcher;
+        private readonly IEfTransactionStrategy transactionStrategy;
 
         /// <summary>
         /// Creates a new <see cref="EfUnitOfWork"/>.
@@ -43,9 +43,9 @@ namespace StudioX.EntityFramework.Uow
                   filterExecuter)
         {
             IocResolver = iocResolver;
-            _dbContextResolver = dbContextResolver;
-            _dbContextTypeMatcher = dbContextTypeMatcher;
-            _transactionStrategy = transactionStrategy;
+            this.dbContextResolver = dbContextResolver;
+            this.dbContextTypeMatcher = dbContextTypeMatcher;
+            this.transactionStrategy = transactionStrategy;
 
             ActiveDbContexts = new Dictionary<string, DbContext>();
         }
@@ -54,7 +54,7 @@ namespace StudioX.EntityFramework.Uow
         {
             if (Options.IsTransactional == true)
             {
-                _transactionStrategy.InitOptions(Options);
+                transactionStrategy.InitOptions(Options);
             }
         }
 
@@ -85,7 +85,7 @@ namespace StudioX.EntityFramework.Uow
 
             if (Options.IsTransactional == true)
             {
-                _transactionStrategy.Commit();
+                transactionStrategy.Commit();
             }
         }
 
@@ -95,14 +95,14 @@ namespace StudioX.EntityFramework.Uow
 
             if (Options.IsTransactional == true)
             {
-                _transactionStrategy.Commit();
+                transactionStrategy.Commit();
             }
         }
         
         public virtual TDbContext GetOrCreateDbContext<TDbContext>(MultiTenancySides? multiTenancySide = null)
             where TDbContext : DbContext
         {
-            var concreteDbContextType = _dbContextTypeMatcher.GetConcreteType(typeof(TDbContext));
+            var concreteDbContextType = dbContextTypeMatcher.GetConcreteType(typeof(TDbContext));
 
             var connectionStringResolveArgs = new ConnectionStringResolveArgs(multiTenancySide);
             connectionStringResolveArgs["DbContextType"] = typeof(TDbContext);
@@ -116,11 +116,11 @@ namespace StudioX.EntityFramework.Uow
             {
                 if (Options.IsTransactional == true)
                 {
-                    dbContext = _transactionStrategy.CreateDbContext<TDbContext>(connectionString, _dbContextResolver);
+                    dbContext = transactionStrategy.CreateDbContext<TDbContext>(connectionString, dbContextResolver);
                 }
                 else
                 {
-                    dbContext = _dbContextResolver.Resolve<TDbContext>(connectionString);
+                    dbContext = dbContextResolver.Resolve<TDbContext>(connectionString);
                 }
 
                 if (Options.Timeout.HasValue && !dbContext.Database.CommandTimeout.HasValue)
@@ -145,7 +145,7 @@ namespace StudioX.EntityFramework.Uow
         {
             if (Options.IsTransactional == true)
             {
-                _transactionStrategy.Dispose(IocResolver);
+                transactionStrategy.Dispose(IocResolver);
             }
             else
             {

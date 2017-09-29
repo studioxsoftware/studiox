@@ -8,25 +8,25 @@ namespace StudioX.AspNetCore.Mvc.ModelBinding
 {
     public class StudioXDateTimeModelBinder : IModelBinder
     {
-        private readonly Type _type;
-        private readonly SimpleTypeModelBinder _simpleTypeModelBinder;
+        private readonly Type type;
+        private readonly SimpleTypeModelBinder simpleTypeModelBinder;
 
         public StudioXDateTimeModelBinder(Type type)
         {
-            _type = type;
-            _simpleTypeModelBinder = new SimpleTypeModelBinder(type);
+            this.type = type;
+            simpleTypeModelBinder = new SimpleTypeModelBinder(type);
         }
         
         public async Task BindModelAsync(ModelBindingContext bindingContext)
         {
-            await _simpleTypeModelBinder.BindModelAsync(bindingContext);
+            await simpleTypeModelBinder.BindModelAsync(bindingContext);
 
             if (!bindingContext.Result.IsModelSet)
             {
                 return;
             }
 
-            if (_type == typeof(DateTime))
+            if (type == typeof(DateTime))
             {
                 var dateTime = (DateTime)bindingContext.Result.Model;
                 bindingContext.Result = ModelBindingResult.Success(Clock.Normalize(dateTime));

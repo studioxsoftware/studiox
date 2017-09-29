@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using StudioX.Localization;
 
 namespace StudioX.Boilerplate.EntityFrameworkCore.Seed.Host
@@ -48,7 +49,7 @@ namespace StudioX.Boilerplate.EntityFrameworkCore.Seed.Host
 
         private void AddLanguageIfNotExists(ApplicationLanguage language)
         {
-            if (context.Languages.Any(l => l.TenantId == language.TenantId && l.Name == language.Name))
+            if (context.Languages.IgnoreQueryFilters().Any(l => l.TenantId == language.TenantId && l.Name == language.Name))
             {
                 return;
             }

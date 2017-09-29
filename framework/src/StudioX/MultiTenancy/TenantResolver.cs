@@ -13,11 +13,11 @@ namespace StudioX.MultiTenancy
 
         public ILogger Logger { get; set; }
 
-        private readonly IMultiTenancyConfig _multiTenancy;
-        private readonly IIocResolver _iocResolver;
-        private readonly ITenantStore _tenantStore;
-        private readonly ITenantResolverCache _cache;
-        private readonly IAmbientScopeProvider<bool> _ambientScopeProvider;
+        private readonly IMultiTenancyConfig multiTenancy;
+        private readonly IIocResolver iocResolver;
+        private readonly ITenantStore tenantStore;
+        private readonly ITenantResolverCache cache;
+        private readonly IAmbientScopeProvider<bool> ambientScopeProvider;
 
         public TenantResolver(
             IMultiTenancyConfig multiTenancy,
@@ -26,47 +26,47 @@ namespace StudioX.MultiTenancy
             ITenantResolverCache cache,
             IAmbientScopeProvider<bool> ambientScopeProvider)
         {
-            _multiTenancy = multiTenancy;
-            _iocResolver = iocResolver;
-            _tenantStore = tenantStore;
-            _cache = cache;
-            _ambientScopeProvider = ambientScopeProvider;
+            this.multiTenancy = multiTenancy;
+            this.iocResolver = iocResolver;
+            this.tenantStore = tenantStore;
+            this.cache = cache;
+            this.ambientScopeProvider = ambientScopeProvider;
 
             Logger = NullLogger.Instance;
         }
 
         public int? ResolveTenantId()
         {
-            if (!_multiTenancy.Resolvers.Any())
+            if (!multiTenancy.Resolvers.Any())
             {
                 return null;
             }
 
-            if (_ambientScopeProvider.GetValue(AmbientScopeContextKey))
+            if (ambientScopeProvider.GetValue(AmbientScopeContextKey))
             {
                 //Preventing recursive call of ResolveTenantId
                 return null;
             }
 
-            using (_ambientScopeProvider.BeginScope(AmbientScopeContextKey, true))
+            using (ambientScopeProvider.BeginScope(AmbientScopeContextKey, true))
             {
-                var cacheItem = _cache.Value;
+                var cacheItem = cache.Value;
                 if (cacheItem != null)
                 {
                     return cacheItem.TenantId;
                 }
 
                 var tenantId = GetTenantIdFromContributors();
-                _cache.Value = new TenantResolverCacheItem(tenantId);
+                cache.Value = new TenantResolverCacheItem(tenantId);
                 return tenantId;
             }
         }
 
         private int? GetTenantIdFromContributors()
         {
-            foreach (var resolverType in _multiTenancy.Resolvers)
+            foreach (var resolverType in multiTenancy.Resolvers)
             {
-                using (var resolver = _iocResolver.ResolveAsDisposable<ITenantResolveContributor>(resolverType))
+                using (var resolver = iocResolver.ResolveAsDisposable<ITenantResolveContributor>(resolverType))
                 {
                     int? tenantId;
 
@@ -85,7 +85,7 @@ namespace StudioX.MultiTenancy
                         continue;
                     }
 
-                    if (_tenantStore.Find(tenantId.Value) == null)
+                    if (tenantStore.Find(tenantId.Value) == null)
                     {
                         continue;
                     }

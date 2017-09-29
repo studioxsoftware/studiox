@@ -10,11 +10,11 @@ namespace StudioX.Web.MultiTenancy
 {
     public class MultiTenancyScriptManager : IMultiTenancyScriptManager, ITransientDependency
     {
-        private readonly IMultiTenancyConfig _multiTenancyConfig;
+        private readonly IMultiTenancyConfig multiTenancyConfig;
 
         public MultiTenancyScriptManager(IMultiTenancyConfig multiTenancyConfig)
         {
-            _multiTenancyConfig = multiTenancyConfig;
+            this.multiTenancyConfig = multiTenancyConfig;
         }
 
         public string GetScript()
@@ -25,7 +25,7 @@ namespace StudioX.Web.MultiTenancy
             script.AppendLine();
 
             script.AppendLine("    studiox.multiTenancy = studiox.multiTenancy || {};");
-            script.AppendLine("    studiox.multiTenancy.isEnabled = " + _multiTenancyConfig.IsEnabled.ToString().ToLowerInvariant() + ";");
+            script.AppendLine("    studiox.multiTenancy.isEnabled = " + multiTenancyConfig.IsEnabled.ToString().ToLowerInvariant() + ";");
 
             script.AppendLine();
             script.Append("})(studiox);");

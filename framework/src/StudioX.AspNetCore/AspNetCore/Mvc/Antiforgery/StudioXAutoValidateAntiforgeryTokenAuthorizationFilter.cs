@@ -9,7 +9,7 @@ namespace StudioX.AspNetCore.Mvc.Antiforgery
 {
     public class StudioXAutoValidateAntiforgeryTokenAuthorizationFilter : AutoValidateAntiforgeryTokenAuthorizationFilter, ITransientDependency
     {
-        private readonly AntiforgeryOptions _options;
+        private readonly AntiforgeryOptions options;
 
         public StudioXAutoValidateAntiforgeryTokenAuthorizationFilter(
             IAntiforgery antiforgery, 
@@ -17,7 +17,7 @@ namespace StudioX.AspNetCore.Mvc.Antiforgery
             IOptions<AntiforgeryOptions> options)
             : base(antiforgery, loggerFactory)
         {
-            _options = options.Value;
+            this.options = options.Value;
         }
 
         protected override bool ShouldValidate(AuthorizationFilterContext context)
@@ -30,7 +30,7 @@ namespace StudioX.AspNetCore.Mvc.Antiforgery
             //No need to validate if antiforgery cookie is not sent.
             //That means the request is sent from a non-browser client.
             //See https://github.com/aspnet/Antiforgery/issues/115
-            if (!context.HttpContext.Request.Cookies.ContainsKey(_options.CookieName))
+            if (!context.HttpContext.Request.Cookies.ContainsKey(options.CookieName))
             {
                 return false;
             }

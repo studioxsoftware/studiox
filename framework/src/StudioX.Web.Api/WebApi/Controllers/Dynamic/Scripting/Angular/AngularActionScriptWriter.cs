@@ -8,29 +8,29 @@ namespace StudioX.WebApi.Controllers.Dynamic.Scripting.Angular
 {
     internal class AngularActionScriptWriter
     {
-        private readonly DynamicApiControllerInfo _controllerInfo;
-        private readonly DynamicApiActionInfo _actionInfo;
+        private readonly DynamicApiControllerInfo controllerInfo;
+        private readonly DynamicApiActionInfo actionInfo;
 
         public AngularActionScriptWriter(DynamicApiControllerInfo controllerInfo, DynamicApiActionInfo methodInfo)
         {
-            _controllerInfo = controllerInfo;
-            _actionInfo = methodInfo;
+            this.controllerInfo = controllerInfo;
+            actionInfo = methodInfo;
         }
 
         public virtual void WriteTo(StringBuilder script)
         {
-            script.AppendLine("                this" + ProxyScriptingJsFuncHelper.WrapWithBracketsOrWithDotPrefix(_actionInfo.ActionName.ToCamelCase()) + " = function (" + ActionScriptingHelper.GenerateJsMethodParameterList(_actionInfo.Method, "httpParams") + ") {");
+            script.AppendLine("                this" + ProxyScriptingJsFuncHelper.WrapWithBracketsOrWithDotPrefix(actionInfo.ActionName.ToCamelCase()) + " = function (" + ActionScriptingHelper.GenerateJsMethodParameterList(actionInfo.Method, "httpParams") + ") {");
             script.AppendLine("                    return $http(angular.extend({");
-            script.AppendLine("                        url: studiox.appPath + '" + ActionScriptingHelper.GenerateUrlWithParameters(_controllerInfo, _actionInfo) + "',");
-            script.AppendLine("                        method: '" + _actionInfo.Verb.ToString().ToUpper(CultureInfo.InvariantCulture) + "',");
+            script.AppendLine("                        url: studiox.appPath + '" + ActionScriptingHelper.GenerateUrlWithParameters(controllerInfo, actionInfo) + "',");
+            script.AppendLine("                        method: '" + actionInfo.Verb.ToString().ToUpper(CultureInfo.InvariantCulture) + "',");
 
-            if (_actionInfo.Verb == HttpVerb.Get)
+            if (actionInfo.Verb == HttpVerb.Get)
             {
-                script.AppendLine("                        params: " + ActionScriptingHelper.GenerateBody(_actionInfo));
+                script.AppendLine("                        params: " + ActionScriptingHelper.GenerateBody(actionInfo));
             }
             else
             {
-                script.AppendLine("                        data: JSON.stringify(" + ActionScriptingHelper.GenerateBody(_actionInfo) + ")");
+                script.AppendLine("                        data: JSON.stringify(" + ActionScriptingHelper.GenerateBody(actionInfo) + ")");
             }
 
             script.AppendLine("                    }, httpParams));");

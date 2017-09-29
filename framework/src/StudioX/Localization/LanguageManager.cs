@@ -8,23 +8,23 @@ namespace StudioX.Localization
 {
     public class LanguageManager : ILanguageManager, ITransientDependency
     {
-        public LanguageInfo CurrentLanguage { get { return GetCurrentLanguage(); } }
+        public LanguageInfo CurrentLanguage => GetCurrentLanguage();
 
-        private readonly ILanguageProvider _languageProvider;
+        private readonly ILanguageProvider languageProvider;
 
         public LanguageManager(ILanguageProvider languageProvider)
         {
-            _languageProvider = languageProvider;
+            this.languageProvider = languageProvider;
         }
 
         public IReadOnlyList<LanguageInfo> GetLanguages()
         {
-            return _languageProvider.GetLanguages();
+            return languageProvider.GetLanguages();
         }
 
         private LanguageInfo GetCurrentLanguage()
         {
-            var languages = _languageProvider.GetLanguages();
+            var languages = languageProvider.GetLanguages();
             if (languages.Count <= 0)
             {
                 throw new StudioXException("No language defined in this application.");

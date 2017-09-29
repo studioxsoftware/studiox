@@ -62,14 +62,14 @@ namespace StudioX.Authorization.Users
 
         public IRepository<TUser, long> UserRepository { get; }
 
-        private readonly IRepository<TRole> _roleRepository;
-        private readonly IRepository<UserRole, long> _userRoleRepository;
-        private readonly IAsyncQueryableExecuter _asyncQueryableExecuter;
-        private readonly IRepository<UserLogin, long> _userLoginRepository;
-        private readonly IRepository<UserClaim, long> _userClaimRepository;
-        private readonly IRepository<UserPermissionSetting, long> _userPermissionSettingRepository;
+        private readonly IRepository<TRole> roleRepository;
+        private readonly IRepository<UserRole, long> userRoleRepository;
+        private readonly IAsyncQueryableExecuter asyncQueryableExecuter;
+        private readonly IRepository<UserLogin, long> userLoginRepository;
+        private readonly IRepository<UserClaim, long> userClaimRepository;
+        private readonly IRepository<UserPermissionSetting, long> userPermissionSettingRepository;
 
-        private readonly IUnitOfWorkManager _unitOfWorkManager;
+        private readonly IUnitOfWorkManager unitOfWorkManager;
 
         public StudioXUserStore(
             IUnitOfWorkManager unitOfWorkManager,
@@ -81,14 +81,14 @@ namespace StudioX.Authorization.Users
             IRepository<UserClaim, long> userClaimRepository, 
             IRepository<UserPermissionSetting, long> userPermissionSettingRepository)
         {
-            _unitOfWorkManager = unitOfWorkManager;
+            this.unitOfWorkManager = unitOfWorkManager;
             UserRepository = userRepository;
-            _roleRepository = roleRepository;
-            _asyncQueryableExecuter = asyncQueryableExecuter;
-            _userRoleRepository = userRoleRepository;
-            _userLoginRepository = userLoginRepository;
-            _userClaimRepository = userClaimRepository;
-            _userPermissionSettingRepository = userPermissionSettingRepository;
+            this.roleRepository = roleRepository;
+            this.asyncQueryableExecuter = asyncQueryableExecuter;
+            this.userRoleRepository = userRoleRepository;
+            this.userLoginRepository = userLoginRepository;
+            this.userClaimRepository = userClaimRepository;
+            this.userPermissionSettingRepository = userPermissionSettingRepository;
 
             StudioXSession = NullStudioXSession.Instance;
             ErrorDescriber = new IdentityErrorDescriber();
@@ -100,12 +100,12 @@ namespace StudioX.Authorization.Users
         /// <returns>The <see cref="Task"/> that represents the asynchronous operation.</returns>
         protected Task SaveChanges(CancellationToken cancellationToken)
         {
-            if (!AutoSaveChanges || _unitOfWorkManager.Current == null)
+            if (!AutoSaveChanges || unitOfWorkManager.Current == null)
             {
                 return Task.CompletedTask;
             }
 
-            return _unitOfWorkManager.Current.SaveChangesAsync();
+            return unitOfWorkManager.Current.SaveChangesAsync();
         }
 
         /// <summary>
@@ -366,7 +366,7 @@ namespace StudioX.Authorization.Users
                 return;
             }
 
-            var role = await _roleRepository.FirstOrDefaultAsync(r => r.NormalizedName== normalizedRoleName);
+            var role = await roleRepository.FirstOrDefaultAsync(r => r.NormalizedName== normalizedRoleName);
 
             if (role == null)
             {
@@ -399,7 +399,7 @@ namespace StudioX.Authorization.Users
                 return;
             }
 
-            var role = await _roleRepository.FirstOrDefaultAsync(r => r.NormalizedName == normalizedRoleName);
+            var role = await roleRepository.FirstOrDefaultAsync(r => r.NormalizedName == normalizedRoleName);
             if (role == null)
             {
                 return;
@@ -421,12 +421,12 @@ namespace StudioX.Authorization.Users
 
             Check.NotNull(user, nameof(user));
 
-            var query = from userRole in _userRoleRepository.GetAll()
-                        join role in _roleRepository.GetAll() on userRole.RoleId equals role.Id
+            var query = from userRole in userRoleRepository.GetAll()
+                        join role in roleRepository.GetAll() on userRole.RoleId equals role.Id
                         where userRole.UserId == user.Id
                         select role.Name;
 
-            return await _asyncQueryableExecuter.ToListAsync(query);
+            return await asyncQueryableExecuter.ToListAsync(query);
         }
 
         /// <summary>
@@ -448,7 +448,7 @@ namespace StudioX.Authorization.Users
                 throw new ArgumentException(nameof(normalizedRoleName) + " can not be null or whitespace");
             }
 
-            var role = await _roleRepository.FirstOrDefaultAsync(r => r.NormalizedName == normalizedRoleName);
+            var role = await roleRepository.FirstOrDefaultAsync(r => r.NormalizedName == normalizedRoleName);
             if (role == null)
             {
                 return false;
@@ -630,14 +630,14 @@ namespace StudioX.Authorization.Users
             Check.NotNull(loginProvider, nameof(loginProvider));
             Check.NotNull(providerKey, nameof(providerKey));
 
-            var query = from userLogin in _userLoginRepository.GetAll()
+            var query = from userLogin in userLoginRepository.GetAll()
                 join user in UserRepository.GetAll() on userLogin.UserId equals user.Id
                 where userLogin.LoginProvider == loginProvider &&
                       userLogin.ProviderKey == providerKey &&
                       userLogin.TenantId == StudioXSession.TenantId
                 select user;
 
-            return _asyncQueryableExecuter.FirstOrDefaultAsync(query);
+            return asyncQueryableExecuter.FirstOrDefaultAsync(query);
         }
 
         /// <summary>
@@ -1044,12 +1044,12 @@ namespace StudioX.Authorization.Users
 
             Check.NotNull(claim, nameof(claim));
 
-            var query = from userclaims in _userClaimRepository.GetAll()
+            var query = from userclaims in userClaimRepository.GetAll()
                         join user in UserRepository.GetAll() on userclaims.UserId equals user.Id
                         where userclaims.ClaimValue == claim.Value && userclaims.ClaimType == claim.Type && userclaims.TenantId == StudioXSession.TenantId
                         select user;
 
-            return await _asyncQueryableExecuter.ToListAsync(query);
+            return await asyncQueryableExecuter.ToListAsync(query);
         }
 
         /// <summary>
@@ -1070,19 +1070,19 @@ namespace StudioX.Authorization.Users
                 throw new ArgumentNullException(nameof(normalizedRoleName));
             }
 
-            var role = await _roleRepository.FirstOrDefaultAsync(r => r.NormalizedName == normalizedRoleName);
+            var role = await roleRepository.FirstOrDefaultAsync(r => r.NormalizedName == normalizedRoleName);
 
             if (role == null)
             {
                 return new List<TUser>();
             }
 
-            var query = from userrole in _userRoleRepository.GetAll()
+            var query = from userrole in userRoleRepository.GetAll()
                         join user in UserRepository.GetAll() on userrole.UserId equals user.Id
                         where userrole.RoleId.Equals(role.Id)
                         select user;
 
-            return await _asyncQueryableExecuter.ToListAsync(query);
+            return await asyncQueryableExecuter.ToListAsync(query);
         }
 
         /// <summary>
@@ -1172,7 +1172,7 @@ namespace StudioX.Authorization.Users
         [UnitOfWork]
         public virtual async Task<TUser> FindByNameOrEmailAsync(int? tenantId, string userNameOrEmailAddress)
         {
-            using (_unitOfWorkManager.Current.SetTenantId(tenantId))
+            using (unitOfWorkManager.Current.SetTenantId(tenantId))
             {
                 return await FindByNameOrEmailAsync(userNameOrEmailAddress);
             }
@@ -1180,7 +1180,7 @@ namespace StudioX.Authorization.Users
 
         public virtual async Task<TUser> FindAsync(UserLoginInfo login)
         {
-            var userLogin = await _userLoginRepository.FirstOrDefaultAsync(
+            var userLogin = await userLoginRepository.FirstOrDefaultAsync(
                 ul => ul.LoginProvider == login.LoginProvider && ul.ProviderKey == login.ProviderKey
             );
 
@@ -1195,7 +1195,7 @@ namespace StudioX.Authorization.Users
         [UnitOfWork]
         public virtual Task<List<TUser>> FindAllAsync(UserLoginInfo login)
         {
-            var query = from userLogin in _userLoginRepository.GetAll()
+            var query = from userLogin in userLoginRepository.GetAll()
                         join user in UserRepository.GetAll() on userLogin.UserId equals user.Id
                         where userLogin.LoginProvider == login.LoginProvider && userLogin.ProviderKey == login.ProviderKey
                         select user;
@@ -1206,9 +1206,9 @@ namespace StudioX.Authorization.Users
         [UnitOfWork]
         public virtual Task<TUser> FindAsync(int? tenantId, UserLoginInfo login)
         {
-            using (_unitOfWorkManager.Current.SetTenantId(tenantId))
+            using (unitOfWorkManager.Current.SetTenantId(tenantId))
             {
-                var query = from userLogin in _userLoginRepository.GetAll()
+                var query = from userLogin in userLoginRepository.GetAll()
                             join user in UserRepository.GetAll() on userLogin.UserId equals user.Id
                             where userLogin.LoginProvider == login.LoginProvider && userLogin.ProviderKey == login.ProviderKey
                             select user;
@@ -1220,8 +1220,8 @@ namespace StudioX.Authorization.Users
         public async Task<string> GetUserNameFromDatabaseAsync(long userId)
         {
             //note: This workaround will not be needed after fixing https://github.com/aspnetboilerplate/aspnetboilerplate/issues/1828
-            var outerUow = _unitOfWorkManager.Current;
-            using (var uow = _unitOfWorkManager.Begin(new UnitOfWorkOptions
+            var outerUow = unitOfWorkManager.Current;
+            using (var uow = unitOfWorkManager.Begin(new UnitOfWorkOptions
             {
                 Scope = TransactionScopeOption.RequiresNew,
                 IsTransactional = false,
@@ -1230,7 +1230,7 @@ namespace StudioX.Authorization.Users
             {
                 if (outerUow != null)
                 {
-                    _unitOfWorkManager.Current.SetTenantId(outerUow.GetTenantId());
+                    unitOfWorkManager.Current.SetTenantId(outerUow.GetTenantId());
                 }
 
                 var user = await UserRepository.GetAsync(userId);
@@ -1246,7 +1246,7 @@ namespace StudioX.Authorization.Users
                 return;
             }
 
-            await _userPermissionSettingRepository.InsertAsync(
+            await userPermissionSettingRepository.InsertAsync(
                 new UserPermissionSetting
                 {
                     TenantId = user.TenantId,
@@ -1258,7 +1258,7 @@ namespace StudioX.Authorization.Users
 
         public virtual async Task RemovePermissionAsync(TUser user, PermissionGrantInfo permissionGrant)
         {
-            await _userPermissionSettingRepository.DeleteAsync(
+            await userPermissionSettingRepository.DeleteAsync(
                 permissionSetting => permissionSetting.UserId == user.Id &&
                                      permissionSetting.Name == permissionGrant.Name &&
                                      permissionSetting.IsGranted == permissionGrant.IsGranted
@@ -1267,14 +1267,14 @@ namespace StudioX.Authorization.Users
 
         public virtual async Task<IList<PermissionGrantInfo>> GetPermissionsAsync(long userId)
         {
-            return (await _userPermissionSettingRepository.GetAllListAsync(p => p.UserId == userId))
+            return (await userPermissionSettingRepository.GetAllListAsync(p => p.UserId == userId))
                 .Select(p => new PermissionGrantInfo(p.Name, p.IsGranted))
                 .ToList();
         }
 
         public virtual async Task<bool> HasPermissionAsync(long userId, PermissionGrantInfo permissionGrant)
         {
-            return await _userPermissionSettingRepository.FirstOrDefaultAsync(
+            return await userPermissionSettingRepository.FirstOrDefaultAsync(
                        p => p.UserId == userId &&
                             p.Name == permissionGrant.Name &&
                             p.IsGranted == permissionGrant.IsGranted
@@ -1283,7 +1283,7 @@ namespace StudioX.Authorization.Users
 
         public virtual async Task RemoveAllPermissionSettingsAsync(TUser user)
         {
-            await _userPermissionSettingRepository.DeleteAsync(s => s.UserId == user.Id);
+            await userPermissionSettingRepository.DeleteAsync(s => s.UserId == user.Id);
         }
     }
 }

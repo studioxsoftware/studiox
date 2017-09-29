@@ -98,7 +98,7 @@ namespace StudioX.Boilerplate.Web.Controllers
                 returnUrl = returnUrl + returnUrlHash;
             }
 
-            var loginResult = await GetLoginResultAsync(loginModel.UsernameOrEmailAddress, loginModel.Password, GetTenancyNameOrNull());
+            var loginResult = await GetLoginResultAsync(loginModel.UserNameOrEmailAddress, loginModel.Password, GetTenancyNameOrNull());
 
             await signInManager.SignInAsync(loginResult.Identity, loginModel.RememberMe);
             await UnitOfWorkManager.Current.SaveChangesAsync();

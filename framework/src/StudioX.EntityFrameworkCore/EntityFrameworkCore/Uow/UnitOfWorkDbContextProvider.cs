@@ -12,7 +12,7 @@ namespace StudioX.EntityFrameworkCore.Uow
     public class UnitOfWorkDbContextProvider<TDbContext> : IDbContextProvider<TDbContext> 
         where TDbContext : DbContext
     {
-        private readonly ICurrentUnitOfWorkProvider _currentUnitOfWorkProvider;
+        private readonly ICurrentUnitOfWorkProvider currentUnitOfWorkProvider;
 
         /// <summary>
         /// Creates a new <see cref="UnitOfWorkDbContextProvider{TDbContext}"/>.
@@ -20,7 +20,7 @@ namespace StudioX.EntityFrameworkCore.Uow
         /// <param name="currentUnitOfWorkProvider"></param>
         public UnitOfWorkDbContextProvider(ICurrentUnitOfWorkProvider currentUnitOfWorkProvider)
         {
-            _currentUnitOfWorkProvider = currentUnitOfWorkProvider;
+            this.currentUnitOfWorkProvider = currentUnitOfWorkProvider;
         }
 
         public TDbContext GetDbContext()
@@ -30,7 +30,7 @@ namespace StudioX.EntityFrameworkCore.Uow
 
         public TDbContext GetDbContext(MultiTenancySides? multiTenancySide)
         {
-            return _currentUnitOfWorkProvider.Current.GetDbContext<TDbContext>(multiTenancySide);
+            return currentUnitOfWorkProvider.Current.GetDbContext<TDbContext>(multiTenancySide);
         }
     }
 }

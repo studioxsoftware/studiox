@@ -20,11 +20,11 @@ namespace StudioX.AspNetCore.Mvc.Conventions
 {
     public class StudioXAppServiceConvention : IApplicationModelConvention
     {
-        private readonly Lazy<StudioXAspNetCoreConfiguration> _configuration;
+        private readonly Lazy<StudioXAspNetCoreConfiguration> configuration;
 
         public StudioXAppServiceConvention(IServiceCollection services)
         {
-            _configuration = new Lazy<StudioXAspNetCoreConfiguration>(() =>
+            configuration = new Lazy<StudioXAspNetCoreConfiguration>(() =>
             {
                 return services
                     .GetSingletonService<StudioXBootstrapper>()
@@ -105,7 +105,7 @@ namespace StudioX.AspNetCore.Mvc.Conventions
 
         private bool CanUseFormBodyBinding(ActionModel action, ParameterModel parameter)
         {
-            if (_configuration.Value.FormBodyBindingIgnoredTypes.Any(t => t.IsAssignableFrom(parameter.ParameterInfo.ParameterType)))
+            if (configuration.Value.FormBodyBindingIgnoredTypes.Any(t => t.IsAssignableFrom(parameter.ParameterInfo.ParameterType)))
             {
                 return false;
             }
@@ -249,7 +249,7 @@ namespace StudioX.AspNetCore.Mvc.Conventions
         [CanBeNull]
         private StudioXControllerAssemblySetting GetControllerSettingOrNull(Type controllerType)
         {
-            return _configuration.Value.ControllerAssemblySettings.GetSettingOrNull(controllerType);
+            return configuration.Value.ControllerAssemblySettings.GetSettingOrNull(controllerType);
         }
 
         private static AttributeRouteModel CreateStudioXServiceAttributeRouteModel(string moduleName, string controllerName, ActionModel action)

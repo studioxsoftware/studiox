@@ -48,9 +48,9 @@ namespace StudioX.WebApi.Controllers.Dynamic.Builders
         /// <summary>
         /// List of all action builders for this controller.
         /// </summary>
-        private readonly IDictionary<string, ApiControllerActionBuilder<T>> _actionBuilders;
+        private readonly IDictionary<string, ApiControllerActionBuilder<T>> actionBuilders;
 
-        private readonly IIocResolver _iocResolver;
+        private readonly IIocResolver iocResolver;
 
         /// <summary>
         /// Creates a new instance of ApiControllerInfoBuilder.
@@ -71,12 +71,12 @@ namespace StudioX.WebApi.Controllers.Dynamic.Builders
                 throw new ArgumentException("serviceName is not properly formatted! It must contain a single-depth namespace at least! For example: 'myapplication/myservice'.", "serviceName");
             }
 
-            _iocResolver = iocResolver;
+            this.iocResolver = iocResolver;
 
             ServiceName = serviceName;
             ServiceInterfaceType = typeof (T);
 
-            _actionBuilders = new Dictionary<string, ApiControllerActionBuilder<T>>();
+            actionBuilders = new Dictionary<string, ApiControllerActionBuilder<T>>();
 
             foreach (var methodInfo in DynamicApiControllerActionHelper.GetMethodsOfType(typeof(T)))
             {
@@ -88,7 +88,7 @@ namespace StudioX.WebApi.Controllers.Dynamic.Builders
                     actionBuilder.DontCreateAction();
                 }
 
-                _actionBuilders[methodInfo.Name] = actionBuilder;
+                actionBuilders[methodInfo.Name] = actionBuilder;
             }
         }
 
@@ -110,17 +110,17 @@ namespace StudioX.WebApi.Controllers.Dynamic.Builders
         /// <returns>Action builder</returns>
         public IApiControllerActionBuilder<T> ForMethod(string methodName)
         {
-            if (!_actionBuilders.ContainsKey(methodName))
+            if (!actionBuilders.ContainsKey(methodName))
             {
                 throw new StudioXException("There is no method with name " + methodName + " in type " + typeof(T).Name);
             }
 
-            return _actionBuilders[methodName];
+            return actionBuilders[methodName];
         }
 
         public IApiControllerBuilder<T> ForMethods(Action<IApiControllerActionBuilder> action)
         {
-            foreach (var actionBuilder in _actionBuilders.Values)
+            foreach (var actionBuilder in actionBuilders.Values)
             {
                 action(actionBuilder);
             }
@@ -162,7 +162,7 @@ namespace StudioX.WebApi.Controllers.Dynamic.Builders
                 IsProxyScriptingEnabled
                 );
             
-            foreach (var actionBuilder in _actionBuilders.Values)
+            foreach (var actionBuilder in actionBuilders.Values)
             {
                 if (actionBuilder.DontCreate)
                 {
@@ -172,7 +172,7 @@ namespace StudioX.WebApi.Controllers.Dynamic.Builders
                 controllerInfo.Actions[actionBuilder.ActionName] = actionBuilder.BuildActionInfo(ConventionalVerbs);
             }
 
-            _iocResolver.Resolve<DynamicApiControllerManager>().Register(controllerInfo);
+            iocResolver.Resolve<DynamicApiControllerManager>().Register(controllerInfo);
         }
     }
 }

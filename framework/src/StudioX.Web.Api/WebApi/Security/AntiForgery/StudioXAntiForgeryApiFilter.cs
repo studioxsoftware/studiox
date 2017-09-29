@@ -20,18 +20,18 @@ namespace StudioX.WebApi.Security.AntiForgery
 
         public bool AllowMultiple => false;
 
-        private readonly IStudioXAntiForgeryManager _studioXAntiForgeryManager;
-        private readonly IStudioXWebApiConfiguration _webApiConfiguration;
-        private readonly IStudioXAntiForgeryWebConfiguration _antiForgeryWebConfiguration;
+        private readonly IStudioXAntiForgeryManager studioXAntiForgeryManager;
+        private readonly IStudioXWebApiConfiguration webApiConfiguration;
+        private readonly IStudioXAntiForgeryWebConfiguration antiForgeryWebConfiguration;
 
         public StudioXAntiForgeryApiFilter(
             IStudioXAntiForgeryManager studioxAntiForgeryManager, 
             IStudioXWebApiConfiguration webApiConfiguration,
             IStudioXAntiForgeryWebConfiguration antiForgeryWebConfiguration)
         {
-            _studioXAntiForgeryManager = studioxAntiForgeryManager;
-            _webApiConfiguration = webApiConfiguration;
-            _antiForgeryWebConfiguration = antiForgeryWebConfiguration;
+            studioXAntiForgeryManager = studioxAntiForgeryManager;
+            this.webApiConfiguration = webApiConfiguration;
+            this.antiForgeryWebConfiguration = antiForgeryWebConfiguration;
             Logger = NullLogger.Instance;
         }
 
@@ -46,12 +46,12 @@ namespace StudioX.WebApi.Security.AntiForgery
                 return await continuation();
             }
 
-            if (!_studioXAntiForgeryManager.ShouldValidate(_antiForgeryWebConfiguration, methodInfo, actionContext.Request.Method.ToHttpVerb(), _webApiConfiguration.IsAutomaticAntiForgeryValidationEnabled))
+            if (!studioXAntiForgeryManager.ShouldValidate(antiForgeryWebConfiguration, methodInfo, actionContext.Request.Method.ToHttpVerb(), webApiConfiguration.IsAutomaticAntiForgeryValidationEnabled))
             {
                 return await continuation();
             }
 
-            if (!_studioXAntiForgeryManager.IsValid(actionContext.Request.Headers))
+            if (!studioXAntiForgeryManager.IsValid(actionContext.Request.Headers))
             {
                 return CreateErrorResponse(actionContext, "Empty or invalid anti forgery header token.");
             }

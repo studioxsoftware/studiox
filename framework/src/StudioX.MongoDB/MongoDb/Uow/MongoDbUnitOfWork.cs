@@ -16,7 +16,7 @@ namespace StudioX.MongoDb.Uow
         /// </summary>
         public MongoDatabase Database { get; private set; }
 
-        private readonly IStudioXMongoDbModuleConfiguration _configuration;
+        private readonly IStudioXMongoDbModuleConfiguration configuration;
 
         /// <summary>
         /// Constructor.
@@ -31,16 +31,16 @@ namespace StudioX.MongoDb.Uow
                   defaultOptions,
                   filterExecuter)
         {
-            _configuration = configuration;
+            this.configuration = configuration;
         }
 
         #pragma warning disable
         protected override void BeginUow()
         {
             //TODO: MongoClientExtensions.GetServer(MongoClient)' is obsolete: 'Use the new API instead.
-            Database = new MongoClient(_configuration.ConnectionString)
+            Database = new MongoClient(configuration.ConnectionString)
                 .GetServer()
-                .GetDatabase(_configuration.DatatabaseName);
+                .GetDatabase(configuration.DatatabaseName);
         }
         #pragma warning restore
 

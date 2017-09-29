@@ -9,27 +9,24 @@ namespace StudioX.Runtime.Caching.Configuration
     {
         public IStudioXStartupConfiguration StudioXConfiguration { get; private set; }
 
-        public IReadOnlyList<ICacheConfigurator> Configurators
-        {
-            get { return _configurators.ToImmutableList(); }
-        }
-        private readonly List<ICacheConfigurator> _configurators;
+        public IReadOnlyList<ICacheConfigurator> Configurators => configurators.ToImmutableList();
+        private readonly List<ICacheConfigurator> configurators;
 
         public CachingConfiguration(IStudioXStartupConfiguration studioxConfiguration)
         {
             StudioXConfiguration = studioxConfiguration;
 
-            _configurators = new List<ICacheConfigurator>();
+            configurators = new List<ICacheConfigurator>();
         }
 
         public void ConfigureAll(Action<ICache> initAction)
         {
-            _configurators.Add(new CacheConfigurator(initAction));
+            configurators.Add(new CacheConfigurator(initAction));
         }
 
         public void Configure(string cacheName, Action<ICache> initAction)
         {
-            _configurators.Add(new CacheConfigurator(cacheName, initAction));
+            configurators.Add(new CacheConfigurator(cacheName, initAction));
         }
     }
 }

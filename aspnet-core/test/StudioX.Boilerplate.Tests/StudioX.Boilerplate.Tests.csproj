@@ -13,6 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\framework\src\StudioX.TestBase\StudioX.TestBase.csproj" />
     <ProjectReference Include="..\..\src\StudioX.Boilerplate.Application\StudioX.Boilerplate.Application.csproj" />
     <ProjectReference Include="..\..\src\StudioX.Boilerplate.EntityFrameworkCore\StudioX.Boilerplate.EntityFrameworkCore.csproj" />
   </ItemGroup>
@@ -24,7 +25,6 @@
     <PackageReference Include="xunit" Version="2.2.0" />
     <PackageReference Include="xunit.extensibility.execution" Version="2.2.0" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0" />
-    <PackageReference Include="Abp.TestBase" Version="3.0.0-beta2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="2.0.0" />
   </ItemGroup>
 

@@ -13,11 +13,11 @@ namespace StudioX.AspNetCore.Mvc.Providers
     /// </summary>
     public class StudioXAppServiceControllerFeatureProvider : ControllerFeatureProvider
     {
-        private readonly IIocResolver _iocResolver;
+        private readonly IIocResolver iocResolver;
 
         public StudioXAppServiceControllerFeatureProvider(IIocResolver iocResolver)
         {
-            _iocResolver = iocResolver;
+            this.iocResolver = iocResolver;
         }
 
         protected override bool IsController(TypeInfo typeInfo)
@@ -37,7 +37,7 @@ namespace StudioX.AspNetCore.Mvc.Providers
                 return false;
             }
 
-            var configuration = _iocResolver.Resolve<StudioXAspNetCoreConfiguration>().ControllerAssemblySettings.GetSettingOrNull(type);
+            var configuration = iocResolver.Resolve<StudioXAspNetCoreConfiguration>().ControllerAssemblySettings.GetSettingOrNull(type);
             return configuration != null && configuration.TypePredicate(type);
         }
     }

@@ -13,19 +13,11 @@ namespace StudioX.Timing
         /// </summary>
         public static IClockProvider Provider
         {
-            get { return _provider; }
-            set
-            {
-                if (value == null)
-                {
-                    throw new ArgumentNullException(nameof(value), "Can not set Clock.Provider to null!");
-                }
-
-                _provider = value;
-            }
+            get => provider;
+            set => provider = value ?? throw new ArgumentNullException(nameof(value), "Can not set Clock.Provider to null!");
         }
 
-        private static IClockProvider _provider;
+        private static IClockProvider provider;
 
         static Clock()
         {

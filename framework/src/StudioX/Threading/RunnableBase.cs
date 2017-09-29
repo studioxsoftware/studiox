@@ -8,18 +8,18 @@ namespace StudioX.Threading
         /// <summary>
         /// A boolean value to control the running.
         /// </summary>
-        public bool IsRunning { get { return _isRunning; } }
+        public bool IsRunning => isRunning;
 
-        private volatile bool _isRunning;
+        private volatile bool isRunning;
 
         public virtual void Start()
         {
-            _isRunning = true;
+            isRunning = true;
         }
 
         public virtual void Stop()
         {
-            _isRunning = false;
+            isRunning = false;
         }
 
         public virtual void WaitToStop()

@@ -7,20 +7,20 @@ namespace StudioX.EntityFramework
 {
     public class DefaultDbContextResolver : IDbContextResolver, ITransientDependency
     {
-        private readonly IIocResolver _iocResolver;
-        private readonly IDbContextTypeMatcher _dbContextTypeMatcher;
+        public readonly IIocResolver iocResolver;
+        private readonly IDbContextTypeMatcher dbContextTypeMatcher;
 
         public DefaultDbContextResolver(IIocResolver iocResolver, IDbContextTypeMatcher dbContextTypeMatcher)
         {
-            _iocResolver = iocResolver;
-            _dbContextTypeMatcher = dbContextTypeMatcher;
+            this.iocResolver = iocResolver;
+            this.dbContextTypeMatcher = dbContextTypeMatcher;
         }
 
         public TDbContext Resolve<TDbContext>(string connectionString)
             where TDbContext : DbContext
         {
             var dbContextType = GetConcreteType<TDbContext>();
-            return (TDbContext) _iocResolver.Resolve(dbContextType, new
+            return (TDbContext) iocResolver.Resolve(dbContextType, new
             {
                 nameOrConnectionString = connectionString
             });
@@ -30,7 +30,7 @@ namespace StudioX.EntityFramework
             where TDbContext : DbContext
         {
             var dbContextType = GetConcreteType<TDbContext>();
-            return (TDbContext)_iocResolver.Resolve(dbContextType, new
+            return (TDbContext)iocResolver.Resolve(dbContextType, new
             {
                 existingConnection = existingConnection,
                 contextOwnsConnection = contextOwnsConnection
@@ -42,7 +42,7 @@ namespace StudioX.EntityFramework
             var dbContextType = typeof(TDbContext);
             return !dbContextType.IsAbstract
                 ? dbContextType
-                : _dbContextTypeMatcher.GetConcreteType(dbContextType);
+                : dbContextTypeMatcher.GetConcreteType(dbContextType);
         }
     }
 }

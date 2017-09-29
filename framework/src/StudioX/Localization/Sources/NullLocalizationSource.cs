@@ -13,12 +13,11 @@ namespace StudioX.Localization.Sources
         /// <summary>
         /// Singleton instance.
         /// </summary>
-        public static NullLocalizationSource Instance { get { return SingletonInstance; } }
-        private static readonly NullLocalizationSource SingletonInstance = new NullLocalizationSource();
+        public static NullLocalizationSource Instance { get; } = new NullLocalizationSource();
 
-        public string Name { get { return null; } }
+        public string Name => null;
 
-        private readonly IReadOnlyList<LocalizedString> _emptyStringArray = new LocalizedString[0];
+        private readonly IReadOnlyList<LocalizedString> emptyStringArray = new LocalizedString[0];
 
         private NullLocalizationSource()
         {
@@ -52,12 +51,12 @@ namespace StudioX.Localization.Sources
 
         public IReadOnlyList<LocalizedString> GetAllStrings(bool includeDefaults = true)
         {
-            return _emptyStringArray;
+            return emptyStringArray;
         }
 
         public IReadOnlyList<LocalizedString> GetAllStrings(CultureInfo culture, bool includeDefaults = true)
         {
-            return _emptyStringArray;
+            return emptyStringArray;
         }
     }
 }

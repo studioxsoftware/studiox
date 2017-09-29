@@ -12,19 +12,19 @@ namespace StudioX.Localization
         ITransientDependency,
         IEventHandler<EntityChangedEventData<ApplicationLanguageText>>
     {
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheManager cacheManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MultiTenantLocalizationDictionaryCacheCleaner"/> class.
         /// </summary>
         public MultiTenantLocalizationDictionaryCacheCleaner(ICacheManager cacheManager)
         {
-            _cacheManager = cacheManager;
+            this.cacheManager = cacheManager;
         }
 
         public void HandleEvent(EntityChangedEventData<ApplicationLanguageText> eventData)
         {
-            _cacheManager
+            cacheManager
                 .GetMultiTenantLocalizationDictionaryCache()
                 .Remove(MultiTenantLocalizationDictionaryCacheHelper.CalculateCacheKey(
                     eventData.Entity.TenantId,

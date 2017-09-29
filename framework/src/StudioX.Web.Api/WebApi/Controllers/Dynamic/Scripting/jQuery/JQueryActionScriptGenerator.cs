@@ -7,8 +7,8 @@ namespace StudioX.WebApi.Controllers.Dynamic.Scripting.jQuery
 {
     internal class JQueryActionScriptGenerator
     {
-        private readonly DynamicApiControllerInfo _controllerInfo;
-        private readonly DynamicApiActionInfo _actionInfo;
+        private readonly DynamicApiControllerInfo controllerInfo;
+        private readonly DynamicApiActionInfo actionInfo;
 
         private const string JsMethodTemplate =
 @"    serviceNamespace{jsMethodName} = function({jsMethodParameterList}) {
@@ -19,14 +19,14 @@ namespace StudioX.WebApi.Controllers.Dynamic.Scripting.jQuery
 
         public JQueryActionScriptGenerator(DynamicApiControllerInfo controllerInfo, DynamicApiActionInfo actionInfo)
         {
-            _controllerInfo = controllerInfo;
-            _actionInfo = actionInfo;
+            this.controllerInfo = controllerInfo;
+            this.actionInfo = actionInfo;
         }
 
         public virtual string GenerateMethod()
         {
-            var jsMethodName = _actionInfo.ActionName.ToCamelCase();
-            var jsMethodParameterList = ActionScriptingHelper.GenerateJsMethodParameterList(_actionInfo.Method, "ajaxParams");
+            var jsMethodName = actionInfo.ActionName.ToCamelCase();
+            var jsMethodParameterList = ActionScriptingHelper.GenerateJsMethodParameterList(actionInfo.Method, "ajaxParams");
 
             var jsMethod = JsMethodTemplate
                 .Replace("{jsMethodName}", ProxyScriptingJsFuncHelper.WrapWithBracketsOrWithDotPrefix(jsMethodName))
@@ -40,16 +40,16 @@ namespace StudioX.WebApi.Controllers.Dynamic.Scripting.jQuery
         {
             var script = new StringBuilder();
             
-            script.AppendLine("            url: studiox.appPath + '" + ActionScriptingHelper.GenerateUrlWithParameters(_controllerInfo, _actionInfo) + "',");
-            script.AppendLine("            type: '" + _actionInfo.Verb.ToString().ToUpperInvariant() + "',");
+            script.AppendLine("            url: studiox.appPath + '" + ActionScriptingHelper.GenerateUrlWithParameters(controllerInfo, actionInfo) + "',");
+            script.AppendLine("            type: '" + actionInfo.Verb.ToString().ToUpperInvariant() + "',");
 
-            if (_actionInfo.Verb == HttpVerb.Get)
+            if (actionInfo.Verb == HttpVerb.Get)
             {
-                script.Append("            data: " + ActionScriptingHelper.GenerateBody(_actionInfo));
+                script.Append("            data: " + ActionScriptingHelper.GenerateBody(actionInfo));
             }
             else
             {
-                script.Append("            data: JSON.stringify(" + ActionScriptingHelper.GenerateBody(_actionInfo) + ")");                
+                script.Append("            data: JSON.stringify(" + ActionScriptingHelper.GenerateBody(actionInfo) + ")");                
             }
             
             return script.ToString();

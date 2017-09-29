@@ -50,13 +50,13 @@ namespace StudioX.Authorization.Users
 
         public StudioXUserStore<TRole, TUser> StudioXStore { get; }
 
-        private readonly IPermissionManager _permissionManager;
-        private readonly IUnitOfWorkManager _unitOfWorkManager;
-        private readonly ICacheManager _cacheManager;
-        private readonly IRepository<OrganizationUnit, long> _organizationUnitRepository;
-        private readonly IRepository<UserOrganizationUnit, long> _userOrganizationUnitRepository;
-        private readonly IOrganizationUnitSettings _organizationUnitSettings;
-        private readonly ISettingManager _settingManager;
+        private readonly IPermissionManager permissionManager;
+        private readonly IUnitOfWorkManager unitOfWorkManager;
+        private readonly ICacheManager cacheManager;
+        private readonly IRepository<OrganizationUnit, long> organizationUnitRepository;
+        private readonly IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository;
+        private readonly IOrganizationUnitSettings organizationUnitSettings;
+        private readonly ISettingManager settingManager;
 
         public StudioXUserManager(
             StudioXRoleManager<TRole, TUser> roleManager,
@@ -87,13 +87,13 @@ namespace StudioX.Authorization.Users
                 services,
                 logger)
         {
-            _permissionManager = permissionManager;
-            _unitOfWorkManager = unitOfWorkManager;
-            _cacheManager = cacheManager;
-            _organizationUnitRepository = organizationUnitRepository;
-            _userOrganizationUnitRepository = userOrganizationUnitRepository;
-            _organizationUnitSettings = organizationUnitSettings;
-            _settingManager = settingManager;
+            this.permissionManager = permissionManager;
+            this.unitOfWorkManager = unitOfWorkManager;
+            this.cacheManager = cacheManager;
+            this.organizationUnitRepository = organizationUnitRepository;
+            this.userOrganizationUnitRepository = userOrganizationUnitRepository;
+            this.organizationUnitSettings = organizationUnitSettings;
+            this.settingManager = settingManager;
 
             StudioXStore = store;
             RoleManager = roleManager;
@@ -125,7 +125,7 @@ namespace StudioX.Authorization.Users
         {
             return await IsGrantedAsync(
                 userId,
-                _permissionManager.GetPermission(permissionName)
+                permissionManager.GetPermission(permissionName)
                 );
         }
 
@@ -200,7 +200,7 @@ namespace StudioX.Authorization.Users
         {
             var permissionList = new List<Permission>();
 
-            foreach (var permission in _permissionManager.GetAllPermissions())
+            foreach (var permission in permissionManager.GetAllPermissions())
             {
                 if (await IsGrantedAsync(user.Id, permission))
                 {
@@ -239,7 +239,7 @@ namespace StudioX.Authorization.Users
         /// <param name="user">User</param>
         public async Task ProhibitAllPermissionsAsync(TUser user)
         {
-            foreach (var permission in _permissionManager.GetAllPermissions())
+            foreach (var permission in permissionManager.GetAllPermissions())
             {
                 await ProhibitPermissionAsync(user, permission);
             }
@@ -428,13 +428,13 @@ namespace StudioX.Authorization.Users
         {
             return await IsInOrganizationUnitAsync(
                 await GetUserByIdAsync(userId),
-                await _organizationUnitRepository.GetAsync(ouId)
+                await organizationUnitRepository.GetAsync(ouId)
                 );
         }
 
         public virtual async Task<bool> IsInOrganizationUnitAsync(TUser user, OrganizationUnit ou)
         {
-            return await _userOrganizationUnitRepository.CountAsync(uou =>
+            return await userOrganizationUnitRepository.CountAsync(uou =>
                 uou.UserId == user.Id && uou.OrganizationUnitId == ou.Id
                 ) > 0;
         }
@@ -443,7 +443,7 @@ namespace StudioX.Authorization.Users
         {
             await AddToOrganizationUnitAsync(
                 await GetUserByIdAsync(userId),
-                await _organizationUnitRepository.GetAsync(ouId)
+                await organizationUnitRepository.GetAsync(ouId)
                 );
         }
 
@@ -458,20 +458,20 @@ namespace StudioX.Authorization.Users
 
             await CheckMaxUserOrganizationUnitMembershipCountAsync(user.TenantId, currentOus.Count + 1);
 
-            await _userOrganizationUnitRepository.InsertAsync(new UserOrganizationUnit(user.TenantId, user.Id, ou.Id));
+            await userOrganizationUnitRepository.InsertAsync(new UserOrganizationUnit(user.TenantId, user.Id, ou.Id));
         }
 
         public virtual async Task RemoveFromOrganizationUnitAsync(long userId, long ouId)
         {
             await RemoveFromOrganizationUnitAsync(
                 await GetUserByIdAsync(userId),
-                await _organizationUnitRepository.GetAsync(ouId)
+                await organizationUnitRepository.GetAsync(ouId)
                 );
         }
 
         public virtual async Task RemoveFromOrganizationUnitAsync(TUser user, OrganizationUnit ou)
         {
-            await _userOrganizationUnitRepository.DeleteAsync(uou => uou.UserId == user.Id && uou.OrganizationUnitId == ou.Id);
+            await userOrganizationUnitRepository.DeleteAsync(uou => uou.UserId == user.Id && uou.OrganizationUnitId == ou.Id);
         }
 
         public virtual async Task SetOrganizationUnitsAsync(long userId, params long[] organizationUnitIds)
@@ -484,7 +484,7 @@ namespace StudioX.Authorization.Users
 
         private async Task CheckMaxUserOrganizationUnitMembershipCountAsync(int? tenantId, int requestedCount)
         {
-            var maxCount = await _organizationUnitSettings.GetMaxUserMembershipCountAsync(tenantId);
+            var maxCount = await organizationUnitSettings.GetMaxUserMembershipCountAsync(tenantId);
             if (requestedCount > maxCount)
             {
                 throw new StudioXException($"Can not set more than {maxCount} organization unit for a user!");
@@ -518,7 +518,7 @@ namespace StudioX.Authorization.Users
                 {
                     await AddToOrganizationUnitAsync(
                         user,
-                        await _organizationUnitRepository.GetAsync(organizationUnitId)
+                        await organizationUnitRepository.GetAsync(organizationUnitId)
                         );
                 }
             }
@@ -527,8 +527,8 @@ namespace StudioX.Authorization.Users
         [UnitOfWork]
         public virtual Task<List<OrganizationUnit>> GetOrganizationUnitsAsync(TUser user)
         {
-            var query = from uou in _userOrganizationUnitRepository.GetAll()
-                        join ou in _organizationUnitRepository.GetAll() on uou.OrganizationUnitId equals ou.Id
+            var query = from uou in userOrganizationUnitRepository.GetAll()
+                        join ou in organizationUnitRepository.GetAll() on uou.OrganizationUnitId equals ou.Id
                         where uou.UserId == user.Id
                         select ou;
 
@@ -540,7 +540,7 @@ namespace StudioX.Authorization.Users
         {
             if (!includeChildren)
             {
-                var query = from uou in _userOrganizationUnitRepository.GetAll()
+                var query = from uou in userOrganizationUnitRepository.GetAll()
                             join user in Users on uou.UserId equals user.Id
                             where uou.OrganizationUnitId == organizationUnit.Id
                             select user;
@@ -549,9 +549,9 @@ namespace StudioX.Authorization.Users
             }
             else
             {
-                var query = from uou in _userOrganizationUnitRepository.GetAll()
+                var query = from uou in userOrganizationUnitRepository.GetAll()
                             join user in Users on uou.UserId equals user.Id
-                            join ou in _organizationUnitRepository.GetAll() on uou.OrganizationUnitId equals ou.Id
+                            join ou in organizationUnitRepository.GetAll() on uou.OrganizationUnitId equals ou.Id
                             where ou.Code.StartsWith(organizationUnit.Code)
                             select user;
 
@@ -584,7 +584,7 @@ namespace StudioX.Authorization.Users
         private async Task<UserPermissionCacheItem> GetUserPermissionCacheItemAsync(long userId)
         {
             var cacheKey = userId + "@" + (GetCurrentTenantId() ?? 0);
-            return await _cacheManager.GetUserPermissionCache().GetAsync(cacheKey, async () =>
+            return await cacheManager.GetUserPermissionCache().GetAsync(cacheKey, async () =>
             {
                 var user = await FindByIdAsync(userId.ToString());
                 if (user == null)
@@ -652,15 +652,15 @@ namespace StudioX.Authorization.Users
         private T GetSettingValue<T>(string settingName, int? tenantId) where T : struct
         {
             return tenantId == null
-                ? _settingManager.GetSettingValueForApplication<T>(settingName)
-                : _settingManager.GetSettingValueForTenant<T>(settingName, tenantId.Value);
+                ? settingManager.GetSettingValueForApplication<T>(settingName)
+                : settingManager.GetSettingValueForTenant<T>(settingName, tenantId.Value);
         }
 
         private Task<T> GetSettingValueAsync<T>(string settingName, int? tenantId) where T : struct
         {
             return tenantId == null
-                ? _settingManager.GetSettingValueForApplicationAsync<T>(settingName)
-                : _settingManager.GetSettingValueForTenantAsync<T>(settingName, tenantId.Value);
+                ? settingManager.GetSettingValueForApplicationAsync<T>(settingName)
+                : settingManager.GetSettingValueForTenantAsync<T>(settingName, tenantId.Value);
         }
 
         private string L(string name)
@@ -670,9 +670,9 @@ namespace StudioX.Authorization.Users
 
         private int? GetCurrentTenantId()
         {
-            if (_unitOfWorkManager.Current != null)
+            if (unitOfWorkManager.Current != null)
             {
-                return _unitOfWorkManager.Current.GetTenantId();
+                return unitOfWorkManager.Current.GetTenantId();
             }
 
             return StudioXSession.TenantId;

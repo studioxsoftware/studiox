@@ -5,7 +5,7 @@ namespace StudioX.Boilerplate.Web.Models.Account
     public class LoginViewModel
     {
         [Required]
-        public string UsernameOrEmailAddress { get; set; }
+        public string UserNameOrEmailAddress { get; set; }
 
         [Required]
         public string Password { get; set; }

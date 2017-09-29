@@ -14,10 +14,10 @@ namespace StudioX.Localization
     {
         public ILogger Logger { get; set; }
 
-        private readonly ILanguageManager _languageManager;
-        private readonly ILocalizationConfiguration _configuration;
-        private readonly IIocResolver _iocResolver;
-        private readonly IDictionary<string, ILocalizationSource> _sources;
+        private readonly ILanguageManager languageManager;
+        private readonly ILocalizationConfiguration configuration;
+        private readonly IIocResolver iocResolver;
+        private readonly IDictionary<string, ILocalizationSource> sources;
 
         /// <summary>
         /// Constructor.
@@ -28,10 +28,10 @@ namespace StudioX.Localization
             IIocResolver iocResolver)
         {
             Logger = NullLogger.Instance;
-            _languageManager = languageManager;
-            _configuration = configuration;
-            _iocResolver = iocResolver;
-            _sources = new Dictionary<string, ILocalizationSource>();
+            this.languageManager = languageManager;
+            this.configuration = configuration;
+            this.iocResolver = iocResolver;
+            sources = new Dictionary<string, ILocalizationSource>();
         }
 
         public void Initialize()
@@ -41,28 +41,28 @@ namespace StudioX.Localization
 
         private void InitializeSources()
         {
-            if (!_configuration.IsEnabled)
+            if (!configuration.IsEnabled)
             {
                 Logger.Debug("Localization disabled.");
                 return;
             }
 
-            Logger.Debug(string.Format("Initializing {0} localization sources.", _configuration.Sources.Count));
-            foreach (var source in _configuration.Sources)
+            Logger.Debug(string.Format("Initializing {0} localization sources.", configuration.Sources.Count));
+            foreach (var source in configuration.Sources)
             {
-                if (_sources.ContainsKey(source.Name))
+                if (sources.ContainsKey(source.Name))
                 {
                     throw new StudioXException("There are more than one source with name: " + source.Name + "! Source name must be unique!");
                 }
 
-                _sources[source.Name] = source;
-                source.Initialize(_configuration, _iocResolver);
+                sources[source.Name] = source;
+                source.Initialize(configuration, iocResolver);
 
                 //Extending dictionaries
                 if (source is IDictionaryBasedLocalizationSource)
                 {
                     var dictionaryBasedSource = source as IDictionaryBasedLocalizationSource;
-                    var extensions = _configuration.Sources.Extensions.Where(e => e.SourceName == source.Name).ToList();
+                    var extensions = configuration.Sources.Extensions.Where(e => e.SourceName == source.Name).ToList();
                     foreach (var extension in extensions)
                     {
                         extension.DictionaryProvider.Initialize(source.Name);
@@ -84,7 +84,7 @@ namespace StudioX.Localization
         /// <returns>The localization source</returns>
         public ILocalizationSource GetSource(string name)
         {
-            if (!_configuration.IsEnabled)
+            if (!configuration.IsEnabled)
             {
                 return NullLocalizationSource.Instance;
             }
@@ -95,7 +95,7 @@ namespace StudioX.Localization
             }
 
             ILocalizationSource source;
-            if (!_sources.TryGetValue(name, out source))
+            if (!sources.TryGetValue(name, out source))
             {
                 throw new StudioXException("Can not find a source with name: " + name);
             }
@@ -109,7 +109,7 @@ namespace StudioX.Localization
         /// <returns>List of sources</returns>
         public IReadOnlyList<ILocalizationSource> GetAllSources()
         {
-            return _sources.Values.ToImmutableList();
+            return sources.Values.ToImmutableList();
         }
     }
 }

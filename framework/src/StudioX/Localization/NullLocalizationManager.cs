@@ -10,14 +10,13 @@ namespace StudioX.Localization
         /// <summary>
         /// Singleton instance.
         /// </summary>
-        public static NullLocalizationManager Instance { get { return SingletonInstance; } }
-        private static readonly NullLocalizationManager SingletonInstance = new NullLocalizationManager();
+        public static NullLocalizationManager Instance { get; } = new NullLocalizationManager();
 
-        public LanguageInfo CurrentLanguage { get { return new LanguageInfo(CultureInfo.CurrentUICulture.Name, CultureInfo.CurrentUICulture.DisplayName); } }
+        public LanguageInfo CurrentLanguage => new LanguageInfo(CultureInfo.CurrentUICulture.Name, CultureInfo.CurrentUICulture.DisplayName);
 
-        private readonly IReadOnlyList<LanguageInfo> _emptyLanguageArray = new LanguageInfo[0];
+        private readonly IReadOnlyList<LanguageInfo> emptyLanguageArray = new LanguageInfo[0];
 
-        private readonly IReadOnlyList<ILocalizationSource> _emptyLocalizationSourceArray = new ILocalizationSource[0];
+        private readonly IReadOnlyList<ILocalizationSource> emptyLocalizationSourceArray = new ILocalizationSource[0];
 
         private NullLocalizationManager()
         {
@@ -26,7 +25,7 @@ namespace StudioX.Localization
 
         public IReadOnlyList<LanguageInfo> GetAllLanguages()
         {
-            return _emptyLanguageArray;
+            return emptyLanguageArray;
         }
 
         public ILocalizationSource GetSource(string name)
@@ -36,7 +35,7 @@ namespace StudioX.Localization
 
         public IReadOnlyList<ILocalizationSource> GetAllSources()
         {
-            return _emptyLocalizationSourceArray;
+            return emptyLocalizationSourceArray;
         }
     }
 }

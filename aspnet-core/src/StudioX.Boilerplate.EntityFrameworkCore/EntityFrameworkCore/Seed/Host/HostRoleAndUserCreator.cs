@@ -1,11 +1,12 @@
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using StudioX.Authorization;
 using StudioX.Authorization.Roles;
 using StudioX.Authorization.Users;
-using StudioX.MultiTenancy;
 using StudioX.Boilerplate.Authorization;
 using StudioX.Boilerplate.Authorization.Roles;
 using StudioX.Boilerplate.Authorization.Users;
+using StudioX.MultiTenancy;
 
 namespace StudioX.Boilerplate.EntityFrameworkCore.Seed.Host
 {
@@ -27,16 +28,23 @@ namespace StudioX.Boilerplate.EntityFrameworkCore.Seed.Host
         {
             //Admin role for host
 
-            var adminRoleForHost = context.Roles.FirstOrDefault(r => r.TenantId == null && r.Name == StaticRoleNames.Host.Admin);
+            var adminRoleForHost = context.Roles.IgnoreQueryFilters()
+                .FirstOrDefault(r => r.TenantId == null && r.Name == StaticRoleNames.Host.Admin);
             if (adminRoleForHost == null)
             {
-                adminRoleForHost = context.Roles.Add(new Role(null, StaticRoleNames.Host.Admin, StaticRoleNames.Host.Admin) { IsStatic = true, IsDefault = true }).Entity;
+                adminRoleForHost = context.Roles.Add(
+                    new Role(null, StaticRoleNames.Host.Admin, StaticRoleNames.Host.Admin)
+                    {
+                        IsStatic = true,
+                        IsDefault = true
+                    }).Entity;
                 context.SaveChanges();
             }
 
             //admin user for host
 
-            var adminUserForHost = context.Users.FirstOrDefault(u => u.TenantId == null && u.UserName == StudioXUserBase.AdminUserName);
+            var adminUserForHost = context.Users.IgnoreQueryFilters()
+                .FirstOrDefault(u => u.TenantId == null && u.UserName == StudioXUserBase.AdminUserName);
             if (adminUserForHost == null)
             {
                 var user = new User
@@ -67,7 +75,6 @@ namespace StudioX.Boilerplate.EntityFrameworkCore.Seed.Host
                     .ToList();
 
                 foreach (var permission in permissions)
-                {
                     context.Permissions.Add(
                         new RolePermissionSetting
                         {
@@ -76,7 +83,6 @@ namespace StudioX.Boilerplate.EntityFrameworkCore.Seed.Host
                             IsGranted = true,
                             RoleId = adminRoleForHost.Id
                         });
-                }
 
                 context.SaveChanges();
 

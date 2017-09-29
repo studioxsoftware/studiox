@@ -17,11 +17,11 @@ namespace StudioX.WebApi.Controllers
     /// </summary>
     public class ResultWrapperHandler : DelegatingHandler, ITransientDependency
     {
-        private readonly IStudioXWebApiConfiguration _configuration;
+        private readonly IStudioXWebApiConfiguration configuration;
 
         public ResultWrapperHandler(IStudioXWebApiConfiguration configuration)
         {
-            _configuration = configuration;
+            this.configuration = configuration;
         }
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
@@ -38,7 +38,7 @@ namespace StudioX.WebApi.Controllers
                 return;
             }
 
-            if (_configuration.SetNoCacheForAllResponses)
+            if (configuration.SetNoCacheForAllResponses)
             {
                 //Based on http://stackoverflow.com/questions/49547/making-sure-a-web-page-is-not-cached-across-all-browsers
                 response.Headers.CacheControl = new CacheControlHeaderValue
@@ -51,7 +51,7 @@ namespace StudioX.WebApi.Controllers
             }
 
             var wrapAttr = HttpActionDescriptorHelper.GetWrapResultAttributeOrNull(request.GetActionDescriptor())
-                           ?? _configuration.DefaultWrapResultAttribute;
+                           ?? configuration.DefaultWrapResultAttribute;
 
             if (!wrapAttr.WrapOnSuccess)
             {
@@ -69,7 +69,7 @@ namespace StudioX.WebApi.Controllers
                 response.StatusCode = HttpStatusCode.OK;
                 response.Content = new ObjectContent<AjaxResponse>(
                     new AjaxResponse(),
-                    _configuration.HttpConfiguration.Formatters.JsonFormatter
+                    configuration.HttpConfiguration.Formatters.JsonFormatter
                     );
                 return;
             }
@@ -81,7 +81,7 @@ namespace StudioX.WebApi.Controllers
 
             response.Content = new ObjectContent<AjaxResponse>(
                 new AjaxResponse(resultObject),
-                _configuration.HttpConfiguration.Formatters.JsonFormatter
+                configuration.HttpConfiguration.Formatters.JsonFormatter
                 );
         }
 
@@ -92,7 +92,7 @@ namespace StudioX.WebApi.Controllers
                 return false;
             }
 
-            return _configuration.ResultWrappingIgnoreUrls.Any(url => uri.AbsolutePath.StartsWith(url));
+            return configuration.ResultWrappingIgnoreUrls.Any(url => uri.AbsolutePath.StartsWith(url));
         }
     }
 }

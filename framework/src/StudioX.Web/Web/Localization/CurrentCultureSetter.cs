@@ -16,18 +16,18 @@ namespace StudioX.Web.Localization
 {
     public class CurrentCultureSetter : ICurrentCultureSetter, ITransientDependency
     {
-        private readonly IStudioXWebLocalizationConfiguration _webLocalizationConfiguration;
-        private readonly ISettingManager _settingManager;
-        private readonly IStudioXSession _studioXSession;
+        private readonly IStudioXWebLocalizationConfiguration webLocalizationConfiguration;
+        private readonly ISettingManager settingManager;
+        private readonly IStudioXSession studioXSession;
 
         public CurrentCultureSetter(
             IStudioXWebLocalizationConfiguration webLocalizationConfiguration,
             ISettingManager settingManager,
             IStudioXSession studioxSession)
         {
-            _webLocalizationConfiguration = webLocalizationConfiguration;
-            _settingManager = settingManager;
-            _studioXSession = studioxSession;
+            this.webLocalizationConfiguration = webLocalizationConfiguration;
+            this.settingManager = settingManager;
+            studioXSession = studioxSession;
         }
 
         public virtual void SetCurrentCulture(HttpContext httpContext)
@@ -57,9 +57,9 @@ namespace StudioX.Web.Localization
             culture = GetCultureFromHeader(httpContext) ?? GetCultureFromCookie(httpContext);
             if (culture != null)
             {
-                if (_studioXSession.UserId.HasValue)
+                if (studioXSession.UserId.HasValue)
                 {
-                    SetCultureToUserSetting(_studioXSession.ToUserIdentifier(), culture);
+                    SetCultureToUserSetting(studioXSession.ToUserIdentifier(), culture);
                 }
 
                 SetCurrentCulture(culture);
@@ -77,7 +77,7 @@ namespace StudioX.Web.Localization
 
         private void SetCultureToUserSetting(UserIdentifier user, string culture)
         {
-            _settingManager.ChangeSettingForUser(
+            settingManager.ChangeSettingForUser(
                 user,
                 LocalizationSettingNames.DefaultLanguage,
                 culture
@@ -86,15 +86,15 @@ namespace StudioX.Web.Localization
 
         private string GetCultureFromUserSetting()
         {
-            if (_studioXSession.UserId == null)
+            if (studioXSession.UserId == null)
             {
                 return null;
             }
 
-            var culture = _settingManager.GetSettingValueForUser(
+            var culture = settingManager.GetSettingValueForUser(
                 LocalizationSettingNames.DefaultLanguage,
-                _studioXSession.TenantId,
-                _studioXSession.UserId.Value,
+                studioXSession.TenantId,
+                studioXSession.UserId.Value,
                 fallbackToDefault: false
             );
 
@@ -119,7 +119,7 @@ namespace StudioX.Web.Localization
 
         protected virtual string GetCultureFromCookie(HttpContext httpContext)
         {
-            var culture = httpContext.Request.Cookies[_webLocalizationConfiguration.CookieName]?.Value;
+            var culture = httpContext.Request.Cookies[webLocalizationConfiguration.CookieName]?.Value;
             if (culture.IsNullOrEmpty() || !GlobalizationHelper.IsValidCultureCode(culture))
             {
                 return null;
@@ -131,7 +131,7 @@ namespace StudioX.Web.Localization
         protected virtual void SetCultureToCookie(HttpContext context, string culture)
         {
             context.Response.SetCookie(
-                new HttpCookie(_webLocalizationConfiguration.CookieName, culture)
+                new HttpCookie(webLocalizationConfiguration.CookieName, culture)
                 {
                     Expires = Clock.Now.AddYears(2),
                     Path = context.Request.ApplicationPath
@@ -141,7 +141,7 @@ namespace StudioX.Web.Localization
 
         protected virtual string GetDefaultCulture()
         {
-            var culture = _settingManager.GetSettingValue(LocalizationSettingNames.DefaultLanguage);
+            var culture = settingManager.GetSettingValue(LocalizationSettingNames.DefaultLanguage);
             if (culture.IsNullOrEmpty() || !GlobalizationHelper.IsValidCultureCode(culture))
             {
                 return null;
@@ -152,7 +152,7 @@ namespace StudioX.Web.Localization
 
         protected virtual string GetCultureFromHeader(HttpContext httpContext)
         {
-            var culture = httpContext.Request.Headers[_webLocalizationConfiguration.CookieName];
+            var culture = httpContext.Request.Headers[webLocalizationConfiguration.CookieName];
             if (culture.IsNullOrEmpty() || !GlobalizationHelper.IsValidCultureCode(culture))
             {
                 return null;
@@ -173,7 +173,7 @@ namespace StudioX.Web.Localization
 
         protected virtual string GetCultureFromQueryString(HttpContext httpContext)
         {
-            var culture = httpContext.Request.QueryString[_webLocalizationConfiguration.CookieName];
+            var culture = httpContext.Request.QueryString[webLocalizationConfiguration.CookieName];
             if (culture.IsNullOrEmpty() || !GlobalizationHelper.IsValidCultureCode(culture))
             {
                 return null;

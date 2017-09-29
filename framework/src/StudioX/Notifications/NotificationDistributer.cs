@@ -17,10 +17,10 @@ namespace StudioX.Notifications
     {
         public IRealTimeNotifier RealTimeNotifier { get; set; }
 
-        private readonly INotificationDefinitionManager _notificationDefinitionManager;
-        private readonly INotificationStore _notificationStore;
-        private readonly IUnitOfWorkManager _unitOfWorkManager;
-        private readonly IGuidGenerator _guidGenerator;
+        private readonly INotificationDefinitionManager notificationDefinitionManager;
+        private readonly INotificationStore notificationStore;
+        private readonly IUnitOfWorkManager unitOfWorkManager;
+        private readonly IGuidGenerator guidGenerator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NotificationDistributionJob"/> class.
@@ -31,17 +31,17 @@ namespace StudioX.Notifications
             IUnitOfWorkManager unitOfWorkManager, 
             IGuidGenerator guidGenerator)
         {
-            _notificationDefinitionManager = notificationDefinitionManager;
-            _notificationStore = notificationStore;
-            _unitOfWorkManager = unitOfWorkManager;
-            _guidGenerator = guidGenerator;
+            this.notificationDefinitionManager = notificationDefinitionManager;
+            this.notificationStore = notificationStore;
+            this.unitOfWorkManager = unitOfWorkManager;
+            this.guidGenerator = guidGenerator;
 
             RealTimeNotifier = NullRealTimeNotifier.Instance;
         }
 
         public async Task DistributeAsync(Guid notificationId)
         {
-            var notificationInfo = await _notificationStore.GetNotificationOrNullAsync(notificationId);
+            var notificationInfo = await notificationStore.GetNotificationOrNullAsync(notificationId);
             if (notificationInfo == null)
             {
                 Logger.Warn("NotificationDistributionJob can not continue since could not found notification by id: " + notificationId);
@@ -52,7 +52,7 @@ namespace StudioX.Notifications
 
             var userNotifications = await SaveUserNotifications(users, notificationInfo);
 
-            await _notificationStore.DeleteNotificationAsync(notificationInfo);
+            await notificationStore.DeleteNotificationAsync(notificationInfo);
 
             try
             {
@@ -91,7 +91,7 @@ namespace StudioX.Notifications
                     (tenantIds.Length == 1 && tenantIds[0] == NotificationInfo.AllTenantIds.To<int>()))
                 {
                     //Get all subscribed users of all tenants
-                    subscriptions = await _notificationStore.GetSubscriptionsAsync(
+                    subscriptions = await notificationStore.GetSubscriptionsAsync(
                         notificationInfo.NotificationName,
                         notificationInfo.EntityTypeName,
                         notificationInfo.EntityId
@@ -100,7 +100,7 @@ namespace StudioX.Notifications
                 else
                 {
                     //Get all subscribed users of specified tenant(s)
-                    subscriptions = await _notificationStore.GetSubscriptionsAsync(
+                    subscriptions = await notificationStore.GetSubscriptionsAsync(
                         tenantIds,
                         notificationInfo.NotificationName,
                         notificationInfo.EntityTypeName,
@@ -116,7 +116,7 @@ namespace StudioX.Notifications
                 {
                     using (CurrentUnitOfWork.SetTenantId(subscription.TenantId))
                     {
-                        if (!await _notificationDefinitionManager.IsAvailableAsync(notificationInfo.NotificationName, new UserIdentifier(subscription.TenantId, subscription.UserId)) ||
+                        if (!await notificationDefinitionManager.IsAvailableAsync(notificationInfo.NotificationName, new UserIdentifier(subscription.TenantId, subscription.UserId)) ||
                             !SettingManager.GetSettingValueForUser<bool>(NotificationSettingNames.ReceiveNotifications, subscription.TenantId, subscription.UserId))
                         {
                             invalidSubscriptions[subscription.Id] = subscription;
@@ -169,24 +169,24 @@ namespace StudioX.Notifications
             var tenantGroups = users.GroupBy(user => user.TenantId);
             foreach (var tenantGroup in tenantGroups)
             {
-                using (_unitOfWorkManager.Current.SetTenantId(tenantGroup.Key))
+                using (unitOfWorkManager.Current.SetTenantId(tenantGroup.Key))
                 {
-                    var tenantNotificationInfo = new TenantNotificationInfo(_guidGenerator.Create(), tenantGroup.Key, notificationInfo);
-                    await _notificationStore.InsertTenantNotificationAsync(tenantNotificationInfo);
-                    await _unitOfWorkManager.Current.SaveChangesAsync(); //To get tenantNotification.Id.
+                    var tenantNotificationInfo = new TenantNotificationInfo(guidGenerator.Create(), tenantGroup.Key, notificationInfo);
+                    await notificationStore.InsertTenantNotificationAsync(tenantNotificationInfo);
+                    await unitOfWorkManager.Current.SaveChangesAsync(); //To get tenantNotification.Id.
 
                     var tenantNotification = tenantNotificationInfo.ToTenantNotification();
 
                     foreach (var user in tenantGroup)
                     {
-                        var userNotification = new UserNotificationInfo(_guidGenerator.Create())
+                        var userNotification = new UserNotificationInfo(guidGenerator.Create())
                         {
                             TenantId = tenantGroup.Key,
                             UserId = user.UserId,
                             TenantNotificationId = tenantNotificationInfo.Id
                         };
 
-                        await _notificationStore.InsertUserNotificationAsync(userNotification);
+                        await notificationStore.InsertUserNotificationAsync(userNotification);
                         userNotifications.Add(userNotification.ToUserNotification(tenantNotification));
                     }
 
